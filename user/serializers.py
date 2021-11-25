@@ -7,9 +7,10 @@ from user.models import User
 
 
 class UserSerializers(serializers.ModelSerializer):
-    state = serializers.PrimaryKeyRelatedField(queryset=StateModel.objects.all(), many=False)
-    city = serializers.PrimaryKeyRelatedField(queryset=CityModel.objects.all(), many=False)
-    default_language = serializers.PrimaryKeyRelatedField(queryset=LanguageModel.objects.all(), many=False)
+    state = serializers.PrimaryKeyRelatedField(queryset=StateModel.objects.all(), many=False, required=False)
+    city = serializers.PrimaryKeyRelatedField(queryset=CityModel.objects.all(), many=False, required=False)
+    default_language = serializers.PrimaryKeyRelatedField(queryset=LanguageModel.objects.all(), many=False,
+                                                          required=False)
 
     class Meta:
         model = User

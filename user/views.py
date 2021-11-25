@@ -18,7 +18,8 @@ def register_view(request):
         if serializer.is_valid():
 
             new_user = serializer.save()
-            print("new user is ", new_user)
+            user.set_password(request.data["password"])
+            user.save()
             data['response'] = "successfully register a new user."
             data['email'] = new_user.email
         else:
