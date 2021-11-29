@@ -31,7 +31,6 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password, **extra_fields):
-        print("create super")
         """Create and save a SuperUser with the given email and password."""
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
@@ -55,7 +54,7 @@ class User(AbstractUser):
 
     user_type = models.CharField(max_length=9, choices=TYPE_CHOICE)
     email = models.EmailField(_('email address'), unique=True)
-    phone = models.CharField(max_length=25,null=True)
+    phone = models.CharField(max_length=25, null=True)
 
     # FIELDS FOR HOSPITAL
     hospital_name = models.CharField(max_length=250, null=True)
@@ -91,4 +90,6 @@ class User(AbstractUser):
         db_table = 'user'
 
     def save(self, *args, **kwargs):
-        self.user_name=self.email
+        # self.username = self.email
+
+        super(User, self).save(*args, **kwargs)
