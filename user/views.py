@@ -1,6 +1,7 @@
 import json
-from django.shortcuts import HttpResponse
+
 from django.contrib.auth.hashers import check_password
+from django.shortcuts import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -8,12 +9,11 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from email_util.send_user_email import send_mail, generate_token, decode_token
+from email_util.send_user_email import generate_token, decode_token, send_mail
 from .models import User
 from .serializers import UserSerializers
 
 
-# from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 
 # Create your views here.
@@ -81,19 +81,18 @@ def change_password(request):
 @permission_classes([AllowAny])
 @csrf_exempt
 def forget_password(request):
-    print(request.body)
     data = json.loads(request.body.decode('utf-8'))
 
     email = data.get("email", None)
     if email == None:
-        return Response("No Email Address found", status=404)
+        return HttpResponse("No Email Address found", status=404)
 
     token = generate_token(email, 60)
 
     user = User.objects.filter(email=email).first()
 
     if user == None:
-        return Response("Business is not registered with this email", status=404)
+        return HttpResponse("Business is not registered with this email", status=404)
 
     name = user.first_name
     context = {}
@@ -104,7 +103,8 @@ def forget_password(request):
     urlObject = request._current_scheme_host + request.path
     context["current_site"] = urlObject
     send_mail("Reset Your Password", "reset-pass.html", context)
-    return Response("Mail has been sent to your registered email", status=200)
+    return HttpResponse("Mail has been sent to your registered email", status=200)
+
 
 @csrf_exempt
 @authentication_classes([JWTAuthentication])
@@ -123,22 +123,17 @@ def reset_password(request, token):
     if "email" not in payload:
         return HttpResponse("No email found", status=404)
 
-
     user = User.objects.filter(email=payload["email"]).first()
-
-
 
     if user == None:
         return HttpResponse("No user found", status=404)
 
     password = data.get("password", None)
 
-
     if password == None:
         return HttpResponse("Reset Password not available", status=404)
 
     user.set_password(password)
     user.save()
-    print("password changed")
 
     return HttpResponse("Password successfully changed", status=200)

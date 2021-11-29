@@ -22,9 +22,7 @@ def generate_token(email=None, token_time=None):
 
 def decode_token(token):
 
-    print("patyload")
-    payload = jwt.decode(token, config('SECRET_KEY'), algorithm='HS256')
-    print("patyload",payload)
+    payload = jwt.decode(token, config('SECRET_KEY'), algorithms='HS256')
 
     return payload
 
