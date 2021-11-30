@@ -1,17 +1,10 @@
+from django.db.models import Q
 from rest_framework import serializers
 
-from city.models import CityModel
-from language.models import LanguageModel
-from state.models import StateModel
 from user.models import User
 
 
 class UserSerializers(serializers.ModelSerializer):
-    state = serializers.PrimaryKeyRelatedField(queryset=StateModel.objects.all(), many=False, required=False)
-    city = serializers.PrimaryKeyRelatedField(queryset=CityModel.objects.all(), many=False, required=False)
-    default_language = serializers.PrimaryKeyRelatedField(queryset=LanguageModel.objects.all(), many=False,
-                                                          required=False)
-    hospital = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=False, required=False)
 
     def validate(self, data):
 
@@ -26,9 +19,16 @@ class UserSerializers(serializers.ModelSerializer):
                 raise serializers.ValidationError("Please enter a valid UID number.")
 
             if user_type == "DOCTOR":
-                duplicate_aadhar = User.objects.filter(user_type="DOCTOR", aadhar_card=aadhar_card).first()
+                duplicate_aadhar = User.objects.filter(user_type="DOCTOR",
+                                                       aadhar_card=aadhar_card)
             elif user_type == "STAFF":
-                duplicate_aadhar = User.objects.filter(user_type="STAFF", aadhar_card=aadhar_card).first()
+                duplicate_aadhar = User.objects.filter(user_type="STAFF",
+                                                       aadhar_card=aadhar_card)
+
+            if self.partial:
+                duplicate_aadhar = duplicate_aadhar.filter(~Q(id=self.instance.id)).first()
+            else:
+                duplicate_aadhar = duplicate_aadhar.first()
 
             if duplicate_aadhar != None:
                 raise serializers.ValidationError("UID number already exists! Please try with another aadhar number.")
@@ -49,7 +49,7 @@ class UserSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'middle_name', 'password', 'user_type', 'hospital_name',
+        fields = ['id', 'first_name', 'last_name', 'middle_name', 'password', 'user_type', 'hospital_name',
                   'phone', 'state',
                   'city', 'area', 'pincode', 'email', 'landline', 'fax_number', 'degree', 'speciality',
                   'aadhar_card', 'registration_no', 'default_language', 'designation', 'hospital']

@@ -43,10 +43,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'city',
-    # 'doctor',
-    # 'hospital',
     'language',
-    # 'staff',
     'state',
     'user',
 ]
