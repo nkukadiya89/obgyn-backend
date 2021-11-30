@@ -65,7 +65,7 @@ def update_user(request, id):
                     user.save()
 
                 data["success"] = "Update successfull"
-                return Response(data=data)
+                return Response(data=serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

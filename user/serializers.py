@@ -18,12 +18,8 @@ class UserSerializers(serializers.ModelSerializer):
             if len(aadhar_card) != 12 or not aadhar_card.isnumeric():
                 raise serializers.ValidationError("Please enter a valid UID number.")
 
-            if user_type == "DOCTOR":
-                duplicate_aadhar = User.objects.filter(user_type="DOCTOR",
-                                                       aadhar_card=aadhar_card)
-            elif user_type == "STAFF":
-                duplicate_aadhar = User.objects.filter(user_type="STAFF",
-                                                       aadhar_card=aadhar_card)
+            duplicate_aadhar = User.objects.filter((Q(user_type="DOCTOR") | Q(user_type="STAFF")),
+                                                   aadhar_card=aadhar_card)
 
             if self.partial:
                 duplicate_aadhar = duplicate_aadhar.filter(~Q(id=self.instance.id)).first()
@@ -52,4 +48,4 @@ class UserSerializers(serializers.ModelSerializer):
         fields = ['id', 'first_name', 'last_name', 'middle_name', 'password', 'user_type', 'hospital_name',
                   'phone', 'state',
                   'city', 'area', 'pincode', 'email', 'landline', 'fax_number', 'degree', 'speciality',
-                  'aadhar_card', 'registration_no', 'default_language', 'designation', 'hospital']
+                  'aadhar_card', 'registration_no', 'default_language', 'designation', 'hospital', 'username']
