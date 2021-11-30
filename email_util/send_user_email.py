@@ -1,17 +1,18 @@
+import os
+import smtplib
 from datetime import datetime, timedelta
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import os
+
 import jwt
 from decouple import config
-from django.template.loader import render_to_string
 from django.shortcuts import HttpResponse
-import smtplib
+from django.template.loader import render_to_string
 
 
 def generate_token(email=None, token_time=None):
-    exp_time = datetime.now() + timedelta(days=1)
+    exp_time = datetime.now() + timedelta(minutes=token_time)
     JWT_PAYLOAD = {
         "email": email,
         "exp": exp_time
@@ -21,7 +22,6 @@ def generate_token(email=None, token_time=None):
 
 
 def decode_token(token):
-
     payload = jwt.decode(token, config('SECRET_KEY'), algorithms='HS256')
 
     return payload
@@ -40,7 +40,6 @@ def send_mail(subject, template, data):
     elif template == "reset-pass.html":
         context["path"] = app_url + "business/reset-password/"
         context["token"] = data["token"]
-
 
     html_body = render_to_string(template, context)
 

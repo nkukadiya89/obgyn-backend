@@ -14,12 +14,12 @@ from .models import User
 from .serializers import UserSerializers
 
 
-
-
 # Create your views here.
 
 # REGISTER HOSPITAL/DOCTOR/STAFF
 @api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([AllowAny])
 def register_view(request):
     if request.method == 'POST':
         user = User()
@@ -39,8 +39,40 @@ def register_view(request):
         return Response(data)
 
 
+@api_view(['PUT', 'PATCH'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def update_user(request, id):
+    if request.method == "PUT" or request.method == 'PATCH':
+        try:
+            if id:
+                user = User.objects.get(pk=id)
+            else:
+                user = User.objects.all()
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if request.method == "PUT" or request.method == "PATCH":
+            serializer = UserSerializers(user, request.data, partial=True)
+
+            data = {}
+            if serializer.is_valid():
+                serializer.save()
+
+                user = serializer.save()
+                if "password" in request.data:
+                    user.set_password(request.data["password"])
+                    user.save()
+
+                data["success"] = "Update successfull"
+                return Response(data=data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 # ================= Retrieve Single or Multiple records=========================
 @api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([AllowAny])
 def get_user(request, type, id=None):
     try:
         user = User.objects.filter(deleted=0)
