@@ -90,6 +90,7 @@ class User(AbstractUser):
         db_table = 'user'
 
     def save(self, *args, **kwargs):
-        self.username = self.email
+        if self.user_type != "HOSPITAL":
+            self.username = self.email
 
         super(User, self).save(*args, **kwargs)
