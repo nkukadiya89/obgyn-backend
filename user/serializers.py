@@ -19,7 +19,7 @@ class UserSerializers(serializers.ModelSerializer):
                 raise serializers.ValidationError("Please enter a valid UID number.")
 
             duplicate_aadhar = User.objects.filter((Q(user_type="DOCTOR") | Q(user_type="STAFF")),
-                                                   aadhar_card=aadhar_card)
+                                                   aadhar_card__iexact=aadhar_card)
 
             if self.partial:
                 duplicate_aadhar = duplicate_aadhar.filter(~Q(id=self.instance.id)).first()

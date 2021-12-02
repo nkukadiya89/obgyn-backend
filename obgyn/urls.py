@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView,TokenVerifyView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
 urlpatterns = [
     path('gettoken/', TokenObtainPairView.as_view(), name="get_token"),
@@ -26,4 +26,5 @@ urlpatterns = [
     path('city/', include('city.urls')),
     path('state/', include('state.urls')),
     path('language/', include('language.urls')),
+    path('medicine/', include('medicine.urls')),
 ]
