@@ -1,16 +1,17 @@
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-# from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 from .models import LanguageModel
 from .serializers import LanguageSerializers
+from rest_framework.permissions import IsAuthenticated
+
+from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 
 class LanguageAPI(APIView):
-    # authentication_classes = (JWTTokenUserAuthentication,)
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = (JWTTokenUserAuthentication,)
+    permission_classes = [IsAuthenticated]
 
     # ================= Retrieve Single or Multiple records=========================
     def get(self, request, id=None):
@@ -38,7 +39,8 @@ class LanguageAPI(APIView):
             data = {}
             if serializer.is_valid():
                 serializer.save()
-                data["success"] = "Complete Update successfully"
+                data["success"] = "Update successfully"
+                data["data"] = serializer.data
                 return Response(data=data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -52,13 +54,14 @@ class LanguageAPI(APIView):
         except LanguageModel.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        if request.method == "PUT":
+        if request.method == "PATCH":
             serializer = LanguageSerializers(language, request.data, partial=True)
 
             data = {}
             if serializer.is_valid():
                 serializer.save()
-                data["success"] = "Partial Update successfully"
+                data["success"] = "Update successfully"
+                data["data"] = serializer.data
                 return Response(data=data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

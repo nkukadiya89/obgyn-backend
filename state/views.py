@@ -38,7 +38,8 @@ class StateAPI(APIView):
             data = {}
             if serializer.is_valid():
                 serializer.save()
-                data["success"] = "Complete Update successfully"
+                data["success"] = "Update successfully"
+                data["data"] = serializer.data
                 return Response(data=data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -52,13 +53,14 @@ class StateAPI(APIView):
         except StateModel.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        if request.method == "PUT":
+        if request.method == "PATCH":
             serializer = StateSerializers(state, request.data, partial=True)
 
             data = {}
             if serializer.is_valid():
                 serializer.save()
-                data["success"] = "Partial Update successfully"
+                data["success"] = "Update successfully"
+                data["data"]=serializer.data
                 return Response(data=data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

@@ -1,5 +1,5 @@
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
@@ -9,8 +9,8 @@ from .serializers import CitySerializers
 
 
 class CityAPI(APIView):
-    # authentication_classes = (JWTTokenUserAuthentication,)
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = (JWTTokenUserAuthentication,)
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     # ================= Retrieve Single or Multiple records=========================
     def get(self, request, id=None):
@@ -39,11 +39,13 @@ class CityAPI(APIView):
             if serializer.is_valid():
                 serializer.save()
                 data["success"] = "Complete Update successfully"
+                data["data"] = serializer.data
                 return Response(data=data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # ================= Partial Update of a record  =========================
     def patch(self, request, id):
+        print(id)
         try:
             if id:
                 city = CityModel.objects.get(city_id=id)
@@ -52,13 +54,14 @@ class CityAPI(APIView):
         except CityModel.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        if request.method == "PUT":
+        if request.method == "PATCH":
             serializer = CitySerializers(city, request.data, partial=True)
 
             data = {}
             if serializer.is_valid():
                 serializer.save()
                 data["success"] = "Partial Update successfully"
+                data["data"] = serializer.data
                 return Response(data=data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
