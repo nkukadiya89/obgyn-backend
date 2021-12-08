@@ -19,6 +19,11 @@ class LanguageSerializers(serializers.ModelSerializer):
 
         return data
 
+
+    languageId = serializers.IntegerField(source='language_id', read_only=True)
+    createdBy = serializers.IntegerField(source='created_by')
+
+
     class Meta:
         model = LanguageModel
-        fields = ['language_id', 'language', 'created_by', 'deleted']
+        fields = ['languageId', 'language', 'createdBy', 'deleted']

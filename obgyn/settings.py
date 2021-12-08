@@ -43,10 +43,14 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'city',
+    'diagnosis',
     'language',
+    'manage_fields',
     'medicine',
     'state',
+    'surgical_item',
     'user',
+
 ]
 
 MIDDLEWARE = [

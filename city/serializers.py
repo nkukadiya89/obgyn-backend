@@ -20,6 +20,10 @@ class CitySerializers(serializers.ModelSerializer):
 
         return data
 
+    cityId = serializers.IntegerField(source='city_id', read_only=True)
+    cityName = serializers.CharField(source='city_name')
+    createdBy = serializers.IntegerField(source='created_by')
+
     class Meta:
         model = CityModel
-        fields = ['city_id', 'city_name', 'state', 'created_by', 'deleted']
+        fields = ['cityId', 'cityName', 'state', 'createdBy', 'deleted']
