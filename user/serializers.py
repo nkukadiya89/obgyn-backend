@@ -43,9 +43,20 @@ class UserSerializers(serializers.ModelSerializer):
             pass
         return data
 
+    firstName = serializers.CharField(source='first_name', required=False)
+    lastName = serializers.CharField(source='last_name', required=False)
+    middleName = serializers.CharField(source='middle_name', required=False)
+    userType = serializers.CharField(source='user_type')
+    hospitalName = serializers.CharField(source='hospital_name', required=False)
+    faxNumber = serializers.CharField(source='fax_number', required=False)
+    aadharCard = serializers.CharField(source='aadhar_card', required=False)
+    registrationNo = serializers.CharField(source='registration_no', required=False)
+    defaultLanguage = serializers.IntegerField(source='default_language', required=False)
+    username = serializers.CharField(required=False)
+    createdBy = serializers.IntegerField(source='created_by')
+
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'middle_name', 'password', 'user_type', 'hospital_name',
-                  'phone', 'state',
-                  'city', 'area', 'pincode', 'email', 'landline', 'fax_number', 'degree', 'speciality',
-                  'aadhar_card', 'registration_no', 'default_language', 'designation', 'hospital', 'username']
+        fields = ['id', 'firstName', 'lastName', 'middleName', 'password', 'userType', 'hospitalName',
+                  'phone', 'state', 'city', 'area', 'pincode', 'email', 'landline', 'faxNumber', 'degree', 'speciality',
+                  'aadharCard', 'registrationNo', 'defaultLanguage', 'designation', 'hospital', 'username', 'createdBy']

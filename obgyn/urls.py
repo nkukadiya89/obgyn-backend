@@ -27,4 +27,7 @@ urlpatterns = [
     path('state/', include('state.urls')),
     path('language/', include('language.urls')),
     path('medicine/', include('medicine.urls')),
+    path('diagnosis/', include('diagnosis.urls')),
+    path('surgical-item/', include('surgical_item.urls')),
+    path('m-fields/', include('manage_fields.urls')),
 ]
