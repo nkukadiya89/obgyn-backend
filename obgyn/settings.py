@@ -56,6 +56,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -158,3 +159,6 @@ SIMPLE_JWT = {
     # 'USER_ID_FIELD': 'email',
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+ALLOWED_HOSTS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
