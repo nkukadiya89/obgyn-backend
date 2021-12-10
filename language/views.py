@@ -4,14 +4,14 @@ from rest_framework.views import APIView
 
 from .models import LanguageModel
 from .serializers import LanguageSerializers
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,IsAuthenticatedOrReadOnly
 
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 
 class LanguageAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     # ================= Retrieve Single or Multiple records=========================
     def get(self, request, id=None):
@@ -25,7 +25,7 @@ class LanguageAPI(APIView):
 
         if request.method == "GET":
             serilizer = LanguageSerializers(language, many=True)
-            return Response(serilizer.data)
+            return Response(data=serilizer.data, status=status.HTTP_200_OK)
 
     # ================= Update all Fields of a record =========================
     def put(self, request, id):
