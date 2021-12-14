@@ -32,16 +32,19 @@ def register_view(request):
             new_user = serializer.save()
             user.set_password(request.data["password"])
             user.save()
+            data["success"] = True
+            data["msg"] = "OK"
             data['response'] = "successfully register a new user."
             data['email'] = new_user.email
         else:
-            data = serializer.errors
+            data["error"] = serializer.errors
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
         return Response(data)
 
 
 @api_view(['PUT', 'PATCH'])
-@authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+# @authentication_classes([JWTAuthentication])
+# @permission_classes([IsAuthenticated])
 def update_user(request, id):
     if request.method == "PUT" or request.method == 'PATCH':
         try:
@@ -54,18 +57,22 @@ def update_user(request, id):
 
         if request.method == "PUT" or request.method == "PATCH":
             serializer = UserSerializers(user, request.data, partial=True)
-
             data = {}
             if serializer.is_valid():
                 serializer.save()
 
                 user = serializer.save()
+
                 if "password" in request.data:
                     user.set_password(request.data["password"])
                     user.save()
 
                 data["success"] = "Update successfull"
-                return Response(data=serializer.data)
+                data["success"] = True
+                data["msg"] = "OK"
+                data["data"] = serializer.data
+                return Response(data=data, status=status.HTTP_200_OK)
+
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -78,16 +85,19 @@ def get_user(request, type, id=None):
         user = User.objects.filter(deleted=0)
         if type:
             user = User.objects.filter(user_type=type.upper())
-
         if id:
             user = user.filter(pk=id)
 
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    data = {}
     if request.method == "GET":
-        serilizer = UserSerializers(user, many=True)
-        return Response(serilizer.data)
+        data["success"] = True
+        data["msg"] = "OK"
+        serializer = UserSerializers(user, many=True)
+        data["data"] = serializer.data
+        return Response(data=data, status=status.HTTP_200_OK)
 
 
 # CHANGE PASSWORD
