@@ -51,7 +51,7 @@ class UserSerializers(serializers.ModelSerializer):
     faxNumber = serializers.CharField(source='fax_number', required=False)
     aadharCard = serializers.CharField(source='aadhar_card', required=False)
     registrationNo = serializers.CharField(source='registration_no', required=False)
-    defaultLanguage = serializers.IntegerField(source='default_language', required=False)
+    defaultLanguage = serializers.IntegerField(source='default_language_id', required=False)
     username = serializers.CharField(required=False)
     createdBy = serializers.IntegerField(source='created_by')
 

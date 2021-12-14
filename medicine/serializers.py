@@ -84,14 +84,19 @@ class MedicineSerializers(serializers.ModelSerializer):
         return data
 
     medicineId = serializers.CharField(source='medicine_id', read_only=True)
-    medicineType = serializers.IntegerField(source='medicine_type')
+    medicineType = serializers.PrimaryKeyRelatedField(queryset=MedicineTypeModel.objects.all(), many=False,
+                                                      source='medicine_type_id')
     perDay = serializers.IntegerField(source='per_day')
     forDay = serializers.IntegerField(source='for_day')
     totalTablet = serializers.IntegerField(source='total_tablet', read_only=True)
-    morningTiming = serializers.IntegerField(source='morning_timing')
-    noonTiming = serializers.IntegerField(source='noon_timing')
-    eveningTiming = serializers.IntegerField(source='evening_timing')
-    bedTiming = serializers.IntegerField(source='bed_timing')
+    morningTiming = serializers.PrimaryKeyRelatedField(queryset=TimingModel.objects.all(), many=False,
+                                                       source='morning_timing_id')
+    noonTiming = serializers.PrimaryKeyRelatedField(queryset=TimingModel.objects.all(), many=False,
+                                                    source='noon_timing_id')
+    eveningTiming = serializers.PrimaryKeyRelatedField(queryset=TimingModel.objects.all(), many=False,
+                                                       source='evening_timing_id')
+    bedTiming = serializers.PrimaryKeyRelatedField(queryset=TimingModel.objects.all(), many=False,
+                                                   source='bed_timing_id')
     createdBy = serializers.IntegerField(source='created_by')
 
     class Meta:
