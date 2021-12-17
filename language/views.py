@@ -24,7 +24,7 @@ class LanguageAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "GET":
             serilizer = LanguageSerializers(language, many=True)
@@ -42,7 +42,7 @@ class LanguageAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "PUT":
             serializer = LanguageSerializers(language, request.data)
@@ -68,7 +68,7 @@ class LanguageAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "PATCH":
             serializer = LanguageSerializers(language, request.data, partial=True)
@@ -94,7 +94,7 @@ class LanguageAPI(APIView):
             data["success"] = False
             data["msg"] = "Record does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":
             language.deleted = 1

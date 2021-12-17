@@ -24,7 +24,7 @@ class CityAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "GET":
             serilizer = CitySerializers(city, many=True)
@@ -42,7 +42,7 @@ class CityAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "PUT":
             serializer = CitySerializers(city, request.data)
@@ -68,7 +68,7 @@ class CityAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "PATCH":
             serializer = CitySerializers(city, request.data, partial=True)
@@ -94,7 +94,7 @@ class CityAPI(APIView):
             data["success"] = False
             data["msg"] = "Record does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":
             city.deleted = 1

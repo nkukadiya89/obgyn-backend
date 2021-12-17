@@ -24,7 +24,7 @@ class MedicineAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "GET":
             serilizer = MedicineSerializers(medicine, many=True)
@@ -42,7 +42,7 @@ class MedicineAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "PUT":
             serializer = MedicineSerializers(medicine, request.data)
@@ -68,7 +68,7 @@ class MedicineAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "PATCH":
             serializer = MedicineSerializers(medicine, request.data, partial=True)
@@ -94,7 +94,7 @@ class MedicineAPI(APIView):
             data["success"] = False
             data["msg"] = "Record does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":
             medicine.deleted = 1
@@ -139,7 +139,7 @@ class MedicineTypeAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "GET":
             serilizer = MedicineTypeSerializers(medicine_type, many=True)
@@ -157,7 +157,7 @@ class MedicineTypeAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "PUT":
             serializer = MedicineTypeSerializers(medicine_type, request.data)
@@ -183,7 +183,7 @@ class MedicineTypeAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "PATCH":
             serializer = MedicineTypeSerializers(medicine_type, request.data, partial=True)
@@ -209,7 +209,7 @@ class MedicineTypeAPI(APIView):
             data["success"] = False
             data["msg"] = "Record does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":
             medicine_type.deleted = 1
@@ -254,7 +254,7 @@ class TimingAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "GET":
             serilizer = TimingSerializers(timing, many=True)
@@ -272,7 +272,7 @@ class TimingAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "PUT":
             serializer = TimingSerializers(timing, request.data)
@@ -298,7 +298,7 @@ class TimingAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "PATCH":
             serializer = TimingSerializers(timing, request.data, partial=True)
@@ -324,7 +324,7 @@ class TimingAPI(APIView):
             data["success"] = False
             data["msg"] = "Record does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":
             timing.deleted = 1
