@@ -24,7 +24,7 @@ class StateAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
 
         if request.method == "GET":
             serilizer = StateSerializers(state, many=True)
@@ -42,7 +42,7 @@ class StateAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
 
         if request.method == "PUT":
             serializer = StateSerializers(state, request.data)
@@ -68,7 +68,7 @@ class StateAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
 
         if request.method == "PATCH":
             serializer = StateSerializers(state, request.data, partial=True)
@@ -94,7 +94,7 @@ class StateAPI(APIView):
             data["success"] = False
             data["msg"] = "Record does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
 
         if request.method == "DELETE":
             state.deleted = 1

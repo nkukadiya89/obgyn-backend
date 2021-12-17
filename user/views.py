@@ -53,7 +53,7 @@ def update_user(request, id):
             else:
                 user = User.objects.all()
         except User.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_401_NOT_FOUND)
 
         if request.method == "PUT" or request.method == "PATCH":
             serializer = UserSerializers(user, request.data, partial=True)
@@ -89,7 +89,7 @@ def get_user(request, type, id=None):
             user = user.filter(pk=id)
 
     except User.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_401_NOT_FOUND)
 
     data = {}
     if request.method == "GET":
@@ -115,37 +115,46 @@ def change_password(request):
         user.set_password(new_password)
         user.save()
     else:
-        return Response("Old Password is incorrect", status=404)
+        return Response("Old Password is incorrect", status=401)
     return Response("Password successfully changed", status=200)
 
 
 @authentication_classes([JWTAuthentication])
 @permission_classes([AllowAny])
 @csrf_exempt
+@api_view(('POST',))
 def forget_password(request):
     data = json.loads(request.body.decode('utf-8'))
-
+    resp_data={}
     email = data.get("email", None)
     if email == None:
-        return HttpResponse("No Email Address found", status=404)
+        resp_data["success"] = False
+        resp_data["msg"] = "No Email Address found"
+
+        return Response(data=resp_data, status=status.HTTP_401_UNAUTHORIZED)
 
     token = generate_token(email, 60)
 
     user = User.objects.filter(email=email).first()
 
     if user == None:
-        return HttpResponse("Business is not registered with this email", status=404)
+        resp_data["success"] = False
+        resp_data["msg"] = "Business is not registered with this email"
+        return Response(data=resp_data, status=status.HTTP_401_UNAUTHORIZED)
 
     name = user.first_name
-    context = {}
 
+    context = {}
     context["name"] = name
     context["token"] = token
     context["email"] = email
     urlObject = request._current_scheme_host + request.path
     context["current_site"] = urlObject
     send_mail("Reset Your Password", "reset-pass.html", context)
-    return HttpResponse("Mail has been sent to your registered email", status=200)
+
+    resp_data["success"] = True
+    resp_data["msg"] = "Mail has been sent to your registered email"
+    return Response(data=resp_data, status=status.HTTP_200_OK)
 
 
 @csrf_exempt
@@ -155,25 +164,25 @@ def reset_password(request, token):
     try:
         data = json.loads(request.body.decode('utf-8'))
     except:
-        return HttpResponse("Service not available", status=404)
+        return HttpResponse("Service not available", status=401)
 
     try:
         payload = decode_token(token)
     except:
-        return HttpResponse("Token Expired", status=404)
+        return HttpResponse("Token Expired", status=401)
 
     if "email" not in payload:
-        return HttpResponse("No email found", status=404)
+        return HttpResponse("No email found", status=401)
 
     user = User.objects.filter(email=payload["email"]).first()
 
     if user == None:
-        return HttpResponse("No user found", status=404)
+        return HttpResponse("No user found", status=401)
 
     password = data.get("password", None)
 
     if password == None:
-        return HttpResponse("Reset Password not available", status=404)
+        return HttpResponse("Reset Password not available", status=401)
 
     user.set_password(password)
     user.save()

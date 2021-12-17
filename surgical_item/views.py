@@ -24,7 +24,7 @@ class SurgicalItemAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
 
         if request.method == "GET":
             serilizer = SurgicalItemSerializers(surgical_item, many=True)
@@ -42,7 +42,7 @@ class SurgicalItemAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
 
         if request.method == "PUT":
             serializer = SurgicalItemSerializers(surgical_item, request.data)
@@ -68,7 +68,7 @@ class SurgicalItemAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
 
         if request.method == "PATCH":
             serializer = SurgicalItemSerializers(surgical_item, request.data, partial=True)
@@ -94,7 +94,7 @@ class SurgicalItemAPI(APIView):
             data["success"] = False
             data["msg"] = "Record does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
 
         if request.method == "DELETE":
             surgical_item.deleted = 1
@@ -138,7 +138,7 @@ class SurgicalItemGroupAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
 
         if request.method == "GET":
             serilizer = SurgicalItemGroupSerializers(surgical_item_group, many=True)
@@ -156,7 +156,7 @@ class SurgicalItemGroupAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
 
         if request.method == "PUT":
             serializer = SurgicalItemGroupSerializers(surgical_item_group, request.data)
@@ -182,7 +182,7 @@ class SurgicalItemGroupAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
 
         if request.method == "PATCH":
             serializer = SurgicalItemGroupSerializers(surgical_item_group, request.data, partial=True)
@@ -208,7 +208,7 @@ class SurgicalItemGroupAPI(APIView):
             data["success"] = False
             data["msg"] = "Record does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
 
         if request.method == "DELETE":
             surgical_item_group.deleted = 1

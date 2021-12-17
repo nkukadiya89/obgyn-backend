@@ -24,7 +24,7 @@ class ManageFieldsAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
 
         if request.method == "GET":
             serilizer = ManageFieldsSerializers(manage_fields, many=True)
@@ -42,7 +42,7 @@ class ManageFieldsAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
 
         if request.method == "PUT":
             serializer = ManageFieldsSerializers(manage_fields, request.data)
@@ -68,7 +68,7 @@ class ManageFieldsAPI(APIView):
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
 
         if request.method == "PATCH":
             serializer = ManageFieldsSerializers(manage_fields, request.data, partial=True)
@@ -94,7 +94,7 @@ class ManageFieldsAPI(APIView):
             data["success"] = False
             data["msg"] = "Record does not exist"
             data["data"] = []
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            return Response(data=data, status=status.HTTP_401_NOT_FOUND)
 
         if request.method == "DELETE":
             manage_fields.deleted = 1
