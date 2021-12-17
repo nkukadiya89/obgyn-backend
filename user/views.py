@@ -53,7 +53,10 @@ def update_user(request, id):
             else:
                 user = User.objects.all()
         except User.DoesNotExist:
-            return Response(status=status.HTTP_401_NOT_FOUND)
+            data={}
+            data["success"] = False
+            data["msg"] ="User does not exist"
+            return Response(data=data,status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "PUT" or request.method == "PATCH":
             serializer = UserSerializers(user, request.data, partial=True)
@@ -89,7 +92,7 @@ def get_user(request, type, id=None):
             user = user.filter(pk=id)
 
     except User.DoesNotExist:
-        return Response(status=status.HTTP_401_NOT_FOUND)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     data = {}
     if request.method == "GET":
@@ -125,7 +128,7 @@ def change_password(request):
 @api_view(('POST',))
 def forget_password(request):
     data = json.loads(request.body.decode('utf-8'))
-    resp_data={}
+    resp_data = {}
     email = data.get("email", None)
     if email == None:
         resp_data["success"] = False
