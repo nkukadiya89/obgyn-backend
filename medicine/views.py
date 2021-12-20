@@ -1,5 +1,5 @@
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
@@ -10,7 +10,7 @@ from .serializers import MedicineSerializers, MedicineTypeSerializers, TimingSer
 
 class MedicineAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
     # ================= Retrieve Single or Multiple records=========================
     def get(self, request, id=None):
@@ -125,7 +125,7 @@ class MedicineAPI(APIView):
 
 class MedicineTypeAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
     # ================= Retrieve Single or Multiple records=========================
     def get(self, request, id=None):
@@ -240,7 +240,7 @@ class MedicineTypeAPI(APIView):
 
 class TimingAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
     # ================= Retrieve Single or Multiple records=========================
     def get(self, request, id=None):
