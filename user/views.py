@@ -46,6 +46,8 @@ def register_view(request):
 # @authentication_classes([JWTAuthentication])
 # @permission_classes([IsAuthenticated])
 def update_user(request, id):
+    data = {}
+
     if request.method == "PUT" or request.method == 'PATCH':
         try:
             if id:
@@ -53,17 +55,13 @@ def update_user(request, id):
             else:
                 user = User.objects.all()
         except User.DoesNotExist:
-            data={}
             data["success"] = False
             data["msg"] ="User does not exist"
             return Response(data=data,status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "PUT" or request.method == "PATCH":
             serializer = UserSerializers(user, request.data, partial=True)
-            data = {}
             if serializer.is_valid():
-                serializer.save()
-
                 user = serializer.save()
 
                 if "password" in request.data:
@@ -75,14 +73,18 @@ def update_user(request, id):
                 data["msg"] = "OK"
                 data["data"] = serializer.data
                 return Response(data=data, status=status.HTTP_200_OK)
+            else:
+                print("error")
+                data["success"] = False
+                data["msg"] =serializer.errors
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # ================= Retrieve Single or Multiple records=========================
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def get_user(request, type, id=None):
     try:
         user = User.objects.filter(deleted=0)

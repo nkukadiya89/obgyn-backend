@@ -10,6 +10,10 @@ class UserSerializers(serializers.ModelSerializer):
 
         user_type = data.get('user_type')
 
+        if "state" in data:
+            print("akasj")
+            print("state", data["state"])
+
         if user_type == "DOCTOR" or user_type == "STAFF":
 
             # CHECK DUPLICATE AADHAR CARD NO
@@ -40,7 +44,16 @@ class UserSerializers(serializers.ModelSerializer):
             email = data.get('email')
             data["username"] = email
         elif user_type == "HOSPITAL":
-            pass
+            username = data.get("username")
+            duplicate_username = User.objects.filter(username=username)
+            if self.partial:
+                duplicate_username = duplicate_username.filter(~Q(id=self.instance.id)).first()
+            else:
+                duplicate_username = duplicate_username.first()
+
+            if duplicate_username != None:
+                raise serializers.ValidationError("Username already taken.")
+
         return data
 
     firstName = serializers.CharField(source='first_name', required=False)

@@ -1,9 +1,11 @@
+from django.db.models import Q
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
+from utility.search_filter import pagination
 from .models import CityModel
 from .serializers import CitySerializers
 
@@ -12,26 +14,46 @@ class CityAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
     permission_classes = [IsAuthenticatedOrReadOnly]
 
+    data = {}
+    search_fields = ["city_name"]
+
     # ================= Retrieve Single or Multiple records=========================
     def get(self, request, id=None):
-        data = {}
+        query_string = request.query_params
+
+        if "order_by" not in query_string:
+            orderby = "city_id"
+        else:
+            orderby = str(query_string["order_by"])
         try:
             if id:
                 city = CityModel.objects.filter(pk=id)
             else:
                 city = CityModel.objects.all()
+
+            if "filter" in query_string:
+                filter = list(query_string["filter"].split(","))
+                if filter:
+                    city = self.filter_fields(city, filter)
+            if "search" in query_string:
+                city = self.search(city, query_string["search"])
+            if orderby:
+                city = city.order_by(orderby)
+            if "page" in query_string:
+                city, self.data["warning"] = pagination(city, query_string["page"])
+
         except CityModel.DoesNotExist:
-            data["success"] = False
-            data["msg"] = "Record Does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+            self.data["success"] = False
+            self.data["msg"] = "Record Does not exist"
+            self.data["data"] = []
+            return Response(data=self.data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "GET":
             serilizer = CitySerializers(city, many=True)
-            data["success"] = True
-            data["msg"] = "OK"
-            data["data"] = serilizer.data
-            return Response(data=data, status=status.HTTP_200_OK)
+            self.data["success"] = True
+            self.data["msg"] = "OK"
+            self.data["data"] = serilizer.data
+            return Response(data=self.data, status=status.HTTP_200_OK)
 
     # ================= Update all Fields of a record =========================
     def put(self, request, id):
@@ -121,3 +143,23 @@ class CityAPI(APIView):
             data["msg"] = serializer.errors
             data["data"] = serializer.data
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+    def filter_fields(self, city, filter_fields):
+
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "city_name":
+                city = city.filter(city_name__iexact=fld_value)
+            if fld_name == "state_id":
+                city = city.filter(state_id=fld_value)
+
+        return city
+
+    def search(self, city, search):
+        if search:
+            city = city.filter(
+                Q(city_name__icontains=search) |
+                Q(state__state_name__icontains=search)
+            )
+        return city
