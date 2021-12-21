@@ -10,10 +10,6 @@ class UserSerializers(serializers.ModelSerializer):
 
         user_type = data.get('user_type')
 
-        if "state" in data:
-            print("akasj")
-            print("state", data["state"])
-
         if user_type == "DOCTOR" or user_type == "STAFF":
 
             # CHECK DUPLICATE AADHAR CARD NO

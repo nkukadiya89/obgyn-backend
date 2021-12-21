@@ -34,12 +34,14 @@ def register_view(request):
             user.save()
             data["success"] = True
             data["msg"] = "OK"
-            data['response'] = "successfully register a new user."
+            data['response'] = "Successfully register a new user."
             data['email'] = new_user.email
         else:
-            data["error"] = serializer.errors
+            data["success"] = False
+            data["msg"] = "User Registration Failed."
+            data["errors"] = serializer.errors
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-        return Response(data)
+        return Response(data=data, status=status.HTTP_200_OK)
 
 
 @api_view(['PUT', 'PATCH'])
@@ -56,8 +58,8 @@ def update_user(request, id):
                 user = User.objects.all()
         except User.DoesNotExist:
             data["success"] = False
-            data["msg"] ="User does not exist"
-            return Response(data=data,status=status.HTTP_401_UNAUTHORIZED)
+            data["msg"] = "User does not exist"
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "PUT" or request.method == "PATCH":
             serializer = UserSerializers(user, request.data, partial=True)
@@ -68,17 +70,16 @@ def update_user(request, id):
                     user.set_password(request.data["password"])
                     user.save()
 
-                data["success"] = "Update successfull"
+                data["success"] = "Update successful"
                 data["success"] = True
                 data["msg"] = "OK"
                 data["data"] = serializer.data
                 return Response(data=data, status=status.HTTP_200_OK)
             else:
-                print("error")
                 data["success"] = False
-                data["msg"] =serializer.errors
+                data["msg"] = "Update user fail."
+                data["errors"] = serializer.errors
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
 
 
 # ================= Retrieve Single or Multiple records=========================
@@ -86,6 +87,7 @@ def update_user(request, id):
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def get_user(request, type, id=None):
+    data = {}
     try:
         user = User.objects.filter(deleted=0)
         if type:
@@ -94,9 +96,11 @@ def get_user(request, type, id=None):
             user = user.filter(pk=id)
 
     except User.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "User Does not exist"
+        data["data"] = []
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-    data = {}
     if request.method == "GET":
         data["success"] = True
         data["msg"] = "OK"
@@ -110,6 +114,7 @@ def get_user(request, type, id=None):
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def change_password(request):
+    data = {}
     user = request.user
 
     data = request.data
@@ -119,9 +124,15 @@ def change_password(request):
     if check_password(old_password, user.password):
         user.set_password(new_password)
         user.save()
+        data["success"] = True
+        data["msg"] = "OK"
+        data["data"] = "Password successfully changed."
     else:
-        return Response("Old Password is incorrect", status=401)
-    return Response("Password successfully changed", status=200)
+        data["success"] = False
+        data["msg"] = "Old Password is incorrect."
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    return Response(data=data, status=status.HTTP_200_OK)
 
 
 @authentication_classes([JWTAuthentication])
