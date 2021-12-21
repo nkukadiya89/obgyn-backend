@@ -69,3 +69,4 @@ class UserSerializers(serializers.ModelSerializer):
         fields = ['id', 'firstName', 'lastName', 'middleName', 'password', 'userType', 'hospitalName',
                   'phone', 'state', 'city', 'area', 'pincode', 'email', 'landline', 'faxNumber', 'degree', 'speciality',
                   'aadharCard', 'registrationNo', 'defaultLanguage', 'designation', 'hospital', 'username', 'createdBy']
+
