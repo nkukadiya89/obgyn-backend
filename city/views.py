@@ -1,3 +1,4 @@
+from decouple import config
 from django.db.models import Q
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -40,7 +41,11 @@ class CityAPI(APIView):
             if orderby:
                 city = city.order_by(orderby)
             if "page" in query_string:
-                city, self.data["warning"] = pagination(city, query_string["page"])
+                if "pageRecord" in query_string:
+                    pageRecord = query_string["pageRecord"]
+                else:
+                    pageRecord = config('PAGE_LIMIT')
+                city, self.data["warning"], total_page = pagination(city, query_string["page"], pageRecord)
 
         except CityModel.DoesNotExist:
             self.data["success"] = False
@@ -145,7 +150,6 @@ class CityAPI(APIView):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
     def filter_fields(self, city, filter_fields):
-
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]

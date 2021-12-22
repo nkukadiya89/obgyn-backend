@@ -1,15 +1,18 @@
 import json
 
+from decouple import config
 from django.contrib.auth.hashers import check_password
+from django.db.models import Q
 from django.shortcuts import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from email_util.send_user_email import generate_token, decode_token, send_mail
+from utility.search_filter import pagination, camel_to_snake
 from .models import User
 from .serializers import UserSerializers
 
@@ -28,7 +31,6 @@ def register_view(request):
 
         data = {}
         if serializer.is_valid():
-
             new_user = serializer.save()
             user.set_password(request.data["password"])
             user.save()
@@ -82,11 +84,88 @@ def update_user(request, id):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
 
+def filter_fields(user, filter_fields):
+    for fields in filter_fields:
+        fld_name = camel_to_snake(fields.split("=")[0])
+        fld_value = fields.split("=")[1]
+        if fld_name == "first_name":
+            user = user.filter(first_name__iexact=fld_value)
+        if fld_name == "middle_name":
+            user = user.filter(middle_name__iexact=fld_value)
+        if fld_name == "last_name":
+            user = user.filter(last_name__iexact=fld_value)
+        if fld_name == "user_type":
+            user = user.filter(user_type__iexact=fld_value)
+        if fld_name == "hospital_name":
+            user = user.filter(hospital_name__iexact=fld_value)
+        if fld_name == "phone":
+            user = user.filter(phone=fld_value)
+        if fld_name == "state_id":
+            user = user.filter(state_id=fld_value)
+        if fld_name == "city_id":
+            user = user.filter(city_id=fld_value)
+        if fld_name == "area_id":
+            user = user.filter(area_id=fld_value)
+        if fld_name == "pincode":
+            user = user.filter(pincode=fld_value)
+        if fld_name == "email":
+            user = user.filter(email__iexact=fld_value)
+        if fld_name == "landline":
+            user = user.filter(landline=fld_value)
+        if fld_name == "faxNumber":
+            user = user.filter(faxNumber=fld_value)
+        if fld_name == "degree":
+            user = user.filter(degree__iexact=fld_value)
+        if fld_name == "speciality":
+            user = user.filter(speciality__iexact=fld_value)
+        if fld_name == "aadhar_card":
+            user = user.filter(aadhar_card__iexact=fld_value)
+        if fld_name == "registration_no":
+            user = user.filter(registration_no=fld_value)
+        if fld_name == "default_language_id":
+            user = user.filter(default_language_id=fld_value)
+        if fld_name == "designation":
+            user = user.filter(designation__iexact=fld_value)
+        if fld_name == "designation":
+            user = user.filter(registration_no=fld_value)
+    return user
+
+
+def search(user, search):
+    if search:
+        user = user.filter(
+            Q(first_name__icontains=search) |
+            Q(middle_name__icontains=search) |
+            Q(user_type__icontains=search) |
+            Q(hospital_name__icontains=search) |
+            Q(state__state_name__icontains=search) |
+            Q(city__city_name__icontains=search) |
+            Q(email__icontains=search) |
+            Q(landline__icontains=search) |
+            Q(faxno__icontains=search) |
+            Q(degree__icontains=search) |
+            Q(speciality__icontains=search) |
+            Q(aadhar_card__icontains=search) |
+            Q(registration_no__icontains=search) |
+            Q(default_language__language__icontains=search) |
+            Q(designation__icontains=search) |
+            Q(username__icontains=search)
+        )
+    return user
+
+
 # ================= Retrieve Single or Multiple records=========================
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticatedOrReadOnly])
 def get_user(request, type, id=None):
+    query_string = request.query_params
+
+    if "order_by" not in query_string:
+        orderby = "city_id"
+    else:
+        orderby = str(query_string["order_by"])
+
     data = {}
     try:
         user = User.objects.filter(deleted=0)
@@ -94,6 +173,22 @@ def get_user(request, type, id=None):
             user = User.objects.filter(user_type=type.upper())
         if id:
             user = user.filter(pk=id)
+
+        if "filter" in query_string:
+            filter = list(query_string["filter"].split(","))
+            if filter:
+                user = filter_fields(user, filter)
+        if "search" in query_string:
+            user = search(user, query_string["search"])
+        if orderby:
+            user = user.order_by(orderby)
+        if "page" in query_string:
+            if "pageRecord" in query_string:
+                pageRecord = query_string["pageRecord"]
+            else:
+                pageRecord = config('PAGE_LIMIT')
+
+            user, data["warning"], total_page = pagination(user, query_string["page"], pageRecord)
 
     except User.DoesNotExist:
         data["success"] = False
@@ -112,7 +207,7 @@ def get_user(request, type, id=None):
 # CHANGE PASSWORD
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticatedOrReadOnly])
 def change_password(request):
     data = {}
     user = request.user
