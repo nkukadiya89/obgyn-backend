@@ -112,8 +112,8 @@ def filter_fields(user, filter_fields):
             user = user.filter(email__iexact=fld_value)
         if fld_name == "landline":
             user = user.filter(landline=fld_value)
-        if fld_name == "faxNumber":
-            user = user.filter(faxNumber=fld_value)
+        if fld_name == "fax_number":
+            user = user.filter(fax_number=fld_value)
         if fld_name == "degree":
             user = user.filter(degree__iexact=fld_value)
         if fld_name == "speciality":
@@ -142,7 +142,7 @@ def search(user, search):
             Q(city__city_name__icontains=search) |
             Q(email__icontains=search) |
             Q(landline__icontains=search) |
-            Q(faxno__icontains=search) |
+            Q(fax_number__icontains=search) |
             Q(degree__icontains=search) |
             Q(speciality__icontains=search) |
             Q(aadhar_card__icontains=search) |
