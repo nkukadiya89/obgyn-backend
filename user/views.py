@@ -46,13 +46,13 @@ def register_view(request):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-@api_view(['PUT', 'PATCH'])
+@api_view(['POST'])
 # @authentication_classes([JWTAuthentication])
 # @permission_classes([IsAuthenticated])
 def update_user(request, id):
     data = {}
 
-    if request.method == "PUT" or request.method == 'PATCH':
+    if request.method == "POST":
         try:
             if id:
                 user = User.objects.get(pk=id)
@@ -63,7 +63,7 @@ def update_user(request, id):
             data["msg"] = "User does not exist"
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-        if request.method == "PUT" or request.method == "PATCH":
+        if request.method == "POST":
             serializer = UserSerializers(user, request.data, partial=True)
             if serializer.is_valid():
                 user = serializer.save()
@@ -161,10 +161,19 @@ def search(user, search):
 def get_user(request, type, id=None):
     query_string = request.query_params
 
-    if "order_by" not in query_string:
-        orderby = "city_id"
+    if "orderBy" not in query_string:
+        orderby = "id"
     else:
-        orderby = str(query_string["order_by"])
+        orderby = camel_to_snake(str(query_string["orderBy"]))
+
+    if "sortBy" not in query_string:
+        sortby = "asc"
+    else:
+        sortby = str(query_string["sortBy"])
+        if sortby.lower() == "desc":
+            sortby = "-"
+        else:
+            sortby = ""
 
     data = {}
     try:
@@ -181,6 +190,10 @@ def get_user(request, type, id=None):
         if "search" in query_string:
             user = search(user, query_string["search"])
         if orderby:
+            if sortby:
+                orderby = sortby + orderby
+
+            print(orderby)
             user = user.order_by(orderby)
         if "page" in query_string:
             if "pageRecord" in query_string:
@@ -188,7 +201,7 @@ def get_user(request, type, id=None):
             else:
                 pageRecord = config('PAGE_LIMIT')
 
-            user, data["warning"], total_page = pagination(user, query_string["page"], pageRecord)
+            user, data["warning"], data["total_page"] = pagination(user, query_string["page"], pageRecord)
 
     except User.DoesNotExist:
         data["success"] = False
@@ -299,3 +312,32 @@ def reset_password(request, token):
     user.save()
 
     return HttpResponse("Password successfully changed", status=200)
+
+
+@csrf_exempt
+@authentication_classes(JWTAuthentication)
+@permission_classes([IsAuthenticatedOrReadOnly])
+@api_view(('POST',))
+def delete_user(request):
+    body = json.loads(request.body.decode('utf-8'))
+    data = {}
+    if "id" not in body:
+        data["success"] = False
+        data["msg"] = "Record ID not provided"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    try:
+        user = User.objects.filter(id__in=body["id"])
+    except User.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "POST":
+        result = user.update(deleted=1)
+        data["success"] = True
+        data["msg"] = "Data deleted successfully."
+        data["deleted"] = result
+        return Response(data=data, status=status.HTTP_200_OK)

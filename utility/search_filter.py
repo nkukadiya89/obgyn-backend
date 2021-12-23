@@ -17,6 +17,7 @@ def pagination(recordset, page, pageRecord=5):
         recordset = p.page(p.num_pages)
     else:
         recordset = p.page(page)
+
     return recordset, warning, p.num_pages
 
 
