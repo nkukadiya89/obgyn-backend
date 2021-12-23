@@ -1,5 +1,5 @@
-from rest_framework import serializers
 from django.db.models import Q
+from rest_framework import serializers
 
 from .models import LanguageModel
 
@@ -19,11 +19,9 @@ class LanguageSerializers(serializers.ModelSerializer):
 
         return data
 
-
     languageId = serializers.IntegerField(source='language_id', read_only=True)
     createdBy = serializers.IntegerField(source='created_by')
 
-
     class Meta:
         model = LanguageModel
-        fields = ['languageId', 'language', 'createdBy', 'deleted']
+        fields = ['languageId', 'language', 'code', 'createdBy', 'deleted']

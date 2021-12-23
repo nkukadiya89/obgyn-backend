@@ -1,3 +1,5 @@
+import json
+
 from decouple import config
 from django.db.models import Q
 from rest_framework import status
@@ -39,7 +41,8 @@ class CityAPI(APIView):
             if "search" in query_string:
                 city = self.search(city, query_string["search"])
             if orderby:
-                city = city.order_by(orderby)
+                # city = city.order_by(orderby)
+                city = city.order_by(orderby.asc())
             if "page" in query_string:
                 if "pageRecord" in query_string:
                     pageRecord = query_string["pageRecord"]
@@ -113,21 +116,29 @@ class CityAPI(APIView):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
     # ================= Delete Record =========================
-    def delete(self, request, id):
+    def delete(self, request):
         data = {}
+        del_id = json.loads(request.body.decode('utf-8'))
+
+        if "id" not in del_id:
+            data["success"] = False
+            data["msg"] = "Record ID not provided"
+            data["data"] = []
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
         try:
-            city = CityModel.objects.get(pk=id)
-        except CityModel.DoesNotExist:
+            city = CityModel.objects.filter(city_id__in=del_id["id"])
+        except CityModel:
             data["success"] = False
             data["msg"] = "Record does not exist"
             data["data"] = []
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":
-            city.deleted = 1
-            city.save()
+            result = city.update(deleted=1)
             data["success"] = True
             data["msg"] = "Data deleted successfully."
+            data["deleted"] = result
             return Response(data=data, status=status.HTTP_200_OK)
 
     # ================= Create New Record=========================
