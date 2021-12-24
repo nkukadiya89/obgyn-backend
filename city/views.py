@@ -28,6 +28,16 @@ class CityAPI(APIView):
             orderby = "city_id"
         else:
             orderby = str(query_string["order_by"])
+
+        if "sortBy" not in query_string:
+            sortby = ""
+        else:
+            sortby = str(query_string["sortBy"])
+            if sortby.lower() == "desc":
+                sortby = "-"
+            else:
+                sortby = ""
+
         try:
             if id:
                 city = CityModel.objects.filter(pk=id)
@@ -41,8 +51,10 @@ class CityAPI(APIView):
             if "search" in query_string:
                 city = self.search(city, query_string["search"])
             if orderby:
-                # city = city.order_by(orderby)
-                city = city.order_by(orderby.asc())
+                if sortby:
+                    orderby = sortby + orderby
+
+                city = city.order_by(orderby)
             if "page" in query_string:
                 if "pageRecord" in query_string:
                     pageRecord = query_string["pageRecord"]
