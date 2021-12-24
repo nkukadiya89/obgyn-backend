@@ -62,7 +62,7 @@ class User(AbstractUser):
     city = models.ForeignKey(CityModel, on_delete=models.DO_NOTHING, null=True)
     area = models.CharField(max_length=250, null=True)
     pincode = models.CharField(max_length=20, null=True)
-    default_language = models.ForeignKey(LanguageModel, on_delete=models.SET_NULL, null=True)
+    default_language = models.ForeignKey(LanguageModel, on_delete=models.SET_DEFAULT, default=1)
 
     # FIELDS FOR DOCTOR
     hospital = models.ForeignKey("self", on_delete=models.SET_NULL, null=True)
