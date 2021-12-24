@@ -167,7 +167,7 @@ def get_user(request, type, id=None):
         orderby = camel_to_snake(str(query_string["orderBy"]))
 
     if "sortBy" not in query_string:
-        sortby = "asc"
+        sortby = ""
     else:
         sortby = str(query_string["sortBy"])
         if sortby.lower() == "desc":

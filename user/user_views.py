@@ -1,5 +1,9 @@
+
+
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+from language.models import LanguageModel
+
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -8,7 +12,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data = {}
         token = super(CustomTokenObtainPairSerializer, self).validate(attrs)
         token.update({"userData": {'userName': self.user.username, 'userId': self.user.id,
-                                   "defaultLanguageId": self.user.default_language_id}})
+                                   "defaultLanguageId": LanguageModel.objects.get(pk=self.user.default_language_id).code}})
         token.update()
         data["success"] = True
         data["msg"] = "Login Successful"
