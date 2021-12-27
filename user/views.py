@@ -93,7 +93,7 @@ def get_user(request, type, id=None):
     try:
         user = User.objects.filter(deleted=0)
         if type:
-            user = User.objects.filter(userType__iexact=type.upper())
+            user = User.objects.filter(user_type__iexact=type.upper())
         if id:
             user = user.filter(pk=id)
         user, data = user_filtering_query(user, query_string, "id", "USER")

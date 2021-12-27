@@ -39,7 +39,7 @@ def user_filtering_query(model, query_string, model_id,classnm):
     if "orderBy" not in query_string:
         orderby = model_id
     else:
-        orderby = camel_to_snake(str(query_string["orderBy"]))
+        orderby = str(query_string["orderBy"])
 
     if "sortBy" not in query_string:
         sortby = ""
@@ -56,6 +56,7 @@ def user_filtering_query(model, query_string, model_id,classnm):
             model = eval(func_name_filter + "(model, filter)")
     if "search" in query_string:
         model = eval(func_name_search + "(model, query_string)")
+
 
     if orderby:
         if sortby:
@@ -100,6 +101,8 @@ def filtering_query(model, query_string, model_id,classnm):
     if orderby:
         if sortby:
             orderby = sortby + orderby
+
+
         model = model.order_by(orderby)
     if "page" in query_string:
         if "pageRecord" in query_string:

@@ -52,14 +52,14 @@ class UserSerializers(serializers.ModelSerializer):
 
         return data
 
-    firstName = serializers.CharField(source='first_name',required=False)
-    lastName = serializers.CharField(source='last_name', required=False)
+    first_name = serializers.CharField(required=False)
+    last_name = serializers.CharField(required=False)
     username = serializers.CharField(required=False)
-    userCode = serializers.CharField(read_only=True)
+    user_code = serializers.CharField(read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'firstName', 'lastName', 'middleName', 'password', 'userType', 'hospitalName',
-                  'phone', 'state', 'city', 'area', 'pincode', 'email', 'landline', 'faxNumber', 'degree', 'speciality',
-                  'aadharCard', 'registrationNo', 'defaultLanguage', 'designation', 'hospital', 'username', 'userCode',
-                  'createdBy']
+        fields = ['id', 'first_name', 'last_name', 'middle_name', 'password', 'user_type', 'hospital_name',
+                  'phone', 'state', 'city', 'area', 'pincode', 'email', 'landline', 'fax_number', 'degree', 'speciality',
+                  'aadhar_card', 'registration_no', 'default_language', 'designation', 'hospital', 'username', 'user_code',
+                  'created_by']
