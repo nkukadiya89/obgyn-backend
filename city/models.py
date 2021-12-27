@@ -7,7 +7,7 @@ from django.utils.timezone import now
 class CityModel(models.Model):
     cityId = models.AutoField(primary_key=True)
     cityName = models.CharField(max_length=50)
-    state = models.ForeignKey(StateModel, on_delete=models.CASCADE, db_column="stateId", related_name="stateID")
+    state = models.ForeignKey(StateModel, on_delete=models.CASCADE, db_column="stateId")
 
     createdBy = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
