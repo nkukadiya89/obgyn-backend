@@ -12,7 +12,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data = {}
         token = super(CustomTokenObtainPairSerializer, self).validate(attrs)
         token.update({"userData": {'userName': self.user.username, 'userId': self.user.id,
-                                   "defaultLanguageId": LanguageModel.objects.get(pk=self.user.defaultLanguage_id).code}})
+                                   "defaultLanguageId": LanguageModel.objects.get(pk=self.user.default_language_id).code}})
         token.update()
         data["success"] = True
         data["msg"] = "Login Successful"
