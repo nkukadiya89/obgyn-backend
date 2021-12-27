@@ -52,8 +52,8 @@ class UserSerializers(serializers.ModelSerializer):
 
         return data
 
-    firstName = serializers.CharField(source='first_name')
-    lastName = serializers.CharField(source='last_name')
+    firstName = serializers.CharField(source='first_name',required=False)
+    lastName = serializers.CharField(source='last_name', required=False)
     username = serializers.CharField(required=False)
     userCode = serializers.CharField(read_only=True)
 
