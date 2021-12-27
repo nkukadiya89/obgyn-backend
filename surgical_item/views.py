@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated,IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
-
+import json
 from .models import SurgicalItemModel,SurgicalItemGroupModel
 from .serializers import SurgicalItemSerializers, SurgicalItemGroupSerializers
 
@@ -70,7 +70,7 @@ class SurgicalItemAPI(APIView):
             data["data"] = []
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-        if request.method == "PATCH":
+        if request.method == "POST":
             serializer = SurgicalItemSerializers(surgical_item, request.data, partial=True)
 
             if serializer.is_valid():
@@ -86,10 +86,17 @@ class SurgicalItemAPI(APIView):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
     # ================= Delete Record =========================
-    def delete(self, request, id):
+    def delete(self, request):
         data = {}
+        del_id = json.loads(request.body.decode('utf-8'))
+        if "id" not in del_id:
+            data["success"] = False
+            data["msg"] = "Record ID not provided"
+            data["data"] = []
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
         try:
-            surgical_item = SurgicalItemModel.objects.get(pk=id)
+            surgical_item = SurgicalItemModel.objects.get(surgicalItemId__in=del_id["id"])
         except SurgicalItemModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
@@ -97,10 +104,10 @@ class SurgicalItemAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":
-            surgical_item.deleted = 1
-            surgical_item.save()
+            result = surgical_item.update(deleted=1)
             data["success"] = True
             data["msg"] = "Data deleted successfully."
+            data["deleted"] = result
             return Response(data=data, status=status.HTTP_200_OK)
 
     # ================= Create New Record=========================
@@ -184,7 +191,7 @@ class SurgicalItemGroupAPI(APIView):
             data["data"] = []
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-        if request.method == "PATCH":
+        if request.method == "POST":
             serializer = SurgicalItemGroupSerializers(surgical_item_group, request.data, partial=True)
 
             if serializer.is_valid():
@@ -200,10 +207,17 @@ class SurgicalItemGroupAPI(APIView):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
     # ================= Delete Record =========================
-    def delete(self, request, id):
+    def delete(self, request):
         data = {}
+        del_id = json.loads(request.body.decode('utf-8'))
+        if "id" not in del_id:
+            data["success"] = False
+            data["msg"] = "Record ID not provided"
+            data["data"] = []
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
         try:
-            surgical_item_group = SurgicalItemGroupModel.objects.get(pk=id)
+            surgical_item_group = SurgicalItemGroupModel.objects.get(surgicalItemGroupId__in=del_id["id"])
         except SurgicalItemGroupModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
@@ -211,10 +225,10 @@ class SurgicalItemGroupAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":
-            surgical_item_group.deleted = 1
-            surgical_item_group.save()
+            result = surgical_item_group.update(deleted=1)
             data["success"] = True
             data["msg"] = "Data deleted successfully."
+            data["deleted"] = result
             return Response(data=data, status=status.HTTP_200_OK)
 
     # ================= Create New Record=========================

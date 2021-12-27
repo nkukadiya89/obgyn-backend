@@ -6,7 +6,7 @@ urlpatterns = [
     path('<int:id>/', MedicineAPI.as_view()),
     path('get/', MedicineAPI.as_view()),
     path('create/', MedicineAPI.as_view()),
-    path('delete/<int:id>/', MedicineAPI.as_view()),
+    path('delete/', MedicineAPI.as_view()),
 
     path('type/<int:id>/', MedicineTypeAPI.as_view()),
     path('type/get/', MedicineTypeAPI.as_view()),

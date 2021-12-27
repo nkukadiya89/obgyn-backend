@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
-
+import json
 from .models import ManageFieldsModel
 from .serializers import ManageFieldsSerializers
 
@@ -86,14 +86,22 @@ class ManageFieldsAPI(APIView):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
     # ================= Delete Record =========================
-    def delete(self, request, id):
+    def delete(self, request):
         data = {}
-        try:
-            manage_fields = ManageFieldsModel.objects.get(pk=id)
-        except ManageFieldsModel.DoesNotExist:
+        del_id = json.loads(request.body.decode('utf-8'))
+        if "id" not in del_id:
             data["success"] = False
-            data["msg"] = "Record does not exist"
+            data["msg"] = "Record ID not provided"
             data["data"] = []
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            manage_fields = ManageFieldsModel.objects.get(manageFieldsId__in=del_id["id"])
+        except ManageFieldsModel.DoesNotExist:
+            result = manage_fields.update(deleted=1)
+            data["success"] = True
+            data["msg"] = "Data deleted successfully."
+            data["deleted"] = result
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":

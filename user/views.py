@@ -1,7 +1,6 @@
 import json
 
 from django.contrib.auth.hashers import check_password
-from django.db.models import Q
 from django.shortcuts import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
@@ -11,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from email_util.send_user_email import generate_token, decode_token, send_mail
-from utility.search_filter import camel_to_snake, filtering_query
+from utility.search_filter import filtering_query
 from .models import User
 from .serializers import UserSerializers
 
@@ -94,11 +93,11 @@ def get_user(request, type, id=None):
     try:
         user = User.objects.filter(deleted=0)
         if type:
-            user = User.objects.filter(userType=type.upper())
+            user = User.objects.filter(userType__iexact=type.upper())
         if id:
             user = user.filter(pk=id)
-
-        user, data = filtering_query(user, query_string, "id","USER")
+        print(user)
+        user, data = filtering_query(user, query_string, "id", "USER")
         data["total_record"] = len(user)
     except User.DoesNotExist:
         data["success"] = False
