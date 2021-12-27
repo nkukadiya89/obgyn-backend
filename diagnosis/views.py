@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
-
+import json
 from .models import DiagnosisModel
 from .serializers import DiagnosisSerializers
 
@@ -70,7 +70,7 @@ class DiagnosisAPI(APIView):
             data["data"] = []
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-        if request.method == "PATCH":
+        if request.method == "POST":
             serializer = DiagnosisSerializers(diagnosis, request.data, partial=True)
 
             if serializer.is_valid():
@@ -86,10 +86,17 @@ class DiagnosisAPI(APIView):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
     # ================= Delete Record =========================
-    def delete(self, request, id):
+    def delete(self, request):
         data = {}
+        del_id = json.loads(request.body.decode('utf-8'))
+        if "id" not in del_id:
+            data["success"] = False
+            data["msg"] = "Record ID not provided"
+            data["data"] = []
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
         try:
-            diagnosis = DiagnosisModel.objects.get(pk=id)
+            diagnosis = DiagnosisModel.objects.get(diagnosisId__in=del_id["id"])
         except DiagnosisModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
@@ -97,10 +104,10 @@ class DiagnosisAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":
-            diagnosis.deleted = 1
-            diagnosis.save()
+            result = diagnosis.update(deleted=1)
             data["success"] = True
             data["msg"] = "Data deleted successfully."
+            data["deleted"] = result
             return Response(data=data, status=status.HTTP_200_OK)
 
     # ================= Create New Record=========================

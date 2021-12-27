@@ -3,6 +3,7 @@ import re
 from django.db.models import Q
 
 
+
 def camel_to_snake(variable_name):
     variable_name = re.sub(r'(?<!^)(?=[A-Z])', '_', variable_name).lower()
     return variable_name
@@ -13,12 +14,12 @@ class ModelFilterUSER:
         for fields in filter_fields:
             fld_name = camel_to_snake(fields.split("=")[0])
             fld_value = fields.split("=")[1]
-            if fld_name == "firstName":
-                model = model.filter(firstName__iexact=fld_value)
+            if fld_name == "first_name":
+                model = model.filter(first_name__iexact=fld_value)
             if fld_name == "middleName":
                 model = model.filter(middleName__iexact=fld_value)
-            if fld_name == "lastName":
-                model = model.filter(lastName__iexact=fld_value)
+            if fld_name == "last_name":
+                model = model.filter(last_name__iexact=fld_value)
             if fld_name == "userType":
                 model = model.filter(userType__iexact=fld_value)
             if fld_name == "hospitalName":
@@ -57,7 +58,8 @@ class ModelFilterUSER:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(firstName__icontains=search) |
+                Q(first_name__icontains=search) |
+                Q(last_name__icontains=search) |
                 Q(middleName__icontains=search) |
                 Q(userType__icontains=search) |
                 Q(hospitalName__icontains=search) |

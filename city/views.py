@@ -82,7 +82,7 @@ class CityAPI(APIView):
             data["data"] = []
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-        if request.method == "PATCH":
+        if request.method == "POST":
             serializer = CitySerializers(city, request.data, partial=True)
 
             if serializer.is_valid():

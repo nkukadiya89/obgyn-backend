@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
-
+import json
 from .models import MedicineModel, TimingModel, MedicineTypeModel
 from .serializers import MedicineSerializers, MedicineTypeSerializers, TimingSerializers
 
@@ -70,7 +70,7 @@ class MedicineAPI(APIView):
             data["data"] = []
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-        if request.method == "PATCH":
+        if request.method == "POST":
             serializer = MedicineSerializers(medicine, request.data, partial=True)
 
             if serializer.is_valid():
@@ -86,10 +86,17 @@ class MedicineAPI(APIView):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
     # ================= Delete Record =========================
-    def delete(self, request, id):
+    def delete(self, request):
         data = {}
+        del_id = json.loads(request.body.decode('utf-8'))
+        if "id" not in del_id:
+            data["success"] = False
+            data["msg"] = "Record ID not provided"
+            data["data"] = []
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
         try:
-            medicine = MedicineModel.objects.get(pk=id)
+            medicine = MedicineModel.objects.get(medicineId__in=del_id["id"])
         except MedicineModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
@@ -97,10 +104,10 @@ class MedicineAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":
-            medicine.deleted = 1
-            medicine.save()
+            result = medicine.update(deleted=1)
             data["success"] = True
             data["msg"] = "Data deleted successfully."
+            data["deleted"] = result
             return Response(data=data, status=status.HTTP_200_OK)
 
     # ================= Create New Record=========================
@@ -185,7 +192,7 @@ class MedicineTypeAPI(APIView):
             data["data"] = []
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-        if request.method == "PATCH":
+        if request.method == "POST":
             serializer = MedicineTypeSerializers(medicine_type, request.data, partial=True)
 
             if serializer.is_valid():
@@ -201,10 +208,16 @@ class MedicineTypeAPI(APIView):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
     # ================= Delete Record =========================
-    def delete(self, request, id):
+    def delete(self, request):
         data = {}
+        del_id = json.loads(request.body.decode('utf-8'))
+        if "id" not in del_id:
+            data["success"] = False
+            data["msg"] = "Record ID not provided"
+            data["data"] = []
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
         try:
-            medicine_type = MedicineTypeModel.objects.get(pk=id)
+            medicine_type = MedicineTypeModel.objects.get(medicineTypeId__in=del_id["id"])
         except MedicineTypeModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
@@ -212,10 +225,10 @@ class MedicineTypeAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":
-            medicine_type.deleted = 1
-            medicine_type.save()
+            result = medicine_type.update(deleted=1)
             data["success"] = True
             data["msg"] = "Data deleted successfully."
+            data["deleted"] = result
             return Response(data=data, status=status.HTTP_200_OK)
 
     # ================= Create New Record=========================
@@ -300,7 +313,7 @@ class TimingAPI(APIView):
             data["data"] = []
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-        if request.method == "PATCH":
+        if request.method == "POST":
             serializer = TimingSerializers(timing, request.data, partial=True)
 
             if serializer.is_valid():
@@ -316,10 +329,17 @@ class TimingAPI(APIView):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
     # ================= Delete Record =========================
-    def delete(self, request, id):
+    def delete(self, request):
         data = {}
+        del_id = json.loads(request.body.decode('utf-8'))
+        if "id" not in del_id:
+            data["success"] = False
+            data["msg"] = "Record ID not provided"
+            data["data"] = []
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
         try:
-            timing = TimingModel.objects.get(pk=id)
+            timing = TimingModel.objects.get(timingId__in=del_id["id"])
         except TimingModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
@@ -327,10 +347,10 @@ class TimingAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":
-            timing.deleted = 1
-            timing.save()
+            result = timing.update(deleted=1)
             data["success"] = True
             data["msg"] = "Data deleted successfully."
+            data["deleted"] = result
             return Response(data=data, status=status.HTTP_200_OK)
 
     # ================= Create New Record=========================

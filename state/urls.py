@@ -6,5 +6,5 @@ urlpatterns = [
     path('<int:id>/', StateAPI.as_view()),
     path('get/', StateAPI.as_view()),
     path('create/', StateAPI.as_view()),
-    path('delete/<int:id>/', StateAPI.as_view()),
+    path('delete/', StateAPI.as_view()),
 ]

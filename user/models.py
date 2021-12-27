@@ -52,8 +52,8 @@ class User(AbstractUser):
         ("DOCTOR", "DOCTOR")
     )
 
-    first_name = models.CharField(max_length=150, db_column="firstName", default="")
-    last_name = models.CharField(max_length=150,db_column="lastName", default="")
+    first_name = models.CharField(max_length=150, default="")
+    last_name = models.CharField(max_length=150, default="")
     userType = models.CharField(max_length=9, choices=TYPE_CHOICE)
     email = models.EmailField(_('email address'), unique=True)
     phone = models.CharField(max_length=25, null=True)
