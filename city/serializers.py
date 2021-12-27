@@ -8,7 +8,7 @@ class CitySerializers(serializers.ModelSerializer):
     def validate(self, data):
         cityName = data.get('cityName')
         state = data.get('state')
-        duplicate_city = CityModel.objects.filter(deleted=0, cityName__iexact=cityName, stateId=state)
+        duplicate_city = CityModel.objects.filter(deleted=0, cityName__iexact=cityName, state_id=state)
 
         if self.partial:
             duplicate_city = duplicate_city.filter(~Q(pk=self.instance.cityId)).first()

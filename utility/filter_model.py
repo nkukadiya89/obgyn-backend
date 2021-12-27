@@ -82,7 +82,7 @@ class ModelFilterUSER:
 class ModelFilterCITY:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
-            fld_name = fields.split("=")[0]
+            fld_name = camel_to_snake(fields.split("=")[0])
             fld_value = fields.split("=")[1]
             if fld_name == "cityName":
                 model = model.filter(cityName__iexact=fld_value)
