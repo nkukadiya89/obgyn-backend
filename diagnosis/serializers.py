@@ -7,11 +7,11 @@ from diagnosis.models import DiagnosisModel
 class DiagnosisSerializers(serializers.ModelSerializer):
 
     def validate(self, data):
-        diagnosis_name = data.get("diagnosis_name")
-        duplicate_diagnosis = DiagnosisModel.objects.filter(deleted=0, diagnosis_name__iexact=diagnosis_name)
+        diagnosis_name = data.get("diagnosisName")
+        duplicate_diagnosis = DiagnosisModel.objects.filter(deleted=0, diagnosisName__iexact=diagnosis_name)
 
         if self.partial:
-            duplicate_diagnosis = duplicate_diagnosis.filter(~Q(pk=self.instance.diagnosis_id)).first()
+            duplicate_diagnosis = duplicate_diagnosis.filter(~Q(pk=self.instance.diagnosisId)).first()
         else:
             duplicate_diagnosis = duplicate_diagnosis.first()
 
@@ -20,9 +20,7 @@ class DiagnosisSerializers(serializers.ModelSerializer):
 
         return data
 
-    diagnosisId = serializers.IntegerField(source='diagnosis_id', read_only=True)
-    diagnosisName = serializers.CharField(source='diagnosis_name')
-    createdBy = serializers.IntegerField(source='created_by')
+    diagnosisId = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = DiagnosisModel

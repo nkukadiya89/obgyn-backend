@@ -52,34 +52,37 @@ class User(AbstractUser):
         ("DOCTOR", "DOCTOR")
     )
 
-    user_type = models.CharField(max_length=9, choices=TYPE_CHOICE)
+    first_name = models.CharField(max_length=150, db_column="firstName", default="")
+    last_name = models.CharField(max_length=150,db_column="lastName", default="")
+    userType = models.CharField(max_length=9, choices=TYPE_CHOICE)
     email = models.EmailField(_('email address'), unique=True)
     phone = models.CharField(max_length=25, null=True)
 
     # FIELDS FOR HOSPITAL
-    hospital_name = models.CharField(max_length=250, null=True)
-    state = models.ForeignKey(StateModel, on_delete=models.DO_NOTHING, null=True)
-    city = models.ForeignKey(CityModel, on_delete=models.DO_NOTHING, null=True)
+    hospitalName = models.CharField(max_length=250, null=True)
+    state = models.ForeignKey(StateModel, on_delete=models.DO_NOTHING, null=True,db_column="stateId")
+    city = models.ForeignKey(CityModel, on_delete=models.DO_NOTHING, null=True, db_column="cityId")
     area = models.CharField(max_length=250, null=True)
     pincode = models.CharField(max_length=20, null=True)
-    default_language = models.ForeignKey(LanguageModel, on_delete=models.SET_DEFAULT, default=1)
+    defaultLanguage = models.ForeignKey(LanguageModel, on_delete=models.SET_DEFAULT, default=1, db_column="defaultLanguageId")
 
     # FIELDS FOR DOCTOR
-    hospital = models.ForeignKey("self", on_delete=models.SET_NULL, null=True)
-    middle_name = models.CharField(max_length=150, null=True)
+    hospital = models.ForeignKey("self", on_delete=models.SET_NULL, null=True,db_column="hospitalId")
+    middleName = models.CharField(max_length=150, null=True)
     landline = models.CharField(max_length=15, null=True)
-    fax_number = models.CharField(max_length=15, null=True)
+    faxNumber = models.CharField(max_length=15, null=True)
     degree = models.CharField(max_length=250, null=True)
     speciality = models.CharField(max_length=500, null=True)
-    aadhar_card = models.CharField(max_length=15, null=True)
-    registration_no = models.CharField(max_length=25, null=True)
+    aadharCard = models.CharField(max_length=15, null=True)
+    registrationNo = models.CharField(max_length=25, null=True)
+    userCode = models.CharField(max_length=10, default="")
 
     # FIELDS FOR STAFF
     designation = models.CharField(max_length=25, null=True)
 
-    created_by = models.IntegerField(default=1, unique=False)
+    createdBy = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
-    created_at = models.DateTimeField(default=now)
+    createdAt = models.DateTimeField(default=now)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -90,7 +93,7 @@ class User(AbstractUser):
         db_table = 'user'
 
     def save(self, *args, **kwargs):
-        if self.user_type != "HOSPITAL":
-            self.username = self.email
+        if self.userType != "HOSPITAL":
+            self.userName = self.email
 
         super(User, self).save(*args, **kwargs)

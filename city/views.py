@@ -29,7 +29,7 @@ class CityAPI(APIView):
             else:
                 city = CityModel.objects.all()
 
-            city, data = filtering_query(city, query_string, "city_id", "CITY")
+            city, data = filtering_query(city, query_string, "cityId", "CITY")
             data["total_record"] = len(city)
 
         except CityModel.DoesNotExist:
@@ -73,7 +73,7 @@ class CityAPI(APIView):
 
         try:
             if id:
-                city = CityModel.objects.get(city_id=id)
+                city = CityModel.objects.get(pk=id)
             else:
                 city = CityModel.objects.all()
         except CityModel.DoesNotExist:
@@ -109,7 +109,7 @@ class CityAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
-            city = CityModel.objects.filter(city_id__in=del_id["id"])
+            city = CityModel.objects.filter(cityId__in=del_id["id"])
         except CityModel:
             data["success"] = False
             data["msg"] = "Record does not exist"
@@ -142,21 +142,3 @@ class CityAPI(APIView):
             data["data"] = serializer.data
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
-    def filter_fields(self, city, filter_fields):
-        for fields in filter_fields:
-            fld_name = fields.split("=")[0]
-            fld_value = fields.split("=")[1]
-            if fld_name == "city_name":
-                city = city.filter(city_name__iexact=fld_value)
-            if fld_name == "state_id":
-                city = city.filter(state_id=fld_value)
-
-        return city
-
-    def search(self, city, search):
-        if search:
-            city = city.filter(
-                Q(city_name__icontains=search) |
-                Q(state__state_name__icontains=search)
-            )
-        return city

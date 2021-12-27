@@ -6,57 +6,62 @@ from language.models import LanguageModel
 
 # Create your models here.
 class MedicineTypeModel(models.Model):
-    medicine_type_id = models.AutoField(primary_key=True)
-    medicine_type = models.CharField(max_length=50, default="")
+    medicineTypeId = models.AutoField(primary_key=True)
+    medicineType = models.CharField(max_length=50, default="")
 
-    created_by = models.IntegerField(default=1, unique=False)
+    createdBy = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
-    created_at = models.DateTimeField(default=now)
+    createdAt = models.DateTimeField(default=now)
 
     def __str__(self):
-        return f"({self.medicine_type_id},{self.medicine_type})"
+        return f"({self.medicineTypeId},{self.medicineType})"
 
     class Meta:
         db_table = "medicine_type"
 
 
 class TimingModel(models.Model):
-    timing_id = models.AutoField(primary_key=True)
-    language = models.ForeignKey(LanguageModel, on_delete=models.SET_NULL, null=True)
+    timingId = models.AutoField(primary_key=True)
+    language = models.ForeignKey(LanguageModel, on_delete=models.SET_NULL, null=True, db_column="languageId")
     timing = models.CharField(max_length=25, default="")
 
-    created_by = models.IntegerField(default=1, unique=False)
+    createdBy = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
-    created_at = models.DateTimeField(default=now)
+    createdAt = models.DateTimeField(default=now)
 
     def __str__(self):
-        return f"({self.timing_id},{self.timing})"
+        return f"({self.timingId},{self.timing})"
 
     class Meta:
         db_table = "timing"
 
 
 class MedicineModel(models.Model):
-    medicine_id = models.AutoField(primary_key=True)
+    medicineId = models.AutoField(primary_key=True)
     barcode = models.CharField(max_length=20, default="")
-    medicine_type = models.ForeignKey(MedicineTypeModel, on_delete=models.SET_NULL, null=True)
+    medicineType = models.ForeignKey(MedicineTypeModel, on_delete=models.SET_NULL, null=True,
+                                     db_column="medicineTypeId")
     medicine = models.CharField(max_length=250, default="")
     contain = models.CharField(max_length=500, default="")
-    per_day = models.IntegerField(default=0)
-    for_day = models.IntegerField(default=0)
-    total_tablet = models.IntegerField(default=0)
+    perDay = models.IntegerField(default=0)
+    forDay = models.IntegerField(default=0)
+    totalTablet = models.IntegerField(default=0)
     company = models.CharField(max_length=250, default="")
-    morning_timing = models.ForeignKey(TimingModel, on_delete=models.SET_NULL, null=True, related_name="morning_timing")
-    noon_timing = models.ForeignKey(TimingModel, on_delete=models.SET_NULL, null=True, related_name="noon_timing")
-    evening_timing = models.ForeignKey(TimingModel, on_delete=models.SET_NULL, null=True, related_name="evening_timing")
-    bed_timing = models.ForeignKey(TimingModel, on_delete=models.SET_NULL, null=True, related_name="bed_timing")
+    morningTiming = models.ForeignKey(TimingModel, on_delete=models.SET_NULL, null=True, related_name="morning_timing",
+                                      db_column="morningTimingId")
+    noonTiming = models.ForeignKey(TimingModel, on_delete=models.SET_NULL, null=True, related_name="noon_timing",
+                                   db_column="noonTimingId")
+    eveningTiming = models.ForeignKey(TimingModel, on_delete=models.SET_NULL, null=True, related_name="evening_timing",
+                                      db_column="eveningTimingId")
+    bedTiming = models.ForeignKey(TimingModel, on_delete=models.SET_NULL, null=True, related_name="bed_timing",
+                                  db_column="bedTimingId")
 
-    created_by = models.IntegerField(default=1, unique=False)
+    createdBy = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
-    created_at = models.DateTimeField(default=now)
+    createdAt = models.DateTimeField(default=now)
 
     def __str__(self):
-        return f"({self.medicine_id},{self.medicine})"
+        return f"({self.medicineId},{self.medicine})"
 
     class Meta:
         db_table = "medicine"

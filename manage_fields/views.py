@@ -61,7 +61,7 @@ class ManageFieldsAPI(APIView):
 
         try:
             if id:
-                manage_fields = ManageFieldsModel.objects.get(manage_fields_id=id)
+                manage_fields = ManageFieldsModel.objects.get(pk=id)
             else:
                 manage_fields = ManageFieldsModel.objects.all()
         except ManageFieldsModel.DoesNotExist:
@@ -70,7 +70,7 @@ class ManageFieldsAPI(APIView):
             data["data"] = []
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-        if request.method == "PATCH":
+        if request.method == "POST":
             serializer = ManageFieldsSerializers(manage_fields, request.data, partial=True)
 
             if serializer.is_valid():

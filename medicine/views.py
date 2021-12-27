@@ -61,7 +61,7 @@ class MedicineAPI(APIView):
 
         try:
             if id:
-                medicine = MedicineModel.objects.get(medicine_id=id)
+                medicine = MedicineModel.objects.get(pk=id)
             else:
                 medicine = MedicineModel.objects.all()
         except MedicineModel.DoesNotExist:
@@ -176,7 +176,7 @@ class MedicineTypeAPI(APIView):
 
         try:
             if id:
-                medicine_type = MedicineTypeModel.objects.get(medicine_type_id=id)
+                medicine_type = MedicineTypeModel.objects.get(pk=id)
             else:
                 medicine_type = MedicineTypeModel.objects.all()
         except MedicineTypeModel.DoesNotExist:
@@ -291,7 +291,7 @@ class TimingAPI(APIView):
 
         try:
             if id:
-                timing = TimingModel.objects.get(timing_id=id)
+                timing = TimingModel.objects.get(pk=id)
             else:
                 timing = TimingModel.objects.all()
         except TimingModel.DoesNotExist:

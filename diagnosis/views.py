@@ -61,7 +61,7 @@ class DiagnosisAPI(APIView):
 
         try:
             if id:
-                diagnosis = DiagnosisModel.objects.get(diagnosis_id=id)
+                diagnosis = DiagnosisModel.objects.get(pk=id)
             else:
                 diagnosis = DiagnosisModel.objects.all()
         except DiagnosisModel.DoesNotExist:

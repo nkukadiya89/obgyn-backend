@@ -6,12 +6,12 @@ from .models import CityModel
 
 class CitySerializers(serializers.ModelSerializer):
     def validate(self, data):
-        city_name = data.get('city_name')
+        cityName = data.get('cityName')
         state = data.get('state')
-        duplicate_city = CityModel.objects.filter(deleted=0, city_name__iexact=city_name, state_id=state)
+        duplicate_city = CityModel.objects.filter(deleted=0, cityName__iexact=cityName, stateId=state)
 
         if self.partial:
-            duplicate_city = duplicate_city.filter(~Q(pk=self.instance.city_id)).first()
+            duplicate_city = duplicate_city.filter(~Q(pk=self.instance.cityId)).first()
         else:
             duplicate_city = duplicate_city.first()
 
@@ -20,9 +20,7 @@ class CitySerializers(serializers.ModelSerializer):
 
         return data
 
-    cityId = serializers.IntegerField(source='city_id', read_only=True)
-    cityName = serializers.CharField(source='city_name')
-    createdBy = serializers.IntegerField(source='created_by')
+    cityId = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = CityModel
