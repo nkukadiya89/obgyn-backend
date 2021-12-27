@@ -7,11 +7,11 @@ from surgical_item.models import SurgicalItemModel, SurgicalItemGroupModel
 class SurgicalItemSerializers(serializers.ModelSerializer):
 
     def validate(self, data):
-        drug_name = data.get("drug_name")
-        duplicate_drug = SurgicalItemModel.objects.filter(deleted=0, drug_name__iexact=drug_name)
+        drug_name = data.get("drugName")
+        duplicate_drug = SurgicalItemModel.objects.filter(deleted=0, drugName__iexact=drug_name)
 
         if self.partial:
-            duplicate_drug = duplicate_drug.filter(~Q(pk=self.instance.surgical_item_id)).first()
+            duplicate_drug = duplicate_drug.filter(~Q(pk=self.instance.surgicalItemId)).first()
         else:
             duplicate_drug = duplicate_drug.first()
 
@@ -20,12 +20,7 @@ class SurgicalItemSerializers(serializers.ModelSerializer):
 
         return data
 
-    surgicalItemId = serializers.IntegerField(source='surgical_item_id',read_only=True)
-    drugName = serializers.CharField(source='drug_name')
-    batchNumber = serializers.CharField(source='batch_number')
-    mfgDate = serializers.CharField(source='mfg_date')
-    expDate = serializers.CharField(source='exp_date')
-    createdBy = serializers.IntegerField(source='created_by')
+    surgicalItemId = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = SurgicalItemModel
@@ -36,11 +31,11 @@ class SurgicalItemSerializers(serializers.ModelSerializer):
 class SurgicalItemGroupSerializers(serializers.ModelSerializer):
 
     def validate(self, data):
-        drug_name = data.get("drug_name")
-        duplicate_drug = SurgicalItemGroupModel.objects.filter(deleted=0, drug_name__iexact=drug_name)
+        drug_name = data.get("drugName")
+        duplicate_drug = SurgicalItemGroupModel.objects.filter(deleted=0, drugName__iexact=drug_name)
 
         if self.partial:
-            duplicate_drug = duplicate_drug.filter(~Q(pk=self.instance.si_group_id)).first()
+            duplicate_drug = duplicate_drug.filter(~Q(pk=self.instance.siGroupId)).first()
         else:
             duplicate_drug = duplicate_drug.first()
 
@@ -49,10 +44,7 @@ class SurgicalItemGroupSerializers(serializers.ModelSerializer):
 
         return data
 
-    siGroupId = serializers.IntegerField(source='si_group_id', read_only=True)
-    drugName = serializers.CharField(source='drug_name')
-    surgicalItem = serializers.IntegerField(source='surgical_item')
-    createdBy = serializers.IntegerField(source='created_by')
+    siGroupId = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = SurgicalItemGroupModel

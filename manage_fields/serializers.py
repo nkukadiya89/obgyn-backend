@@ -7,15 +7,15 @@ from manage_fields.models import ManageFieldsModel
 class ManageFieldsSerializers(serializers.ModelSerializer):
 
     def validate(self, data):
-        field_name = data.get("field_name")
-        duplicate_manage_fields = ManageFieldsModel.objects.filter(deleted=0, field_name__iexact=field_name)
+        field_name = data.get("fieldName")
+        duplicate_manage_fields = ManageFieldsModel.objects.filter(deleted=0, fieldName__iexact=field_name)
 
         language_id = data.get('language', None)
         if language_id != None:
-            duplicate_manage_fields = duplicate_manage_fields.filter(language_id=language_id)
+            duplicate_manage_fields = duplicate_manage_fields.filter(languageId=language_id)
 
         if self.partial:
-            duplicate_manage_fields = duplicate_manage_fields.filter(~Q(pk=self.instance.mf_id)).first()
+            duplicate_manage_fields = duplicate_manage_fields.filter(~Q(pk=self.instance.mfId)).first()
         else:
             duplicate_manage_fields = duplicate_manage_fields.first()
 
@@ -24,10 +24,7 @@ class ManageFieldsSerializers(serializers.ModelSerializer):
 
         return data
 
-    mfId = serializers.IntegerField(source='mf_id', read_only=True)
-    fieldName = serializers.CharField(source='field_name')
-    fieldValue = serializers.CharField(source='field_value')
-    createdBy = serializers.IntegerField(source='created_by')
+    mfId = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = ManageFieldsModel

@@ -10,7 +10,7 @@ class LanguageSerializers(serializers.ModelSerializer):
         duplicate_language = LanguageModel.objects.filter(deleted=0, language__iexact=language)
 
         if self.partial:
-            duplicate_language = duplicate_language.filter(~Q(pk=self.instance.language_id)).first()
+            duplicate_language = duplicate_language.filter(~Q(pk=self.instance.languaged)).first()
         else:
             duplicate_language = duplicate_language.first()
 
@@ -19,8 +19,7 @@ class LanguageSerializers(serializers.ModelSerializer):
 
         return data
 
-    languageId = serializers.IntegerField(source='language_id', read_only=True)
-    createdBy = serializers.IntegerField(source='created_by')
+    languageId = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = LanguageModel

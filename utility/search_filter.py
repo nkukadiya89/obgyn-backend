@@ -1,6 +1,14 @@
 import re
 
+from decouple import config
 from django.core.paginator import Paginator
+
+from utility.filter_model import *
+
+
+def camel_to_snake(variable_name):
+    variable_name = re.sub(r'(?<!^)(?=[A-Z])', '_', variable_name).lower()
+    return variable_name
 
 
 def pagination(recordset, page, pageRecord=5):
@@ -18,9 +26,45 @@ def pagination(recordset, page, pageRecord=5):
     else:
         recordset = p.page(page)
 
-    return recordset, warning, p.num_pages
+    return recordset, warning
 
 
-def camel_to_snake(variable_name):
-    variable_name = re.sub(r'(?<!^)(?=[A-Z])', '_', variable_name).lower()
-    return variable_name
+def filtering_query(model, query_string, model_id,classnm):
+
+    func_name_filter = "ModelFilter" + classnm + "().filter_fields"
+    func_name_search = "ModelFilter" + classnm + "().search"
+    data = {}
+
+    if "orderBy" not in query_string:
+        orderby = model_id
+    else:
+        orderby = str(query_string["orderBy"])
+
+    if "sortBy" not in query_string:
+        sortby = ""
+    else:
+        sortby = str(query_string["sortBy"])
+        if sortby.lower() == "desc":
+            sortby = "-"
+        else:
+            sortby = ""
+
+    if "filter" in query_string:
+        filter = list(query_string["filter"].split(","))
+        if filter:
+            model = eval(func_name_filter + "(model, filter)")
+    if "search" in query_string:
+        model = eval(func_name_search + "(model, query_string)")
+
+    if orderby:
+        if sortby:
+            orderby = sortby + orderby
+        model = model.order_by(orderby)
+    if "page" in query_string:
+        if "pageRecord" in query_string:
+            pageRecord = query_string["pageRecord"]
+        else:
+            pageRecord = config('PAGE_LIMIT')
+        model, data["warning"] = pagination(model, query_string["page"], pageRecord)
+
+    return model, data

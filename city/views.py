@@ -1,6 +1,5 @@
 import json
 
-from decouple import config
 from django.db.models import Q
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -8,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
-from utility.search_filter import pagination
+from utility.search_filter import filtering_query
 from .models import CityModel
 from .serializers import CitySerializers
 
@@ -24,43 +23,14 @@ class CityAPI(APIView):
     def get(self, request, id=None):
         query_string = request.query_params
 
-        if "order_by" not in query_string:
-            orderby = "city_id"
-        else:
-            orderby = str(query_string["order_by"])
-
-        if "sortBy" not in query_string:
-            sortby = ""
-        else:
-            sortby = str(query_string["sortBy"])
-            if sortby.lower() == "desc":
-                sortby = "-"
-            else:
-                sortby = ""
-
         try:
             if id:
                 city = CityModel.objects.filter(pk=id)
             else:
                 city = CityModel.objects.all()
 
-            if "filter" in query_string:
-                filter = list(query_string["filter"].split(","))
-                if filter:
-                    city = self.filter_fields(city, filter)
-            if "search" in query_string:
-                city = self.search(city, query_string["search"])
-            if orderby:
-                if sortby:
-                    orderby = sortby + orderby
-
-                city = city.order_by(orderby)
-            if "page" in query_string:
-                if "pageRecord" in query_string:
-                    pageRecord = query_string["pageRecord"]
-                else:
-                    pageRecord = config('PAGE_LIMIT')
-                city, self.data["warning"], total_page = pagination(city, query_string["page"], pageRecord)
+            city, data = filtering_query(city, query_string, "cityId", "CITY")
+            data["total_record"] = len(city)
 
         except CityModel.DoesNotExist:
             self.data["success"] = False
@@ -103,7 +73,7 @@ class CityAPI(APIView):
 
         try:
             if id:
-                city = CityModel.objects.get(city_id=id)
+                city = CityModel.objects.get(pk=id)
             else:
                 city = CityModel.objects.all()
         except CityModel.DoesNotExist:
@@ -139,7 +109,7 @@ class CityAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
-            city = CityModel.objects.filter(city_id__in=del_id["id"])
+            city = CityModel.objects.filter(cityId__in=del_id["id"])
         except CityModel:
             data["success"] = False
             data["msg"] = "Record does not exist"
@@ -172,21 +142,3 @@ class CityAPI(APIView):
             data["data"] = serializer.data
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
-    def filter_fields(self, city, filter_fields):
-        for fields in filter_fields:
-            fld_name = fields.split("=")[0]
-            fld_value = fields.split("=")[1]
-            if fld_name == "city_name":
-                city = city.filter(city_name__iexact=fld_value)
-            if fld_name == "state_id":
-                city = city.filter(state_id=fld_value)
-
-        return city
-
-    def search(self, city, search):
-        if search:
-            city = city.filter(
-                Q(city_name__icontains=search) |
-                Q(state__state_name__icontains=search)
-            )
-        return city

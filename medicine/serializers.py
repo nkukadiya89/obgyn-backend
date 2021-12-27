@@ -9,10 +9,10 @@ class TimingSerializers(serializers.ModelSerializer):
         timing = data.get('timing')
         language = data.get("language")
 
-        duplicate_timing = TimingModel.objects.filter(deleted=0, timing__iexact=timing, language_id=language)
+        duplicate_timing = TimingModel.objects.filter(deleted=0, timing__iexact=timing, languageId=language)
 
         if self.partial:
-            duplicate_timing = duplicate_timing.filter(~Q(pk=self.instance.timing_id)).first()
+            duplicate_timing = duplicate_timing.filter(~Q(pk=self.instance.timingId)).first()
         else:
             duplicate_timing = duplicate_timing.first()
 
@@ -21,8 +21,7 @@ class TimingSerializers(serializers.ModelSerializer):
 
         return data
 
-    timingId = serializers.IntegerField(source='timing_id', read_only=True)
-    createdBy = serializers.IntegerField(source='created_by')
+    timingId = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = TimingModel
@@ -31,11 +30,11 @@ class TimingSerializers(serializers.ModelSerializer):
 
 class MedicineTypeSerializers(serializers.ModelSerializer):
     def validate(self, data):
-        medicine_type = data.get('medicine_type')
-        duplicate_type = MedicineTypeModel.objects.filter(deleted=0, medicine_type__iexact=medicine_type)
+        medicine_type = data.get('medicineType')
+        duplicate_type = MedicineTypeModel.objects.filter(deleted=0, medicineType__iexact=medicine_type)
 
         if self.partial:
-            duplicate_type = duplicate_type.filter(~Q(pk=self.instance.medicine_type_id)).first()
+            duplicate_type = duplicate_type.filter(~Q(pk=self.instance.medicineTypeId)).first()
         else:
             duplicate_type = duplicate_type.first()
 
@@ -44,9 +43,7 @@ class MedicineTypeSerializers(serializers.ModelSerializer):
 
         return data
 
-    medicineTypeId = serializers.IntegerField(source='medicine_type_id', read_only=True)
-    medicineType = serializers.CharField(source='medicine_type')
-    createdBy = serializers.IntegerField(source='created_by')
+    medicineTypeId = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = MedicineTypeModel
@@ -55,27 +52,27 @@ class MedicineTypeSerializers(serializers.ModelSerializer):
 
 class MedicineSerializers(serializers.ModelSerializer):
     def validate(self, data):
-        per_day = data.get("per_day", 1)
-        for_day = data.get("for_day", 1)
+        per_day = data.get("perDay", 1)
+        for_day = data.get("forDay", 1)
 
-        data["per_day"] = per_day
-        data["for_day"] = for_day
-        data["total_tablet"] = per_day * for_day
+        data["perDay"] = per_day
+        data["forDay"] = for_day
+        data["totalTablet"] = per_day * for_day
 
-        if "medicine" in data and "morning_timing" in data and "noon_timing" in data and "evening_timing" in data and "bed_timing" in data:
+        if "medicine" in data and "morningTiming" in data and "noonTiming" in data and "eveningTiming" in data and "bedTiming" in data:
             medicine = data.get("medicine")
-            morning_timing = data.get("morning_timing")
-            noon_timing = data.get("noon_timing")
-            evening_timing = data.get("evening_timing")
-            bed_timing = data.get("bed_timing")
+            morning_timing = data.get("morningTiming")
+            noon_timing = data.get("noonTiming")
+            evening_timing = data.get("eveningTiming")
+            bed_timing = data.get("bedTiming")
             duplicate_medicin = MedicineModel.objects.all().filter(deleted=0, medicine__iexact=medicine,
-                                                                   morning_timing_id=morning_timing,
-                                                                   noon_timing_id=noon_timing,
-                                                                   evening_timing_id=evening_timing,
-                                                                   bed_timing_id=bed_timing)
+                                                                   morningTimingId=morning_timing,
+                                                                   noonTimingId=noon_timing,
+                                                                   eveningTimingId=evening_timing,
+                                                                   bedTimingId=bed_timing)
 
             if self.partial:
-                duplicate_medicin = duplicate_medicin.filter(~Q(pk=self.instance.medicine_id)).first()
+                duplicate_medicin = duplicate_medicin.filter(~Q(pk=self.instance.medicineId)).first()
             else:
                 duplicate_medicin = duplicate_medicin.first()
 
@@ -83,21 +80,7 @@ class MedicineSerializers(serializers.ModelSerializer):
                 raise serializers.ValidationError("Medicine already exist.")
         return data
 
-    medicineId = serializers.CharField(source='medicine_id', read_only=True)
-    medicineType = serializers.PrimaryKeyRelatedField(queryset=MedicineTypeModel.objects.all(), many=False,
-                                                      source='medicine_type_id')
-    perDay = serializers.IntegerField(source='per_day')
-    forDay = serializers.IntegerField(source='for_day')
-    totalTablet = serializers.IntegerField(source='total_tablet', read_only=True)
-    morningTiming = serializers.PrimaryKeyRelatedField(queryset=TimingModel.objects.all(), many=False,
-                                                       source='morning_timing_id')
-    noonTiming = serializers.PrimaryKeyRelatedField(queryset=TimingModel.objects.all(), many=False,
-                                                    source='noon_timing_id')
-    eveningTiming = serializers.PrimaryKeyRelatedField(queryset=TimingModel.objects.all(), many=False,
-                                                       source='evening_timing_id')
-    bedTiming = serializers.PrimaryKeyRelatedField(queryset=TimingModel.objects.all(), many=False,
-                                                   source='bed_timing_id')
-    createdBy = serializers.IntegerField(source='created_by')
+    medicineId = serializers.CharField(read_only=True)
 
     class Meta:
         model = MedicineModel

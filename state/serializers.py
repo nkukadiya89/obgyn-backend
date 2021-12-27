@@ -6,11 +6,11 @@ from .models import StateModel
 
 class StateSerializers(serializers.ModelSerializer):
     def validate(self, data):
-        state_name = data.get('state_name')
-        duplicate_state = StateModel.objects.filter(deleted=0, state_name__iexact=state_name)
+        state_name = data.get('stateName')
+        duplicate_state = StateModel.objects.filter(deleted=0, stateName__iexact=state_name)
 
         if self.partial:
-            duplicate_state = duplicate_state.filter(~Q(pk=self.instance.state_id)).first()
+            duplicate_state = duplicate_state.filter(~Q(pk=self.instance.stateId)).first()
         else:
             duplicate_state = duplicate_state.first()
 
@@ -19,9 +19,7 @@ class StateSerializers(serializers.ModelSerializer):
 
         return data
 
-    stateId = serializers.IntegerField(source='state_id', read_only=True)
-    stateName = serializers.CharField(source='state_name')
-    createdBy = serializers.IntegerField(source='created_by')
+    stateId = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = StateModel

@@ -61,7 +61,7 @@ class LanguageAPI(APIView):
 
         try:
             if id:
-                language = LanguageModel.objects.get(language_id=id)
+                language = LanguageModel.objects.get(pk=id)
             else:
                 language = LanguageModel.objects.all()
         except LanguageModel.DoesNotExist:
