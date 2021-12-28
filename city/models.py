@@ -9,7 +9,7 @@ class CityModel(models.Model):
     city_name = models.CharField(max_length=50)
     state = models.ForeignKey(StateModel, on_delete=models.CASCADE)
 
-    create_by = models.IntegerField(default=1, unique=False)
+    created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
     created_at = models.DateTimeField(default=now)
 
