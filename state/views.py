@@ -96,7 +96,7 @@ class StateAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
-            state = StateModel.objects.get(stateId__in=del_id["id"])
+            state = StateModel.objects.get(state_id__in=del_id["id"])
         except StateModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"

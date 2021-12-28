@@ -8,18 +8,18 @@ class UserSerializers(serializers.ModelSerializer):
 
     def validate(self, data):
 
-        user_type = data.get('userType')
+        user_type = data.get('user_type')
 
         if user_type == "DOCTOR" or user_type == "STAFF":
 
             # CHECK DUPLICATE AADHAR CARD NO
-            aadhar_card = data.get('aadharCard')
+            aadhar_card = data.get('aadhar_card')
 
             if len(aadhar_card) != 12 or not aadhar_card.isnumeric():
                 raise serializers.ValidationError("Please enter a valid UID number.")
 
-            duplicate_aadhar = User.objects.filter((Q(userType="DOCTOR") | Q(userType="STAFF")),
-                                                   aadharCard__iexact=aadhar_card)
+            duplicate_aadhar = User.objects.filter((Q(user_type="DOCTOR") | Q(user_type="STAFF")),
+                                                   aadhar_card__iexact=aadhar_card)
 
             if self.partial:
                 duplicate_aadhar = duplicate_aadhar.filter(~Q(id=self.instance.id)).first()
