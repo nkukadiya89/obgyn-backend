@@ -19,8 +19,8 @@ class StateSerializers(serializers.ModelSerializer):
 
         return data
 
-    stateId = serializers.IntegerField(read_only=True)
+    state_id = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = StateModel
-        fields = ['stateId', 'stateName', 'createdBy', 'deleted']
+        fields = ['state_id', 'state_name', 'created_by', 'deleted']

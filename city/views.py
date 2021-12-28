@@ -29,7 +29,7 @@ class CityAPI(APIView):
             else:
                 city = CityModel.objects.all()
 
-            city, data = filtering_query(city, query_string, "cityId", "CITY")
+            city, data = filtering_query(city, query_string, "city_id", "CITY")
             data["total_record"] = len(city)
 
         except CityModel.DoesNotExist:
@@ -109,7 +109,7 @@ class CityAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
-            city = CityModel.objects.filter(cityId__in=del_id["id"])
+            city = CityModel.objects.filter(city_id__in=del_id["id"])
         except CityModel:
             data["success"] = False
             data["msg"] = "Record does not exist"

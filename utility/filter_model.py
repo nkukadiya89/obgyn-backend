@@ -21,7 +21,7 @@ class ModelFilterUSER:
             if fld_name == "last_name":
                 model = model.filter(last_name__iexact=fld_value)
             if fld_name == "user_type":
-                model = model.filter(userType__iexact=fld_value)
+                model = model.filter(user_type__iexact=fld_value)
             if fld_name == "hospital_name":
                 model = model.filter(hospital_name__iexact=fld_value)
             if fld_name == "phone":
@@ -63,8 +63,8 @@ class ModelFilterUSER:
                 Q(middle_name__icontains=search) |
                 Q(user_type__icontains=search) |
                 Q(hospital_name__icontains=search) |
-                Q(state__stateName__icontains=search) |
-                Q(city__cityName__icontains=search) |
+                Q(state__state_name__icontains=search) |
+                Q(city__city_name__icontains=search) |
                 Q(email__icontains=search) |
                 Q(landline__icontains=search) |
                 Q(fax_number__icontains=search) |
@@ -82,21 +82,21 @@ class ModelFilterUSER:
 class ModelFilterCITY:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
-            fld_name = camel_to_snake(fields.split("=")[0])
+            fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
-            if fld_name == "cityName":
-                model = model.filter(cityName__iexact=fld_value)
+            if fld_name == "city_name":
+                model = model.filter(city_name__iexact=fld_value)
             if fld_name == "state_id":
-                model = model.filter(state_Id=fld_value)
-            if fld_name == "cityId":
-                model = model.filter(cityId=fld_value)
+                model = model.filter(state_id=fld_value)
+            if fld_name == "city_id":
+                model = model.filter(city_id=fld_value)
         return model
 
     def search(self, model, query_string):
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(cityName__icontains=search) |
-                Q(state__stateName__icontains=search)
+                Q(city_name__icontains=search) |
+                Q(state__state_name__icontains=search)
             )
         return model
