@@ -6,17 +6,17 @@ from language.models import LanguageModel
 
 # Create your models here.
 class ManageFieldsModel(models.Model):
-    mfId = models.AutoField(primary_key=True)
-    language = models.ForeignKey(LanguageModel, on_delete=models.SET_NULL, null=True, db_column="languageId")
-    fieldName = models.CharField(max_length=50, default="")
-    fieldValue = models.CharField(max_length=150, default="")
+    mf_id = models.AutoField(primary_key=True)
+    language = models.ForeignKey(LanguageModel, on_delete=models.SET_NULL, null=True)
+    field_name = models.CharField(max_length=50, default="")
+    field_value = models.CharField(max_length=150, default="")
 
-    createdBy = models.IntegerField(default=1, unique=False)
+    created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
-    createdAt = models.DateTimeField(default=now)
+    created_at = models.DateTimeField(default=now)
 
     def __str__(self):
-        return f"({self.mfId},{self.fieldName})"
+        return f"({self.mf_id},{self.field_name})"
 
     class Meta:
         db_table = "manage_field"

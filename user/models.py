@@ -60,7 +60,7 @@ class User(AbstractUser):
 
     # FIELDS FOR HOSPITAL
     hospital_name = models.CharField(max_length=250, null=True)
-    state = models.ForeignKey(StateModel, on_delete=models.DO_NOTHING, null=True)
+    state = models.ForeignKey(StateModel, on_delete=models.DO_NOTHING, null=True, related_name="user")
     city = models.ForeignKey(CityModel, on_delete=models.DO_NOTHING, null=True)
     area = models.CharField(max_length=250, null=True)
     pincode = models.CharField(max_length=20, null=True)
