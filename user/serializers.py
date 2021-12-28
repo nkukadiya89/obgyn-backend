@@ -1,6 +1,8 @@
 from django.db.models import Q
 from rest_framework import serializers
 
+from state.models import StateModel
+from state.serializers import StateSerializers
 from user.models import User
 
 
@@ -32,7 +34,7 @@ class UserSerializers(serializers.ModelSerializer):
             # CHECK IF SELECTED FOREIGN KEY IS OF HOSPITAL OR NOT
             hospital = data.get('hospital')
             if hospital:
-                if hospital.userType != "HOSPITAL":
+                if hospital.user_type != "HOSPITAL":
                     raise serializers.ValidationError("Please select hospital.")
             else:
                 raise serializers.ValidationError("Please select hospital.")
@@ -56,10 +58,11 @@ class UserSerializers(serializers.ModelSerializer):
     last_name = serializers.CharField(required=False)
     username = serializers.CharField(required=False)
     user_code = serializers.CharField(read_only=True)
-
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'middle_name', 'password', 'user_type', 'hospital_name',
-                  'phone', 'state', 'city', 'area', 'pincode', 'email', 'landline', 'fax_number', 'degree', 'speciality',
-                  'aadhar_card', 'registration_no', 'default_language', 'designation', 'hospital', 'username', 'user_code',
+                  'phone', 'state', 'city', 'area', 'pincode', 'email', 'landline', 'fax_number', 'degree',
+                  'speciality',
+                  'aadhar_card', 'registration_no', 'default_language', 'designation', 'hospital', 'username',
+                  'user_code',
                   'created_by']

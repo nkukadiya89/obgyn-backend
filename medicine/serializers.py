@@ -30,11 +30,11 @@ class TimingSerializers(serializers.ModelSerializer):
 
 class MedicineTypeSerializers(serializers.ModelSerializer):
     def validate(self, data):
-        medicine_type = data.get('medicineType')
-        duplicate_type = MedicineTypeModel.objects.filter(deleted=0, medicineType__iexact=medicine_type)
+        medicine_type = data.get('medicine_type')
+        duplicate_type = MedicineTypeModel.objects.filter(deleted=0, medicine_type__iexact=medicine_type)
 
         if self.partial:
-            duplicate_type = duplicate_type.filter(~Q(pk=self.instance.medicineTypeId)).first()
+            duplicate_type = duplicate_type.filter(~Q(pk=self.instance.medicine_type_id)).first()
         else:
             duplicate_type = duplicate_type.first()
 
@@ -43,33 +43,33 @@ class MedicineTypeSerializers(serializers.ModelSerializer):
 
         return data
 
-    medicineTypeId = serializers.IntegerField(read_only=True)
+    medicine_type_id = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = MedicineTypeModel
-        fields = ['medicineTypeId', 'medicineType', 'createdBy', 'deleted']
+        fields = ['medicine_type_id', 'medicineType', 'created_by', 'deleted']
 
 
 class MedicineSerializers(serializers.ModelSerializer):
     def validate(self, data):
-        per_day = data.get("perDay", 1)
-        for_day = data.get("forDay", 1)
+        per_day = data.get("per_day", 1)
+        for_day = data.get("for_day", 1)
 
-        data["perDay"] = per_day
-        data["forDay"] = for_day
-        data["totalTablet"] = per_day * for_day
+        data["per_day"] = per_day
+        data["for_day"] = for_day
+        data["total_tablet"] = per_day * for_day
 
-        if "medicine" in data and "morningTiming" in data and "noonTiming" in data and "eveningTiming" in data and "bedTiming" in data:
+        if "medicine" in data and "morning_timing" in data and "noon_timing" in data and "evening_timing" in data and "bed_timing" in data:
             medicine = data.get("medicine")
-            morning_timing = data.get("morningTiming")
-            noon_timing = data.get("noonTiming")
+            morning_timing = data.get("morning_timing")
+            noon_timing = data.get("noon_timing")
             evening_timing = data.get("eveningTiming")
-            bed_timing = data.get("bedTiming")
+            bed_timing = data.get("bedtiming")
             duplicate_medicin = MedicineModel.objects.all().filter(deleted=0, medicine__iexact=medicine,
-                                                                   morningTimingId=morning_timing,
-                                                                   noonTimingId=noon_timing,
-                                                                   eveningTimingId=evening_timing,
-                                                                   bedTimingId=bed_timing)
+                                                                   morning_timing_id=morning_timing,
+                                                                   noon_timing_id=noon_timing,
+                                                                   evening_timing_id=evening_timing,
+                                                                   bed_timing_id=bed_timing)
 
             if self.partial:
                 duplicate_medicin = duplicate_medicin.filter(~Q(pk=self.instance.medicineId)).first()
@@ -80,10 +80,10 @@ class MedicineSerializers(serializers.ModelSerializer):
                 raise serializers.ValidationError("Medicine already exist.")
         return data
 
-    medicineId = serializers.CharField(read_only=True)
+    medicine_id = serializers.CharField(read_only=True)
 
     class Meta:
         model = MedicineModel
-        fields = ['medicineId', 'barcode', 'medicineType', 'medicine', 'contain', 'perDay', 'forDay',
-                  'totalTablet', 'company', 'morningTiming', 'noonTiming', 'eveningTiming', 'bedTiming',
-                  'createdBy', 'deleted']
+        fields = ['medicine_id', 'barcode', 'medicine_type', 'medicine', 'contain', 'per_day', 'for_day',
+                  'total_tablet', 'company', 'morning_timing', 'noon_timing', 'evening_timing', 'bed_timing',
+                  'created_by', 'deleted']

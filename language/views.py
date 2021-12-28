@@ -96,7 +96,7 @@ class LanguageAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
-            language = LanguageModel.objects.get(languageId__in=del_id["id"])
+            language = LanguageModel.objects.get(language_id__in=del_id["id"])
         except LanguageModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
