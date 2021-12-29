@@ -58,6 +58,7 @@ class UserSerializers(serializers.ModelSerializer):
     last_name = serializers.CharField(required=False)
     username = serializers.CharField(required=False)
     user_code = serializers.CharField(read_only=True)
+
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'middle_name', 'password', 'user_type', 'hospital_name',
