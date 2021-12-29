@@ -150,10 +150,8 @@ from rest_framework.permissions import IsAuthenticated
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
-
 def patch(request, id):
         data = {}
-
         try:
             if id:
                 city = CityModel.objects.get(pk=id)
