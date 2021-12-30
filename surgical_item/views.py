@@ -1,10 +1,15 @@
+import json
+
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated,IsAuthenticatedOrReadOnly
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
-import json
-from .models import SurgicalItemModel,SurgicalItemGroupModel
+
+from .models import SurgicalItemModel, SurgicalItemGroupModel
 from .serializers import SurgicalItemSerializers, SurgicalItemGroupSerializers
 
 
@@ -55,36 +60,6 @@ class SurgicalItemAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # ================= Partial Update of a record  =========================
-    def patch(self, request, id):
-        data = {}
-
-        try:
-            if id:
-                surgical_item = SurgicalItemModel.objects.get(pk=id)
-            else:
-                surgical_item = SurgicalItemModel.objects.all()
-        except SurgicalItemModel.DoesNotExist:
-            data["success"] = False
-            data["msg"] = "Record Does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        if request.method == "POST":
-            serializer = SurgicalItemSerializers(surgical_item, request.data, partial=True)
-
-            if serializer.is_valid():
-                serializer.save()
-                data["success"] = True
-                data["msg"] = "Data updated successfully"
-                data["data"] = serializer.data
-                return Response(data=data, status=status.HTTP_200_OK)
-
-            data["success"] = False
-            data["msg"] = serializer.errors
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-
     # ================= Delete Record =========================
     def delete(self, request):
         data = {}
@@ -128,6 +103,7 @@ class SurgicalItemAPI(APIView):
             data["msg"] = serializer.errors
             data["data"] = serializer.data
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
 
 class SurgicalItemGroupAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
@@ -176,36 +152,6 @@ class SurgicalItemGroupAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # ================= Partial Update of a record  =========================
-    def patch(self, request, id):
-        data = {}
-
-        try:
-            if id:
-                surgical_item_group = SurgicalItemGroupModel.objects.get(pk=id)
-            else:
-                surgical_item_group = SurgicalItemGroupModel.objects.all()
-        except SurgicalItemGroupModel.DoesNotExist:
-            data["success"] = False
-            data["msg"] = "Record Does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        if request.method == "POST":
-            serializer = SurgicalItemGroupSerializers(surgical_item_group, request.data, partial=True)
-
-            if serializer.is_valid():
-                serializer.save()
-                data["success"] = True
-                data["msg"] = "Data updated successfully"
-                data["data"] = serializer.data
-                return Response(data=data, status=status.HTTP_200_OK)
-
-            data["success"] = False
-            data["msg"] = serializer.errors
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-
     # ================= Delete Record =========================
     def delete(self, request):
         data = {}
@@ -249,3 +195,69 @@ class SurgicalItemGroupAPI(APIView):
             data["msg"] = serializer.errors
             data["data"] = serializer.data
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def patch_surgical_group(request, id):
+    data = {}
+
+    try:
+        if id:
+            surgical_item_group = SurgicalItemGroupModel.objects.get(pk=id)
+        else:
+            surgical_item_group = SurgicalItemGroupModel.objects.all()
+    except SurgicalItemGroupModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record Does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "POST":
+        serializer = SurgicalItemGroupSerializers(surgical_item_group, request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            data["success"] = True
+            data["msg"] = "Data updated successfully"
+            data["data"] = serializer.data
+            return Response(data=data, status=status.HTTP_200_OK)
+
+        data["success"] = False
+        data["msg"] = serializer.errors
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def patch(request, id):
+    data = {}
+
+    try:
+        if id:
+            surgical_item = SurgicalItemModel.objects.get(pk=id)
+        else:
+            surgical_item = SurgicalItemModel.objects.all()
+    except SurgicalItemModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record Does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "POST":
+        serializer = SurgicalItemSerializers(surgical_item, request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            data["success"] = True
+            data["msg"] = "Data updated successfully"
+            data["data"] = serializer.data
+            return Response(data=data, status=status.HTTP_200_OK)
+
+        data["success"] = False
+        data["msg"] = serializer.errors
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)

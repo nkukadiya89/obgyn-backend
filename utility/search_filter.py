@@ -57,7 +57,10 @@ def user_filtering_query(model, query_string, model_id, classnm):
         if sortby:
             orderby = sortby + orderby
         model = model.order_by(orderby)
+
     data["total_record"] = len(model)
+    data["current_page"] = 1
+
     if "page" in query_string:
         if "pageRecord" in query_string:
             pageRecord = query_string["pageRecord"]
@@ -65,6 +68,7 @@ def user_filtering_query(model, query_string, model_id, classnm):
             pageRecord = config('PAGE_LIMIT')
         model, data["warning"] = pagination(model, query_string["page"], pageRecord)
 
+        data["current_page"] = int(query_string["page"])
     return model, data
 
 

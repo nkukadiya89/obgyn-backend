@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager  ## A new class is imported. ##
 from django.db import models
+from django.db.models.query import Q
+from django.db.models.signals import post_save
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
@@ -76,6 +78,7 @@ class User(AbstractUser):
     aadhar_card = models.CharField(max_length=15, null=True)
     registration_no = models.CharField(max_length=25, null=True)
     user_code = models.CharField(max_length=10, default="")
+    verified = models.BooleanField(default=False)
 
     # FIELDS FOR STAFF
     designation = models.CharField(max_length=25, null=True)
@@ -92,8 +95,16 @@ class User(AbstractUser):
     class Meta:
         db_table = 'user'
 
-    def save(self, *args, **kwargs):
-        if self.user_type != "HOSPITAL":
-            self.user_name = self.email
 
-        super(User, self).save(*args, **kwargs)
+def user_post_save(sender, instance, *args, **kwargs):
+    if kwargs["created"]:
+        seq_no = 0
+        last_user = User.objects.filter(user_type=instance.user_type).filter(~Q(pk=instance.id)).last()
+        if last_user:
+            seq_no += 1
+
+        instance.user_code = instance.user_type[0] + '{:05}'.format(seq_no)
+        instance.save()
+
+
+post_save.connect(user_post_save, sender=User)

@@ -93,10 +93,11 @@ def get_user(request, type, id=None):
     try:
         user = User.objects.filter(deleted=0)
         if type:
-            user = User.objects.filter(user_type__iexact=type.upper(),deleted=0)
+            user = User.objects.filter(user_type__iexact=type.upper(), deleted=0)
         if id:
-            user = user.filter(pk=id,deleted=0)
+            user = user.filter(pk=id, deleted=0)
         data["total_record"] =  len(user)  
+
         user, data = user_filtering_query(user, query_string, "id", "USER")
 
     except User.DoesNotExist:
@@ -237,3 +238,86 @@ def delete_user(request):
         data["msg"] = "Data deleted successfully."
         data["deleted"] = result
         return Response(data=data, status=status.HTTP_200_OK)
+
+
+@csrf_exempt
+@authentication_classes(JWTAuthentication)
+@permission_classes([IsAuthenticatedOrReadOnly])
+@api_view(('POST',))
+def verify_user(request, token):
+    data = {}
+    try:
+        payload = decode_token(token)
+    except:
+        data["success"] = False
+        data["msg"] = "Provided Token is Expired"
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if "email" not in payload:
+        data["success"] = False
+        data["msg"] = "This email is not registered"
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    user = User.objects.filter(email=payload["email"]).first()
+
+    if user == None:
+        data["success"] = False
+        data["msg"] = "Record Not Found"
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    user.verified = True
+    user.save()
+
+    data["success"] = True
+    data["msg"] = "OK"
+    return Response(data=data, status=status.HTTP_200_OK)
+
+
+
+@csrf_exempt
+@authentication_classes(JWTAuthentication)
+@permission_classes([IsAuthenticatedOrReadOnly])
+@api_view(('POST',))
+def send_verify_link(request):
+    data = {}
+    try:
+        req_data = json.loads(request.body.decode('utf-8'))
+    except:
+        data["success"] = False
+        data["msg"] = "Service not available"
+        return HttpResponse(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    email = req_data.get("email", None)
+    if email == None:
+        data["success"] = False
+        data["msg"] = "Email Address is not registered"
+        return HttpResponse(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    user = User.objects.filter(email=email).first()
+
+    if user == None:
+        data["success"] = False
+        data["msg"] = "Record Not Found"
+        return HttpResponse(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    verify_user = User.objects.filter(id=user.id).first()
+
+    if verify_user.verified:
+        data["success"] = False
+        data["msg"] = "Account is already verified"
+        return Response(data=data, status=status.HTTP_200_OK)
+
+    token = generate_token(email, None, 2880).decode('utf-8')
+
+    name = user.first_name
+    context = {}
+
+    context["name"] = name
+    context["token"] = token
+    context["email"] = email
+    urlObject = request._current_scheme_host + request.path
+    context["current_site"] = urlObject
+    send_mail("Verify Your Account", "verify_account.html", context)
+
+
+    return Response("Email has been send", status=200)

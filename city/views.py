@@ -1,10 +1,12 @@
 import json
 
-from django.db.models import Q
 from rest_framework import status
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 from utility.search_filter import filtering_query
@@ -25,7 +27,7 @@ class CityAPI(APIView):
 
         try:
             if id:
-                city = CityModel.objects.filter(pk=id,deleted=0)
+                city = CityModel.objects.filter(pk=id, deleted=0)
             else:
                 city = CityModel.objects.filter(deleted=0)
 
@@ -143,37 +145,33 @@ class CityAPI(APIView):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.permissions import IsAuthenticated
-
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def patch(request, id):
-        data = {}
-        try:
-            if id:
-                city = CityModel.objects.get(pk=id)
-            else:
-                city = CityModel.objects.all()
-        except CityModel.DoesNotExist:
-            data["success"] = False
-            data["msg"] = "Record Does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+    data = {}
+    try:
+        if id:
+            city = CityModel.objects.get(pk=id)
+        else:
+            city = CityModel.objects.all()
+    except CityModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record Does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-        if request.method == "POST":
-            serializer = CitySerializers(city, request.data, partial=True)
+    if request.method == "POST":
+        serializer = CitySerializers(city, request.data, partial=True)
 
-            if serializer.is_valid():
-                serializer.save()
-                data["success"] = True
-                data["msg"] = "Data updated successfully"
-                data["data"] = serializer.data
-                return Response(data=data, status=status.HTTP_200_OK)
+        if serializer.is_valid():
+            serializer.save()
+            data["success"] = True
+            data["msg"] = "Data updated successfully"
+            data["data"] = serializer.data
+            return Response(data=data, status=status.HTTP_200_OK)
 
-            data["success"] = False
-            data["msg"] = serializer.errors
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+        data["success"] = False
+        data["msg"] = serializer.errors
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
