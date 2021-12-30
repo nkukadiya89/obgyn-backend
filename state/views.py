@@ -17,9 +17,9 @@ class StateAPI(APIView):
         data = {}
         try:
             if id:
-                state = StateModel.objects.filter(pk=id)
+                state = StateModel.objects.filter(pk=id,deleted=0)
             else:
-                state = StateModel.objects.all()
+                state = StateModel.objects.filter(deleted=0)
         except StateModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record Does not exist"

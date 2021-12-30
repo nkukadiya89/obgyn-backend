@@ -1,5 +1,3 @@
-import re
-
 from decouple import config
 from django.core.paginator import Paginator
 
@@ -29,9 +27,7 @@ def pagination(recordset, page, pageRecord=5):
     return recordset, warning
 
 
-
-def user_filtering_query(model, query_string, model_id,classnm):
-
+def user_filtering_query(model, query_string, model_id, classnm):
     func_name_filter = "ModelFilter" + classnm + "().filter_fields"
     func_name_search = "ModelFilter" + classnm + "().search"
     data = {}
@@ -57,11 +53,11 @@ def user_filtering_query(model, query_string, model_id,classnm):
     if "search" in query_string:
         model = eval(func_name_search + "(model, query_string)")
 
-
     if orderby:
         if sortby:
             orderby = sortby + orderby
         model = model.order_by(orderby)
+    data["total_record"] = len(model)
     if "page" in query_string:
         if "pageRecord" in query_string:
             pageRecord = query_string["pageRecord"]
@@ -71,8 +67,8 @@ def user_filtering_query(model, query_string, model_id,classnm):
 
     return model, data
 
-def filtering_query(model, query_string, model_id,classnm):
 
+def filtering_query(model, query_string, model_id, classnm):
     func_name_filter = "ModelFilter" + classnm + "().filter_fields"
     func_name_search = "ModelFilter" + classnm + "().search"
     data = {}
@@ -102,8 +98,8 @@ def filtering_query(model, query_string, model_id,classnm):
         if sortby:
             orderby = sortby + orderby
 
-
         model = model.order_by(orderby)
+    data["total_record"] = len(model)
     if "page" in query_string:
         if "pageRecord" in query_string:
             pageRecord = query_string["pageRecord"]

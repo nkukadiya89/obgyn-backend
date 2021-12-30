@@ -3,6 +3,8 @@ from django.db import models
 from state.models import StateModel
 from django.utils.timezone import now
 
+from django.db.models.signals import post_save,pre_save
+
 # Create your models here.
 class CityModel(models.Model):
     city_id = models.AutoField(primary_key=True)
@@ -18,3 +20,17 @@ class CityModel(models.Model):
 
     class Meta:
         db_table = "city"
+
+# def city_post_save(*args,**kwargs):
+#     print("Post Save")
+#     print(args)
+#     print(kwargs)
+#
+# post_save.connect(city_post_save,sender=CityModel)
+#
+# def city_pre_save(*args,**kwargs):
+#     print("Pre Save")
+#     print(args)
+#     print(kwargs)
+#
+# pre_save.connect(city_pre_save,sender=CityModel)

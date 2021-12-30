@@ -93,11 +93,11 @@ def get_user(request, type, id=None):
     try:
         user = User.objects.filter(deleted=0)
         if type:
-            user = User.objects.filter(user_type__iexact=type.upper())
+            user = User.objects.filter(user_type__iexact=type.upper(),deleted=0)
         if id:
-            user = user.filter(pk=id)
+            user = user.filter(pk=id,deleted=0)
         user, data = user_filtering_query(user, query_string, "id", "USER")
-        data["total_record"] = len(user)
+
     except User.DoesNotExist:
         data["success"] = False
         data["msg"] = "User Does not exist"

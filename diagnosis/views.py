@@ -17,9 +17,9 @@ class DiagnosisAPI(APIView):
         data = {}
         try:
             if id:
-                diagnosis = DiagnosisModel.objects.filter(pk=id)
+                diagnosis = DiagnosisModel.objects.filter(pk=id,deleted=0)
             else:
-                diagnosis = DiagnosisModel.objects.all()
+                diagnosis = DiagnosisModel.objects.filter(deleted=0)
         except DiagnosisModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record Does not exist"
