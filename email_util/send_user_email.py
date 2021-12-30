@@ -72,7 +72,7 @@ def send_mail(subject, template, data):
     mailserver.starttls()
 
 
-    mailserver.login("myobguide@gmail.com", "cdyjfoazbgkgnbix")
+    mailserver.login(config('ADMIN_EMAIL'), config('EMAIL_PASSWORD'))
 
     mailserver.sendmail(config('ADMIN_EMAIL'), msg['To'], msg.as_string())
 
