@@ -32,13 +32,13 @@ def send_mail(subject, template, data):
     context["name"] = data["name"]
 
     app_url = config('APP_URL')
-    if template == "register-success.html":
+    if template == "register-success.html" or template == "verify_account.html":
         token = generate_token(data["email"], None, 2880).decode('utf-8')
-        context["login_url"] = app_url + "business/login"
-        context["verify_link"] = app_url + "business/account-verification/"
+        context["login_url"] = app_url + "login"
+        context["verify_link"] = app_url + "verify-success/"
         context["token"] = token
     elif template == "reset-pass.html":
-        context["path"] = app_url + "business/reset-password/"
+        context["path"] = app_url + "reset-password/"
         context["token"] = data["token"]
 
     html_body = render_to_string(template, context)
@@ -69,9 +69,10 @@ def send_mail(subject, template, data):
 
     mailserver = smtplib.SMTP_SSL("smtp.gmail.com", 425)
     mailserver.ehlo()
+    mailserver.starttls()
 
 
-    mailserver.login(config('ADMIN_EMAIL'), "config('EMAIL_PASSWORD')")
+    mailserver.login("myobguide@gmail.com", "cdyjfoazbgkgnbix")
 
     mailserver.sendmail(config('ADMIN_EMAIL'), msg['To'], msg.as_string())
 

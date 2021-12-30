@@ -1,9 +1,13 @@
+import json
+
 from rest_framework import status
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
-import json
+
 from .models import MedicineModel, TimingModel, MedicineTypeModel
 from .serializers import MedicineSerializers, MedicineTypeSerializers, TimingSerializers
 
@@ -54,36 +58,6 @@ class MedicineAPI(APIView):
                 return Response(data=data, status=status.HTTP_200_OK)
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    # ================= Partial Update of a record  =========================
-    def patch(self, request, id):
-        data = {}
-
-        try:
-            if id:
-                medicine = MedicineModel.objects.get(pk=id)
-            else:
-                medicine = MedicineModel.objects.all()
-        except MedicineModel.DoesNotExist:
-            data["success"] = False
-            data["msg"] = "Record Does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        if request.method == "POST":
-            serializer = MedicineSerializers(medicine, request.data, partial=True)
-
-            if serializer.is_valid():
-                serializer.save()
-                data["success"] = True
-                data["msg"] = "Data updated successfully"
-                data["data"] = serializer.data
-                return Response(data=data, status=status.HTTP_200_OK)
-
-            data["success"] = False
-            data["msg"] = serializer.errors
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
     # ================= Delete Record =========================
     def delete(self, request):
@@ -177,36 +151,6 @@ class MedicineTypeAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # ================= Partial Update of a record  =========================
-    def patch(self, request, id):
-        data = {}
-
-        try:
-            if id:
-                medicine_type = MedicineTypeModel.objects.get(pk=id)
-            else:
-                medicine_type = MedicineTypeModel.objects.all()
-        except MedicineTypeModel.DoesNotExist:
-            data["success"] = False
-            data["msg"] = "Record Does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        if request.method == "POST":
-            serializer = MedicineTypeSerializers(medicine_type, request.data, partial=True)
-
-            if serializer.is_valid():
-                serializer.save()
-                data["success"] = True
-                data["msg"] = "Data updated successfully"
-                data["data"] = serializer.data
-                return Response(data=data, status=status.HTTP_200_OK)
-
-            data["success"] = False
-            data["msg"] = serializer.errors
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-
     # ================= Delete Record =========================
     def delete(self, request):
         data = {}
@@ -298,36 +242,6 @@ class TimingAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # ================= Partial Update of a record  =========================
-    def patch(self, request, id):
-        data = {}
-
-        try:
-            if id:
-                timing = TimingModel.objects.get(pk=id)
-            else:
-                timing = TimingModel.objects.all()
-        except TimingModel.DoesNotExist:
-            data["success"] = False
-            data["msg"] = "Record Does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        if request.method == "POST":
-            serializer = TimingSerializers(timing, request.data, partial=True)
-
-            if serializer.is_valid():
-                serializer.save()
-                data["success"] = True
-                data["msg"] = "Data updated successfully"
-                data["data"] = serializer.data
-                return Response(data=data, status=status.HTTP_200_OK)
-
-            data["success"] = False
-            data["msg"] = serializer.errors
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-
     # ================= Delete Record =========================
     def delete(self, request):
         data = {}
@@ -371,3 +285,102 @@ class TimingAPI(APIView):
             data["msg"] = serializer.errors
             data["data"] = serializer.data
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def patch_timing(request, id):
+    data = {}
+
+    try:
+        if id:
+            timing = TimingModel.objects.get(pk=id)
+        else:
+            timing = TimingModel.objects.all()
+    except TimingModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record Does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "POST":
+        serializer = TimingSerializers(timing, request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            data["success"] = True
+            data["msg"] = "Data updated successfully"
+            data["data"] = serializer.data
+            return Response(data=data, status=status.HTTP_200_OK)
+
+        data["success"] = False
+        data["msg"] = serializer.errors
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def patch_medicine_type(request, id):
+    data = {}
+
+    try:
+        if id:
+            medicine_type = MedicineTypeModel.objects.get(pk=id)
+        else:
+            medicine_type = MedicineTypeModel.objects.all()
+    except MedicineTypeModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record Does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "POST":
+        serializer = MedicineTypeSerializers(medicine_type, request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            data["success"] = True
+            data["msg"] = "Data updated successfully"
+            data["data"] = serializer.data
+            return Response(data=data, status=status.HTTP_200_OK)
+
+        data["success"] = False
+        data["msg"] = serializer.errors
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def patch_medicine(request, id):
+    data = {}
+
+    try:
+        if id:
+            medicine = MedicineModel.objects.get(pk=id)
+        else:
+            medicine = MedicineModel.objects.all()
+    except MedicineModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record Does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "POST":
+        serializer = MedicineSerializers(medicine, request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            data["success"] = True
+            data["msg"] = "Data updated successfully"
+            data["data"] = serializer.data
+            return Response(data=data, status=status.HTTP_200_OK)
+
+        data["success"] = False
+        data["msg"] = serializer.errors
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)

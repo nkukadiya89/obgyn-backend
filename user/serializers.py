@@ -8,6 +8,11 @@ from user.models import User
 
 class UserSerializers(serializers.ModelSerializer):
 
+    def to_representation(self, instance):
+        ret = super(UserSerializers, self).to_representation(instance)
+        ret.pop('password')
+        return ret
+
     def validate(self, data):
 
         user_type = data.get('user_type')
