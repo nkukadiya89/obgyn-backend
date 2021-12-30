@@ -25,12 +25,12 @@ class CityAPI(APIView):
 
         try:
             if id:
-                city = CityModel.objects.filter(pk=id)
+                city = CityModel.objects.filter(pk=id,deleted=0)
             else:
-                city = CityModel.objects.all()
+                city = CityModel.objects.filter(deleted=0)
 
             city, data = filtering_query(city, query_string, "city_id", "CITY")
-            data["total_record"] = len(city)
+            # data["total_record"] = len(city)
 
         except CityModel.DoesNotExist:
             self.data["success"] = False
