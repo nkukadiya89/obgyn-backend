@@ -67,9 +67,9 @@ def send_mail(subject, template, data):
         msImage1.add_header('Content-ID', '<image2>')
         msg.attach(msImage1)
 
-    mailserver = smtplib.SMTP_SSL("smtp.gmail.com", 465)
+    mailserver = smtplib.SMTP_SSL("smtp.gmail.com", 587)
     mailserver.ehlo()
-
+    mailserver.starttls()
 
 
     mailserver.login(config('ADMIN_EMAIL'), config('EMAIL_PASSWORD'))
