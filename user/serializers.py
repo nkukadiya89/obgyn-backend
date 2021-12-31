@@ -17,7 +17,7 @@ class UserSerializers(serializers.ModelSerializer):
             ret.pop('first_name')
             ret.pop('last_name')
             ret.pop('middle_name')
-            
+
         ret['state'] = StateSerializers(instance.state).data["state_name"]
         ret['city'] = CitySerializers(instance.city).data["city_name"]
         ret['default_language'] = LanguageSerializers(instance.default_language).data["language"]
