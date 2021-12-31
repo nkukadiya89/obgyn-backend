@@ -18,10 +18,10 @@ class UserSerializers(serializers.ModelSerializer):
             ret.pop('last_name')
             ret.pop('middle_name')
 
-        ret['state'] = StateSerializers(instance.state).data["state_name"]
-        ret['city'] = CitySerializers(instance.city).data["city_name"]
-        ret['default_language'] = LanguageSerializers(instance.default_language).data["language"]
-        ret['hospital'] = UserSerializers(instance.hospital).data["hospital_name"]
+        ret['state_name'] = StateSerializers(instance.state).data["state_name"]
+        ret['city_name'] = CitySerializers(instance.city).data["city_name"]
+        ret['default_language_name'] = LanguageSerializers(instance.default_language).data["language"]
+        ret['hospital_name'] = UserSerializers(instance.hospital).data["hospital_name"]
         return ret
 
     def validate(self, data):

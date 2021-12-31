@@ -145,12 +145,6 @@ STATICFILES_DIRS = [
 
 AUTH_USER_MODEL = 'user.User'
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework_simplejwt.authentication.JWTAuthentication'
-#     )
-# }
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=2880),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=5),
@@ -159,6 +153,3 @@ SIMPLE_JWT = {
     # 'USER_ID_FIELD': 'email',
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
-
-ALLOWED_HOSTS = ['*']
-CORS_ORIGIN_ALLOW_ALL = True
