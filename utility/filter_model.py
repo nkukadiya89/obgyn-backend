@@ -63,6 +63,8 @@ class ModelFilterUSER:
                 Q(middle_name__icontains=search) |
                 Q(user_type__icontains=search) |
                 Q(hospital_name__icontains=search) |
+                Q(area__icontains=search)|
+                Q(phone__icontains=search)|
                 Q(state__state_name__icontains=search) |
                 Q(city__city_name__icontains=search) |
                 Q(email__icontains=search) |
