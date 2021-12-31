@@ -238,7 +238,7 @@ def reset_password(request, token):
 
     data["success"] = True
     data["msg"] = "Password sucessfully changed"
-    return HttpResponse("Password successfully changed", status=status.HTTP_200_OK)
+    return Response("Password successfully changed", status=status.HTTP_200_OK)
 
 
 @csrf_exempt
