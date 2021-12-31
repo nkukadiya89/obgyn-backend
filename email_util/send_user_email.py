@@ -33,7 +33,7 @@ def send_mail(subject, template, data):
 
     app_url = config('APP_URL')
     if template == "register-success.html" or template == "verify_account.html":
-        token = generate_token(data["email"], None, 2880).decode('utf-8')
+        token = generate_token(data["email"], 2880)
         context["login_url"] = app_url + "login"
         context["verify_link"] = app_url + "verify-success/"
         context["token"] = token
@@ -47,7 +47,7 @@ def send_mail(subject, template, data):
 
     msg = MIMEMultipart()
     msg.set_unixfrom('author')
-    msg['From'] = "Online Deals <" + config('ADMIN_EMAIL') + ">"
+    msg['From'] = "OBGYN <" + config('ADMIN_EMAIL') + ">"
     msg['To'] = to_email
     msg['Subject'] = subject
     part2 = MIMEText(html_body, 'html')
@@ -67,9 +67,9 @@ def send_mail(subject, template, data):
         msImage1.add_header('Content-ID', '<image2>')
         msg.attach(msImage1)
 
-    mailserver = smtplib.SMTP_SSL("smtp.gmail.com", 587)
+    mailserver = smtplib.SMTP_SSL("smtp.gmail.com", 465)
     mailserver.ehlo()
-    mailserver.starttls()
+    # mailserver.starttls()
 
 
     mailserver.login(config('ADMIN_EMAIL'), config('EMAIL_PASSWORD'))

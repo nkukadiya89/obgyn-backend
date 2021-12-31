@@ -22,9 +22,9 @@ class LanguageAPI(APIView):
         data = {}
         try:
             if id:
-                language = LanguageModel.objects.filter(pk=id)
+                language = LanguageModel.objects.filter(pk=id,deleted=0)
             else:
-                language = LanguageModel.objects.all()
+                language = LanguageModel.objects.filter(deleted=0)
         except LanguageModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record Does not exist"
@@ -115,7 +115,7 @@ def patch(request, id):
         if id:
             language = LanguageModel.objects.get(pk=id)
         else:
-            language = LanguageModel.objects.all()
+            language = LanguageModel.objects.filter(deleted=0)
     except LanguageModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"

@@ -115,7 +115,7 @@ def patch(request, id):
         if id:
             diagnosis = DiagnosisModel.objects.get(pk=id)
         else:
-            diagnosis = DiagnosisModel.objects.all()
+            diagnosis = DiagnosisModel.objects.filter(deleted=0)
     except DiagnosisModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"

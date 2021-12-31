@@ -55,7 +55,7 @@ def update_user(request, id):
             if id:
                 user = User.objects.get(pk=id)
             else:
-                user = User.objects.all()
+                user = User.objects.filter(deleted=0)
         except User.DoesNotExist:
             data["success"] = False
             data["msg"] = "User does not exist"
@@ -96,8 +96,8 @@ def get_user(request, type, id=None):
             user = User.objects.filter(user_type__iexact=type.upper(), deleted=0)
         if id:
             user = user.filter(pk=id, deleted=0)
-        data["total_record"] =  len(user)  
 
+        data["total_record"] = len(user)
         user, data = user_filtering_query(user, query_string, "id", "USER")
 
     except User.DoesNotExist:
@@ -122,9 +122,9 @@ def change_password(request):
     data = {}
     user = request.user
 
-    data = request.data
-    old_password = data.get('old_password')
-    new_password = data.get('new_password')
+    req_data = request.data
+    old_password = req_data.get('old_password')
+    new_password = req_data.get('new_password')
 
     if check_password(old_password, user.password):
         user.set_password(new_password)
@@ -189,6 +189,7 @@ def reset_password(request, token):
 
     try:
         payload = decode_token(token)
+        print(payload)
     except:
         return HttpResponse("Token Expired", status=401)
 
@@ -269,9 +270,8 @@ def verify_user(request, token):
     user.save()
 
     data["success"] = True
-    data["msg"] = "OK"
+    data["msg"] = "Account verified"
     return Response(data=data, status=status.HTTP_200_OK)
-
 
 
 @csrf_exempt
@@ -305,9 +305,9 @@ def send_verify_link(request):
     if verify_user.verified:
         data["success"] = False
         data["msg"] = "Account is already verified"
-        return Response(data=data, status=status.HTTP_200_OK)
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-    token = generate_token(email, None, 2880).decode('utf-8')
+    token = generate_token(email, 2880)
 
     name = user.first_name
     context = {}
@@ -318,6 +318,6 @@ def send_verify_link(request):
     urlObject = request._current_scheme_host + request.path
     context["current_site"] = urlObject
     send_mail("Verify Your Account", "verify_account.html", context)
-
-
-    return Response("Email has been send", status=200)
+    data["success"] = True
+    data["msg"] = "Email has been send"
+    return Response(data=data, status=status.HTTP_200_OK)

@@ -65,7 +65,7 @@ class MedicineSerializers(serializers.ModelSerializer):
             noon_timing = data.get("noon_timing")
             evening_timing = data.get("eveningTiming")
             bed_timing = data.get("bedtiming")
-            duplicate_medicin = MedicineModel.objects.all().filter(deleted=0, medicine__iexact=medicine,
+            duplicate_medicin = MedicineModel.objects.filter(deleted=0).filter(deleted=0, medicine__iexact=medicine,
                                                                    morning_timing_id=morning_timing,
                                                                    noon_timing_id=noon_timing,
                                                                    evening_timing_id=evening_timing,

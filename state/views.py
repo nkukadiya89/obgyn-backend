@@ -115,7 +115,7 @@ def patch(request, id):
         if id:
             state = StateModel.objects.get(state_id=id)
         else:
-            state = StateModel.objects.all()
+            state = StateModel.objects.filter(deleted=0)
     except StateModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"

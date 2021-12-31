@@ -22,9 +22,9 @@ class ManageFieldsAPI(APIView):
         data = {}
         try:
             if id:
-                manage_fields = ManageFieldsModel.objects.filter(pk=id)
+                manage_fields = ManageFieldsModel.objects.filter(pk=id,deleted=0)
             else:
-                manage_fields = ManageFieldsModel.objects.all()
+                manage_fields = ManageFieldsModel.objects.filter(deleted=0)
         except ManageFieldsModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record Does not exist"
@@ -114,9 +114,9 @@ def patch(request, id):
 
     try:
         if id:
-            manage_fields = ManageFieldsModel.objects.get(pk=id)
+            manage_fields = ManageFieldsModel.objects.get(pk=id, deleted=0)
         else:
-            manage_fields = ManageFieldsModel.objects.all()
+            manage_fields = ManageFieldsModel.objects.filter(deleted=0)
     except ManageFieldsModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"
