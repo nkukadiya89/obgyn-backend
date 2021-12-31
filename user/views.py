@@ -198,6 +198,7 @@ def forget_password(request):
 @csrf_exempt
 @authentication_classes([JWTAuthentication])
 @permission_classes([AllowAny])
+@api_view(('POST',))
 def reset_password(request, token):
     data = {}
     try:
@@ -238,7 +239,7 @@ def reset_password(request, token):
 
     data["success"] = True
     data["msg"] = "Password sucessfully changed"
-    return Response("Password successfully changed", status=status.HTTP_200_OK)
+    return Response(data=data, status=status.HTTP_200_OK)
 
 
 @csrf_exempt
@@ -314,27 +315,27 @@ def send_verify_link(request):
     except:
         data["success"] = False
         data["msg"] = "Service not available"
-        return HttpResponse(data=data, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     email = req_data.get("email", None)
     if email == None:
         data["success"] = False
         data["msg"] = "Email Address is not registered"
-        return HttpResponse(data=data, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     user = User.objects.filter(email=email).first()
 
     if user == None:
         data["success"] = False
         data["msg"] = "Record Not Found"
-        return HttpResponse(data=data, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     verify_user = User.objects.filter(id=user.id).first()
 
     if verify_user.verified:
         data["success"] = False
         data["msg"] = "Account is already verified"
-        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(data=data, status=status.HTTP_200_OK)
 
     token = generate_token(email, 2880)
 
