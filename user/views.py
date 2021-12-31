@@ -42,7 +42,18 @@ def register_view(request):
             data["errors"] = serializer.errors
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-        context={}
+        if user.user_type == "HOSPITAL":
+            name = user.hospital_name
+        else:
+            name = user.first_name
+
+        email = user.email
+        token = generate_token(email, 2880)
+        context = {}
+        context["name"] = name
+        context["token"] = token
+        context["email"] = email
+
         urlObject = request._current_scheme_host + request.path
         context["current_site"] = urlObject
         send_mail("Registration Successful", "register-success.html", context)
@@ -314,7 +325,10 @@ def send_verify_link(request):
 
     token = generate_token(email, 2880)
 
-    name = user.first_name
+    if user.user_type == "HOSPITAL":
+        name = user.hospital_name
+    else:
+        name = user.first_name
     context = {}
 
     context["name"] = name
