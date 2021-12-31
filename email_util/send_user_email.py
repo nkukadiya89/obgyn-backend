@@ -69,8 +69,6 @@ def send_mail(subject, template, data):
 
     mailserver = smtplib.SMTP_SSL("smtp.gmail.com", 465)
     mailserver.ehlo()
-    # mailserver.starttls()
-
 
     mailserver.login(config('ADMIN_EMAIL'), config('EMAIL_PASSWORD'))
 
