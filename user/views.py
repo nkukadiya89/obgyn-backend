@@ -41,6 +41,11 @@ def register_view(request):
             data["msg"] = "User Registration Failed."
             data["errors"] = serializer.errors
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+        context={}
+        urlObject = request._current_scheme_host + request.path
+        context["current_site"] = urlObject
+        send_mail("Registration Successful", "register-success.html", context)
         return Response(data=data, status=status.HTTP_200_OK)
 
 
