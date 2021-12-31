@@ -79,6 +79,7 @@ def update_user(request, id):
 
         if request.method == "POST":
             serializer = UserSerializers(user, request.data, partial=True)
+            print(serializer)
             if serializer.is_valid():
                 user = serializer.save()
 
