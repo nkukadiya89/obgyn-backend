@@ -198,34 +198,46 @@ def forget_password(request):
 @authentication_classes([JWTAuthentication])
 @permission_classes([AllowAny])
 def reset_password(request, token):
+    data = {}
     try:
-        data = json.loads(request.body.decode('utf-8'))
+        res_data = json.loads(request.body.decode('utf-8'))
     except:
-        return HttpResponse("Service not available", status=401)
+        data["success"] = False
+        data["msg"] = "Service Not available"
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     try:
         payload = decode_token(token)
-        print(payload)
     except:
-        return HttpResponse("Token Expired", status=401)
+        data["success"] = False
+        data["msg"] = "Token Expired"
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     if "email" not in payload:
-        return HttpResponse("No email found", status=401)
+        data["success"] = False
+        data["msg"] = "Inavalid Token"
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     user = User.objects.filter(email=payload["email"]).first()
 
     if user == None:
-        return HttpResponse("No user found", status=401)
+        data["success"] = False
+        data["msg"] = "Email not registered"
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-    password = data.get("password", None)
+    password = res_data.get("password", None)
 
     if password == None:
-        return HttpResponse("Reset Password not available", status=401)
+        data["success"] = False
+        data["msg"] = "Provide valid Password"
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     user.set_password(password)
     user.save()
 
-    return HttpResponse("Password successfully changed", status=200)
+    data["success"] = True
+    data["msg"] = "Password sucessfully changed"
+    return HttpResponse("Password successfully changed", status=status.HTTP_200_OK)
 
 
 @csrf_exempt
