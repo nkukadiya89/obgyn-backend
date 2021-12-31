@@ -21,9 +21,9 @@ class MedicineAPI(APIView):
         data = {}
         try:
             if id:
-                medicine = MedicineModel.objects.filter(pk=id)
+                medicine = MedicineModel.objects.filter(pk=id,deleted=0)
             else:
-                medicine = MedicineModel.objects.all()
+                medicine = MedicineModel.objects.filter(deleted=0)
         except MedicineModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record Does not exist"
@@ -113,9 +113,9 @@ class MedicineTypeAPI(APIView):
         data = {}
         try:
             if id:
-                medicine_type = MedicineTypeModel.objects.filter(pk=id)
+                medicine_type = MedicineTypeModel.objects.filter(pk=id,deleted=0)
             else:
-                medicine_type = MedicineTypeModel.objects.all()
+                medicine_type = MedicineTypeModel.objects.filter(deleted=0)
         except MedicineTypeModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record Does not exist"
@@ -204,9 +204,9 @@ class TimingAPI(APIView):
         data = {}
         try:
             if id:
-                timing = TimingModel.objects.filter(pk=id)
+                timing = TimingModel.objects.filter(pk=id,deleted=0)
             else:
-                timing = TimingModel.objects.all()
+                timing = TimingModel.objects.filter(deleted=0)
         except TimingModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record Does not exist"
@@ -297,7 +297,7 @@ def patch_timing(request, id):
         if id:
             timing = TimingModel.objects.get(pk=id)
         else:
-            timing = TimingModel.objects.all()
+            timing = TimingModel.objects.filter(deleted=0)
     except TimingModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"
@@ -330,7 +330,7 @@ def patch_medicine_type(request, id):
         if id:
             medicine_type = MedicineTypeModel.objects.get(pk=id)
         else:
-            medicine_type = MedicineTypeModel.objects.all()
+            medicine_type = MedicineTypeModel.objects.filter(deleted=0)
     except MedicineTypeModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"
@@ -363,7 +363,7 @@ def patch_medicine(request, id):
         if id:
             medicine = MedicineModel.objects.get(pk=id)
         else:
-            medicine = MedicineModel.objects.all()
+            medicine = MedicineModel.objects.filter(deleted=0)
     except MedicineModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"

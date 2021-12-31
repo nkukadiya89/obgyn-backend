@@ -77,7 +77,7 @@ class CityAPI(APIView):
     #         if id:
     #             city = CityModel.objects.get(pk=id)
     #         else:
-    #             city = CityModel.objects.all()
+    #             city = CityModel.objects.filter(deleted=0)
     #     except CityModel.DoesNotExist:
     #         data["success"] = False
     #         data["msg"] = "Record Does not exist"
@@ -154,7 +154,7 @@ def patch(request, id):
         if id:
             city = CityModel.objects.get(pk=id)
         else:
-            city = CityModel.objects.all()
+            city = CityModel.objects.filter(deleted=0)
     except CityModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"

@@ -1,7 +1,8 @@
 from django.db.models import Q
 from rest_framework import serializers
 
-from state.models import StateModel
+from city.serializers import CitySerializers
+from language.serializers import LanguageSerializers
 from state.serializers import StateSerializers
 from user.models import User
 
@@ -11,6 +12,16 @@ class UserSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(UserSerializers, self).to_representation(instance)
         ret.pop('password')
+
+        if instance.user_type == "HOSPITAL":
+            ret.pop('first_name')
+            ret.pop('last_name')
+            ret.pop('middle_name')
+            
+        ret['state'] = StateSerializers(instance.state).data["state_name"]
+        ret['city'] = CitySerializers(instance.city).data["city_name"]
+        ret['default_language'] = LanguageSerializers(instance.default_language).data["language"]
+        ret['hospital'] = UserSerializers(instance.hospital).data["hospital_name"]
         return ret
 
     def validate(self, data):

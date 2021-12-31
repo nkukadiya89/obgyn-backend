@@ -22,9 +22,9 @@ class SurgicalItemAPI(APIView):
         data = {}
         try:
             if id:
-                surgical_item = SurgicalItemModel.objects.filter(pk=id)
+                surgical_item = SurgicalItemModel.objects.filter(pk=id, deleted=0)
             else:
-                surgical_item = SurgicalItemModel.objects.all()
+                surgical_item = SurgicalItemModel.objects.filter(deleted=0)
         except SurgicalItemModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record Does not exist"
@@ -114,9 +114,9 @@ class SurgicalItemGroupAPI(APIView):
         data = {}
         try:
             if id:
-                surgical_item_group = SurgicalItemGroupModel.objects.filter(pk=id)
+                surgical_item_group = SurgicalItemGroupModel.objects.filter(pk=id, deleted=0)
             else:
-                surgical_item_group = SurgicalItemGroupModel.objects.all()
+                surgical_item_group = SurgicalItemGroupModel.objects.filter(deleted=0)
         except SurgicalItemGroupModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record Does not exist"
@@ -207,7 +207,7 @@ def patch_surgical_group(request, id):
         if id:
             surgical_item_group = SurgicalItemGroupModel.objects.get(pk=id)
         else:
-            surgical_item_group = SurgicalItemGroupModel.objects.all()
+            surgical_item_group = SurgicalItemGroupModel.objects.filter(deleted=0)
     except SurgicalItemGroupModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"
@@ -240,7 +240,7 @@ def patch(request, id):
         if id:
             surgical_item = SurgicalItemModel.objects.get(pk=id)
         else:
-            surgical_item = SurgicalItemModel.objects.all()
+            surgical_item = SurgicalItemModel.objects.filter(deleted=0)
     except SurgicalItemModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"

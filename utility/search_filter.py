@@ -95,15 +95,17 @@ def filtering_query(model, query_string, model_id, classnm):
         filter = list(query_string["filter"].split(","))
         if filter:
             model = eval(func_name_filter + "(model, filter)")
+            data["total_record"] = len(model)
     if "search" in query_string:
         model = eval(func_name_search + "(model, query_string)")
-
+        data["total_record"] = len(model)
     if orderby:
         if sortby:
             orderby = sortby + orderby
 
         model = model.order_by(orderby)
-    data["total_record"] = len(model)
+
+
     if "page" in query_string:
         if "pageRecord" in query_string:
             pageRecord = query_string["pageRecord"]
