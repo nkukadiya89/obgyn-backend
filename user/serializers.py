@@ -7,6 +7,48 @@ from state.serializers import StateSerializers
 from user.models import User
 
 
+class DynamicFieldModelSerializer(serializers.ModelSerializer):
+
+    def __init__(self, *args, **kwargs):
+        fields = kwargs.pop('fields', None)
+
+        super(DynamicFieldModelSerializer, self).__init__(*args, **kwargs)
+
+        fields = set(fields.split(","))
+
+        if fields is not None:
+            allowed = fields
+            existing = set(self.fields)
+
+            for field_name in existing - allowed:
+                self.fields.pop(field_name)
+
+    def to_representation(self, instance,*args,**kwargs):
+        ret = super(DynamicFieldModelSerializer, self).to_representation(instance)
+
+        if instance.user_type == "HOSPITAL":
+            if "first_name" in ret: ret.pop('first_name')
+            if "last_name" in ret: ret.pop('last_name')
+            if "middle_name" in ret: ret.pop('middle_name')
+
+        if "state" in ret:
+            ret['state_name'] = StateSerializers(instance.state).data["state_name"]
+
+        if "city" in ret: ret['city_name'] = CitySerializers(instance.city).data["city_name"]
+        if "default_language" in ret: ret['default_language_name'] = LanguageSerializers(instance.default_language).data[
+            "language"]
+        if "hospital" in ret: ret['hospitalname'] = UserSerializers(instance.hospital).data["hospital_name"]
+        return ret
+
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'middle_name', 'user_type', 'hospital_name',
+                  'phone', 'state', 'city', 'area', 'pincode', 'email', 'landline', 'fax_number', 'degree',
+                  'speciality', 'aadhar_card', 'registration_no', 'default_language', 'designation', 'hospital',
+                  'username',
+                  'user_code', 'created_by']
+
+
 class UserSerializers(serializers.ModelSerializer):
 
     def to_representation(self, instance):

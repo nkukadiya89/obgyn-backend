@@ -13,5 +13,5 @@ urlpatterns = [
     path('reset-password/<str:token>', reset_password, name="reset_password"),
     path('verify-email/', send_verify_link, name="send_verify_link"),
     path('verify-token/<str:token>', verify_user, name="verify_user"),
-    path('delete/', delete_user, name="delete_user")
+    path('delete/', delete_user, name="delete_user"),
 ]

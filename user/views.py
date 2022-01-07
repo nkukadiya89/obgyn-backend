@@ -12,7 +12,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from email_util.send_user_email import generate_token, decode_token, send_mail
 from utility.search_filter import user_filtering_query
 from .models import User
-from .serializers import UserSerializers
+from .serializers import UserSerializers, DynamicFieldModelSerializer
 
 
 # Create your views here.
@@ -126,7 +126,44 @@ def get_user(request, type, id=None):
     if request.method == "GET":
         data["success"] = True
         data["msg"] = "OK"
-        serializer = UserSerializers(user, many=True)
+
+        if query_string["fields"]:
+            serializer = DynamicFieldModelSerializer(user, many=True, fields=query_string["fields"])
+        else:
+            serializer = UserSerializers(user, many=True)
+        data["data"] = serializer.data
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+# ================= Retrieve Single or Multiple records=========================
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticatedOrReadOnly])
+def get_user_field_wise(request, type, id=None):
+    query_string = request.query_params
+
+    data = {}
+    try:
+        user = User.objects.filter(deleted=0)
+        if type:
+            user = User.objects.filter(user_type__iexact=type.upper(), deleted=0)
+        if id:
+            user = user.filter(pk=id, deleted=0)
+
+        data["total_record"] = len(user)
+        user, data = user_filtering_query(user, query_string, "id", "USER")
+
+    except User.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "User Does not exist"
+        data["data"] = []
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "GET":
+        data["success"] = True
+        data["msg"] = "OK"
+        user = user
+        serializer = DynamicFieldModelSerializer(user, many=True, fields=query_string["fields"])
         data["data"] = serializer.data
         return Response(data=data, status=status.HTTP_200_OK)
 
