@@ -47,7 +47,7 @@ class MedicineTypeSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = MedicineTypeModel
-        fields = ['medicine_type_id', 'medicineType', 'created_by', 'deleted']
+        fields = ['medicine_type_id', 'medicine_type', 'created_by', 'deleted']
 
 
 class MedicineSerializers(serializers.ModelSerializer):
