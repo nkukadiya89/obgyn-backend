@@ -268,7 +268,7 @@ def get_group(request, id=None):
             surgical_item_group = SurgicalItemGroupModel.objects.filter(deleted=0)
 
             data["total_record"] = len(surgical_item_group)
-            surgical_item_group, data = filtering_query(surgical_item_group, query_string, "surgical_item_group_id", "SURGICALITEMGROUP")
+            surgical_item_group, data = filtering_query(surgical_item_group, query_string, "si_group_id", "SURGICALITEMGROUP")
 
     except SurgicalItemGroupModel.DoesNotExist:
         data["success"] = False
