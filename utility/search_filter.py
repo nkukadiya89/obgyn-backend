@@ -105,7 +105,6 @@ def filtering_query(model, query_string, model_id, classnm):
 
         model = model.order_by(orderby)
 
-
     if "page" in query_string:
         if "pageRecord" in query_string:
             pageRecord = query_string["pageRecord"]

@@ -31,9 +31,7 @@ class DynamicFieldModelSerializer(serializers.ModelSerializer):
             if "last_name" in ret: ret.pop('last_name')
             if "middle_name" in ret: ret.pop('middle_name')
 
-        if "state" in ret:
-            ret['state_name'] = StateSerializers(instance.state).data["state_name"]
-
+        if "state" in ret: ret['state_name'] = StateSerializers(instance.state).data["state_name"]
         if "city" in ret: ret['city_name'] = CitySerializers(instance.city).data["city_name"]
         if "default_language" in ret: ret['default_language_name'] = LanguageSerializers(instance.default_language).data[
             "language"]

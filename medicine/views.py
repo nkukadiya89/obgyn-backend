@@ -9,33 +9,13 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 from .models import MedicineModel, TimingModel, MedicineTypeModel
-from .serializers import MedicineSerializers, MedicineTypeSerializers, TimingSerializers
+from .serializers import MedicineSerializers, MedicineTypeSerializers, TimingSerializers,DynamicFieldModelSerializer
+from utility.search_filter import filtering_query
 
 
 class MedicineAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
     permission_classes = [IsAuthenticated]
-
-    # ================= Retrieve Single or Multiple records=========================
-    def get(self, request, id=None):
-        data = {}
-        try:
-            if id:
-                medicine = MedicineModel.objects.filter(pk=id,deleted=0)
-            else:
-                medicine = MedicineModel.objects.filter(deleted=0)
-        except MedicineModel.DoesNotExist:
-            data["success"] = False
-            data["msg"] = "Record Does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        if request.method == "GET":
-            serilizer = MedicineSerializers(medicine, many=True)
-            data["success"] = True
-            data["msg"] = "OK"
-            data["data"] = serilizer.data
-            return Response(data=data, status=status.HTTP_200_OK)
 
     # ================= Update all Fields of a record =========================
     def put(self, request, id):
@@ -107,27 +87,6 @@ class MedicineAPI(APIView):
 class MedicineTypeAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
     permission_classes = [IsAuthenticated]
-
-    # ================= Retrieve Single or Multiple records=========================
-    def get(self, request, id=None):
-        data = {}
-        try:
-            if id:
-                medicine_type = MedicineTypeModel.objects.filter(pk=id,deleted=0)
-            else:
-                medicine_type = MedicineTypeModel.objects.filter(deleted=0)
-        except MedicineTypeModel.DoesNotExist:
-            data["success"] = False
-            data["msg"] = "Record Does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        if request.method == "GET":
-            serilizer = MedicineTypeSerializers(medicine_type, many=True)
-            data["success"] = True
-            data["msg"] = "OK"
-            data["data"] = serilizer.data
-            return Response(data=data, status=status.HTTP_200_OK)
 
     # ================= Update all Fields of a record =========================
     def put(self, request, id):
@@ -384,3 +343,73 @@ def patch_medicine(request, id):
         data["msg"] = serializer.errors
         data["data"] = []
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+# ================= Retrieve Single or Multiple records=========================
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+# ================= Retrieve Single or Multiple records=========================
+def get_medicine(request, id=None):
+    query_string = request.query_params
+
+    data = {}
+    try:
+        if id:
+            medicine = MedicineModel.objects.filter(pk=id, deleted=0)
+        else:
+            medicine = MedicineModel.objects.filter(deleted=0)
+
+        data["total_record"] = len(medicine)
+        medicine, data = filtering_query(medicine, query_string, "medicine_id", "MEDICINE")
+
+    except MedicineModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record Does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "GET":
+        serializer = MedicineSerializers(medicine, many=True)
+        if "fields" in query_string:
+            if query_string["fields"]:
+                serializer = DynamicFieldModelSerializer(medicine, many=True, fields=query_string["fields"])
+
+        data["success"] = True
+        data["msg"] = "OK"
+        data["data"] = serializer.data
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+# ================= Retrieve Single or Multiple records=========================
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+# ================= Retrieve Single or Multiple records=========================
+def get_medicine_type(request, id=None):
+    query_string = request.query_params
+
+    data = {}
+    try:
+        if id:
+            medicine_type = MedicineTypeModel.objects.filter(pk=id, deleted=0)
+        else:
+            medicine_type = MedicineTypeModel.objects.filter(deleted=0)
+
+        data["total_record"] = len(medicine_type)
+        medicine_type, data = filtering_query(medicine_type, query_string, "medicine_type_id", "MEDICINETYPE")
+
+    except MedicineTypeModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record Does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "GET":
+        serializer = MedicineTypeSerializers(medicine_type, many=True)
+
+        data["success"] = True
+        data["msg"] = "OK"
+        data["data"] = serializer.data
+        return Response(data=data, status=status.HTTP_200_OK)

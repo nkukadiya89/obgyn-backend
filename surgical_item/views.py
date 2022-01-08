@@ -11,32 +11,13 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 from .models import SurgicalItemModel, SurgicalItemGroupModel
 from .serializers import SurgicalItemSerializers, SurgicalItemGroupSerializers
+from utility.search_filter import filtering_query
 
 
 class SurgicalItemAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-    # ================= Retrieve Single or Multiple records=========================
-    def get(self, request, id=None):
-        data = {}
-        try:
-            if id:
-                surgical_item = SurgicalItemModel.objects.filter(pk=id, deleted=0)
-            else:
-                surgical_item = SurgicalItemModel.objects.filter(deleted=0)
-        except SurgicalItemModel.DoesNotExist:
-            data["success"] = False
-            data["msg"] = "Record Does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        if request.method == "GET":
-            serilizer = SurgicalItemSerializers(surgical_item, many=True)
-            data["success"] = True
-            data["msg"] = "OK"
-            data["data"] = serilizer.data
-            return Response(data=data, status=status.HTTP_200_OK)
 
     # ================= Update all Fields of a record =========================
     def put(self, request, id):
@@ -108,27 +89,6 @@ class SurgicalItemAPI(APIView):
 class SurgicalItemGroupAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
     permission_classes = [IsAuthenticatedOrReadOnly]
-
-    # ================= Retrieve Single or Multiple records=========================
-    def get(self, request, id=None):
-        data = {}
-        try:
-            if id:
-                surgical_item_group = SurgicalItemGroupModel.objects.filter(pk=id, deleted=0)
-            else:
-                surgical_item_group = SurgicalItemGroupModel.objects.filter(deleted=0)
-        except SurgicalItemGroupModel.DoesNotExist:
-            data["success"] = False
-            data["msg"] = "Record Does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        if request.method == "GET":
-            serilizer = SurgicalItemGroupSerializers(surgical_item_group, many=True)
-            data["success"] = True
-            data["msg"] = "OK"
-            data["data"] = serilizer.data
-            return Response(data=data, status=status.HTTP_200_OK)
 
     # ================= Update all Fields of a record =========================
     def put(self, request, id):
@@ -261,3 +221,64 @@ def patch(request, id):
         data["msg"] = serializer.errors
         data["data"] = []
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+# ================= Retrieve Single or Multiple records=========================
+def get(request, id=None):
+    query_string = request.query_params
+
+    data = {}
+    try:
+        if id:
+            surgical_item = SurgicalItemModel.objects.filter(pk=id, deleted=0)
+        else:
+            surgical_item = SurgicalItemModel.objects.filter(deleted=0)
+
+        data["total_record"] = len(surgical_item)
+        surgical_item, data = filtering_query(surgical_item, query_string, "surgical_item_id", "SURGICALITEM")
+
+    except SurgicalItemModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record Does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "GET":
+        serilizer = SurgicalItemSerializers(surgical_item, many=True)
+        data["success"] = True
+        data["msg"] = "OK"
+        data["data"] = serilizer.data
+        return Response(data=data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+# ================= Retrieve Single or Multiple records=========================
+def get_group(request, id=None):
+    query_string = request.query_params
+
+    data = {}
+    try:
+        if id:
+            surgical_item_group = SurgicalItemGroupModel.objects.filter(pk=id, deleted=0)
+        else:
+            surgical_item_group = SurgicalItemGroupModel.objects.filter(deleted=0)
+
+            data["total_record"] = len(surgical_item_group)
+            surgical_item_group, data = filtering_query(surgical_item_group, query_string, "surgical_item_group_id", "SURGICALITEMGROUP")
+
+    except SurgicalItemGroupModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record Does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "GET":
+        serilizer = SurgicalItemGroupSerializers(surgical_item_group, many=True)
+        data["success"] = True
+        data["msg"] = "OK"
+        data["data"] = serilizer.data
+        return Response(data=data, status=status.HTTP_200_OK)

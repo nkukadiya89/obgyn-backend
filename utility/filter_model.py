@@ -80,7 +80,6 @@ class ModelFilterUSER:
             )
         return model
 
-
 class ModelFilterCITY:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
@@ -100,5 +99,140 @@ class ModelFilterCITY:
             model = model.filter(
                 Q(city_name__icontains=search) |
                 Q(state__state_name__icontains=search)
+            )
+        return model
+
+class ModelFilterSTATE:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "state_name":
+                model = model.filter(state_name__iexact=fld_value)
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(state_name__icontains=search)
+            )
+        return model
+
+class ModelFilterLANGUAGE:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "language":
+                model = model.filter(language__iexact=fld_value)
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(language__icontains=search)
+            )
+        return model
+
+class ModelFilterDIAGNOSIS:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "diagnosis_name":
+                model = model.filter(diagnosis_name__iexact=fld_value)
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(diagnosis_name__icontains=search) |
+                Q(medicine__medicine__icontains=search)
+            )
+        return model
+
+class ModelFilterMEDICINE:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "medicine":
+                model = model.filter(medicine__iexact=fld_value)
+            if fld_name == "contain":
+                model = model.filter(contain__iexat=fld_value)
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(medicine__icontains=search) |
+                Q(contain__icontains=search)
+            )
+        return model
+
+class ModelFilterMEDICINETYPE:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "medicine_type":
+                model = model.filter(medicine_type__iexact=fld_value)
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(medicine_type__icontains=search)
+            )
+        return model
+
+class ModelFilterSURGICALITEM:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "drug_name":
+                model = model.filter(drug_name__iexact=fld_value)
+            if fld_name == "batch_number":
+                model = model.filter(batch_number__iexact=fld_value)
+            if fld_name == "mfg_date":
+                model = model.filter(mfg_date=fld_value)
+            if fld_name == "exp_date":
+                model = model.filter(exp_date=fld_value)
+
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(drug_name__icontains=search) |
+                Q(batch_number__icontains=search)
+            )
+        return model
+
+class ModelFilterMANAGEFIELDS:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "field_name":
+                model = model.filter(field_name__iexact=fld_value)
+            if fld_name == "field_value":
+                model = model.filter(field_value__iexact=fld_value)
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(field_name__icontains=search) |
+                Q(field_value__icontains=search) |
+                Q(language__language__icontains=search)
             )
         return model

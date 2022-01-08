@@ -9,10 +9,10 @@ class TimingSerializers(serializers.ModelSerializer):
         timing = data.get('timing')
         language = data.get("language")
 
-        duplicate_timing = TimingModel.objects.filter(deleted=0, timing__iexact=timing, languageId=language)
+        duplicate_timing = TimingModel.objects.filter(deleted=0, timing__iexact=timing, language_id=language)
 
         if self.partial:
-            duplicate_timing = duplicate_timing.filter(~Q(pk=self.instance.timingId)).first()
+            duplicate_timing = duplicate_timing.filter(~Q(pk=self.instance.timing_id)).first()
         else:
             duplicate_timing = duplicate_timing.first()
 
@@ -21,11 +21,11 @@ class TimingSerializers(serializers.ModelSerializer):
 
         return data
 
-    timingId = serializers.IntegerField(read_only=True)
+    timing_id = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = TimingModel
-        fields = ['timingId', 'language', 'timing', 'createdBy', 'deleted']
+        fields = ['timing_id', 'language', 'timing', 'created_by', 'deleted']
 
 
 class MedicineTypeSerializers(serializers.ModelSerializer):
@@ -66,10 +66,10 @@ class MedicineSerializers(serializers.ModelSerializer):
             evening_timing = data.get("eveningTiming")
             bed_timing = data.get("bedtiming")
             duplicate_medicin = MedicineModel.objects.filter(deleted=0).filter(deleted=0, medicine__iexact=medicine,
-                                                                   morning_timing_id=morning_timing,
-                                                                   noon_timing_id=noon_timing,
-                                                                   evening_timing_id=evening_timing,
-                                                                   bed_timing_id=bed_timing)
+                                                                               morning_timing_id=morning_timing,
+                                                                               noon_timing_id=noon_timing,
+                                                                               evening_timing_id=evening_timing,
+                                                                               bed_timing_id=bed_timing)
 
             if self.partial:
                 duplicate_medicin = duplicate_medicin.filter(~Q(pk=self.instance.medicineId)).first()
@@ -81,6 +81,40 @@ class MedicineSerializers(serializers.ModelSerializer):
         return data
 
     medicine_id = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = MedicineModel
+        fields = ['medicine_id', 'barcode', 'medicine_type', 'medicine', 'contain', 'per_day', 'for_day',
+                  'total_tablet', 'company', 'morning_timing', 'noon_timing', 'evening_timing', 'bed_timing',
+                  'created_by', 'deleted']
+
+
+class DynamicFieldModelSerializer(serializers.ModelSerializer):
+
+    def __init__(self, *args, **kwargs):
+        fields = kwargs.pop('fields', None)
+
+        super(DynamicFieldModelSerializer, self).__init__(*args, **kwargs)
+
+        fields = set(fields.split(","))
+
+        if fields is not None:
+            allowed = fields
+            existing = set(self.fields)
+
+            for field_name in existing - allowed:
+                self.fields.pop(field_name)
+
+    def to_representation(self, instance, *args, **kwargs):
+        ret = super(DynamicFieldModelSerializer, self).to_representation(instance)
+
+        if "medicine_type" in ret: ret['state_name'] = MedicineTypeSerializers(instance.medicine_type).data[
+            "medicine_type"]
+        if "morning_timing" in ret: ret['morning_timing'] = TimingSerializers(instance.morning_timing).data["timing"]
+        if "noon_timing" in ret: ret['noon_timing'] = TimingSerializers(instance.noon_timing).data["timing"]
+        if "evening_timing" in ret: ret['evening_timing'] = TimingSerializers(instance.evening_timing).data["timing"]
+        if "bed_timing" in ret: ret['bed_timing'] = TimingSerializers(instance.bed_timing).data["timing"]
+        return ret
 
     class Meta:
         model = MedicineModel
