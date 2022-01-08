@@ -11,32 +11,12 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 from .models import StateModel
 from .serializers import StateSerializers
+from utility.search_filter import filtering_query
 
 
 class StateAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
     permission_classes = [IsAuthenticatedOrReadOnly]
-
-    # ================= Retrieve Single or Multiple records=========================
-    def get(self, request, id=None):
-        data = {}
-        try:
-            if id:
-                state = StateModel.objects.filter(pk=id, deleted=0)
-            else:
-                state = StateModel.objects.filter(deleted=0)
-        except StateModel.DoesNotExist:
-            data["success"] = False
-            data["msg"] = "Record Does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        if request.method == "GET":
-            serilizer = StateSerializers(state, many=True)
-            data["success"] = True
-            data["msg"] = "OK"
-            data["data"] = serilizer.data
-            return Response(data=data, status=status.HTTP_200_OK)
 
     # ================= Update all Fields of a record =========================
     def put(self, request, id):
@@ -136,3 +116,32 @@ def patch(request, id):
         data["msg"] = serializer.errors
         data["data"] = []
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticatedOrReadOnly])
+# ================= Retrieve Single or Multiple records=========================
+def get(request, id=None):
+    query_string = request.query_params
+    data = {}
+    try:
+        if id:
+            state = StateModel.objects.filter(pk=id, deleted=0)
+        else:
+            state = StateModel.objects.filter(deleted=0)
+
+        data["total_record"] = len(state)
+        state, data = filtering_query(state, query_string, "state_id", "STATE")
+
+    except StateModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record Does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "GET":
+        serilizer = StateSerializers(state, many=True)
+        data["success"] = True
+        data["msg"] = "OK"
+        data["data"] = serilizer.data
+        return Response(data=data, status=status.HTTP_200_OK)

@@ -11,32 +11,13 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 from .models import DiagnosisModel
 from .serializers import DiagnosisSerializers
+from utility.search_filter import filtering_query
+
 
 
 class DiagnosisAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
     permission_classes = [IsAuthenticatedOrReadOnly]
-
-    # ================= Retrieve Single or Multiple records=========================
-    def get(self, request, id=None):
-        data = {}
-        try:
-            if id:
-                diagnosis = DiagnosisModel.objects.filter(pk=id, deleted=0)
-            else:
-                diagnosis = DiagnosisModel.objects.filter(deleted=0)
-        except DiagnosisModel.DoesNotExist:
-            data["success"] = False
-            data["msg"] = "Record Does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        if request.method == "GET":
-            serilizer = DiagnosisSerializers(diagnosis, many=True)
-            data["success"] = True
-            data["msg"] = "OK"
-            data["data"] = serilizer.data
-            return Response(data=data, status=status.HTTP_200_OK)
 
     # ================= Update all Fields of a record =========================
     def put(self, request, id):
@@ -136,3 +117,33 @@ def patch(request, id):
         data["msg"] = serializer.errors
         data["data"] = []
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+# ================= Retrieve Single or Multiple records=========================
+def get(request, id=None):
+    query_string = request.query_params
+
+    data = {}
+    try:
+        if id:
+            diagnosis = DiagnosisModel.objects.filter(pk=id, deleted=0)
+        else:
+            diagnosis = DiagnosisModel.objects.filter(deleted=0)
+        data["total_record"] = len(diagnosis)
+        language, data = filtering_query(diagnosis, query_string, "diagnosis_id", "DIAGNOSIS")
+
+    except DiagnosisModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record Does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "GET":
+        serilizer = DiagnosisSerializers(diagnosis, many=True)
+        data["success"] = True
+        data["msg"] = "OK"
+        data["data"] = serilizer.data
+        return Response(data=data, status=status.HTTP_200_OK)

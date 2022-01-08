@@ -11,32 +11,12 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 from .models import ManageFieldsModel
 from .serializers import ManageFieldsSerializers
+from utility.search_filter import filtering_query
 
 
 class ManageFieldsAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
     permission_classes = [IsAuthenticatedOrReadOnly]
-
-    # ================= Retrieve Single or Multiple records=========================
-    def get(self, request, id=None):
-        data = {}
-        try:
-            if id:
-                manage_fields = ManageFieldsModel.objects.filter(pk=id,deleted=0)
-            else:
-                manage_fields = ManageFieldsModel.objects.filter(deleted=0)
-        except ManageFieldsModel.DoesNotExist:
-            data["success"] = False
-            data["msg"] = "Record Does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        if request.method == "GET":
-            serilizer = ManageFieldsSerializers(manage_fields, many=True)
-            data["success"] = True
-            data["msg"] = "OK"
-            data["data"] = serilizer.data
-            return Response(data=data, status=status.HTTP_200_OK)
 
     # ================= Update all Fields of a record =========================
     def put(self, request, id):
@@ -137,3 +117,33 @@ def patch(request, id):
         data["msg"] = serializer.errors
         data["data"] = []
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticatedOrReadOnly])
+# ================= Retrieve Single or Multiple records=========================
+def get(request, id=None):
+    query_string = request.query_params
+    data = {}
+    try:
+        if id:
+            manage_fields = ManageFieldsModel.objects.filter(pk=id,deleted=0)
+        else:
+            manage_fields = ManageFieldsModel.objects.filter(deleted=0)
+
+        data["total_record"] = len(manage_fields)
+        manage_fields, data = filtering_query(manage_fields, query_string, "mf_id", "MANAGEFIELDS")
+
+    except ManageFieldsModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record Does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "GET":
+        serilizer = ManageFieldsSerializers(manage_fields, many=True)
+        data["success"] = True
+        data["msg"] = "OK"
+        data["data"] = serilizer.data
+        return Response(data=data, status=status.HTTP_200_OK)

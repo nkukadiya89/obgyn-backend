@@ -13,7 +13,7 @@ class LanguageModel(models.Model):
     created_at = models.DateTimeField(default=now)
 
     def __str__(self):
-        return f"({self.languageId},{self.language})"
+        return f"({self.language_Id},{self.language})"
 
     class Meta:
         db_table = "language"
