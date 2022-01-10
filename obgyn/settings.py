@@ -146,7 +146,7 @@ STATICFILES_DIRS = [
 AUTH_USER_MODEL = 'user.User'
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=2880),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=360),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=5),
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
