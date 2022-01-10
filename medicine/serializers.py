@@ -44,10 +44,11 @@ class MedicineTypeSerializers(serializers.ModelSerializer):
         return data
 
     medicine_type_id = serializers.IntegerField(read_only=True)
+    created_at = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = MedicineTypeModel
-        fields = ['medicine_type_id', 'medicine_type', 'created_by', 'deleted']
+        fields = ['medicine_type_id', 'medicine_type', 'created_by', 'deleted','created_at']
 
 
 class MedicineSerializers(serializers.ModelSerializer):
@@ -81,13 +82,12 @@ class MedicineSerializers(serializers.ModelSerializer):
         return data
 
     medicine_id = serializers.CharField(read_only=True)
-    created_at = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = MedicineModel
         fields = ['medicine_id', 'barcode', 'medicine_type', 'medicine', 'contain', 'per_day', 'for_day',
                   'total_tablet', 'company', 'morning_timing', 'noon_timing', 'evening_timing', 'bed_timing',
-                  'created_by', 'deleted','created_at']
+                  'created_by', 'deleted']
 
 
 class DynamicFieldModelSerializer(serializers.ModelSerializer):
@@ -121,4 +121,4 @@ class DynamicFieldModelSerializer(serializers.ModelSerializer):
         model = MedicineModel
         fields = ['medicine_id', 'barcode', 'medicine_type', 'medicine', 'contain', 'per_day', 'for_day',
                   'total_tablet', 'company', 'morning_timing', 'noon_timing', 'evening_timing', 'bed_timing',
-                  'created_by', 'deleted','created_at']
+                  'created_by', 'deleted']
