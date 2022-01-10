@@ -4,6 +4,10 @@ from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
 
+def update_user(apps, edit_schema):
+    user_model = apps.get_model('user', 'User')
+    user_model.objects.update(user_code="admin")
+
 
 class Migration(migrations.Migration):
 
@@ -94,4 +98,5 @@ class Migration(migrations.Migration):
             name='state',
             field=models.ForeignKey(db_column='stateId', null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='state.statemodel'),
         ),
+        migrations.RunPython(update_user)
     ]

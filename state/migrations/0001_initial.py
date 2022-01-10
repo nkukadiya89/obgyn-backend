@@ -3,6 +3,10 @@
 from django.db import migrations, models
 import django.utils.timezone
 
+def create_default_user(apps, edit_schema):
+    state_model = apps.get_model('state', 'StateModel')
+    state_model.objects.create(city_name="Gujarat")
+
 
 class Migration(migrations.Migration):
 
@@ -25,4 +29,5 @@ class Migration(migrations.Migration):
                 'db_table': 'state',
             },
         ),
+        migrations.RunPython(create_default_user)
     ]

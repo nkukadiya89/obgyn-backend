@@ -11,7 +11,8 @@ import user.models
 def create_default_user(apps, edit_schema):
     user_model = apps.get_model('user', 'User')
     user_model.objects.create(is_superuser=True, username='nirav@devopsinternational.nl', first_name='Nirav',
-                              last_name='Kukadiya', is_staff=True, is_active=True,email='nirav@devopsinternational.nl',)
+                              last_name='Kukadiya', is_staff=True, is_active=True, email='nirav@devopsinternational.nl',
+                              created_by=1, default_language_id=1)
 
 
 class Migration(migrations.Migration):
@@ -86,5 +87,5 @@ class Migration(migrations.Migration):
                 ('objects', user.models.UserManager()),
             ],
         ),
-        # migrations.RunPython(create_default_user)
+        migrations.RunPython(create_default_user)
     ]

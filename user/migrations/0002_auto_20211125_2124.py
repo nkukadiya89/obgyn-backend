@@ -2,6 +2,10 @@
 
 from django.db import migrations, models
 
+def update_user(apps, edit_schema):
+    user_model = apps.get_model('user', 'User')
+    user_model.objects.update(user_type="admin")
+
 
 class Migration(migrations.Migration):
 
@@ -21,4 +25,5 @@ class Migration(migrations.Migration):
             field=models.CharField(choices=[('HOSPITAL', 'HOSPITAL'), ('STAFF', 'STAFF'), ('DOCTOR', 'DOCTOR')], default='DOCTOR', max_length=9),
             preserve_default=False,
         ),
+        migrations.RunPython(update_user)
     ]
