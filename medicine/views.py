@@ -50,7 +50,7 @@ class MedicineAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
-            medicine = MedicineModel.objects.get(medicineId__in=del_id["id"])
+            medicine = MedicineModel.objects.filter(medicineId__in=del_id["id"])
         except MedicineModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
@@ -114,13 +114,14 @@ class MedicineTypeAPI(APIView):
     def delete(self, request):
         data = {}
         del_id = json.loads(request.body.decode('utf-8'))
+        print(del_id)
         if "id" not in del_id:
             data["success"] = False
             data["msg"] = "Record ID not provided"
             data["data"] = []
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
         try:
-            medicine_type = MedicineTypeModel.objects.get(medicineTypeId__in=del_id["id"])
+            medicine_type = MedicineTypeModel.objects.filter(medicine_type_id__in=del_id["id"])
         except MedicineTypeModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
@@ -212,7 +213,7 @@ class TimingAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
-            timing = TimingModel.objects.get(timingId__in=del_id["id"])
+            timing = TimingModel.objects.filter(timing_id__in=del_id["id"])
         except TimingModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"

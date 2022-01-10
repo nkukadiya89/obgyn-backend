@@ -52,7 +52,7 @@ class DiagnosisAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
-            diagnosis = DiagnosisModel.objects.get(diagnosis_id__in=del_id["id"])
+            diagnosis = DiagnosisModel.objects.filter(diagnosis_id__in=del_id["id"])
         except DiagnosisModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
