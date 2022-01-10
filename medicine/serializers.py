@@ -86,7 +86,7 @@ class MedicineSerializers(serializers.ModelSerializer):
         model = MedicineModel
         fields = ['medicine_id', 'barcode', 'medicine_type', 'medicine', 'contain', 'per_day', 'for_day',
                   'total_tablet', 'company', 'morning_timing', 'noon_timing', 'evening_timing', 'bed_timing',
-                  'created_by', 'deleted']
+                  'created_by', 'deleted','created_at']
 
 
 class DynamicFieldModelSerializer(serializers.ModelSerializer):
@@ -120,4 +120,4 @@ class DynamicFieldModelSerializer(serializers.ModelSerializer):
         model = MedicineModel
         fields = ['medicine_id', 'barcode', 'medicine_type', 'medicine', 'contain', 'per_day', 'for_day',
                   'total_tablet', 'company', 'morning_timing', 'noon_timing', 'evening_timing', 'bed_timing',
-                  'created_by', 'deleted']
+                  'created_by', 'deleted','created_at']
