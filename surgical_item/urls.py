@@ -12,7 +12,7 @@ urlpatterns = [
     path('group/<int:id>/', SurgicalItemGroupAPI.as_view()),
     path('group/get/', get_group),
     path('group/create/', SurgicalItemGroupAPI.as_view()),
-    path('group/delete/<int:id>/', SurgicalItemGroupAPI.as_view()),
+    path('group/delete/', SurgicalItemGroupAPI.as_view()),
     path('update-group/<int:id>/', patch_surgical_group),
 
 ]
