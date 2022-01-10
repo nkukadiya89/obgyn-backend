@@ -32,4 +32,5 @@ urlpatterns = [
     path('diagnosis/', include('diagnosis.urls')),
     path('surgical-item/', include('surgical_item.urls')),
     path('m-fields/', include('manage_fields.urls')),
+    path('advise/', include('advise.urls')),
 ]

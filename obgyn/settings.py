@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'state',
     'surgical_item',
     'user',
-
+    'advise',
 ]
 
 MIDDLEWARE = [

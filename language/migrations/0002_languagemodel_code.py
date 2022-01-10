@@ -2,6 +2,10 @@
 
 from django.db import migrations, models
 
+def update_language(apps,edit_schema):
+    language = apps.get_model('language', 'LanguageModel')
+    language.objects.update(code="en")
+
 
 class Migration(migrations.Migration):
 
@@ -15,4 +19,5 @@ class Migration(migrations.Migration):
             name='code',
             field=models.CharField(default='', max_length=5),
         ),
+        migrations.RunPython(update_language)
     ]
