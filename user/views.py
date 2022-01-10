@@ -127,10 +127,11 @@ def get_user(request, type, id=None):
         data["success"] = True
         data["msg"] = "OK"
 
-        if query_string["fields"]:
-            serializer = DynamicFieldModelSerializer(user, many=True, fields=query_string["fields"])
-        else:
-            serializer = UserSerializers(user, many=True)
+        serializer = UserSerializers(user, many=True)
+        if "fields" in query_string:
+            if query_string["fields"]:
+                serializer = DynamicFieldModelSerializer(user, many=True, fields=query_string["fields"])
+
         data["data"] = serializer.data
         return Response(data=data, status=status.HTTP_200_OK)
 
