@@ -81,6 +81,7 @@ class MedicineSerializers(serializers.ModelSerializer):
         return data
 
     medicine_id = serializers.CharField(read_only=True)
+    created_at = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = MedicineModel
