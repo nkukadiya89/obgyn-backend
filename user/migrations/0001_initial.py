@@ -86,5 +86,5 @@ class Migration(migrations.Migration):
                 ('objects', user.models.UserManager()),
             ],
         ),
-        migrations.RunPython(create_default_user)
+        # migrations.RunPython(create_default_user)
     ]
