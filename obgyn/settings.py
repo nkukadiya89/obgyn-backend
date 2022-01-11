@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'surgical_item',
     'user',
     'advise',
+    'patient',
 ]
 
 MIDDLEWARE = [

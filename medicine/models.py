@@ -39,8 +39,7 @@ class TimingModel(models.Model):
 class MedicineModel(models.Model):
     medicine_id = models.AutoField(primary_key=True)
     barcode = models.CharField(max_length=20, default="")
-    medicine_type = models.ForeignKey(MedicineTypeModel, on_delete=models.SET_NULL, null=True,
-                                     db_column="medicineTypeId")
+    medicine_type = models.ForeignKey(MedicineTypeModel, on_delete=models.SET_NULL, null=True)
     medicine = models.CharField(max_length=250, default="")
     contain = models.CharField(max_length=500, default="")
     per_day = models.IntegerField(default=0)
