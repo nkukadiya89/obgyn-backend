@@ -283,7 +283,7 @@ def reset_password(request, token):
 @csrf_exempt
 @authentication_classes(JWTAuthentication)
 @permission_classes([IsAuthenticatedOrReadOnly])
-@api_view(('POST',))
+@api_view(('DELETE',))
 def delete_user(request):
     body = json.loads(request.body.decode('utf-8'))
     data = {}

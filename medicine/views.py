@@ -50,7 +50,7 @@ class MedicineAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
-            medicine = MedicineModel.objects.filter(medicineId__in=del_id["id"])
+            medicine = MedicineModel.objects.filter(medicine_id__in=del_id["id"])
         except MedicineModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
@@ -318,7 +318,6 @@ def patch_medicine_type(request, id):
 @permission_classes([IsAuthenticated])
 def patch_medicine(request, id):
     data = {}
-
     try:
         if id:
             medicine = MedicineModel.objects.get(pk=id)
