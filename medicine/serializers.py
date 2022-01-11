@@ -25,7 +25,7 @@ class TimingSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = TimingModel
-        fields = ['timing_id', 'language', 'timing', 'created_by', 'deleted']
+        fields = ['timing_id', 'language', 'timing', 'created_at', 'created_by', 'deleted']
 
 
 class MedicineTypeSerializers(serializers.ModelSerializer):
