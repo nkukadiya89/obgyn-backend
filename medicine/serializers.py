@@ -1,10 +1,17 @@
 from django.db.models import Q
 from rest_framework import serializers
+from language.serializers import LanguageSerializers
 
 from .models import TimingModel, MedicineTypeModel, MedicineModel
 
 
 class TimingSerializers(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        ret = super(TimingSerializers, self).to_representation(instance)
+
+        ret['language'] = LanguageSerializers(instance.language).data["language"]
+        return ret
+
     def validate(self, data):
         timing = data.get('timing')
         language = data.get("language")

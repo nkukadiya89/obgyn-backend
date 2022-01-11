@@ -12,6 +12,8 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from .models import PatientModel
 from .serializers import PatientSerializers
 from utility.search_filter import filtering_query
+from user.models import User
+from uuid import uuid1
 
 
 class PatientAPI(APIView):
@@ -74,6 +76,12 @@ class PatientAPI(APIView):
 
             if serializer.is_valid():
                 serializer.save()
+                patient.pid = uuid1()
+                patient.save()
+                user = User.objects.filter(pk=patient.user_ptr_id).first()
+                if user!=None:
+                    user.set_password(request.POST.get("password"))
+                    user.save()
                 data["success"] = True
                 data["msg"] = "Data updated successfully"
                 data["data"] = serializer.data
