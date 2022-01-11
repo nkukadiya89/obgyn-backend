@@ -35,7 +35,7 @@ class SurgicalItemGroupModel(models.Model):
     created_at = models.DateTimeField(default=now)
 
     def __str__(self):
-        return f"({self.siGroupId},{self.drugName})"
+        return f"({self.si_group_id},{self.drug_name})"
 
     class Meta:
         db_table = "surgical_item_group"

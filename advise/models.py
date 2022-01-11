@@ -7,11 +7,14 @@ class AdviseModel(models.Model):
     advise_for_choice = (
         ('OPD', 'OPD'),
         ('SONOGRAPHY', 'SONOGRAPHY'),
-        ('GENERAL', 'GENERAL')
+        ('GENERAL', 'GENERAL'),
+        ('POST-CS', 'POST-CS'),
+        ('PRE-CS', 'PRE-CS')
     )
     advise_id = models.AutoField(primary_key=True)
     advise = models.TextField(null=True)
     advise_for = models.CharField(max_length=15, choices=advise_for_choice, null=False, default="OPD")
+    detail = models.CharField(max_length=100, default="")
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
