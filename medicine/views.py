@@ -318,7 +318,6 @@ def patch_medicine_type(request, id):
 @permission_classes([IsAuthenticated])
 def patch_medicine(request, id):
     data = {}
-    print("id",id)
     try:
         if id:
             medicine = MedicineModel.objects.get(pk=id)
