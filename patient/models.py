@@ -31,3 +31,5 @@ class PatientModel(User):
 
     class Meta:
         db_table = 'patient'
+
+
