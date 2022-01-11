@@ -6,12 +6,14 @@ from .views import MedicineAPI, MedicineTypeAPI, TimingAPI, patch_medicine, patc
 urlpatterns = [
     path('<int:id>/', MedicineAPI.as_view()),
     path('get/', get_medicine, name="get_medicine"),
+    path('get/<int:int>', get_medicine, name="get_medicine"),
     path('create/', MedicineAPI.as_view()),
     path('delete/', MedicineAPI.as_view()),
     path('update-medicine/<int:id>/', patch_medicine),
 
     path('type/<int:id>/', MedicineTypeAPI.as_view()),
     path('type/get/', get_medicine_type),
+    path('type/get/<int:id>', get_medicine_type),
     path('type/create/', MedicineTypeAPI.as_view()),
     path('type/delete/', MedicineTypeAPI.as_view()),
     path('update-type/<int:id>/', patch_medicine_type),

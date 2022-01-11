@@ -51,7 +51,8 @@ class User(AbstractUser):
     TYPE_CHOICE = (
         ("HOSPITAL", "HOSPITAL"),
         ("STAFF", "STAFF"),
-        ("DOCTOR", "DOCTOR")
+        ("DOCTOR", "DOCTOR"),
+        ("PATIENT", "PATIENT")
     )
 
     first_name = models.CharField(max_length=150, default="")
