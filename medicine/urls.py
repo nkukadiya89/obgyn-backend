@@ -20,6 +20,7 @@ urlpatterns = [
 
     path('timing/<int:id>/', TimingAPI.as_view()),
     path('timing/get/', TimingAPI.as_view()),
+    path('timing/get/<int:id>', TimingAPI.as_view()),
     path('timing/create/', TimingAPI.as_view()),
     path('timing/delete/', TimingAPI.as_view()),
     path('update-timing/<int:id>/', patch_timing),
