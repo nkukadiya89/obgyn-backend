@@ -271,6 +271,8 @@ class ModelFilterTIMING:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(advise__icontains=search)
+                Q(advise__icontains=search) |
+                Q(language__code__icontains=search) |
+                Q(language__language__icontains=search)
             )
         return model
