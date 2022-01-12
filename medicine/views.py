@@ -162,11 +162,17 @@ class TimingAPI(APIView):
     # ================= Retrieve Single or Multiple records=========================
     def get(self, request, id=None):
         data = {}
+        query_string = request.query_params
+
         try:
             if id:
                 timing = TimingModel.objects.filter(pk=id,deleted=0)
             else:
                 timing = TimingModel.objects.filter(deleted=0)
+
+            data["total_record"] = len(timing)
+            timing, data = filtering_query(timing, query_string, "timing_id", "TIMING")
+
         except TimingModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record Does not exist"
