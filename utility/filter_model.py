@@ -253,3 +253,24 @@ class ModelFilterADVISE:
                 Q(advise__icontains=search)
             )
         return model
+
+class ModelFilterTIMING:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "language":
+                model = model.filter(language__language__iexact=fld_value)
+            if fld_name == "code":
+                model = model.filter(language__code__iexact=fld_value)
+            if fld_name == "language_id":
+                model = model.filter(language=fld_value)
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(advise__icontains=search)
+            )
+        return model
