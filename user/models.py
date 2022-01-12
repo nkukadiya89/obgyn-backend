@@ -101,7 +101,9 @@ def user_post_save(sender, instance, *args, **kwargs):
     if kwargs["created"]:
         seq_no = 0
         last_user = User.objects.filter(user_type=instance.user_type).filter(~Q(pk=instance.id)).last()
+
         if last_user:
+            seq_no = int(last_user.user_code[-4:])
             seq_no += 1
 
         instance.user_code = instance.user_type[0] + '{:05}'.format(seq_no)
