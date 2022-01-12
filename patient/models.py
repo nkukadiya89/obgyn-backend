@@ -17,7 +17,6 @@ class PatientModel(User):
         ("PARTIAL", "PARTIAL")
     )
     patient_id = models.AutoField(primary_key=True)
-    pid = models.CharField(max_length=100,default="")
     married = models.BooleanField(default=False)
     department = models.CharField(max_length=5, choices=department_choice, default="OPD")
     patient_type = models.CharField(max_length=5, choices=patient_type_choice, default="OB")

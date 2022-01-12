@@ -6,6 +6,7 @@ from rest_framework import serializers
 from city.serializers import CitySerializers
 from state.serializers import StateSerializers
 from .models import PatientModel
+from user.models import User
 
 
 class PatientSerializers(serializers.ModelSerializer):
@@ -20,6 +21,15 @@ class PatientSerializers(serializers.ModelSerializer):
         first_name = data.get('first_name')
         last_name = data.get('last_name')
         phone = data.get("phone")
+        user = User.objects.filter(email=phone).first()
+
+        if user!=None:
+            first_name = user.first_name
+            last_name = user.last_name
+            middle_name = user.middle_name
+            name = first_name + " " + middle_name + " " + last_name
+            raise serializers.ValidationError(f'{ phone } belongs to { name }. Provide alternative Contact number.')
+
         data["email"] = phone
         data["username"] = phone
         data["user_type"] = "PATIENT"
@@ -33,4 +43,4 @@ class PatientSerializers(serializers.ModelSerializer):
         model = PatientModel
         fields = ['patient_id', 'first_name', 'last_name', 'middle_name', 'phone', 'state',
                   'city', 'married', 'department', 'patient_type', 'patient_detail', 'date_of_opd', 'registered_no',
-                  'grand_parent_name', 'age', 'taluka', 'district', 'created_by', 'deleted']
+                  'grand_parent_name', 'age', 'taluka', 'district', 'created_by', 'deleted', 'hospital']
