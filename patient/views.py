@@ -14,7 +14,7 @@ from .serializers import PatientSerializers
 from utility.search_filter import filtering_query
 from user.models import User
 from uuid import uuid1
-
+from patient.utility.code_generate import generate_patient_user_code
 
 class PatientAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
@@ -82,6 +82,7 @@ class PatientAPI(APIView):
                 if user!=None:
                     user.set_password(request.POST.get("password"))
                     user.save()
+                    generate_patient_user_code(user)
                 data["success"] = True
                 data["msg"] = "Data updated successfully"
                 data["data"] = serializer.data
