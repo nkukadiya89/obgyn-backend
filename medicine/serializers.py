@@ -1,7 +1,7 @@
 from django.db.models import Q
 from rest_framework import serializers
-from language.serializers import LanguageSerializers
 
+from language.serializers import LanguageSerializers
 from .models import TimingModel, MedicineTypeModel, MedicineModel
 
 
@@ -57,10 +57,40 @@ class MedicineTypeSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = MedicineTypeModel
-        fields = ['medicine_type_id', 'medicine_type', 'created_by', 'deleted','created_at']
+        fields = ['medicine_type_id', 'medicine_type', 'created_by', 'deleted', 'created_at']
 
 
 class MedicineSerializers(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        ret = super(MedicineSerializers, self).to_representation(instance)
+
+        if "medicine_type" in ret:
+            ret["medicine_type_id"] = ret["medicine_type"]
+            ret.pop("medicine_type")
+            ret['medicine_type'] = MedicineTypeSerializers(instance.medicine_type).data["medicine_type"]
+
+        if "morning_timing" in ret:
+            ret["morning_timing_id"] = ret["morning_timing"]
+            ret.pop("morning_timing")
+            ret['morning_timing'] = TimingSerializers(instance.morning_timing).data["timing"]
+
+        if "noon_timing" in ret:
+            ret["noon_timing_id"] = ret["noon_timing"]
+            ret.pop("noon_timing")
+            ret['noon_timing'] = TimingSerializers(instance.noon_timing).data["timing"]
+
+        if "evening_timing" in ret:
+            ret["evening_timing_id"] = ret["evening_timing"]
+            ret.pop("evening_timing")
+            ret['evening_timing'] = TimingSerializers(instance.evening_timing).data["timing"]
+
+        if "bed_timing" in ret:
+            ret["bed_timing_id"] = ret["bed_timing"]
+            ret.pop("bed_timing")
+            ret['bed_timing'] = TimingSerializers(instance.bed_timing).data["timing"]
+
+        return ret
+
     def validate(self, data):
         per_day = data.get("per_day", 1)
         for_day = data.get("for_day", 1)

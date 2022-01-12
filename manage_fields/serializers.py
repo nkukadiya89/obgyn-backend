@@ -2,9 +2,18 @@ from django.db.models import Q
 from rest_framework import serializers
 
 from manage_fields.models import ManageFieldsModel
+from language.serializers import LanguageSerializers
 
 
 class ManageFieldsSerializers(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        ret = super(ManageFieldsSerializers, self).to_representation(instance)
+
+        if "language" in ret:
+            ret['language'] = LanguageSerializers(instance.language).data["language"]
+            ret['language_id'] = LanguageSerializers(instance.language).data["language_id"]
+        return ret
+
 
     def validate(self, data):
         field_name = data.get("field_name")
