@@ -76,7 +76,7 @@ class PatientAPI(APIView):
 
             if serializer.is_valid():
                 serializer.save()
-                patient.pid = uuid1()
+                patient.registered_no = uuid1()
                 patient.save()
                 user = User.objects.filter(pk=patient.user_ptr_id).first()
                 if user!=None:
