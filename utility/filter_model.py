@@ -257,6 +257,8 @@ class ModelFilterTIMING:
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
+            if fld_name == 'timing':
+                model = model.filter(timing__iexact=fld_value)
             if fld_name == "language":
                 model = model.filter(language__language__iexact=fld_value)
             if fld_name == "code":
@@ -269,7 +271,7 @@ class ModelFilterTIMING:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(advise__icontains=search) |
+                Q(timing__icontains=search) |
                 Q(language__code__icontains=search) |
                 Q(language__language__icontains=search)
             )
