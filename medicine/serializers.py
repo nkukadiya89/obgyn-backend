@@ -111,6 +111,7 @@ class MedicineSerializers(serializers.ModelSerializer):
         return data
 
     medicine_id = serializers.CharField(read_only=True)
+    total_tablet = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = MedicineModel
