@@ -65,29 +65,19 @@ class MedicineSerializers(serializers.ModelSerializer):
         ret = super(MedicineSerializers, self).to_representation(instance)
 
         if "medicine_type" in ret:
-            ret["medicine_type_id"] = ret["medicine_type"]
-            ret.pop("medicine_type")
-            ret['medicine_type'] = MedicineTypeSerializers(instance.medicine_type).data["medicine_type"]
+            ret['medicine_type_name'] = MedicineTypeSerializers(instance.medicine_type).data["medicine_type"]
 
         if "morning_timing" in ret:
-            ret["morning_timing_id"] = ret["morning_timing"]
-            ret.pop("morning_timing")
-            ret['morning_timing'] = TimingSerializers(instance.morning_timing).data["timing"]
+            ret['morning_timing_name'] = TimingSerializers(instance.morning_timing).data["timing"]
 
         if "noon_timing" in ret:
-            ret["noon_timing_id"] = ret["noon_timing"]
-            ret.pop("noon_timing")
-            ret['noon_timing'] = TimingSerializers(instance.noon_timing).data["timing"]
+            ret['noon_timing_name'] = TimingSerializers(instance.noon_timing).data["timing"]
 
         if "evening_timing" in ret:
-            ret["evening_timing_id"] = ret["evening_timing"]
-            ret.pop("evening_timing")
-            ret['evening_timing'] = TimingSerializers(instance.evening_timing).data["timing"]
+            ret['evening_timing_name'] = TimingSerializers(instance.evening_timing).data["timing"]
 
         if "bed_timing" in ret:
-            ret["bed_timing_id"] = ret["bed_timing"]
-            ret.pop("bed_timing")
-            ret['bed_timing'] = TimingSerializers(instance.bed_timing).data["timing"]
+            ret['bed_timing_name'] = TimingSerializers(instance.bed_timing).data["timing"]
 
         return ret
 
