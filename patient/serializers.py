@@ -12,7 +12,7 @@ from user.models import User
 class PatientSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(PatientSerializers, self).to_representation(instance)
-
+        print(instance.state)
         ret['state_name'] = StateSerializers(instance.state).data["state_name"]
         ret['city_name'] = CitySerializers(instance.city).data["city_name"]
         return ret
