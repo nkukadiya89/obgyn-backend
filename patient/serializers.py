@@ -38,9 +38,26 @@ class PatientSerializers(serializers.ModelSerializer):
         return data
 
     patient_id = serializers.IntegerField(read_only=True)
+    first_name = serializers.CharField(required=True)
+    last_name = serializers.CharField(required=True)
+    middle_name = serializers.CharField(required=True)
+    phone = serializers.CharField(required=True)
+    married = serializers.BooleanField(required=True)
+    patient_type = serializers.CharField(required=True)
+    patient_detail = serializers.CharField(required=True)
+    department = serializers.CharField(required=True)
+    date_of_opd = serializers.CharField(required=True)
+    taluka = serializers.CharField(required=True)
+    district = serializers.CharField(required=True)
+    registered_no = serializers.CharField(read_only=True)
 
     class Meta:
         model = PatientModel
         fields = ['patient_id', 'first_name', 'last_name', 'middle_name', 'phone', 'state',
                   'city', 'married', 'department', 'patient_type', 'patient_detail', 'date_of_opd', 'registered_no',
                   'grand_parent_name', 'age', 'taluka', 'district', 'created_by', 'deleted', 'hospital']
+        extra_kwargs = {
+            "city": {"required": True},
+            "state": {"required": True},
+            "hospital": {"required": True},
+        }

@@ -10,7 +10,7 @@ class ManageFieldsSerializers(serializers.ModelSerializer):
         ret = super(ManageFieldsSerializers, self).to_representation(instance)
 
         if "language" in ret:
-            ret['language'] = LanguageSerializers(instance.language).data["language"]
+            ret['language'] = LanguageSerializers(instance.language).data["code"]
             ret['language_id'] = LanguageSerializers(instance.language).data["language_id"]
         return ret
 
