@@ -21,7 +21,7 @@ class ManageFieldsSerializers(serializers.ModelSerializer):
             ret["field_master_name"] = FieldMasterSerializers(instance.field_master).data["field_master_name"]
 
         if "language" in ret:
-            ret['language_name'] = LanguageSerializers(instance.language).data["code"]
+            ret['language_name'] = LanguageSerializers(instance.language).data["language"]
         return ret
 
     mf_id = serializers.IntegerField(read_only=True)
