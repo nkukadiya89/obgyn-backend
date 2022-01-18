@@ -51,7 +51,7 @@ class ManageFieldsAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
-            manage_fields = ManageFieldsModel.objects.filter(manage_fields_id__in=del_id["id"])
+            manage_fields = ManageFieldsModel.objects.filter(mf_id__in=del_id["id"])
         except ManageFieldsModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
