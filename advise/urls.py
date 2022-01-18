@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import AdviseAPI, patch, get,
+from .views import AdviseAPI, patch, get
 
 urlpatterns = [
     path('<int:id>/', AdviseAPI.as_view()),

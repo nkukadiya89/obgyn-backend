@@ -83,6 +83,7 @@ class User(AbstractUser):
 
     # FIELDS FOR STAFF
     designation = models.CharField(max_length=25, null=True)
+    uid = models.CharField(max_length=100, default="")
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)

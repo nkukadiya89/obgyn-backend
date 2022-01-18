@@ -23,7 +23,7 @@ class DynamicFieldModelSerializer(serializers.ModelSerializer):
             for field_name in existing - allowed:
                 self.fields.pop(field_name)
 
-    def to_representation(self, instance,*args,**kwargs):
+    def to_representation(self, instance, *args, **kwargs):
         ret = super(DynamicFieldModelSerializer, self).to_representation(instance)
 
         if instance.user_type == "HOSPITAL":
@@ -33,8 +33,9 @@ class DynamicFieldModelSerializer(serializers.ModelSerializer):
 
         if "state" in ret: ret['state_name'] = StateSerializers(instance.state).data["state_name"]
         if "city" in ret: ret['city_name'] = CitySerializers(instance.city).data["city_name"]
-        if "default_language" in ret: ret['default_language_name'] = LanguageSerializers(instance.default_language).data[
-            "language"]
+        if "default_language" in ret: ret['default_language_name'] = \
+            LanguageSerializers(instance.default_language).data[
+                "language"]
         if "hospital" in ret: ret['hospitalname'] = UserSerializers(instance.hospital).data["hospital_name"]
         return ret
 
@@ -114,12 +115,12 @@ class UserSerializers(serializers.ModelSerializer):
     last_name = serializers.CharField(required=False)
     username = serializers.CharField(required=False)
     user_code = serializers.CharField(read_only=True)
+    uid = serializers.CharField(read_only=True)
 
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'middle_name', 'password', 'user_type', 'hospital_name',
                   'phone', 'state', 'city', 'area', 'pincode', 'email', 'landline', 'fax_number', 'degree',
-                  'speciality',
-                  'aadhar_card', 'registration_no', 'default_language', 'designation', 'hospital', 'username',
-                  'user_code',
-                  'created_by']
+                  'speciality', 'aadhar_card', 'registration_no', 'default_language', 'designation', 'hospital',
+                  'username', 'uid',
+                  'user_code', 'created_by']

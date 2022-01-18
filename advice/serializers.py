@@ -3,13 +3,6 @@ from rest_framework import serializers
 from .models import AdviceModel, AdviceGroupModel
 
 
-class AdviceGroupSerializers(serializers.ModelSerializer):
-    advice_group_id = serializers.IntegerField(read_only=True)
-
-    class Meta:
-        model = AdviceGroupModel
-        fields = ['advice_group_id', 'advice_group', 'created_by', 'deleted']
-
 
 class AdviceSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
@@ -23,4 +16,24 @@ class AdviceSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = AdviceModel
-        fields = ['advice_id', 'advice', 'advice_group', 'advice_for', 'detail', 'created_by', 'deleted']
+        fields = ['advice_id', 'advice', 'advice_for', 'detail', 'created_by', 'deleted']
+
+
+class AdviceGroupSerializers(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        ret = super(AdviceGroupSerializers, self).to_representation(instance)
+
+        advice_name_list = []
+        for advice1 in ret["advice"]:
+            advice = AdviceModel.objects.get(pk=advice1).advice
+            advice_name_list.append(advice)
+            ret['advice_name'] = advice_name_list
+
+        return ret
+
+    advice_group_id = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = AdviceGroupModel
+        fields = ['advice_group_id','advice', 'advice_group', 'created_by', 'deleted']
+
