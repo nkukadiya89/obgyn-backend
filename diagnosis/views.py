@@ -133,7 +133,7 @@ def get(request, id=None):
         else:
             diagnosis = DiagnosisModel.objects.filter(deleted=0)
         data["total_record"] = len(diagnosis)
-        language, data = filtering_query(diagnosis, query_string, "diagnosis_id", "DIAGNOSIS")
+        diagnosis, data = filtering_query(diagnosis, query_string, "diagnosis_id", "DIAGNOSIS")
 
     except DiagnosisModel.DoesNotExist:
         data["success"] = False
