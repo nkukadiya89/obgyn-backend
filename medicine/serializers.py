@@ -10,8 +10,7 @@ class TimingSerializers(serializers.ModelSerializer):
         ret = super(TimingSerializers, self).to_representation(instance)
 
         if "language" in ret:
-            ret['language'] = LanguageSerializers(instance.language).data["language"]
-            ret['language_id'] = LanguageSerializers(instance.language).data["language_id"]
+            ret['language_name'] = LanguageSerializers(instance.language).data["code"]
         return ret
 
     def validate(self, data):
