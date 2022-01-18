@@ -1,7 +1,20 @@
 from django.db import models
 from django.utils.timezone import now
 
+
 # Create your models here.
+class AdviceGroupModel(models.Model):
+    advice_group_id = models.AutoField(primary_key=True)
+    advice_group = models.CharField(max_length=50, default="")
+
+    created_by = models.IntegerField(default=1, unique=False)
+    deleted = models.IntegerField(default=0, unique=False)
+    created_at = models.DateTimeField(default=now)
+
+    class Meta:
+        db_table = 'advice_group'
+
+
 class AdviceModel(models.Model):
     advice_for_choice = (
         ('OPD', 'OPD'),
@@ -14,6 +27,7 @@ class AdviceModel(models.Model):
     advice = models.TextField(null=True)
     advice_for = models.CharField(max_length=15, choices=advice_for_choice, null=False, default="OPD")
     detail = models.CharField(max_length=100, default="")
+    advice_group = models.ForeignKey(AdviceGroupModel, on_delete=models.DO_NOTHING, null=True)
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
@@ -21,16 +35,3 @@ class AdviceModel(models.Model):
 
     class Meta:
         db_table = 'advice'
-
-
-class AdviceGroupModel(models.Model):
-    advice_group_id = models.AutoField(primary_key=True)
-    advice = models.ForeignKey(AdviceModel, on_delete=models.DO_NOTHING)
-    advice_group = models.CharField(max_length=50, default="")
-
-    created_by = models.IntegerField(default=1, unique=False)
-    deleted = models.IntegerField(default=0, unique=False)
-    created_at = models.DateTimeField(default=now)
-
-    class Meta:
-        db_table = 'advice_group'

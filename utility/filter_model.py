@@ -242,13 +242,33 @@ class ModelFilterADVICE:
             fld_value = fields.split("=")[1]
             if fld_name == "advice":
                 model = model.filter(advice__iexact=fld_value)
+            if fld_name == "advice_group_id":
+                model = model.filter(advice_group_id=fld_value)
         return model
 
     def search(self, model, query_string):
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(advice__icontains=search)
+                Q(advice__icontains=search) |
+                Q(advice_group__advice_group__icontains=search)
+            )
+        return model
+
+class ModelFilterADVICEGROUP:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "advice_group":
+                model = model.filter(advice_group__iexact=fld_value)
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(advice_group__icontains=search)
             )
         return model
 
@@ -293,3 +313,4 @@ class ModelFilterFIELDMASTER:
                 Q(field_master_name__icontains=search)
             )
         return model
+
