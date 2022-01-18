@@ -20,3 +20,11 @@ class DiagnosisModel(models.Model):
     class Meta:
         db_table = "diagnosis"
 
+
+class DiagnosisMedicineModel(models.Model):
+    diagnosismodel = models.ForeignKey(DiagnosisModel, on_delete=models.DO_NOTHING)
+    medicinemodel = models.ForeignKey(MedicineModel, on_delete=models.DO_NOTHING)
+
+    class Meta:
+        db_table = "diagnosis_medicine"
+        managed = False

@@ -82,6 +82,7 @@ def filtering_query(model, query_string, model_id, classnm):
     else:
         orderby = str(query_string["orderBy"])
 
+
     if "sortBy" not in query_string:
         sortby = ""
     else:
@@ -102,7 +103,6 @@ def filtering_query(model, query_string, model_id, classnm):
     if orderby:
         if sortby:
             orderby = sortby + orderby
-
         model = model.order_by(orderby)
 
     if "page" in query_string:
@@ -112,4 +112,5 @@ def filtering_query(model, query_string, model_id, classnm):
             pageRecord = config('PAGE_LIMIT')
         model, data["warning"] = pagination(model, query_string["page"], pageRecord)
 
+    model = model.distinct()
     return model, data
