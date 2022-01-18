@@ -216,6 +216,23 @@ class ModelFilterSURGICALITEM:
             )
         return model
 
+class ModelFilterFIELDMASTER:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "field_master_name":
+                model = model.filter(field_master_name__iexact=fld_value)
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(field_master_name__icontains=search)
+            )
+        return model
+
 class ModelFilterMANAGEFIELDS:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
@@ -223,6 +240,8 @@ class ModelFilterMANAGEFIELDS:
             fld_value = fields.split("=")[1]
             if fld_name == "field_value":
                 model = model.filter(field_value__iexact=fld_value)
+            if fld_name == "field_master_id":
+                model = model.filter(field_master_id=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -297,20 +316,4 @@ class ModelFilterTIMING:
             )
         return model
 
-class ModelFilterFIELDMASTER:
-    def filter_fields(self, model, filter_fields):
-        for fields in filter_fields:
-            fld_name = fields.split("=")[0]
-            fld_value = fields.split("=")[1]
-            if fld_name == "field_master_name":
-                model = model.filter(field_master_name__iexact=fld_value)
-        return model
-
-    def search(self, model, query_string):
-        search = query_string["search"]
-        if search:
-            model = model.filter(
-                Q(field_master_name__icontains=search)
-            )
-        return model
 
