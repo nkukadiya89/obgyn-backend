@@ -235,20 +235,20 @@ class ModelFilterMANAGEFIELDS:
             )
         return model
 
-class ModelFilterADVISE:
+class ModelFilterADVICE:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
-            if fld_name == "advise":
-                model = model.filter(advise__iexact=fld_value)
+            if fld_name == "advice":
+                model = model.filter(advice__iexact=fld_value)
         return model
 
     def search(self, model, query_string):
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(advise__icontains=search)
+                Q(advice__icontains=search)
             )
         return model
 
