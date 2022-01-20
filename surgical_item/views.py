@@ -123,7 +123,7 @@ class SurgicalItemGroupAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
-            surgical_item_group = SurgicalItemGroupModel.objects.filter(surgical_item_group_id__in=del_id["id"])
+            surgical_item_group = SurgicalItemGroupModel.objects.filter(si_group_id__in=del_id["id"])
         except SurgicalItemGroupModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
