@@ -223,12 +223,6 @@ class ModelFilterSURGICALITEMGROUP:
             fld_value = fields.split("=")[1]
             if fld_name == "drug_group_name":
                 model = model.filter(drug_group_name__iexact=fld_value)
-            if fld_name == "batch_number":
-                model = model.filter(batch_number__iexact=fld_value)
-            if fld_name == "mfg_date":
-                model = model.filter(mfg_date=fld_value)
-            if fld_name == "exp_date":
-                model = model.filter(exp_date=fld_value)
 
         return model
 
@@ -237,7 +231,7 @@ class ModelFilterSURGICALITEMGROUP:
         if search:
             model = model.filter(
                 Q(drug_group_name__icontains=search) |
-                Q(batch_number__icontains=search)
+                Q(surgical_item__drug_name__icontains=search)
             )
         return model
 
