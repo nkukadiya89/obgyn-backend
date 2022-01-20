@@ -77,11 +77,7 @@ class ConsultationAPI(APIView):
             serializer = ConsultationSerializers(consultation, data=request.data)
 
             if serializer.is_valid():
-                new_consultation = serializer.save()
-                patient = PatientModel.objects.get(registered_no=new_consultation.regd_no)
-                new_consultation.patient_id = patient.patient_id
-                new_consultation.save()
-
+                serializer.save()
                 data["success"] = True
                 data["msg"] = "Data updated successfully"
                 data["data"] = serializer.data
