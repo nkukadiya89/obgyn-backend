@@ -316,4 +316,47 @@ class ModelFilterTIMING:
             )
         return model
 
+class ModelFilterCONSULTATION:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "uid":
+                model = model.filter(uid__iexact=fld_value)
+            if fld_name == "parity":
+                model = model.filter(parity=fld_value)
+            if fld_name == "prev_del_type":
+                model = model.filter(prev_del_type=fld_value)
+            if fld_name == "regd_no":
+                model = model.filter(regd_no=fld_value)
+            if fld_name == "ftnd_male_live":
+                model = model.filter(ftnd_male_live=fld_value)
+            if fld_name == "ftnd_male_dead":
+                model = model.filter(ftnd_male_dead=fld_value)
+            if fld_name == "ftnd_female_live":
+                model = model.filter(ftnd_female_live=fld_value)
+            if fld_name == "ftnd_female_dead":
+                model = model.filter(ftnd_female_dead=fld_value)
+            if fld_name == "ftlscs_male_live":
+                model = model.filter(ftlscs_male_live=fld_value)
+            if fld_name == "ftlscs_male_dead":
+                model = model.filter(ftlscs_male_dead=fld_value)
+            if fld_name == "ftlscs_female_live":
+                model = model.filter(ftlscs_female_live=fld_value)
+            if fld_name == "ftlscs_female_dead":
+                model = model.filter(ftlscs_female_dead=fld_value)
+        return model
 
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(patient__first_name__icontains=search) |
+                Q(patient__middle_name__icontains=search) |
+                Q(patient__last_name__icontains=search) |
+                Q(patient__grand_parent_name__icontains=search) |
+                Q(patient__registration_no__icontains=search) |
+                Q(parity__icontains=search) |
+                Q(prev_del_type__icontains=search)
+            )
+        return model
