@@ -41,8 +41,8 @@ class SurgicalItemGroupSerializers(serializers.ModelSerializer):
         return ret
 
     def validate(self, data):
-        drug_name = data.get("drug_name")
-        duplicate_drug = SurgicalItemGroupModel.objects.filter(deleted=0, drug_name__iexact=drug_name)
+        drug_group_name = data.get("drug_group_name")
+        duplicate_drug = SurgicalItemGroupModel.objects.filter(deleted=0, drug_group_name__iexact=drug_group_name)
 
         if self.partial:
             duplicate_drug = duplicate_drug.filter(~Q(pk=self.instance.si_group_id)).first()
@@ -58,4 +58,4 @@ class SurgicalItemGroupSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = SurgicalItemGroupModel
-        fields = ['siGroup_id', 'drug_name', 'surgical_item', 'created_by', 'deleted']
+        fields = ['siGroup_id', 'drug_group_name', 'surgical_item', 'created_by', 'deleted']
