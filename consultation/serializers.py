@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from manage_fields.serializers import ManageFieldsSerializers
+from patient.models import PatientModel
 from .models import ConsultationModel
 
 
@@ -19,6 +20,11 @@ class ConsultationSerializers(serializers.ModelSerializer):
         return ret
 
     def validate(self, data):
+        patient = PatientModel.objects.filter(registered_no=data["regd_no"])
+        if len(patient) == 0:
+            raise serializers.ValidationError("Patient does not exist")
+        data["patient_id"] = patient[0].patient_id
+
         return data
 
     consultation_id = serializers.IntegerField(read_only=True)
