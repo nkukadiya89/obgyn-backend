@@ -54,8 +54,8 @@ class SurgicalItemGroupSerializers(serializers.ModelSerializer):
 
         return data
 
-    siGroup_id = serializers.IntegerField(read_only=True)
+    si_group_id = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = SurgicalItemGroupModel
-        fields = ['siGroup_id', 'drug_group_name', 'surgical_item', 'created_by', 'deleted']
+        fields = ['si_group_id', 'drug_group_name', 'surgical_item', 'created_by', 'deleted']
