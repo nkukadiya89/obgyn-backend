@@ -181,10 +181,10 @@ class ModelFilterMEDICINE:
                 Q(medicine__icontains=search) |
                 Q(contain__icontains=search) |
                 Q(company__icontains=search) |
-                Q(morning_timing_timing__icontains=search) |
-                Q(noon_timing_timing__icontains=search) |
-                Q(evening_timing_timing__icontains=search) |
-                Q(bed_timing_timing__icontains=search) |
+                Q(morning_timing__timing__icontains=search) |
+                Q(noon_timing__timing__icontains=search) |
+                Q(evening_timing__timing__icontains=search) |
+                Q(bed_timing__timing__icontains=search) |
                 Q(medicine_type__medicine_type__icontains=search)
             )
         return model
