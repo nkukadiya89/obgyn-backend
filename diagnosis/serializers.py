@@ -3,7 +3,6 @@ from rest_framework import serializers
 
 from diagnosis.models import DiagnosisModel
 from medicine.models import MedicineModel
-from medicine.serializers import MedicineSerializers
 
 
 class DiagnosisSerializers(serializers.ModelSerializer):
@@ -11,11 +10,14 @@ class DiagnosisSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(DiagnosisSerializers, self).to_representation(instance)
 
-        medicine_name_list=[]
+        medicine_name_list = []
+        medicine_id_list = []
         for medicine1 in ret["medicine"]:
-            medicine_name = MedicineModel.objects.get(pk=medicine1).medicine
-            medicine_name_list.append(medicine_name)
+            medicine = MedicineModel.objects.get(pk=medicine1)
+            medicine_name_list.append(medicine.medicine)
+            medicine_id_list.append(str(medicine.medicine_id))
             ret['medicine_name'] = medicine_name_list
+            ret['medicine'] = medicine_id_list
 
         return ret
 
@@ -34,6 +36,7 @@ class DiagnosisSerializers(serializers.ModelSerializer):
         return data
 
     diagnosis_id = serializers.IntegerField(read_only=True)
+
     # medicine = MedicineSerializers(many=True)
     class Meta:
         model = DiagnosisModel
