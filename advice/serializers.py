@@ -24,13 +24,10 @@ class AdviceGroupSerializers(serializers.ModelSerializer):
         ret = super(AdviceGroupSerializers, self).to_representation(instance)
 
         advice_name_list = []
-        advice_id_list = []
         for advice1 in ret["advice"]:
-            advice = AdviceModel.objects.get(pk=advice1)
-            advice_name_list.append(advice.advice)
-            advice_id_list.append(str(advice.advice_id))
+            advice = AdviceModel.objects.get(pk=advice1).advice
+            advice_name_list.append(advice)
             ret['advice_name'] = advice_name_list
-            ret['advice'] = advice_id_list
 
         return ret
 

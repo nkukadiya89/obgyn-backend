@@ -109,7 +109,7 @@ class MedicineSerializers(serializers.ModelSerializer):
                 raise serializers.ValidationError("Medicine already exist.")
         return data
 
-    medicine_id = serializers.CharField(read_only=True)
+    medicine_id = serializers.IntegerField(read_only=True)
     total_tablet = serializers.IntegerField(read_only=True)
 
     class Meta:
