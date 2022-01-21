@@ -163,6 +163,15 @@ class ModelFilterMEDICINE:
                 model = model.filter(medicine__iexact=fld_value)
             if fld_name == "contain":
                 model = model.filter(contain__iexat=fld_value)
+            if fld_name == "medicine_type":
+                model = model.filter(medicine_type__medicine_type__icontains=fld_value)
+            if fld_name == "per_day":
+                model = model.filter(per_day=fld_value)
+            if fld_name == "for_day":
+                model = model.filter(for_day=fld_value)
+            if fld_name == "company":
+                model = model.filter(company=fld_value)
+
         return model
 
     def search(self, model, query_string):
@@ -170,7 +179,13 @@ class ModelFilterMEDICINE:
         if search:
             model = model.filter(
                 Q(medicine__icontains=search) |
-                Q(contain__icontains=search)
+                Q(contain__icontains=search) |
+                Q(company__icontains=search) |
+                Q(morning_timing_timing__icontains=search) |
+                Q(noon_timing_timing__icontains=search) |
+                Q(evening_timing_timing__icontains=search) |
+                Q(bed_timing_timing__icontains=search) |
+                Q(medicine_type__medicine_type__icontains=search)
             )
         return model
 
