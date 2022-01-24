@@ -16,7 +16,7 @@ class AdviceSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = AdviceModel
-        fields = ['advice_id', 'advice', 'advice_for', 'detail', 'created_by', 'deleted']
+        fields = ['advice_id', 'advice', 'advice_for', 'detail', 'created_by', 'deleted', 'created_at']
 
 
 class AdviceGroupSerializers(serializers.ModelSerializer):
@@ -35,5 +35,5 @@ class AdviceGroupSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = AdviceGroupModel
-        fields = ['advice_group_id','advice', 'advice_group', 'created_by', 'deleted']
+        fields = ['advice_group_id','advice', 'advice_group', 'created_by', 'deleted', 'created_at']
 

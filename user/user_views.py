@@ -9,6 +9,7 @@ from language.models import LanguageModel
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         # The default result (access/refresh tokens)
+        attrs['email'] = attrs.get('email').lower()
         data = {}
         token = super(CustomTokenObtainPairSerializer, self).validate(attrs)
         token.update({"userData": {'userName': self.user.username, 'userId': self.user.id,

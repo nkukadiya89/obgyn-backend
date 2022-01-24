@@ -97,9 +97,11 @@ class UserSerializers(serializers.ModelSerializer):
                 raise serializers.ValidationError("Please select hospital.")
 
             email = data.get('email')
-            data["username"] = email
+            data["username"] = email.lower()
         elif user_type == "HOSPITAL":
-            username = data.get("username")
+            username = data.get("username").lower()
+            email = data.get('email')
+            data["email"] = email.lower()
             duplicate_username = User.objects.filter(username=username)
             if self.partial:
                 duplicate_username = duplicate_username.filter(~Q(id=self.instance.id)).first()
