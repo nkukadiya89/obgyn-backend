@@ -22,9 +22,14 @@ class PatientPrescriptionSerializers(serializers.ModelSerializer):
                 ret_medicine["per_day"] = MedicineModel.objects.get(pk=medicine1).per_day
 
                 medicine_type_id = MedicineModel.objects.get(pk=medicine1).medicine_type_id
-                ret_medicine["medicine_type"] = medicine_type_id
-                ret_medicine["medicine_type_name"] = MedicineTypeModel.objects.get(pk=medicine_type_id).medicine_type
+                try:
+                    ret_medicine["medicine_type"] = medicine_type_id
+                    ret_medicine["medicine_type_name"] = MedicineTypeModel.objects.get(pk=medicine_type_id).medicine_type
+                except:
+                    ret_medicine["medicine_type"] = None
+                    ret_medicine["medicine_type_name"] = None
 
+                    
                 morning_timing_id = MedicineModel.objects.get(pk=medicine1).morning_timing_id
                 ret_medicine["morning_timing"] = morning_timing_id
                 ret_medicine["morning_timing_name"] = TimingModel.objects.get(pk=morning_timing_id).timing
