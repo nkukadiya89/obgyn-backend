@@ -29,22 +29,38 @@ class PatientPrescriptionSerializers(serializers.ModelSerializer):
                     ret_medicine["medicine_type"] = None
                     ret_medicine["medicine_type_name"] = None
 
-                    
-                morning_timing_id = MedicineModel.objects.get(pk=medicine1).morning_timing_id
-                ret_medicine["morning_timing"] = morning_timing_id
-                ret_medicine["morning_timing_name"] = TimingModel.objects.get(pk=morning_timing_id).timing
+                try:
+                    morning_timing_id = MedicineModel.objects.get(pk=medicine1).morning_timing_id
+                    ret_medicine["morning_timing"] = morning_timing_id
+                    ret_medicine["morning_timing_name"] = TimingModel.objects.get(pk=morning_timing_id).timing
+                except:
+                    ret_medicine["morning_timing"] = None
+                    ret_medicine["morning_timing_name"] = None
 
-                noon_timing_id = MedicineModel.objects.get(pk=medicine1).noon_timing_id
-                ret_medicine["noon_timing"] = noon_timing_id
-                ret_medicine["noon_timing_name"] = TimingModel.objects.get(pk=noon_timing_id).timing
+                try:
+                    noon_timing_id = MedicineModel.objects.get(pk=medicine1).noon_timing_id
+                    ret_medicine["noon_timing"] = noon_timing_id
+                    ret_medicine["noon_timing_name"] = TimingModel.objects.get(pk=noon_timing_id).timing
+                except:
+                    ret_medicine["noon_timing"] = None
+                    ret_medicine["noon_timing_name"] = None
 
-                evening_timing_id = MedicineModel.objects.get(pk=medicine1).evening_timing_id
-                ret_medicine["evening_timing"] = evening_timing_id
-                ret_medicine["evening_timing_name"] = TimingModel.objects.get(pk=evening_timing_id).timing
+                try:
+                    evening_timing_id = MedicineModel.objects.get(pk=medicine1).evening_timing_id
+                    ret_medicine["evening_timing"] = evening_timing_id
+                    ret_medicine["evening_timing_name"] = TimingModel.objects.get(pk=evening_timing_id).timing
+                except:
+                    ret_medicine["evening_timing"] = None
+                    ret_medicine["evening_timing_name"] = None
 
-                bed_timing_id = MedicineModel.objects.get(pk=medicine1).bed_timing_id
-                ret_medicine["bed_timing"] = bed_timing_id
-                ret_medicine["bed_timing_name"] = TimingModel.objects.get(pk=bed_timing_id).timing
+                try:
+                    bed_timing_id = MedicineModel.objects.get(pk=medicine1).bed_timing_id
+                    ret_medicine["bed_timing"] = bed_timing_id
+                    ret_medicine["bed_timing_name"] = TimingModel.objects.get(pk=bed_timing_id).timing
+                except:
+                    ret_medicine["bed_timing"] = None
+                    ret_medicine["bed_timing_name"] = None
+
                 medicine_name_list.append(ret_medicine)
 
                 ret['medicine_name'] = medicine_name_list
