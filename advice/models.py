@@ -14,7 +14,7 @@ class AdviceModel(models.Model):
     advice_id = models.AutoField(primary_key=True)
     advice = models.TextField(null=True)
     advice_for = models.CharField(max_length=15, choices=advice_for_choice, null=False, default="OPD")
-    detail = models.CharField(max_length=100, default="")
+    detail = models.CharField(max_length=100, default="", blank=True)
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)

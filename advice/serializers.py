@@ -3,7 +3,6 @@ from rest_framework import serializers
 from .models import AdviceModel, AdviceGroupModel
 
 
-
 class AdviceSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(AdviceSerializers, self).to_representation(instance)
@@ -35,5 +34,4 @@ class AdviceGroupSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = AdviceGroupModel
-        fields = ['advice_group_id','advice', 'advice_group', 'created_by', 'deleted', 'created_at']
-
+        fields = ['advice_group_id', 'advice', 'advice_group', 'created_by', 'deleted', 'created_at']
