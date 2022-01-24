@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.db.models.query import Q
 
 from diagnosis.serializers import DiagnosisSerializers
 from medicine.models import MedicineModel
@@ -71,16 +72,20 @@ class PatientPrescriptionSerializers(serializers.ModelSerializer):
     def validate(self, data):
         diagnosis = data.get('diagnosis')
         consultation = data.get('consultation')
-        duplicate_prescription = PatientPrescriptionModel.objects.filter(consultation_id=consultation,
-                                                                         diagnosis_id=diagnosis, deleted=0)
-
-        if len(duplicate_prescription) > 0:
-            raise serializers.ValidationError("Prescription already exist.")
 
         patient = PatientModel.objects.filter(registered_no=data["regd_no"])
         if len(patient) == 0:
             raise serializers.ValidationError("Patient does not exist")
         data["patient_id"] = patient[0].patient_id
+
+        duplicate_prescription = PatientPrescriptionModel.objects.filter(consultation_id=consultation,
+                                                                         diagnosis_id=diagnosis, deleted=0)
+
+        if self.partial:
+            duplicate_prescription = duplicate_prescription.filter(~Q(pk=self.instance.patient_prescription_id))
+        if len(duplicate_prescription) > 0:
+            raise serializers.ValidationError("Prescription already exist.")
+
 
         return data
 
