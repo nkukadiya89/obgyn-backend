@@ -15,15 +15,15 @@ class ModelFilterUSER:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
             if fld_name == "first_name":
-                model = model.filter(first_name__iexact=fld_value)
+                model = model.filter(first_name__icontains=fld_value)
             if fld_name == "middle_name":
-                model = model.filter(middle_name__iexact=fld_value)
+                model = model.filter(middle_name__icontains=fld_value)
             if fld_name == "last_name":
-                model = model.filter(last_name__iexact=fld_value)
+                model = model.filter(last_name__icontains=fld_value)
             if fld_name == "user_type":
-                model = model.filter(user_type__iexact=fld_value)
+                model = model.filter(user_type__icontains=fld_value)
             if fld_name == "hospital_name":
-                model = model.filter(hospital_name__iexact=fld_value)
+                model = model.filter(hospital_name__icontains=fld_value)
             if fld_name == "phone":
                 model = model.filter(phone=fld_value)
             if fld_name == "state_id":
@@ -35,23 +35,23 @@ class ModelFilterUSER:
             if fld_name == "pincode":
                 model = model.filter(pincode=fld_value)
             if fld_name == "email":
-                model = model.filter(email__iexact=fld_value)
+                model = model.filter(email__icontains=fld_value)
             if fld_name == "landline":
                 model = model.filter(landline=fld_value)
             if fld_name == "fax_number":
                 model = model.filter(fax_number=fld_value)
             if fld_name == "degree":
-                model = model.filter(degree__iexact=fld_value)
+                model = model.filter(degree__icontains=fld_value)
             if fld_name == "speciality":
-                model = model.filter(speciality__iexact=fld_value)
+                model = model.filter(speciality__icontains=fld_value)
             if fld_name == "aadhar_card":
-                model = model.filter(aadhar_card__iexact=fld_value)
+                model = model.filter(aadhar_card__icontains=fld_value)
             if fld_name == "registration_no":
                 model = model.filter(registration_no=fld_value)
             if fld_name == "defaultLanguage_id":
                 model = model.filter(default_language_id=fld_value)
             if fld_name == "designation":
-                model = model.filter(designation__iexact=fld_value)
+                model = model.filter(designation__icontains=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -86,7 +86,7 @@ class ModelFilterCITY:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
             if fld_name == "city_name":
-                model = model.filter(city_name__iexact=fld_value)
+                model = model.filter(city_name__icontains=fld_value)
             if fld_name == "state_id":
                 model = model.filter(state_id=fld_value)
             if fld_name == "city_id":
@@ -108,7 +108,7 @@ class ModelFilterSTATE:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
             if fld_name == "state_name":
-                model = model.filter(state_name__iexact=fld_value)
+                model = model.filter(state_name__icontains=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -125,7 +125,7 @@ class ModelFilterLANGUAGE:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
             if fld_name == "language":
-                model = model.filter(language__iexact=fld_value)
+                model = model.filter(language__icontains=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -142,7 +142,7 @@ class ModelFilterDIAGNOSIS:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
             if fld_name == "diagnosis_name":
-                model = model.filter(diagnosis_name__iexact=fld_value)
+                model = model.filter(diagnosis_name__icontains=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -160,7 +160,7 @@ class ModelFilterMEDICINE:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
             if fld_name == "medicine":
-                model = model.filter(medicine__iexact=fld_value)
+                model = model.filter(medicine__icontains=fld_value)
             if fld_name == "contain":
                 model = model.filter(contain__iexat=fld_value)
             if fld_name == "medicine_type":
@@ -195,7 +195,7 @@ class ModelFilterMEDICINETYPE:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
             if fld_name == "medicine_type":
-                model = model.filter(medicine_type__iexact=fld_value)
+                model = model.filter(medicine_type__icontains=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -212,9 +212,9 @@ class ModelFilterSURGICALITEM:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
             if fld_name == "drug_name":
-                model = model.filter(drug_name__iexact=fld_value)
+                model = model.filter(drug_name__icontains=fld_value)
             if fld_name == "batch_number":
-                model = model.filter(batch_number__iexact=fld_value)
+                model = model.filter(batch_number__icontains=fld_value)
             if fld_name == "mfg_date":
                 model = model.filter(mfg_date=fld_value)
             if fld_name == "exp_date":
@@ -237,7 +237,7 @@ class ModelFilterSURGICALITEMGROUP:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
             if fld_name == "drug_group_name":
-                model = model.filter(drug_group_name__iexact=fld_value)
+                model = model.filter(drug_group_name__icontains=fld_value)
 
         return model
 
@@ -256,7 +256,7 @@ class ModelFilterFIELDMASTER:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
             if fld_name == "field_master_name":
-                model = model.filter(field_master_name__iexact=fld_value)
+                model = model.filter(field_master_name__icontains=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -273,7 +273,7 @@ class ModelFilterMANAGEFIELDS:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
             if fld_name == "field_value":
-                model = model.filter(field_value__iexact=fld_value)
+                model = model.filter(field_value__icontains=fld_value)
             if fld_name == "field_master_id":
                 model = model.filter(field_master_id=fld_value)
         return model
@@ -294,9 +294,11 @@ class ModelFilterADVICE:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
             if fld_name == "advice":
-                model = model.filter(advice__iexact=fld_value)
-            if fld_name == "advice_group_id":
-                model = model.filter(advice_group_id=fld_value)
+                model = model.filter(advice__icontains=fld_value)
+            if fld_name == "advice_for":
+                model = model.filter(advice_for=fld_value)
+            if fld_name == "detail":
+                model = model.filter(detail=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -304,7 +306,8 @@ class ModelFilterADVICE:
         if search:
             model = model.filter(
                 Q(advice__icontains=search) |
-                Q(advice_group__advice_group__icontains=search)
+                Q(advice_for__icontains=search) |
+                Q(detail__icontains=search)
             )
         return model
 
@@ -314,14 +317,17 @@ class ModelFilterADVICEGROUP:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
             if fld_name == "advice_group":
-                model = model.filter(advice_group__iexact=fld_value)
+                model = model.filter(advice_group__icontains=fld_value)
+            if fld_name == "advice_group_id":
+                model = model.filter(advice_group__id=fld_value)
         return model
 
     def search(self, model, query_string):
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(advice_group__icontains=search)
+                Q(advice_group__icontains=search) |
+                Q(advice__advice__icontains=search)
             )
         return model
 
@@ -331,11 +337,11 @@ class ModelFilterTIMING:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
             if fld_name == 'timing':
-                model = model.filter(timing__iexact=fld_value)
+                model = model.filter(timing__icontains=fld_value)
             if fld_name == "language":
-                model = model.filter(language__language__iexact=fld_value)
+                model = model.filter(language__language__icontains=fld_value)
             if fld_name == "code":
-                model = model.filter(language__code__iexact=fld_value)
+                model = model.filter(language__code__icontains=fld_value)
             if fld_name == "language_id":
                 model = model.filter(language=fld_value)
         return model
@@ -356,7 +362,7 @@ class ModelFilterCONSULTATION:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
             if fld_name == "uid":
-                model = model.filter(uid__iexact=fld_value)
+                model = model.filter(uid__icontains=fld_value)
             if fld_name == "parity":
                 model = model.filter(parity=fld_value)
             if fld_name == "prev_del_type":
@@ -392,5 +398,24 @@ class ModelFilterCONSULTATION:
                 Q(patient__registration_no__icontains=search) |
                 Q(parity__icontains=search) |
                 Q(prev_del_type__icontains=search)
+            )
+        return model
+
+class ModelFilterPATIENTPRESCRIPTION:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "regd_no":
+                model = model.filter(regd_no=fld_value)
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(regd_no__iexact=search) |
+                Q(diagnosis__diagnosis_name=search) |
+                Q(medicine__medicine__icontains=search)
             )
         return model

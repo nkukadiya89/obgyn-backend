@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 from .views import ConsultationAPI, patch, get
 
@@ -9,4 +9,5 @@ urlpatterns = [
     path('create/', ConsultationAPI.as_view()),
     path('delete/', ConsultationAPI.as_view()),
     path('update/<int:id>/', patch, name="update"),
+    path('prescription/',include('patient_prescription.urls')),
 ]
