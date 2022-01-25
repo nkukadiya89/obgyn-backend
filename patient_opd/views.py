@@ -9,30 +9,30 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
-from .models import PatientModel
-from .serializers import PatientSerializers
 from utility.search_filter import filtering_query
-from user.models import User
-from uuid import uuid1
-from patient.utility.code_generate import generate_patient_user_code
+from .models import PatientOpdModel
+from .serializers import PatientOpdSerializers
 
-class PatientAPI(APIView):
+
+class PatientOpdAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+    search_fields = ["patient_opd_id"]
 
     # ================= Update all Fields of a record =========================
     def put(self, request, id):
         data = {}
         try:
-            patient = PatientModel.objects.filter(pk=id).first()
-        except PatientModel.DoesNotExist:
+            patient_opd = PatientOpdModel.objects.filter(pk=id).first()
+        except PatientOpdModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "PUT":
-            serializer = PatientSerializers(patient, request.data)
+            serializer = PatientOpdSerializers(patient_opd, request.data)
             if serializer.is_valid():
                 serializer.save()
                 data["success"] = True
@@ -42,10 +42,10 @@ class PatientAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # ================= Delete Record =========================
     def delete(self, request):
         data = {}
         del_id = json.loads(request.body.decode('utf-8'))
+
         if "id" not in del_id:
             data["success"] = False
             data["msg"] = "Record ID not provided"
@@ -53,15 +53,15 @@ class PatientAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
-            patient = PatientModel.objects.filter(patient_id__in=del_id["id"])
-        except PatientModel.DoesNotExist:
+            patient_opd = PatientOpdModel.objects.filter(patient_opd_id__in=del_id["id"])
+        except PatientOpdModel:
             data["success"] = False
             data["msg"] = "Record does not exist"
             data["data"] = []
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":
-            result = patient.update(deleted=1)
+            result = patient_opd.update(deleted=1)
             data["success"] = True
             data["msg"] = "Data deleted successfully."
             data["deleted"] = result
@@ -71,18 +71,11 @@ class PatientAPI(APIView):
     def post(self, request):
         data = {}
         if request.method == "POST":
-            patient = PatientModel()
-            serializer = PatientSerializers(patient, data=request.data)
+            patient_opd = PatientOpdModel()
+            serializer = PatientOpdSerializers(patient_opd, data=request.data)
 
             if serializer.is_valid():
                 serializer.save()
-                patient.registered_no = uuid1()
-                patient.save()
-                user = User.objects.filter(pk=patient.user_ptr_id).first()
-                if user!=None:
-                    user.set_password(request.POST.get("password"))
-                    user.save()
-                    generate_patient_user_code(user)
                 data["success"] = True
                 data["msg"] = "Data updated successfully"
                 data["data"] = serializer.data
@@ -99,20 +92,19 @@ class PatientAPI(APIView):
 @permission_classes([IsAuthenticated])
 def patch(request, id):
     data = {}
-
     try:
         if id:
-            patient = PatientModel.objects.get(patient_id=id)
+            patient_opd = PatientOpdModel.objects.get(pk=id)
         else:
-            patient = PatientModel.objects.filter(deleted=0)
-    except PatientModel.DoesNotExist:
+            patient_opd = PatientOpdModel.objects.filter(deleted=0)
+    except PatientOpdModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"
         data["data"] = []
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == "POST":
-        serializer = PatientSerializers(patient, request.data, partial=True)
+        serializer = PatientOpdSerializers(patient_opd, request.data, partial=True)
 
         if serializer.is_valid():
             serializer.save()
@@ -126,6 +118,7 @@ def patch(request, id):
         data["data"] = []
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticatedOrReadOnly])
@@ -135,21 +128,21 @@ def get(request, id=None):
     data = {}
     try:
         if id:
-            patient = PatientModel.objects.filter(pk=id, deleted=0)
+            patient_opd = PatientOpdModel.objects.filter(pk=id, deleted=0)
         else:
-            patient = PatientModel.objects.filter(deleted=0)
+            patient_opd = PatientOpdModel.objects.filter(deleted=0)
 
-        data["total_record"] = len(patient)
-        patient, data = filtering_query(patient, query_string, "patient_id", "PATIENT")
+        data["total_record"] = len(patient_opd)
+        patient_opd, data = filtering_query(patient_opd, query_string, "patient_opd_id", "PATIENTOPD")
 
-    except PatientModel.DoesNotExist:
+    except PatientOpdModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"
         data["data"] = []
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == "GET":
-        serilizer = PatientSerializers(patient, many=True)
+        serilizer = PatientOpdSerializers(patient_opd, many=True)
         data["success"] = True
         data["msg"] = "OK"
         data["data"] = serilizer.data

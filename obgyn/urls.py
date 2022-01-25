@@ -34,4 +34,5 @@ urlpatterns = [
     path('m-fields/', include('manage_fields.urls')),
     path('advice/', include('advice.urls')),
     path('patient/', include('patient.urls')),
+    path('opd/', include('patient_opd.urls')),
 ]

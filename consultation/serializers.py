@@ -20,10 +20,11 @@ class ConsultationSerializers(serializers.ModelSerializer):
         return ret
 
     def validate(self, data):
-        patient = PatientModel.objects.filter(registered_no=data["regd_no"])
-        if len(patient) == 0:
-            raise serializers.ValidationError("Patient does not exist")
-        data["patient_id"] = patient[0].patient_id
+        if "regd_no" in data:
+            patient = PatientModel.objects.filter(registered_no=data["regd_no"])
+            if len(patient) == 0:
+                raise serializers.ValidationError("Patient does not exist")
+            data["patient_id"] = patient[0].patient_id
 
         return data
 
