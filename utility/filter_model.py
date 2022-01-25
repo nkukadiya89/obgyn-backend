@@ -1,4 +1,5 @@
 import re
+import datetime
 
 from django.db.models import Q
 
@@ -385,6 +386,18 @@ class ModelFilterCONSULTATION:
                 model = model.filter(ftlscs_female_live=fld_value)
             if fld_name == "ftlscs_female_dead":
                 model = model.filter(ftlscs_female_dead=fld_value)
+            if fld_name == 'lmp_date':
+                model = model.filter(lmp_date=fld_value)
+            if fld_name == 'opd_date':
+                model = model.filter(opd_date=fld_value)
+            if fld_name == 'edd_date':
+                model = model.filter(edd_date=fld_value)
+            if fld_name == 'possible_lmp':
+                model = model.filter(possible_lmp=fld_value)
+            if fld_name == 'possible_edd':
+                model = model.filter(possible_edd=fld_value)
+            if fld_name == 'fu_date':
+                model = model.filter(fu_date=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -417,5 +430,68 @@ class ModelFilterPATIENTPRESCRIPTION:
                 Q(regd_no__iexact=search) |
                 Q(diagnosis__diagnosis_name=search) |
                 Q(medicine__medicine__icontains=search)
+            )
+        return model
+
+class ModelFilterPATIENT:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "patient_id":
+                model = model.filter(patient_id=fld_value)
+            if fld_name == "department":
+                model = model.filter(department=fld_value)
+            if fld_name == "patient_type":
+                model = model.filter(patient_type=fld_value)
+            if fld_name == "patient_detail":
+                model = model.filter(patient_detail=fld_value)
+            if fld_name == "registered_no":
+                model = model.filter(registered_no=fld_value)
+            if fld_name == "grand_parent_name":
+                model = model.filter(grand_parent_name__icontains=fld_value)
+            if fld_name == "taluka":
+                model = model.filter(taluka__icontains=fld_value)
+            if fld_name == "district":
+                model = model.filter(district__icontains=fld_value)
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(patient__first_name__icontains=search) |
+                Q(patient__middle_name__icontains=search) |
+                Q(patient__last_name__icontains=search) |
+                Q(patient__phone=search) |
+                Q(department__icontains=search) |
+                Q(patient_type__icontains=search) |
+                Q(patient_detail__icontains=search) |
+                Q(registered_no=search) |
+                Q(grand_parent_name__icontains=search) |
+                Q(taluka__icontains=search) |
+                Q(district__icontains=search)
+            )
+        return model
+
+class ModelFilterPATIENTOPD:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "patient_id":
+                model = model.filter(patient_id=fld_value)
+            if fld_name == "opd_date":
+                model = model.filter(opd_date=fld_value)
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(patient__first_name=search) |
+                Q(patient__middle_name=search) |
+                Q(patient__last_name=search) |
+                Q(patient__phone=search)
             )
         return model

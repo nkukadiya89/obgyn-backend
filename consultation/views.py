@@ -12,7 +12,6 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from utility.search_filter import filtering_query
 from .models import ConsultationModel
 from .serializers import ConsultationSerializers
-from patient.models import PatientModel
 
 
 class ConsultationAPI(APIView):
@@ -20,7 +19,6 @@ class ConsultationAPI(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     search_fields = ["consultation_name"]
-
 
     # ================= Update all Fields of a record =========================
     def put(self, request, id):
@@ -120,13 +118,14 @@ def patch(request, id):
         data["data"] = []
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticatedOrReadOnly])
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
-    data={}
+    data = {}
     try:
         if id:
             consultation = ConsultationModel.objects.filter(pk=id, deleted=0)
@@ -148,5 +147,3 @@ def get(request, id=None):
         data["msg"] = "OK"
         data["data"] = serilizer.data
         return Response(data=data, status=status.HTTP_200_OK)
-
-
