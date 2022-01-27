@@ -11,4 +11,5 @@ urlpatterns = [
     path('update/<int:id>/', patch),
     path('consultation/', include('consultation.urls')),
     path('referal/', include('patient_referal.urls')),
+    path('delivery/', include('patient_delivery.urls')),
 ]
