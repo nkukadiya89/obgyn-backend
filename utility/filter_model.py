@@ -495,3 +495,28 @@ class ModelFilterPATIENTOPD:
                 Q(patient__phone=search)
             )
         return model
+
+class ModelFilterPATIENTREFERAL:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "patient_id":
+                model = model.filter(patient_id=fld_value)
+            if fld_name == "patient_referal_id":
+                model = model.filter(patient_referal_id=fld_value)
+            if fld_name == "indication":
+                model = model.filter(indication__icontains=fld_value)
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(patient__first_name=search) |
+                Q(patient__middle_name=search) |
+                Q(patient__last_name=search) |
+                Q(patient__phone=search) |
+                Q(indication=search)
+            )
+        return model

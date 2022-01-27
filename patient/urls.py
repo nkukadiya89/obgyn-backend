@@ -10,4 +10,5 @@ urlpatterns = [
     path('delete/', PatientAPI.as_view()),
     path('update/<int:id>/', patch),
     path('consultation/', include('consultation.urls')),
+    path('referal/', include('patient_referal.urls')),
 ]

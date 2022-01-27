@@ -11,6 +11,8 @@ class PatientOpdSerializers(serializers.ModelSerializer):
             if len(patient) == 0:
                 raise serializers.ValidationError("Patient does not exist")
             data["patient_id"] = patient[0].patient_id
+        else:
+            raise serializers.ValidationError("Patient is missing")
 
         patient_opd = PatientOpdModel.objects.filter(opd_date=data["opd_date"], patient_id=data["patient_id"])
         if len(patient_opd) > 0:

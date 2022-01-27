@@ -73,10 +73,13 @@ class PatientPrescriptionSerializers(serializers.ModelSerializer):
         diagnosis = data.get('diagnosis')
         consultation = data.get('consultation')
 
-        patient = PatientModel.objects.filter(registered_no=data["regd_no"])
-        if len(patient) == 0:
-            raise serializers.ValidationError("Patient does not exist")
-        data["patient_id"] = patient[0].patient_id
+        if "regd_no" in data:
+            patient = PatientModel.objects.filter(registered_no=data["regd_no"])
+            if len(patient) == 0:
+                raise serializers.ValidationError("Patient does not exist")
+            data["patient_id"] = patient[0].patient_id
+        else:
+            raise serializers.ValidationError("Patient is missing")
 
         duplicate_prescription = PatientPrescriptionModel.objects.filter(consultation_id=consultation,
                                                                          diagnosis_id=diagnosis, deleted=0)
