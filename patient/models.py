@@ -23,7 +23,7 @@ class PatientModel(User):
     patient_detail = models.CharField(max_length=8,choices=patient_detail_choice, default="PARTIAL")
     date_of_opd = models.DateField(default=now)
     registered_no = models.CharField(max_length=100, default="")
-    husband_name = models.CharField(max_length=100, default="")
+    husband_father_name = models.CharField(max_length=100, default="")
     grand_father_name = models.CharField(max_length=100, default="")
     age = models.IntegerField(default=0)
     taluka = models.CharField(max_length=100, default="")
