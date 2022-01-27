@@ -54,7 +54,7 @@ class PatientSerializers(serializers.ModelSerializer):
         model = PatientModel
         fields = ['patient_id', 'first_name', 'last_name', 'middle_name', 'phone', 'state',
                   'city', 'married', 'department', 'patient_type', 'patient_detail', 'date_of_opd', 'registered_no',
-                  'grand_parent_name', 'age', 'taluka', 'district', 'created_by', 'deleted', 'hospital']
+                  'grand_father_name', 'age', 'taluka', 'district', 'created_by', 'deleted', 'hospital']
         extra_kwargs = {
             "city": {"required": True},
             "state": {"required": True},

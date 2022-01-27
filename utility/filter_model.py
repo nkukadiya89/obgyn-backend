@@ -407,7 +407,7 @@ class ModelFilterCONSULTATION:
                 Q(patient__first_name__icontains=search) |
                 Q(patient__middle_name__icontains=search) |
                 Q(patient__last_name__icontains=search) |
-                Q(patient__grand_parent_name__icontains=search) |
+                Q(patient__grand_father_name__icontains=search) |
                 Q(patient__registration_no__icontains=search) |
                 Q(parity__icontains=search) |
                 Q(prev_del_type__icontains=search)
@@ -448,8 +448,8 @@ class ModelFilterPATIENT:
                 model = model.filter(patient_detail=fld_value)
             if fld_name == "registered_no":
                 model = model.filter(registered_no=fld_value)
-            if fld_name == "grand_parent_name":
-                model = model.filter(grand_parent_name__icontains=fld_value)
+            if fld_name == "grand_father_name":
+                model = model.filter(grand_father_name__icontains=fld_value)
             if fld_name == "taluka":
                 model = model.filter(taluka__icontains=fld_value)
             if fld_name == "district":
@@ -468,7 +468,7 @@ class ModelFilterPATIENT:
                 Q(patient_type__icontains=search) |
                 Q(patient_detail__icontains=search) |
                 Q(registered_no=search) |
-                Q(grand_parent_name__icontains=search) |
+                Q(grand_father_name__icontains=search) |
                 Q(taluka__icontains=search) |
                 Q(district__icontains=search)
             )
