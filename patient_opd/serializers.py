@@ -5,6 +5,23 @@ from .models import PatientOpdModel
 
 
 class PatientOpdSerializers(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        ret = super(PatientOpdSerializers, self).to_representation(instance)
+
+        if "regd_no" in ret:
+            patient = PatientModel.objects.filter(registered_no=ret["regd_no"])
+            if len(patient) == 0:
+                raise serializers.ValidationError("Patient does not exist")
+            ret["patient_id"] = patient[0].patient_id
+            ret["first_name"] = patient[0].first_name
+            ret["middle_name"] = patient[0].middle_name
+            ret["last_name"] = patient[0].last_name
+            ret["phone"] = patient[0].phone
+            ret["department"] = patient[0].department
+            ret["regd_no"] = patient[0].registered_no
+            ret["husband_father_name"] = patient[0].grand_parent_name
+
+        return ret
     def validate(self, data):
         if "regd_no" in data:
             patient = PatientModel.objects.filter(registered_no=data["regd_no"])
