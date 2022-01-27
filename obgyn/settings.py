@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'consultation',
     'patient_prescription',
     'patient_opd',
+    'patient_referal'
 ]
 
 MIDDLEWARE = [
