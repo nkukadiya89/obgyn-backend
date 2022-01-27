@@ -19,7 +19,7 @@ class PatientOpdSerializers(serializers.ModelSerializer):
             ret["phone"] = patient[0].phone
             ret["department"] = patient[0].department
             ret["regd_no"] = patient[0].registered_no
-            ret["husband_father_name"] = patient[0].grand_parent_name
+            ret["grand_father_name"] = patient[0].grand_father_name
 
         return ret
     def validate(self, data):
