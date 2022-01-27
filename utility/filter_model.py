@@ -450,6 +450,8 @@ class ModelFilterPATIENT:
                 model = model.filter(registered_no=fld_value)
             if fld_name == "grand_father_name":
                 model = model.filter(grand_father_name__icontains=fld_value)
+            if fld_name == "husband_father_name":
+                model = model.filter(husband_father_name__icontains=fld_value)
             if fld_name == "taluka":
                 model = model.filter(taluka__icontains=fld_value)
             if fld_name == "district":
@@ -469,6 +471,7 @@ class ModelFilterPATIENT:
                 Q(patient_detail__icontains=search) |
                 Q(registered_no=search) |
                 Q(grand_father_name__icontains=search) |
+                Q(husband_father_name__icontains=search) |
                 Q(taluka__icontains=search) |
                 Q(district__icontains=search)
             )
