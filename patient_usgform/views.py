@@ -18,8 +18,6 @@ class PatientUSGFormAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-    search_fields = ["patient_usgform_id"]
-
     # ================= Update all Fields of a record =========================
     def put(self, request, id):
         data = {}
@@ -152,8 +150,6 @@ def get(request, id=None):
 class USGFormChildAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
     permission_classes = [IsAuthenticatedOrReadOnly]
-
-    search_fields = ["usgform_child_id"]
 
     # ================= Update all Fields of a record =========================
     def put(self, request, id):
