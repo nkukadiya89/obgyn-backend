@@ -5,7 +5,7 @@ import django.utils.timezone
 
 def create_default_user(apps, edit_schema):
     state_model = apps.get_model('state', 'StateModel')
-    state_model.objects.create(city_name="Gujarat")
+    state_model.objects.create(state_name="Gujarat")
 
 
 class Migration(migrations.Migration):

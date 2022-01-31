@@ -22,7 +22,7 @@ class ConsultationModel(models.Model):
     )
 
     consultation_id = models.AutoField(primary_key=True)
-    patient_opd = models.ForeignKey(PatientOpdModel, on_delete=models.DO_NOTHING, null=True)
+    patient_opd = models.OneToOneField(PatientOpdModel, on_delete=models.DO_NOTHING, null=True)
     patient = models.ForeignKey(PatientModel, on_delete=models.DO_NOTHING, null=True)
     parity = models.CharField(max_length=15, choices=parity_choice, default='PRIMI')
     prev_del_type = models.CharField(max_length=15, choices=prev_del_choice, default="NORMAL")

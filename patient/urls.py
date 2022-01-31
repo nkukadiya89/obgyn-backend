@@ -12,4 +12,6 @@ urlpatterns = [
     path('consultation/', include('consultation.urls')),
     path('referal/', include('patient_referal.urls')),
     path('delivery/', include('patient_delivery.urls')),
+    path('usgform/', include('patient_usgform.urls')),
+    path('discharge/', include('patient_discharge.urls')),
 ]

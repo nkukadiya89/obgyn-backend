@@ -56,7 +56,9 @@ INSTALLED_APPS = [
     'patient_prescription',
     'patient_opd',
     'patient_referal',
-    'patient_delivery'
+    'patient_delivery',
+    'patient_usgform',
+    'patient_discharge',
 ]
 
 MIDDLEWARE = [

@@ -523,3 +523,108 @@ class ModelFilterPATIENTREFERAL:
                 Q(indication=search)
             )
         return model
+
+class ModelFilterPATIENTUSGFORM:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "patient_id":
+                model = model.filter(patient_id=fld_value)
+            if fld_name == "patient_usgform_id":
+                model = model.filter(patient_usgform_id=fld_value)
+            if fld_name == "diagnosis":
+                model = model.filter(diagnosis__diagnosis_name__icontains=fld_value)
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(patient__first_name=search) |
+                Q(patient__middle_name=search) |
+                Q(patient__last_name=search) |
+                Q(patient__phone=search) |
+                Q(diagnosis__dianosis_name=search)
+            )
+        return model
+
+class ModelFilterUSGFORMCHILD:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "usgform_child_id":
+                model = model.filter(usgform_child_id=fld_value)
+            if fld_name == "child_gender":
+                model = model.filter(child_gender=fld_value)
+            if fld_name == "child_year":
+                model = model.filter(child_year=fld_value)
+            if fld_name == "child_month":
+                model = model.filter(child_month=fld_value)
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(child_gender=search)
+            )
+        return model
+
+
+class ModelFilterPATIENTDISCHARGE:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "patient_discharge_id":
+                model = model.filter(patient_discharge_id=fld_value)
+            if fld_name == "regd_no":
+                model = model.filter(regd_no=fld_value)
+            if fld_name == "admission_date":
+                model = model.filter(admission_date=fld_value)
+            if fld_name == "admission_time":
+                model = model.filter(admission_time=fld_value)
+            if fld_name == "complain_of":
+                model = model.filter(complain_of__icontains=fld_value)
+            if fld_name == "diagnosis":
+                model = model.filter(diagnosis__diagnosis_name=fld_value)
+            if fld_name == "name_of_operation":
+                model = model.filter(name_of_operation__icontains=fld_value)
+            if fld_name == "ot_date":
+                model = model.filter(ot_date=fld_value)
+            if fld_name == "ot_time":
+                model = model.filter(ot_time=fld_value)
+            if fld_name == "treatment_given":
+                model = model.filter(treatment_given__icontains=fld_value)
+            if fld_name == "advice":
+                model = model.filter(advice__advice__icontains=fld_value)
+            if fld_name == "any_history":
+                model = model.filter(any_history__icontains=fld_value)
+            if fld_name == "assisted":
+                model = model.filter(assisted__icontains=fld_value)
+            if fld_name == "discharge_date":
+                model = model.filter(discharge_date=fld_value)
+            if fld_name == "discharge_time":
+                model = model.filter(discharge_time=fld_value)
+            if fld_name == "remark":
+                model = model.filter(remark__icontains=fld_value)
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(complain_of__icontains=search) |
+                Q(diagnosis__diagnosis_name__icontains=search) |
+                Q(name_of_operation__icontains=search) |
+                Q(treatment_given__icontains=search) |
+                Q(advice__advice__icontains=search) |
+                Q(any_history__icontains=search) |
+                Q(assisted__icontains=search) |
+                Q(remark__icontains=search)
+            )
+        return model
