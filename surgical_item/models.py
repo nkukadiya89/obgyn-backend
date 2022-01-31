@@ -10,8 +10,8 @@ class SurgicalItemModel(models.Model):
     drug_name = models.CharField(max_length=150, default="")
     mrp = models.FloatField(default=0)
     batch_number = models.CharField(max_length=50, default="")
-    mfg_date = models.DateField(default=now)
-    exp_date = models.DateField(default=now)
+    mfg_date = models.CharField(max_length=25, default="")
+    exp_date = models.CharField(max_length=25, default="")
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     created_by = models.IntegerField(default=1, unique=False)

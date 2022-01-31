@@ -2,9 +2,6 @@
 
 from django.db import migrations, models
 
-def update_user(apps, edit_schema):
-    user_model = apps.get_model('user', 'User')
-    user_model.objects.update(verified=True)
 
 
 class Migration(migrations.Migration):
@@ -19,5 +16,4 @@ class Migration(migrations.Migration):
             name='verify',
             field=models.BooleanField(default=False),
         ),
-        migrations.RunPython(update_user)
     ]
