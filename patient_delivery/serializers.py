@@ -1,10 +1,21 @@
 from rest_framework import serializers
 
 from patient.models import PatientModel
+from patient.serializers import PatientSerializers
 from .models import PatientDeliveryModel
 
 
 class PatientDeliverySerializers(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        ret = super(PatientDeliverySerializers, self).to_representation(instance)
+        patient = PatientSerializers(instance.patient)
+        ret["first_name"] = patient.data["first_name"]
+        ret["last_name"] = patient.data["last_name"]
+        ret["husband_father_name"] = patient.data["husband_father_name"]
+        ret["grand_father_name"] = patient.data["grand_father_name"]
+        ret["phone"] = patient.data["phone"]
+        return ret
+
     def validate(self, data):
         if "regd_no" in data:
             patient = PatientModel.objects.filter(registered_no=data["regd_no"])
