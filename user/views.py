@@ -302,7 +302,7 @@ def delete_user(request):
         data["data"] = []
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-    if request.method == "POST":
+    if request.method == "DELETE":
         result = user.update(deleted=1)
         data["success"] = True
         data["msg"] = "Data deleted successfully."
