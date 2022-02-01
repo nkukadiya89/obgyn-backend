@@ -1,4 +1,5 @@
 import json
+from uuid import uuid1
 
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -9,12 +10,12 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
+from patient.utility.code_generate import generate_patient_user_code
+from user.models import User
+from utility.search_filter import filtering_query
 from .models import PatientModel
 from .serializers import PatientSerializers
-from utility.search_filter import filtering_query
-from user.models import User
-from uuid import uuid1
-from patient.utility.code_generate import generate_patient_user_code
+
 
 class PatientAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
@@ -79,7 +80,7 @@ class PatientAPI(APIView):
                 patient.registered_no = uuid1()
                 patient.save()
                 user = User.objects.filter(pk=patient.user_ptr_id).first()
-                if user!=None:
+                if user != None:
                     user.set_password(request.POST.get("password"))
                     user.save()
                     generate_patient_user_code(user)
@@ -112,7 +113,8 @@ def patch(request, id):
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == "POST":
-        serializer = PatientSerializers(patient, request.data, partial=True)
+        print("data", request.data["media"])
+        serializer = PatientSerializers(patient, json.loads(request.data["data"]), partial=True)
 
         if serializer.is_valid():
             serializer.save()
@@ -125,6 +127,7 @@ def patch(request, id):
         data["msg"] = serializer.errors
         data["data"] = []
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])

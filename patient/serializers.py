@@ -1,12 +1,13 @@
 import random
 import string
 
+from django.db.models.query import Q
 from rest_framework import serializers
 
 from city.serializers import CitySerializers
 from state.serializers import StateSerializers
-from .models import PatientModel
 from user.models import User
+from .models import PatientModel
 
 
 class PatientSerializers(serializers.ModelSerializer):
@@ -20,14 +21,19 @@ class PatientSerializers(serializers.ModelSerializer):
         first_name = data.get('first_name')
         last_name = data.get('last_name')
         phone = data.get("phone")
-        user = User.objects.filter(email=phone).first()
+        user = User.objects.filter(email=phone)
 
-        if user!=None:
+        if self.partial:
+            user = user.filter(~Q(pk=user[0].id)).first()
+        else:
+            user = user.first()
+
+        if user != None:
             first_name = user.first_name
             last_name = user.last_name
             middle_name = user.middle_name
             name = first_name + " " + middle_name + " " + last_name
-            raise serializers.ValidationError(f'{ phone } belongs to { name }. Provide alternative Contact number.')
+            raise serializers.ValidationError(f'{phone} belongs to {name}. Provide alternative Contact number.')
 
         data["email"] = phone
         data["username"] = phone
@@ -39,7 +45,6 @@ class PatientSerializers(serializers.ModelSerializer):
     patient_id = serializers.IntegerField(read_only=True)
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
-    middle_name = serializers.CharField(required=True)
     phone = serializers.CharField(required=True)
     married = serializers.BooleanField(required=True)
     patient_type = serializers.CharField(required=True)
@@ -54,7 +59,8 @@ class PatientSerializers(serializers.ModelSerializer):
         model = PatientModel
         fields = ['patient_id', 'first_name', 'last_name', 'middle_name', 'phone', 'state',
                   'city', 'married', 'department', 'patient_type', 'patient_detail', 'date_of_opd', 'registered_no',
-                  'grand_father_name', 'husband_father_name', 'age', 'taluka', 'district', 'created_by', 'deleted', 'hospital']
+                  'grand_father_name', 'husband_father_name', 'age', 'taluka', 'district', 'created_by', 'deleted',
+                  'hospital']
         extra_kwargs = {
             "city": {"required": True},
             "state": {"required": True},
