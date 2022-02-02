@@ -7,8 +7,8 @@ from .models import CityModel
 class CitySerializers(serializers.ModelSerializer):
     def validate(self, data):
         city_name = data.get('city_name')
-        state = data.get('state')
-        duplicate_city = CityModel.objects.filter(deleted=0, city_name__iexact=city_name, state_id=state)
+        taluka_id = data.get('taluka')
+        duplicate_city = CityModel.objects.filter(deleted=0, city_name__iexact=city_name, taluka_id=taluka_id)
 
         if self.partial:
             duplicate_city = duplicate_city.filter(~Q(pk=self.instance.city_id)).first()
@@ -24,4 +24,4 @@ class CitySerializers(serializers.ModelSerializer):
 
     class Meta:
         model = CityModel
-        fields = ['city_id', 'city_name', 'state', 'created_by', 'deleted']
+        fields = ['city_id', 'city_name', 'taluka', 'created_by', 'deleted']
