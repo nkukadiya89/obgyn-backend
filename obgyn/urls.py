@@ -26,6 +26,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include('user.urls')),
     path('city/', include('city.urls')),
+    path('taluka/', include('taluka.urls')),
+    path('district/', include('district.urls')),
     path('state/', include('state.urls')),
     path('language/', include('language.urls')),
     path('medicine/', include('medicine.urls')),

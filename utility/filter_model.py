@@ -77,7 +77,8 @@ class ModelFilterUSER:
                 Q(registration_no__icontains=search) |
                 Q(default_language__language__icontains=search) |
                 Q(designation__icontains=search) |
-                Q(username__icontains=search)
+                Q(username__icontains=search) |
+                Q(hospital_id__hospital_name__icontains=search)
             )
         return model
 
@@ -88,8 +89,8 @@ class ModelFilterCITY:
             fld_value = fields.split("=")[1]
             if fld_name == "city_name":
                 model = model.filter(city_name__icontains=fld_value)
-            if fld_name == "state_id":
-                model = model.filter(state_id=fld_value)
+            if fld_name == "taluka_id":
+                model = model.filter(taluka_id=fld_value)
             if fld_name == "city_id":
                 model = model.filter(city_id=fld_value)
         return model
@@ -99,7 +100,54 @@ class ModelFilterCITY:
         if search:
             model = model.filter(
                 Q(city_name__icontains=search) |
+                Q(taluka__taluka_name__icontains=search) |
+                Q(taluka__district__district_name__icontains=search) |
+                Q(taluka__district__state__state_name__icontains=search)
+            )
+        return model
+
+class ModelFilterDISTRICT:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "district_name":
+                model = model.filter(district_name__icontains=fld_value)
+            if fld_name == "state_id":
+                model = model.filter(state_id=fld_value)
+            if fld_name == "district_id":
+                model = model.filter(district_id=fld_value)
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(district_name__icontains=search) |
                 Q(state__state_name__icontains=search)
+            )
+        return model
+
+class ModelFilterTALUKA:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "taluka_name":
+                model = model.filter(taluka_name__icontains=fld_value)
+            if fld_name == "district_id":
+                model = model.filter(district_id=fld_value)
+            if fld_name == "taluka_id":
+                model = model.filter(taluka_id=fld_value)
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(taluka_name__icontains=search) |
+                Q(district__district_name__icontains=search) |
+                Q(district__state__state_name__icontains=search)
             )
         return model
 

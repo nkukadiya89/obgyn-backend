@@ -59,6 +59,8 @@ INSTALLED_APPS = [
     'patient_delivery',
     'patient_usgform',
     'patient_discharge',
+    'district',
+    'taluka'
 ]
 
 MIDDLEWARE = [
