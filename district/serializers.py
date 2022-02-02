@@ -2,9 +2,18 @@ from django.db.models import Q
 from rest_framework import serializers
 
 from .models import DistrictModel
+from state.serializers import StateSerializers
 
 
 class DistrictSerializers(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        ret = super(DistrictSerializers,self).to_representation(instance)
+
+        if "state" in ret:
+            ret["state_name"] = StateSerializers(instance.state).data["state_name"]
+
+        return ret
+
     def validate(self, data):
         district_name = data.get('district_name')
         state = data.get('state')

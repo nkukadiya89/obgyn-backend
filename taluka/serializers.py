@@ -1,10 +1,19 @@
 from django.db.models import Q
 from rest_framework import serializers
+from district.serializers import DistrictSerializers
+from state.serializers import StateSerializers
 
 from .models import TalukaModel
 
 
 class TalukaSerializers(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        ret = super(TalukaSerializers, self).to_representation(instance)
+
+        if "district" in ret:
+            ret["district_name"] = DistrictSerializers(instance.district).data["district_name"]
+        return ret
+
     def validate(self, data):
         taluka_name = data.get('taluka_name')
         district = data.get('district')
