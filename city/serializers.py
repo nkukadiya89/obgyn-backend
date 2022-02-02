@@ -1,10 +1,19 @@
 from django.db.models import Q
 from rest_framework import serializers
+from taluka.serializers import TalukaSerializers
 
 from .models import CityModel
 
 
 class CitySerializers(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        ret = super(CitySerializers, self).to_representation(instance)
+
+        if "taluka" in ret:
+            ret["taluka_name"] = TalukaSerializers(instance.taluka).data["taluka_name"]
+
+        return ret
+
     def validate(self, data):
         city_name = data.get('city_name')
         taluka_id = data.get('taluka')
