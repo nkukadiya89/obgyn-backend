@@ -12,7 +12,7 @@ class TalukaSerializers(serializers.ModelSerializer):
 
         if "district" in ret:
             ret["district_name"] = DistrictSerializers(instance.district).data["district_name"]
-            ret["state_name"] = StateSerializers(instance.taluka.district.state).data["state_name"]
+            ret["state_name"] = StateSerializers(instance.district.state).data["state_name"]
         return ret
 
     def validate(self, data):
