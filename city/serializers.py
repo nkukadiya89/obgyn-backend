@@ -1,6 +1,8 @@
 from django.db.models import Q
 from rest_framework import serializers
 from taluka.serializers import TalukaSerializers
+from district.serializers import DistrictSerializers
+from state.serializers import StateSerializers
 
 from .models import CityModel
 
@@ -11,6 +13,8 @@ class CitySerializers(serializers.ModelSerializer):
 
         if "taluka" in ret:
             ret["taluka_name"] = TalukaSerializers(instance.taluka).data["taluka_name"]
+            ret["district_name"] = DistrictSerializers(instance.taluka.district).data["district_name"]
+            ret["state_name"] = StateSerializers(instance.taluka.district.state).data["state_name"]
 
         return ret
 
