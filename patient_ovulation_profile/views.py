@@ -131,7 +131,7 @@ def get(request, id=None):
             patient_ovulation_profile = PatientOvulationProfileModel.objects.filter(deleted=0)
 
         data["total_record"] = len(patient_ovulation_profile)
-        patient_ovulation_profile, data = filtering_query(patient_ovulation_profile, query_string, "patient_ovulation_profile_id", "PATIENTUSGREPORT")
+        patient_ovulation_profile, data = filtering_query(patient_ovulation_profile, query_string, "patient_ovulation_profile_id", "PATIENTOVULATIONPROFILE")
 
     except PatientOvulationProfileModel.DoesNotExist:
         data["success"] = False
