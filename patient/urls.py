@@ -14,4 +14,6 @@ urlpatterns = [
     path('delivery/', include('patient_delivery.urls')),
     path('usgform/', include('patient_usgform.urls')),
     path('discharge/', include('patient_discharge.urls')),
+    path('usgreport/',include('patient_usgreport.urls')),
+    path('ovulation-profile/', include('patient_ovulation_profile.urls')),
 ]
