@@ -14,7 +14,9 @@ class CitySerializers(serializers.ModelSerializer):
         if "taluka" in ret:
             ret["taluka_name"] = TalukaSerializers(instance.taluka).data["taluka_name"]
             ret["district_name"] = DistrictSerializers(instance.taluka.district).data["district_name"]
+            ret["district"] = DistrictSerializers(instance.taluka.district).data["district_id"]
             ret["state_name"] = StateSerializers(instance.taluka.district.state).data["state_name"]
+            ret["state_id"] = StateSerializers(instance.taluka.district.state).data["state_id"]
 
         return ret
 
