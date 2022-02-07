@@ -678,3 +678,63 @@ class ModelFilterPATIENTDISCHARGE:
                 Q(remark__icontains=search)
             )
         return model
+
+class ModelFilterPATIENTUSGREPORT:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "patient_usgreport_id":
+                model = model.filter(patient_usgreport_id=fld_value)
+            if fld_name == "regd_no":
+                model = model.filter(regd_no=fld_value)
+            if fld_name == "report_date":
+                model = model.filter(report_date=fld_value)
+            if fld_name == "anomalies":
+                model = model.filter(anomalies_icontains=fld_value)
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(anomalies__icontains=search) |
+                Q(regd_no__icontains=search) |
+                Q(cardiac_activity__icontains=search) |
+                Q(presentation__icontains=search) |
+                Q(possible_lmp__icontains=search) |
+                Q(placental_location__icontains=search) |
+                Q(amount_of_liquor__icontains=search) |
+                Q(remark__icontains=search) |
+                Q(usg_report__icontains=search)
+            )
+        return model
+
+class ModelFilterPATIENTOVULATIONPROFILE:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "patient_ovulation_profile_id":
+                model = model.filter(patient_ovulation_profile_id=fld_value)
+            if fld_name == "regd_no":
+                model = model.filter(regd_no=fld_value)
+            if fld_name == "op_day":
+                model = model.filter(op_day=fld_value)
+            if fld_name == "op_date":
+                model = model.filter(op_date=fld_value)
+            if fld_name == "ut_blood_flow":
+                model = model.filter(ut_blood_flow__icontains=fld_value)
+            if fld_name == "diagnosis":
+                model = model.filter(ovarian_blood_flow=fld_value)
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(regd_no__icontains=search) |
+                Q(ut_blood_flow_icontains=search) |
+                Q(ovarian_blood_flow__icontains=search)
+            )
+        return model
