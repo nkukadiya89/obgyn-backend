@@ -60,7 +60,9 @@ INSTALLED_APPS = [
     'patient_usgform',
     'patient_discharge',
     'district',
-    'taluka'
+    'taluka',
+    'patient_usgreport',
+    'patient_ovulation_profile'
 ]
 
 MIDDLEWARE = [
