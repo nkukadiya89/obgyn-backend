@@ -510,10 +510,10 @@ class ModelFilterPATIENT:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(patient__first_name__icontains=search) |
-                Q(patient__middle_name__icontains=search) |
-                Q(patient__last_name__icontains=search) |
-                Q(patient__phone=search) |
+                Q(first_name__icontains=search) |
+                Q(middle_name__icontains=search) |
+                Q(last_name__icontains=search) |
+                Q(phone=search) |
                 Q(department__icontains=search) |
                 Q(patient_type__icontains=search) |
                 Q(patient_detail__icontains=search) |
@@ -530,8 +530,6 @@ class ModelFilterPATIENTOPD:
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
-            print(fld_value)
-            print(fld_name)
             if fld_name == "patient_id":
                 model = model.filter(patient_id=fld_value)
             if fld_name == "opd_date":
@@ -545,7 +543,7 @@ class ModelFilterPATIENTOPD:
                 Q(patient__first_name=search) |
                 Q(patient__middle_name=search) |
                 Q(patient__last_name=search) |
-                Q(patient__phone_icontains=search)
+                Q(patient__phone__icontains=search)
             )
         return model
 
