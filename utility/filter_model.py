@@ -543,7 +543,13 @@ class ModelFilterPATIENTOPD:
                 Q(patient__first_name=search) |
                 Q(patient__middle_name=search) |
                 Q(patient__last_name=search) |
-                Q(patient__phone__icontains=search)
+                Q(patient__phone__icontains=search) |
+                Q(patient__department__icontains=search) |
+                Q(patient__patient_type__icontains=search) |
+                Q(patient__patient_detail__icontains=search) |
+                Q(patient__husband_father_name__icontains=search) |
+                Q(patient__grand_father_name__icontains=search) |
+                Q(patient__city__city_name__icontains=search)
             )
         return model
 
