@@ -1,6 +1,18 @@
+import os
+from urllib.parse import urlparse
+
+from decouple import config
 from django.db import models
-from user.models import User
 from django.utils.timezone import now
+
+from user.models import User
+from utility.aws_file_upload import upload_file_to_bucket
+
+ACCESS_KEY = config('AWS_ACCESS_KEY')
+SECRET_KEY = config('AWS_SECRET_KEY')
+REGION_NAME = config('REGION_NAME')
+BUCKET = config('BUCKET_NAME')
+
 
 # Create your models here.
 class PatientModel(User):
@@ -18,9 +30,10 @@ class PatientModel(User):
     )
     patient_id = models.AutoField(primary_key=True)
     married = models.BooleanField(default=False)
+    profile_image = models.CharField(max_length=250, default="", null=True)
     department = models.CharField(max_length=5, choices=department_choice, default="OPD")
     patient_type = models.CharField(max_length=5, choices=patient_type_choice, default="OB")
-    patient_detail = models.CharField(max_length=8,choices=patient_detail_choice, default="PARTIAL")
+    patient_detail = models.CharField(max_length=8, choices=patient_detail_choice, default="PARTIAL")
     date_of_opd = models.DateField(default=now)
     registered_no = models.CharField(max_length=100, default="")
     husband_father_name = models.CharField(max_length=100, default="")
@@ -31,3 +44,17 @@ class PatientModel(User):
 
     class Meta:
         db_table = 'patient'
+
+    def upload_file(self, file_to_upload):
+        allowed_type = [".jpg", ".png", ".jpeg"]
+        file_name = "profile_image"
+        self.profile_image, presigned_url = upload_file_to_bucket(file_to_upload, allowed_type, "patient/", self.patient_id,file_name)
+
+
+def get_bucket_file_folder(aws_file_url):
+    o = urlparse(aws_file_url, allow_fragments=False)
+    return o.path.lstrip('/')
+
+
+def file_extention(path):
+    return os.path.splitext(path)[1]

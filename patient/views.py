@@ -73,12 +73,17 @@ class PatientAPI(APIView):
         data = {}
         if request.method == "POST":
             patient = PatientModel()
-            serializer = PatientSerializers(patient, data=request.data)
+            serializer = PatientSerializers(patient, data=json.loads(request.data["data"]))
 
             if serializer.is_valid():
                 serializer.save()
                 patient.registered_no = uuid1()
                 patient.save()
+                if "media" in request.data:
+                    file = request.data["media"]
+                    patient.upload_file(file)
+                    patient.save()
+
                 user = User.objects.filter(pk=patient.user_ptr_id).first()
                 if user != None:
                     user.set_password(request.POST.get("password"))
@@ -113,11 +118,16 @@ def patch(request, id):
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == "POST":
-        print("data", request.data["media"])
+
         serializer = PatientSerializers(patient, json.loads(request.data["data"]), partial=True)
 
         if serializer.is_valid():
-            serializer.save()
+            patient = serializer.save()
+            if "media" in request.data:
+                file = request.data["media"]
+                patient.upload_file(file)
+                patient.save()
+
             data["success"] = True
             data["msg"] = "Data updated successfully"
             data["data"] = serializer.data
