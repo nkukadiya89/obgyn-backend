@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from django.db.models.query import Q
 from patient.models import PatientModel
 from .models import PatientOpdModel
 from patient.serializers import PatientSerializers
@@ -31,6 +32,7 @@ class PatientOpdSerializers(serializers.ModelSerializer):
             ret["date_of_opd"] = PatientSerializers(instance.patient).data["date_of_opd"]
             ret["husband_father_name"] = PatientSerializers(instance.patient).data["husband_father_name"]
             ret["grand_father_name"] = PatientSerializers(instance.patient).data["grand_father_name"]
+            ret["profile_image"] = PatientSerializers(instance.patient).data["profile_image"]
             ret["age"] = PatientSerializers(instance.patient).data["age"]
             ret["taluka"] = PatientSerializers(instance.patient).data["taluka"]
             ret["district"] = PatientSerializers(instance.patient).data["district"]
@@ -54,6 +56,10 @@ class PatientOpdSerializers(serializers.ModelSerializer):
             raise serializers.ValidationError("Patient is missing")
 
         patient_opd = PatientOpdModel.objects.filter(opd_date=data["opd_date"], patient_id=data["patient_id"])
+
+        if self.partial:
+            patient_opd = patient_opd.filter(~Q(pk=self.instance.patient_opd_id))
+
         if len(patient_opd) > 0:
             raise serializers.ValidationError("Patient visited today.")
 
