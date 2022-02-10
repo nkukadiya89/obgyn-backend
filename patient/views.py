@@ -81,6 +81,7 @@ class PatientAPI(APIView):
                 str(now()).replace("-", "").replace(":", "").replace(" ", "").replace(".", "").split("+")[0][:16]
 
                 patient.save()
+
                 if "media" in request.data:
                     file = request.data["media"]
                     patient.upload_file(file)

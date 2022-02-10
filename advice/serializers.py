@@ -1,3 +1,4 @@
+from django.db.models.query import Q
 from rest_framework import serializers
 
 from .models import AdviceModel, AdviceGroupModel
@@ -10,6 +11,19 @@ class AdviceSerializers(serializers.ModelSerializer):
         if "advice_group" in ret:
             ret['advice_group_name'] = AdviceGroupSerializers(instance.advice_group).data["advice_group"]
         return ret
+
+    def validate(self, data):
+        advice = data.get('advice')
+
+        duplicate_advice = AdviceModel.objects.filter(advice=advice, deleted=0)
+
+        if self.partial:
+            duplicate_advice = duplicate_advice.filter(~Q(pk=self.instance.advice_id)).first()
+        else:
+            duplicate_advice = duplicate_advice.first()
+
+        if duplicate_advice != None:
+            raise serializers.ValidationError("Advice already exist.")
 
     advice_id = serializers.IntegerField(read_only=True)
 
@@ -29,6 +43,19 @@ class AdviceGroupSerializers(serializers.ModelSerializer):
             ret['advice_name'] = advice_name_list
 
         return ret
+
+    def validate(self, data):
+        advice_group = data.get('advice_group')
+
+        duplicate_advice_group = AdviceGroupModel.objects.filter(advice_group=advice_group, deleted=0)
+
+        if self.partial:
+            duplicate_advice_group = duplicate_advice_group.filter(~Q(pk=self.instance.advice_group_id)).first()
+        else:
+            duplicate_advice_group = duplicate_advice_group.first()
+
+        if duplicate_advice_group != None:
+            raise serializers.ValidationError("Advice Group already exist.")
 
     advice_group_id = serializers.IntegerField(read_only=True)
 
