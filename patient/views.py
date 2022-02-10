@@ -1,6 +1,6 @@
 import json
-from uuid import uuid1
 
+from django.utils.timezone import now
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -77,7 +77,9 @@ class PatientAPI(APIView):
 
             if serializer.is_valid():
                 serializer.save()
-                patient.registered_no = uuid1()
+                patient.registered_no = \
+                str(now()).replace("-", "").replace(":", "").replace(" ", "").replace(".", "").split("+")[0][:16]
+
                 patient.save()
                 if "media" in request.data:
                     file = request.data["media"]
