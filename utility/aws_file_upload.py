@@ -1,4 +1,5 @@
-from os import path
+from os import path,remove
+from os.path import isfile
 from urllib.parse import urlparse
 
 import boto3
@@ -52,4 +53,6 @@ def upload_file_to_bucket(upload_file, allowed_type, folder_name, p_value, file_
                                                                     'Key': get_bucket_file_folder(
                                                                         aws_file_url)}, ExpiresIn=300)
 
+    isfile(tempfile)
+    remove(tempfile)
     return aws_file_url, presigned_url

@@ -55,13 +55,13 @@ class PatientOpdSerializers(serializers.ModelSerializer):
         else:
             raise serializers.ValidationError("Patient is missing")
 
-        patient_opd = PatientOpdModel.objects.filter(opd_date=data["opd_date"], patient_id=data["patient_id"])
-
-        if self.partial:
-            patient_opd = patient_opd.filter(~Q(pk=self.instance.patient_opd_id))
-
-        if len(patient_opd) > 0:
-            raise serializers.ValidationError("Patient visited today.")
+        # patient_opd = PatientOpdModel.objects.filter(opd_date=data["opd_date"], patient_id=data["patient_id"])
+        #
+        # if self.partial:
+        #     patient_opd = patient_opd.filter(~Q(pk=self.instance.patient_opd_id))
+        #
+        # if len(patient_opd) > 0:
+        #     raise serializers.ValidationError("Patient visited today.")
 
         return data
 
