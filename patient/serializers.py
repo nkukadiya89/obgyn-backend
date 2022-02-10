@@ -1,12 +1,10 @@
 import random
 import string
 
-from django.db.models.query import Q
 from rest_framework import serializers
 
 from city.serializers import CitySerializers
 from state.serializers import StateSerializers
-from user.models import User
 from .models import PatientModel
 
 
@@ -37,8 +35,8 @@ class PatientSerializers(serializers.ModelSerializer):
             #     name = first_name + " " + middle_name + " " + last_name
             #     raise serializers.ValidationError(f'{phone} belongs to {name}. Provide alternative Contact number.')
 
-            data["email"] = phone
-            data["username"] = phone
+            data["email"] = first_name[:2] + last_name[:2] + phone + "@yopmail.com"
+            data["username"] = first_name[:2] + last_name[:2] + phone
 
         data["user_type"] = "PATIENT"
         passcode = "".join(random.choices(string.ascii_letters + string.digits, k=8))
@@ -64,7 +62,7 @@ class PatientSerializers(serializers.ModelSerializer):
         fields = ['patient_id', 'first_name', 'last_name', 'middle_name', 'phone', 'state',
                   'city', 'married', 'department', 'patient_type', 'patient_detail', 'date_of_opd', 'registered_no',
                   'grand_father_name', 'husband_father_name', 'age', 'taluka', 'district', 'created_by', 'deleted',
-                  'hospital','profile_image']
+                  'hospital', 'profile_image']
         extra_kwargs = {
             "city": {"required": True},
             "state": {"required": True},

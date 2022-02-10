@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.utils.timezone import now
 from rest_framework import serializers
 
 from language.serializers import LanguageSerializers
@@ -90,6 +91,11 @@ class MedicineSerializers(serializers.ModelSerializer):
 
         if "medicine" in data and "morning_timing" in data and "noon_timing" in data and "evening_timing" in data and "bed_timing" in data:
             medicine = data.get("medicine")
+
+            if not self.partial:
+                data["barcode"] = \
+                medicine[:2] + str(now()).replace("-", "").replace(":", "").replace(" ", "").replace(".", "").split("+")[0][:14]
+
             morning_timing = data.get("morning_timing")
             noon_timing = data.get("noon_timing")
             evening_timing = data.get("eveningTiming")
@@ -111,6 +117,7 @@ class MedicineSerializers(serializers.ModelSerializer):
 
     medicine_id = serializers.IntegerField(read_only=True)
     total_tablet = serializers.IntegerField(read_only=True)
+    barcode = serializers.CharField(read_only=True)
 
     class Meta:
         model = MedicineModel

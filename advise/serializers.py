@@ -6,6 +6,7 @@ from .models import AdviseModel
 
 class AdviseSerializers(serializers.ModelSerializer):
 
+
     advise_id = serializers.IntegerField(read_only=True)
 
     class Meta:
