@@ -13,7 +13,7 @@ from email_util.send_user_email import generate_token, decode_token, send_mail
 from utility.search_filter import user_filtering_query
 from .models import User
 from .serializers import UserSerializers, DynamicFieldModelSerializer
-from uuid import uuid1
+from django.utils.timezone import now
 
 
 # Create your views here.
@@ -32,7 +32,7 @@ def register_view(request):
         if serializer.is_valid():
             new_user = serializer.save()
             user.set_password(request.data["password"])
-            user.uid =uuid1()
+            user.uid = str(now()).replace("-", "").replace(":", "").replace(" ", "").replace(".", "").split("+")[0][:16]
             user.save()
             data["success"] = True
             data["msg"] = "OK"

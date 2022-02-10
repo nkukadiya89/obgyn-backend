@@ -23,7 +23,7 @@ class MedicineTypeModel(models.Model):
 class TimingModel(models.Model):
     timing_id = models.AutoField(primary_key=True)
     language = models.ForeignKey(LanguageModel, on_delete=models.SET_NULL, null=True)
-    timing = models.CharField(max_length=25, default="")
+    timing = models.CharField(max_length=100, default="")
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)

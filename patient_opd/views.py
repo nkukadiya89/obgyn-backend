@@ -14,7 +14,7 @@ from patient.serializers import PatientSerializers
 from utility.search_filter import filtering_query
 from .models import PatientOpdModel
 from .serializers import PatientOpdSerializers
-from uuid import uuid1
+from django.utils.timezone import now
 from user.models import User
 from patient.utility.code_generate import generate_patient_user_code
 
@@ -99,7 +99,8 @@ class PatientOpdAPI(APIView):
             if patient_serializer.is_valid():
                 patient_serializer.save()
                 if not patient_serializer.partial:
-                    patient.registered_no = uuid1()
+                    patient.registered_no = \
+                        str(now()).replace("-", "").replace(":", "").replace(" ", "").replace(".", "").split("+")[0][:16]
                     patient.save()
                 if "media" in request.data:
                     file = request.data["media"]
