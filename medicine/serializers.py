@@ -94,7 +94,8 @@ class MedicineSerializers(serializers.ModelSerializer):
 
             if not self.partial:
                 data["barcode"] = \
-                medicine[:2] + str(now()).replace("-", "").replace(":", "").replace(" ", "").replace(".", "").split("+")[0][:14]
+                    medicine[:4] + \
+                    str(now()).replace("-", "").replace(":", "").replace(" ", "").replace(".", "").split("+")[0][2:14]
 
             morning_timing = data.get("morning_timing")
             noon_timing = data.get("noon_timing")
@@ -104,7 +105,8 @@ class MedicineSerializers(serializers.ModelSerializer):
                                                                                morning_timing_id=morning_timing,
                                                                                noon_timing_id=noon_timing,
                                                                                evening_timing_id=evening_timing,
-                                                                               bed_timing_id=bed_timing)
+                                                                               bed_timing_id=bed_timing,
+                                                                               for_day=for_day, per_day=per_day)
 
             if self.partial:
                 duplicate_medicin = duplicate_medicin.filter(~Q(pk=self.instance.medicine_id)).first()
