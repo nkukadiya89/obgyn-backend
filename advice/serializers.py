@@ -25,6 +25,7 @@ class AdviceSerializers(serializers.ModelSerializer):
         if duplicate_advice != None:
             raise serializers.ValidationError("Advice already exist.")
 
+        return data
     advice_id = serializers.IntegerField(read_only=True)
 
     class Meta:
@@ -56,7 +57,7 @@ class AdviceGroupSerializers(serializers.ModelSerializer):
 
         if duplicate_advice_group != None:
             raise serializers.ValidationError("Advice Group already exist.")
-        
+
         return data
     advice_group_id = serializers.IntegerField(read_only=True)
 
