@@ -1,6 +1,7 @@
 import random
 import string
 
+from django.db.models.query import Q
 from rest_framework import serializers
 
 from city.serializers import CitySerializers
@@ -37,6 +38,19 @@ class PatientSerializers(serializers.ModelSerializer):
 
             data["email"] = first_name[:2] + last_name[:2] + phone + "@yopmail.com"
             data["username"] = first_name[:2] + last_name[:2] + phone
+
+        user = PatientModel.objects.filter(
+            Q(phone=data["phone"]) |
+            Q(email=data["email"])
+        ).first()
+
+        if user != None:
+            first_name = user.first_name
+            last_name = user.last_name
+            middle_name = user.middle_name
+            regd_no = user.registered_no
+            name = first_name + " " + middle_name + " " + last_name
+            raise serializers.ValidationError(f"Patient {name} registered previously. Reg. No. {regd_no}")
 
         data["user_type"] = "PATIENT"
         passcode = "".join(random.choices(string.ascii_letters + string.digits, k=8))

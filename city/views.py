@@ -43,37 +43,6 @@ class CityAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # ================= Partial Update of a record  =========================
-    # def patch(self, request, id):
-    #     data = {}
-    #
-    #     try:
-    #         if id:
-    #             city = CityModel.objects.get(pk=id)
-    #         else:
-    #             city = CityModel.objects.filter(deleted=0)
-    #     except CityModel.DoesNotExist:
-    #         data["success"] = False
-    #         data["msg"] = "Record Does not exist"
-    #         data["data"] = []
-    #         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-    #
-    #     if request.method == "PATCH":
-    #         serializer = CitySerializers(city, request.data, partial=True)
-    #
-    #         if serializer.is_valid():
-    #             serializer.save()
-    #             data["success"] = True
-    #             data["msg"] = "Data updated successfully"
-    #             data["data"] = serializer.data
-    #             return Response(data=data, status=status.HTTP_200_OK)
-    #
-    #         data["success"] = False
-    #         data["msg"] = serializer.errors
-    #         data["data"] = []
-    #         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-
-    # ================= Delete Record =========================
     def delete(self, request):
         data = {}
         del_id = json.loads(request.body.decode('utf-8'))
