@@ -91,6 +91,9 @@ def filtering_query(model, query_string, model_id, classnm):
         else:
             sortby = ""
 
+    data["total_record"] = len(model)
+    data["current_page"] = 1
+
     if "filter" in query_string:
         filter = list(query_string["filter"].split(","))
         if filter:
