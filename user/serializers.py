@@ -2,8 +2,10 @@ from django.db.models import Q
 from rest_framework import serializers
 
 from city.serializers import CitySerializers
+from district.serializers import DistrictSerializers
 from language.serializers import LanguageSerializers
 from state.serializers import StateSerializers
+from taluka.serializers import TalukaSerializers
 from user.models import User
 
 
@@ -33,6 +35,9 @@ class DynamicFieldModelSerializer(serializers.ModelSerializer):
 
         if "state" in ret: ret['state_name'] = StateSerializers(instance.state).data["state_name"]
         if "city" in ret: ret['city_name'] = CitySerializers(instance.city).data["city_name"]
+        if "district" in ret: ret['district_name'] = DistrictSerializers(instance.district).data["district_name"]
+        if "taluka" in ret: ret['taluka_name'] = TalukaSerializers(instance.taluka).data["taluka_name"]
+        if "city" in ret: ret['city_name'] = CitySerializers(instance.city).data["city_name"]
         if "default_language" in ret: ret['default_language_name'] = \
             LanguageSerializers(instance.default_language).data[
                 "language"]
@@ -42,7 +47,8 @@ class DynamicFieldModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'middle_name', 'user_type', 'hospital_name',
-                  'phone', 'state', 'city', 'area', 'pincode', 'email', 'landline', 'fax_number', 'degree',
+                  'phone', 'state', 'district', 'taluka', 'city', 'area', 'pincode', 'email', 'landline', 'fax_number',
+                  'degree',
                   'speciality', 'aadhar_card', 'registration_no', 'default_language', 'designation', 'hospital',
                   'username',
                   'user_code', 'created_by']
@@ -61,6 +67,8 @@ class UserSerializers(serializers.ModelSerializer):
 
         ret['state_name'] = StateSerializers(instance.state).data["state_name"]
         ret['city_name'] = CitySerializers(instance.city).data["city_name"]
+        ret['district_name'] = DistrictSerializers(instance.district).data["district_name"]
+        ret['taluka_name'] = TalukaSerializers(instance.taluka).data["taluka_name"]
         ret['default_language_name'] = LanguageSerializers(instance.default_language).data["language"]
         ret['hospitalname'] = UserSerializers(instance.hospital).data["hospital_name"]
         return ret
