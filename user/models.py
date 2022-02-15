@@ -7,8 +7,10 @@ from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
 from city.models import CityModel
+from district.models import DistrictModel
 from language.models import LanguageModel
 from state.models import StateModel
+from taluka.models import TalukaModel
 
 
 class UserManager(BaseUserManager):
@@ -64,6 +66,8 @@ class User(AbstractUser):
     # FIELDS FOR HOSPITAL
     hospital_name = models.CharField(max_length=250, null=True)
     state = models.ForeignKey(StateModel, on_delete=models.DO_NOTHING, null=True, related_name="user")
+    taluka = models.ForeignKey(TalukaModel, on_delete=models.DO_NOTHING, null=True)
+    district = models.ForeignKey(DistrictModel, on_delete=models.DO_NOTHING, null=True)
     city = models.ForeignKey(CityModel, on_delete=models.DO_NOTHING, null=True)
     area = models.CharField(max_length=250, null=True)
     pincode = models.CharField(max_length=20, null=True)

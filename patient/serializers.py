@@ -66,8 +66,8 @@ class PatientSerializers(serializers.ModelSerializer):
     patient_detail = serializers.CharField(required=True)
     department = serializers.CharField(required=True)
     date_of_opd = serializers.CharField(required=True)
-    taluka = serializers.CharField(required=True)
-    district = serializers.CharField(required=True)
+    # taluka = serializers.CharField(required=True)
+    # district = serializers.CharField(required=True)
     registered_no = serializers.CharField(read_only=True)
     profile_image = serializers.CharField(read_only=True)
 

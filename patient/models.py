@@ -39,8 +39,6 @@ class PatientModel(User):
     husband_father_name = models.CharField(max_length=100, default="")
     grand_father_name = models.CharField(max_length=100, default="")
     age = models.IntegerField(default=0)
-    taluka = models.CharField(max_length=100, default="")
-    district = models.CharField(max_length=100, default="")
 
     class Meta:
         db_table = 'patient'
