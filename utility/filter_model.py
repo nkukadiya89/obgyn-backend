@@ -325,6 +325,8 @@ class ModelFilterMANAGEFIELDS:
                 model = model.filter(field_value__icontains=fld_value)
             if fld_name == "field_master_id":
                 model = model.filter(field_master_id=fld_value)
+            if fld_name == 'field_master_name':
+                model = model.filter(field_master__field_master_name__icontains=fld_value)
         return model
 
     def search(self, model, query_string):
