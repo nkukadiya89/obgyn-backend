@@ -81,6 +81,11 @@ class PatientAPI(APIView):
                 str(now()).replace("-", "").replace(":", "").replace(" ", "").replace(".", "").split("+")[0][:16]
 
                 patient.save()
+                user = User.objects.filter(pk=patient.user_ptr_id).first()
+                if user != None:
+                    user.set_password(request.POST.get("password"))
+                    user.save()
+                    generate_patient_user_code(user)
 
                 if "media" in request.data:
                     if request.data["media"]:
@@ -89,11 +94,6 @@ class PatientAPI(APIView):
                             patient.upload_file(file)
                             patient.save()
 
-                user = User.objects.filter(pk=patient.user_ptr_id).first()
-                if user != None:
-                    user.set_password(request.POST.get("password"))
-                    user.save()
-                    generate_patient_user_code(user)
                 data["success"] = True
                 data["msg"] = "Data updated successfully"
                 data["data"] = serializer.data
