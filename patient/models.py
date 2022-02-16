@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 from decouple import config
 from django.db import models
 from django.utils.timezone import now
+from manage_fields.models import ManageFieldsModel
 
 from user.models import User
 from utility.aws_file_upload import upload_file_to_bucket
@@ -29,6 +30,7 @@ class PatientModel(User):
         ("PARTIAL", "PARTIAL")
     )
     patient_id = models.AutoField(primary_key=True)
+    name_title = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="name_title", null=True)
     married = models.BooleanField(default=False)
     profile_image = models.CharField(max_length=250, default="", null=True)
     department = models.CharField(max_length=5, choices=department_choice, default="OPD")
