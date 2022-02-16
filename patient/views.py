@@ -83,9 +83,11 @@ class PatientAPI(APIView):
                 patient.save()
 
                 if "media" in request.data:
-                    file = request.data["media"]
-                    patient.upload_file(file)
-                    patient.save()
+                    if request.data["media"]:
+                        if len(request.data["media"]) > 0:
+                            file = request.data["media"]
+                            patient.upload_file(file)
+                            patient.save()
 
                 user = User.objects.filter(pk=patient.user_ptr_id).first()
                 if user != None:
@@ -127,9 +129,10 @@ def patch(request, id):
         if serializer.is_valid():
             patient = serializer.save()
             if "media" in request.data:
-                file = request.data["media"]
-                patient.upload_file(file)
-                patient.save()
+                if len(request.data["media"]) > 0:
+                    file = request.data["media"]
+                    patient.upload_file(file)
+                    patient.save()
 
             data["success"] = True
             data["msg"] = "Data updated successfully"
