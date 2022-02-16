@@ -7,6 +7,7 @@ from rest_framework import serializers
 from city.serializers import CitySerializers
 from state.serializers import StateSerializers
 from .models import PatientModel
+from manage_fields.serializers import ManageFieldsSerializers
 
 
 class PatientSerializers(serializers.ModelSerializer):
@@ -14,6 +15,7 @@ class PatientSerializers(serializers.ModelSerializer):
         ret = super(PatientSerializers, self).to_representation(instance)
         ret['state_name'] = StateSerializers(instance.state).data["state_name"]
         ret['city_name'] = CitySerializers(instance.city).data["city_name"]
+        ret['name_title'] = ManageFieldsSerializers(instance.name_title).data["field_value"]
         return ret
 
     def validate(self, data):
