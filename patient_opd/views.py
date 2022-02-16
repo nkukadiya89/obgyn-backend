@@ -1,5 +1,6 @@
 import json
 
+from django.utils.timezone import now
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -11,12 +12,11 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 from patient.models import PatientModel
 from patient.serializers import PatientSerializers
+from patient.utility.code_generate import generate_patient_user_code
+from user.models import User
 from utility.search_filter import filtering_query
 from .models import PatientOpdModel
 from .serializers import PatientOpdSerializers
-from django.utils.timezone import now
-from user.models import User
-from patient.utility.code_generate import generate_patient_user_code
 
 
 class PatientOpdAPI(APIView):
@@ -87,7 +87,8 @@ class PatientOpdAPI(APIView):
                 if len(regd_no) > 0:
                     patient = PatientModel.objects.get(registered_no=str(regd_no))
                     # print("patient",patient, len(patient))
-                    patient_serializer = PatientSerializers(patient, data=json.loads(request.data["data"])["patient"], partial=True)
+                    patient_serializer = PatientSerializers(patient, data=json.loads(request.data["data"])["patient"],
+                                                            partial=True)
                 else:
                     patient = PatientModel()
                     patient_serializer = PatientSerializers(patient, data=json.loads(request.data["data"])["patient"])
@@ -100,12 +101,14 @@ class PatientOpdAPI(APIView):
                 patient_serializer.save()
                 if not patient_serializer.partial:
                     patient.registered_no = \
-                        str(now()).replace("-", "").replace(":", "").replace(" ", "").replace(".", "").split("+")[0][:16]
+                        str(now()).replace("-", "").replace(":", "").replace(" ", "").replace(".", "").split("+")[0][
+                        :16]
                     patient.save()
                 if "media" in request.data:
-                    file = request.data["media"]
-                    patient.upload_file(file)
-                    patient.save()
+                    if len(request.data["media"]) > 0:
+                        file = request.data["media"]
+                        patient.upload_file(file)
+                        patient.save()
 
                 user = User.objects.filter(pk=patient.user_ptr_id).first()
                 if user != None:
@@ -162,9 +165,10 @@ def patch(request, id):
             if patient_serializer.is_valid():
                 patient_serializer.save()
                 if "media" in request.data:
-                    file = request.data["media"]
-                    patient.upload_file(file)
-                    patient.save()
+                    if len(request.data["media"]) > 0:
+                        file = request.data["media"]
+                        patient.upload_file(file)
+                        patient.save()
 
             else:
                 data["success"] = False
