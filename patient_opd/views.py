@@ -104,17 +104,19 @@ class PatientOpdAPI(APIView):
                         str(now()).replace("-", "").replace(":", "").replace(" ", "").replace(".", "").split("+")[0][
                         :16]
                     patient.save()
-                if "media" in request.data:
-                    if len(request.data["media"]) > 0:
-                        file = request.data["media"]
-                        patient.upload_file(file)
-                        patient.save()
 
                 user = User.objects.filter(pk=patient.user_ptr_id).first()
                 if user != None:
                     user.set_password(request.POST.get("password"))
                     user.save()
                     generate_patient_user_code(user)
+
+                if "media" in request.data:
+                    if len(request.data["media"]) > 0:
+                        file = request.data["media"]
+                        patient.upload_file(file)
+                        patient.save()
+
             else:
                 data["success"] = False
                 data["msg"] = patient_serializer.errors
