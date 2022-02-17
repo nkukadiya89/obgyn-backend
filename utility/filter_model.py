@@ -211,7 +211,7 @@ class ModelFilterMEDICINE:
             if fld_name == "medicine":
                 model = model.filter(medicine__icontains=fld_value)
             if fld_name == "contain":
-                model = model.filter(contain__iexat=fld_value)
+                model = model.filter(contain__icontains=fld_value)
             if fld_name == "medicine_type":
                 model = model.filter(medicine_type__medicine_type__icontains=fld_value)
             if fld_name == "per_day":
@@ -306,6 +306,8 @@ class ModelFilterFIELDMASTER:
             fld_value = fields.split("=")[1]
             if fld_name == "field_master_name":
                 model = model.filter(field_master_name__icontains=fld_value)
+            if fld_name == 'field_master_id':
+                model = model.filter(field_master_id=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -323,10 +325,12 @@ class ModelFilterMANAGEFIELDS:
             fld_value = fields.split("=")[1]
             if fld_name == "field_value":
                 model = model.filter(field_value__icontains=fld_value)
-            if fld_name == "field_master_id":
+            if fld_name == "field_master":
                 model = model.filter(field_master_id=fld_value)
             if fld_name == 'field_master_name':
                 model = model.filter(field_master__field_master_name__icontains=fld_value)
+            if fld_name == 'lanaguage':
+                model = model.filter(language_id=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -393,8 +397,8 @@ class ModelFilterTIMING:
                 model = model.filter(language__language__icontains=fld_value)
             if fld_name == "code":
                 model = model.filter(language__code__icontains=fld_value)
-            if fld_name == "language_id":
-                model = model.filter(language=fld_value)
+            if fld_name == "language":
+                model = model.filter(language_id=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -740,7 +744,227 @@ class ModelFilterPATIENTOVULATIONPROFILE:
         if search:
             model = model.filter(
                 Q(regd_no__icontains=search) |
-                Q(ut_blood_flow_icontains=search) |
+                Q(ut_blood_flow__icontains=search) |
                 Q(ovarian_blood_flow__icontains=search)
             )
         return model
+
+class ModelFilterMTP:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "patient_mtp_id":
+                model = model.filter(patient_mtp_id=fld_value)
+            if fld_name == "regd_no":
+                model = model.filter(regd_no=fld_value)
+            if fld_name == "second_rmp":
+                model = model.filter(second_rmp=fld_value)
+            if fld_name == "op_date":
+                model = model.filter(op_date=fld_value)
+            if fld_name == "reason_for_mtp":
+                model = model.filter(reason_for_mtp__icontains=fld_value)
+            if fld_name == "contraception":
+                model = model.filter(contraception__icontains=fld_value)
+            if fld_name == "mtp_complication":
+                model = model.filter(mtp_complication__icontains=fld_value)
+            if fld_name == "discharge_date":
+                model = model.filter(discharge_date=fld_value)
+
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(regd_no__icontains=search) |
+                Q(second_rmp__icontains=search) |
+                Q(reason_for_mtp__icontains=search) |
+                Q(contraception__icontains=search) |
+                Q(mtp_complication__icontains=search) |
+                Q(remark__icontains=search)
+            )
+        return model
+
+
+class ModelFilterHISTOLAP:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "patient_histolap_id":
+                model = model.filter(patient_histolap_id=fld_value)
+            if fld_name == "regd_no":
+                model = model.filter(regd_no=fld_value)
+            if fld_name == "admission_date":
+                model = model.filter(admission_date=fld_value)
+            if fld_name == "procedure_name":
+                model = model.filter(procedure_name=fld_value)
+            if fld_name == "discharge_date":
+                model = model.filter(discharge_date=fld_value)
+
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(regd_no__icontains=search) |
+                Q(procedure_name__icontains=search)
+            )
+        return model
+
+class ModelFilterPATIENTBILLING:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "patient_billing_id":
+                model = model.filter(patient_billing_id=fld_value)
+            if fld_name == "regd_no":
+                model = model.filter(regd_no=fld_value)
+            if fld_name == "invoice_no":
+                model = model.filter(invoice_no=fld_value)
+            if fld_name == "admission_date":
+                model = model.filter(admission_date=fld_value)
+            if fld_name == "ot_date":
+                model = model.filter(ot_date=fld_value)
+            if fld_name == "discharge_date":
+                model = model.filter(discharge_date=fld_value)
+            if fld_name == "diagnosis":
+                model = model.filter(diagnosis_id=fld_value)
+            if fld_name == "procedure_name":
+                model = model.filter(procedure_name__icontains=fld_value)
+
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(regd_no__icontains=search) |
+                Q(invoice_no__icontains=search) |
+                Q(procedure_name__icontains=search)
+            )
+        return model
+
+class ModelFilterPATIENTVOUCHER:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "patient_voucher_id":
+                model = model.filter(patient_voucher_id=fld_value)
+            if fld_name == "regd_no":
+                model = model.filter(regd_no=fld_value)
+            if fld_name == "voucher_no":
+                model = model.filter(voucher_no__icontains=fld_value)
+            if fld_name == "bill_date":
+                model = model.filter(bill_date=fld_value)
+
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(regd_no__icontains=search) |
+                Q(voucher_no__icontains=search)
+            )
+        return model
+
+class ModelFilterVOUCHERITEM:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "surgical_item_id":
+                model = model.filter(surgical_item_id=fld_value)
+            if fld_name == "surgical_item":
+                model = model.filter(surgical_item_id=fld_value)
+
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(regd_no__icontains=search) |
+                Q(surgical_item__drug_name_icontains=search)
+            )
+        return model
+
+class ModelFilterPATIENTINDOOR:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "patient_indoor_id":
+                model = model.filter(patient_indoor_id=fld_value)
+            if fld_name == "regd_no":
+                model = model.filter(regd_no=fld_value)
+            if fld_name == "indoor_case_number":
+                model = model.filter(indoor_case_number__icontains=fld_value)
+            if fld_name == "indoor_date":
+                model = model.filter(indoor_date=fld_value)
+            if fld_name == "indoor_time":
+                model = model.filter(indoor_time=fld_value)
+            if fld_name == "complain":
+                model = model.filter(complain__icontains=fld_value)
+            if fld_name == "diagnosis":
+                model = model.filter(diagnosis_id=fld_value)
+            if fld_name == "operation":
+                model = model.filter(operation__icontains=fld_value)
+
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(regd_no__icontains=search) |
+                Q(indoor_case_number__icontains=search) |
+                Q(complain__icontains=search) |
+                Q(contraception__icontains=search) |
+                Q(operation__icontains=search) |
+                Q(diagnosis__diagnosis_name__icontains=search)
+            )
+        return model
+
+class ModelFilterINDOORADVICE:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "patient_mtp_id":
+                model = model.filter(patient_mtp_id=fld_value)
+            if fld_name == "regd_no":
+                model = model.filter(regd_no=fld_value)
+            if fld_name == "second_rmp":
+                model = model.filter(second_rmp=fld_value)
+            if fld_name == "op_date":
+                model = model.filter(op_date=fld_value)
+            if fld_name == "reason_for_mtp":
+                model = model.filter(reason_for_mtp__icontains=fld_value)
+            if fld_name == "contraception":
+                model = model.filter(contraception__icontains=fld_value)
+            if fld_name == "mtp_complication":
+                model = model.filter(mtp_complication__icontains=fld_value)
+            if fld_name == "discharge_date":
+                model = model.filter(discharge_date=fld_value)
+
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(regd_no__icontains=search) |
+                Q(second_rmp_icontains=search) |
+                Q(reason_for_mtp__icontains=search) |
+                Q(contraception__icontains=search) |
+                Q(mtp_complication__icontains=search) |
+                Q(remark__icontains=search)
+            )
+        return model
+
