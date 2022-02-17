@@ -1,51 +1,54 @@
 from rest_framework import serializers
 
-from django.db.models.query import Q
+from manage_fields.serializers import ManageFieldsSerializers
 from patient.models import PatientModel
 from .models import PatientOpdModel
-from patient.serializers import PatientSerializers
-from city.serializers import CitySerializers
-from taluka.serializers import TalukaSerializers
-from district.serializers import DistrictSerializers
-from state.serializers import StateSerializers
 
 
 class PatientOpdSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(PatientOpdSerializers, self).to_representation(instance)
-
-
         if "regd_no" in ret:
-            patient = PatientModel.objects.filter(registered_no=ret["regd_no"])
+            patient = PatientModel.objects.filter(registered_no=str(ret["regd_no"])).select_related(
+                'name_title').select_related('husband_title').select_related('grand_title').select_related(
+                'taluka').select_related('district').select_related('state').select_related('city')
             if len(patient) == 0:
                 raise serializers.ValidationError("Patient does not exist")
-            ret["patient_id"] = PatientSerializers(instance.patient).data["patient_id"]
-            ret["first_name"] = PatientSerializers(instance.patient).data["first_name"]
-            ret["middle_name"] = PatientSerializers(instance.patient).data["middle_name"]
-            ret["last_name"] = PatientSerializers(instance.patient).data["last_name"]
-            ret["phone"] = PatientSerializers(instance.patient).data["phone"]
-            ret["department"] = PatientSerializers(instance.patient).data["department"]
-            ret["regd_no"] = PatientSerializers(instance.patient).data["registered_no"]
-            ret["married"] = PatientSerializers(instance.patient).data["married"]
-            ret["patient_type"] = PatientSerializers(instance.patient).data["patient_type"]
-            ret["patient_detail"] = PatientSerializers(instance.patient).data["patient_detail"]
-            ret["date_of_opd"] = PatientSerializers(instance.patient).data["date_of_opd"]
-            ret["husband_father_name"] = PatientSerializers(instance.patient).data["husband_father_name"]
-            ret["grand_father_name"] = PatientSerializers(instance.patient).data["grand_father_name"]
-            ret["profile_image"] = PatientSerializers(instance.patient).data["profile_image"]
-            ret["age"] = PatientSerializers(instance.patient).data["age"]
-            ret["taluka"] = PatientSerializers(instance.patient).data["taluka"]
-            ret["district"] = PatientSerializers(instance.patient).data["district"]
-            ret["city"] = PatientSerializers(instance.patient).data["city"]
-            ret["city_name"] = CitySerializers(instance.patient.city).data["city_name"]
-            ret["taluka"] = CitySerializers(instance.patient.city).data["taluka"]
-            ret["taluka_name"] = TalukaSerializers(instance.patient.city.taluka).data["taluka_name"]
-            ret["district"] = TalukaSerializers(instance.patient.city.taluka).data["district"]
-            ret["district_name"] = DistrictSerializers(instance.patient.city.taluka.district).data["district_name"]
-            ret["state"] = DistrictSerializers(instance.patient.city.taluka.district).data["state"]
-            ret["state_name"] = StateSerializers(instance.patient.city.taluka.district.state).data["state_name"]
+            ret["patient_id"] = patient[0].patient_id
+            ret["first_name"] = patient[0].first_name
+            ret["middle_name"] = patient[0].middle_name
+            ret["last_name"] = patient[0].last_name
+            ret["phone"] = patient[0].phone
+            ret["department"] = patient[0].department
+            ret["regd_no"] = patient[0].registered_no
+            ret["married"] = patient[0].married
+            ret["patient_type"] = patient[0].patient_type
+            ret["patient_detail"] = patient[0].patient_detail
+            ret["date_of_opd"] = patient[0].date_of_opd
+            ret["husband_father_name"] = patient[0].husband_father_name
+            ret["grand_father_name"] = patient[0].grand_father_name
+
+            ret['name_title'] = patient[0].name_title_id
+            ret['husband_title'] = patient[0].husband_title_id
+            ret['grand_title'] = patient[0].grand_title_id
+
+            ret['name_title_name'] = ManageFieldsSerializers(patient[0].name_title).data["field_value"]
+            ret['husband_title_name'] = ManageFieldsSerializers(patient[0].husband_title).data["field_value"]
+            ret['grand_title_name'] = ManageFieldsSerializers(patient[0].grand_title).data["field_value"]
+
+            ret["profile_image"] = patient[0].profile_image
+            ret["age"] = patient[0].age
+            ret["taluka"] = patient[0].taluka.taluka_id
+            ret["district"] = patient[0].district.district_id
+            ret["city"] = patient[0].city.city_id
+            ret["city_name"] = patient[0].city.city_name
+            ret["taluka_name"] = patient[0].taluka.taluka_name
+            ret["district_name"] = patient[0].district.district_name
+            ret["state"] = patient[0].state.state_id
+            ret["state_name"] = patient[0].state.state_name
 
         return ret
+
     def validate(self, data):
         if "regd_no" in data:
             patient = PatientModel.objects.filter(registered_no=data["regd_no"])
@@ -54,14 +57,6 @@ class PatientOpdSerializers(serializers.ModelSerializer):
             data["patient_id"] = patient[0].patient_id
         else:
             raise serializers.ValidationError("Patient is missing")
-
-        # patient_opd = PatientOpdModel.objects.filter(opd_date=data["opd_date"], patient_id=data["patient_id"])
-        #
-        # if self.partial:
-        #     patient_opd = patient_opd.filter(~Q(pk=self.instance.patient_opd_id))
-        #
-        # if len(patient_opd) > 0:
-        #     raise serializers.ValidationError("Patient visited today.")
 
         return data
 
