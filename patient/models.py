@@ -39,7 +39,11 @@ class PatientModel(User):
     date_of_opd = models.DateField(default=now)
     registered_no = models.CharField(max_length=100, default="")
     husband_father_name = models.CharField(max_length=100, default="")
+    husband_title = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="husband_title",
+                                      null=True)
     grand_father_name = models.CharField(max_length=100, default="")
+    grand_title = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="grand_title",
+                                    null=True)
     age = models.IntegerField(default=0)
 
     class Meta:
