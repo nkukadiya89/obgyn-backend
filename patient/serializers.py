@@ -15,7 +15,9 @@ class PatientSerializers(serializers.ModelSerializer):
         ret = super(PatientSerializers, self).to_representation(instance)
         ret['state_name'] = StateSerializers(instance.state).data["state_name"]
         ret['city_name'] = CitySerializers(instance.city).data["city_name"]
-        ret['name_title'] = ManageFieldsSerializers(instance.name_title).data["field_value"]
+        ret['name_title_name'] = ManageFieldsSerializers(instance.name_title).data["field_value"]
+        ret['husband_title_name'] = ManageFieldsSerializers(instance.husband_title).data["field_value"]
+        ret['grand_title_name'] = ManageFieldsSerializers(instance.grand_title).data["field_value"]
         return ret
 
     def validate(self, data):
@@ -44,7 +46,13 @@ class PatientSerializers(serializers.ModelSerializer):
         user = PatientModel.objects.filter(
             Q(phone=data["phone"]) |
             Q(email=data["email"])
-        ).first()
+        )
+
+        if self.partial:
+            user = user.filter(~Q(pk=self.instance.patient_id)).first()
+        else:
+            user = user.first()
+
 
         if user != None:
             first_name = user.first_name
@@ -68,16 +76,14 @@ class PatientSerializers(serializers.ModelSerializer):
     patient_detail = serializers.CharField(required=True)
     department = serializers.CharField(required=True)
     date_of_opd = serializers.CharField(required=True)
-    # taluka = serializers.CharField(required=True)
-    # district = serializers.CharField(required=True)
     registered_no = serializers.CharField(read_only=True)
     profile_image = serializers.CharField(read_only=True)
 
     class Meta:
         model = PatientModel
-        fields = ['patient_id', 'first_name', 'last_name', 'middle_name', 'phone', 'state',
+        fields = ['patient_id', 'first_name', 'last_name', 'middle_name','name_title', 'phone', 'state',
                   'city', 'married', 'department', 'patient_type', 'patient_detail', 'date_of_opd', 'registered_no',
-                  'grand_father_name', 'husband_father_name', 'age', 'taluka', 'district', 'created_by', 'deleted',
+                  'grand_father_name','grand_title', 'husband_father_name','husband_title', 'age', 'taluka', 'district', 'created_by', 'deleted',
                   'hospital', 'profile_image']
         extra_kwargs = {
             "city": {"required": True},
