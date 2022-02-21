@@ -542,6 +542,11 @@ class ModelFilterPATIENTOPD:
                 model = model.filter(opd_date=fld_value)
             if fld_name == "registered_no":
                 model = model.filter(registered_no=fld_value)
+            if fld_name == "first_name":
+                model = model.filter(patient__first_name__icontains=fld_value)
+            if fld_name == "last_name":
+                model = model.filter(patient__last_name__icontains=fld_value)
+
         return model
 
     def search(self, model, query_string):
