@@ -166,6 +166,7 @@ def patch(request, id):
 
             if patient_serializer.is_valid():
                 patient_serializer.save()
+
                 if "media" in request.data:
                     if len(request.data["media"]) > 0:
                         file = request.data["media"]
