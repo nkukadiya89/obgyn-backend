@@ -8,6 +8,8 @@ from city.serializers import CitySerializers
 from state.serializers import StateSerializers
 from .models import PatientModel
 from manage_fields.serializers import ManageFieldsSerializers
+from taluka.serializers import TalukaSerializers
+from district.serializers import DistrictSerializers
 
 
 class PatientSerializers(serializers.ModelSerializer):
@@ -18,6 +20,8 @@ class PatientSerializers(serializers.ModelSerializer):
         ret['name_title_name'] = ManageFieldsSerializers(instance.name_title).data["field_value"]
         ret['husband_title_name'] = ManageFieldsSerializers(instance.husband_title).data["field_value"]
         ret['grand_title_name'] = ManageFieldsSerializers(instance.grand_title).data["field_value"]
+        ret['taluka_name'] = TalukaSerializers(instance.taluka).data["taluka_name"]
+        ret["district_name"] = DistrictSerializers(instance.district).data["district_name"]
         return ret
 
     def validate(self, data):
