@@ -526,8 +526,8 @@ class ModelFilterPATIENT:
                 Q(registered_no=search) |
                 Q(grand_father_name__icontains=search) |
                 Q(husband_father_name__icontains=search) |
-                Q(taluka__icontains=search) |
-                Q(district__icontains=search)
+                Q(taluka__taluka_name__icontains=search) |
+                Q(district__district_name__icontains=search)
             )
         return model
 
