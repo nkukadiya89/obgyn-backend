@@ -10,7 +10,6 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
-from patient.utility.code_generate import generate_patient_user_code
 from user.models import User
 from utility.search_filter import filtering_query
 from .models import PatientModel
@@ -52,7 +51,6 @@ class PatientAPI(APIView):
             data["msg"] = "Record ID not provided"
             data["data"] = []
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
         try:
             patient = PatientModel.objects.filter(patient_id__in=del_id["id"])
         except PatientModel.DoesNotExist:
@@ -62,10 +60,13 @@ class PatientAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":
-            result = patient.update(deleted=1)
+            for each_patient in patient:
+                each_patient.deleted = 1
+                each_patient.save()
+
             data["success"] = True
             data["msg"] = "Data deleted successfully."
-            data["deleted"] = result
+            data["deleted"] = 1
             return Response(data=data, status=status.HTTP_200_OK)
 
     # ================= Create New Record=========================
@@ -78,7 +79,7 @@ class PatientAPI(APIView):
             if serializer.is_valid():
                 serializer.save()
                 patient.registered_no = \
-                str(now()).replace("-", "").replace(":", "").replace(" ", "").replace(".", "").split("+")[0][:16]
+                    str(now()).replace("-", "").replace(":", "").replace(" ", "").replace(".", "").split("+")[0][:16]
 
                 patient.save()
                 user = User.objects.filter(pk=patient.user_ptr_id).first()
