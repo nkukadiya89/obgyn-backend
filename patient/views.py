@@ -85,7 +85,7 @@ class PatientAPI(APIView):
                 if user != None:
                     user.set_password(request.POST.get("password"))
                     user.save()
-                    generate_patient_user_code(user)
+                    # generate_patient_user_code(user)
 
                 if "media" in request.data:
                     if request.data["media"]:

@@ -107,9 +107,10 @@ class PatientOpdAPI(APIView):
 
                 user = User.objects.filter(pk=patient.user_ptr_id).first()
                 if user != None:
+                    print("user is nonoe")
                     user.set_password(request.POST.get("password"))
                     user.save()
-                    generate_patient_user_code(user)
+                    # generate_patient_user_code(user)
 
                 if "media" in request.data:
                     if len(request.data["media"]) > 0:

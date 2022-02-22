@@ -42,6 +42,8 @@ class PatientSerializers(serializers.ModelSerializer):
 
             data["email"] = first_name[:2] + last_name[:2] + phone + "@yopmail.com"
             data["username"] = first_name[:2] + last_name[:2] + phone
+        else:
+            raise serializers.ValidationError("Phone is required.")
 
         user = PatientModel.objects.filter(
             Q(phone=data["phone"]) |
