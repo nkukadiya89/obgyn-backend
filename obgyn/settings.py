@@ -63,7 +63,11 @@ INSTALLED_APPS = [
     'taluka',
     'patient_usgreport',
     'patient_ovulation_profile',
-    'patient_mtp'
+    'patient_mtp',
+    'patient_histolap',
+    'patient_billing',
+    'patient_voucher',
+    'patient_indoor',
 ]
 
 MIDDLEWARE = [
