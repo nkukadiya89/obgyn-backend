@@ -44,7 +44,7 @@ def upload_file_to_bucket(upload_file, allowed_type, folder_name, p_value, file_
 
     s3_file = f"{folder_name}" + str(p_value) + "_" + file_name + file_type
 
-    aws_file_url = f"https://{BUCKET}.s3.{REGION_NAME}.amazonaws.com/{s3_file}"
+    aws_file_url = f"http://{BUCKET}.s3.{REGION_NAME}.amazonaws.com/{s3_file}"
 
     s3.upload_file(tempfile, BUCKET, s3_file,
                    ExtraArgs={'ACL': 'public-read', 'ContentType': picture_format})
@@ -53,7 +53,6 @@ def upload_file_to_bucket(upload_file, allowed_type, folder_name, p_value, file_
                                                                     'Key': get_bucket_file_folder(
                                                                         aws_file_url)}, ExpiresIn=300)
 
-    print(aws_file_url)
     isfile(tempfile)
     remove(tempfile)
     return aws_file_url, presigned_url
