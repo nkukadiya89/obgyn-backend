@@ -1,6 +1,5 @@
 import json
 
-from django.utils.timezone import now
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -10,14 +9,12 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
-from patient.utility.code_generate import generate_patient_user_code
-from user.models import User
 from utility.search_filter import filtering_query
-from .models import PatientModel
-from .serializers import PatientSerializers
+from .models import PatientBillingModel
+from .serializers import PatientBillingSerializers
 
 
-class PatientAPI(APIView):
+class PatientBillingAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
     permission_classes = [IsAuthenticatedOrReadOnly]
 
@@ -25,15 +22,15 @@ class PatientAPI(APIView):
     def put(self, request, id):
         data = {}
         try:
-            patient = PatientModel.objects.filter(pk=id).first()
-        except PatientModel.DoesNotExist:
+            patient_billing = PatientBillingModel.objects.filter(pk=id).first()
+        except PatientBillingModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record Does not exist"
             data["data"] = []
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "PUT":
-            serializer = PatientSerializers(patient, request.data)
+            serializer = PatientBillingSerializers(patient_billing, request.data)
             if serializer.is_valid():
                 serializer.save()
                 data["success"] = True
@@ -43,10 +40,10 @@ class PatientAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # ================= Delete Record =========================
     def delete(self, request):
         data = {}
         del_id = json.loads(request.body.decode('utf-8'))
+
         if "id" not in del_id:
             data["success"] = False
             data["msg"] = "Record ID not provided"
@@ -54,15 +51,15 @@ class PatientAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
-            patient = PatientModel.objects.filter(patient_id__in=del_id["id"])
-        except PatientModel.DoesNotExist:
+            patient_billing = PatientBillingModel.objects.filter(patient_billing_id__in=del_id["id"])
+        except PatientBillingModel:
             data["success"] = False
             data["msg"] = "Record does not exist"
             data["data"] = []
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":
-            result = patient.update(deleted=1)
+            result = patient_billing.update(deleted=1)
             data["success"] = True
             data["msg"] = "Data deleted successfully."
             data["deleted"] = result
@@ -72,28 +69,11 @@ class PatientAPI(APIView):
     def post(self, request):
         data = {}
         if request.method == "POST":
-            patient = PatientModel()
-            serializer = PatientSerializers(patient, data=json.loads(request.data["data"]))
+            patient_billing = PatientBillingModel()
+            serializer = PatientBillingSerializers(patient_billing, data=request.data)
 
             if serializer.is_valid():
                 serializer.save()
-                patient.registered_no = \
-                str(now()).replace("-", "").replace(":", "").replace(" ", "").replace(".", "").split("+")[0][:16]
-
-                patient.save()
-                user = User.objects.filter(pk=patient.user_ptr_id).first()
-                if user != None:
-                    user.set_password(request.POST.get("password"))
-                    user.save()
-                    # generate_patient_user_code(user)
-
-                if "media" in request.data:
-                    if request.data["media"]:
-                        if len(request.data["media"]) > 0:
-                            file = request.data["media"]
-                            patient.upload_file(file)
-                            patient.save()
-
                 data["success"] = True
                 data["msg"] = "Data updated successfully"
                 data["data"] = serializer.data
@@ -110,30 +90,22 @@ class PatientAPI(APIView):
 @permission_classes([IsAuthenticated])
 def patch(request, id):
     data = {}
-
     try:
         if id:
-            patient = PatientModel.objects.get(patient_id=id)
+            patient_billing = PatientBillingModel.objects.get(pk=id)
         else:
-            patient = PatientModel.objects.filter(deleted=0)
-    except PatientModel.DoesNotExist:
+            patient_billing = PatientBillingModel.objects.filter(deleted=0)
+    except PatientBillingModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"
         data["data"] = []
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == "POST":
-
-        serializer = PatientSerializers(patient, json.loads(request.data["data"]), partial=True)
+        serializer = PatientBillingSerializers(patient_billing, request.data, partial=True)
 
         if serializer.is_valid():
-            patient = serializer.save()
-            if "media" in request.data:
-                if len(request.data["media"]) > 0:
-                    file = request.data["media"]
-                    patient.upload_file(file)
-                    patient.save()
-
+            serializer.save()
             data["success"] = True
             data["msg"] = "Data updated successfully"
             data["data"] = serializer.data
@@ -154,22 +126,23 @@ def get(request, id=None):
     data = {}
     try:
         if id:
-            patient = PatientModel.objects.filter(pk=id, deleted=0)
+            patient_billing = PatientBillingModel.objects.filter(pk=id, deleted=0)
         else:
-            patient = PatientModel.objects.filter(deleted=0)
+            patient_billing = PatientBillingModel.objects.filter(deleted=0)
 
-        data["total_record"] = len(patient)
-        patient, data = filtering_query(patient, query_string, "patient_id", "PATIENT")
+        data["total_record"] = len(patient_billing)
+        patient_billing, data = filtering_query(patient_billing, query_string, "patient_billing_id", "PATIENTBILLING")
 
-    except PatientModel.DoesNotExist:
+    except PatientBillingModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"
         data["data"] = []
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == "GET":
-        serilizer = PatientSerializers(patient, many=True)
+        serilizer = PatientBillingSerializers(patient_billing, many=True)
         data["success"] = True
         data["msg"] = "OK"
         data["data"] = serilizer.data
         return Response(data=data, status=status.HTTP_200_OK)
+

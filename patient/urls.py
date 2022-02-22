@@ -14,6 +14,11 @@ urlpatterns = [
     path('delivery/', include('patient_delivery.urls')),
     path('usgform/', include('patient_usgform.urls')),
     path('discharge/', include('patient_discharge.urls')),
-    path('usgreport/',include('patient_usgreport.urls')),
+    path('usgreport/', include('patient_usgreport.urls')),
     path('ovulation-profile/', include('patient_ovulation_profile.urls')),
+    path('mtp', include('patient_mtp.urls')),
+    path('histolap', include('patient_histolap.urls')),
+    path('billing', include('patient_billing.urls')),
+    path('voucher', include('patient_voucher.urls')),
+    path('indoor', include('patient_indoor.urls')),
 ]

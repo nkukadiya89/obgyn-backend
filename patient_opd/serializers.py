@@ -46,6 +46,7 @@ class PatientOpdSerializers(serializers.ModelSerializer):
             ret["district_name"] = patient[0].district.district_name
             ret["state"] = patient[0].state.state_id
             ret["state_name"] = patient[0].state.state_name
+            ret["user_code"] = patient[0].user_code
 
         return ret
 

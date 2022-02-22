@@ -1,6 +1,7 @@
 import os
 from urllib.parse import urlparse
-
+from django.db.models.query import Q
+from django.db.models.signals import post_save
 from decouple import config
 from django.db import models
 from django.utils.timezone import now
@@ -62,3 +63,19 @@ def get_bucket_file_folder(aws_file_url):
 
 def file_extention(path):
     return os.path.splitext(path)[1]
+
+
+def user_post_save(sender, instance, *args, **kwargs):
+    if kwargs["created"]:
+        seq_no = 0
+        last_user = User.objects.filter(user_type=instance.user_type).filter(~Q(pk=instance.id)).last()
+
+        if last_user:
+            seq_no = int(last_user.user_code[-4:])
+            seq_no += 1
+
+        instance.user_code = instance.user_type[0] + '{:05}'.format(seq_no)
+        instance.save()
+
+
+post_save.connect(user_post_save, sender=PatientModel)
