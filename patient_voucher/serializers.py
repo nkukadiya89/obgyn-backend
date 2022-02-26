@@ -4,9 +4,6 @@ from patient.models import PatientModel
 from .models import PatientVoucherModel, VoucherItemModel
 
 
-
-
-
 class PatientVoucherSerializers(serializers.ModelSerializer):
     def validate(self, data):
         if "regd_no" in data:
@@ -24,7 +21,6 @@ class PatientVoucherSerializers(serializers.ModelSerializer):
     class Meta:
         model = PatientVoucherModel
         exclude = ('created_at', 'patient')
-
 
 
 class VoucherItemSerializers(serializers.ModelSerializer):

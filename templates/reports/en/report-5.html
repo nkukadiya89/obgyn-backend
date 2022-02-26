@@ -1,0 +1,507 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+
+<head>
+    <title>Obgyn register success</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        /* Base CSS styles DO NOT CHANGE OR REMOVE */
+        body {
+            margin: 0;
+            padding: 0;
+            font: 62.5%/1.5 Helvetica, Arial, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        ul,
+        ul li,
+        p,
+        div,
+        ol {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        #obygyn {
+            margin: 0 12pt;
+            width: 768px;
+            padding: 10px 20px;
+            margin: 1em auto;
+            clear: both;
+            position: relative;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #onlyne h3 {
+            font-size: 20px;
+            margin-bottom: 16px;
+            background: #f5f5f5;
+            text-align: center;
+            padding: 5px;
+            border: 1px solid #e6e6e6;
+        }
+
+        #onlyne h5 {
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+
+        #obygyn {
+            font-family: Helvetica, Arial, Verdana, sans-serif !important
+        }
+
+        #onlyne h2 {
+            font-size: 22px;
+            margin: 0;
+            margin-bottom: 16px;
+            background: #00BAB9;
+            text-align: center;
+            padding: 5px;
+            color: #fff;
+        }
+
+
+
+        #obygyn-header {
+            margin-top: 0.3cm;
+            padding-bottom: 16px;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        #instruction h5 {
+            font-weight: bold;
+            display: block;
+            margin: 0;
+
+        }
+
+        #congo {
+            background: #00BAB9;
+            color: #fff;
+            text-align: center;
+            padding: 16px 32px;
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        #congo .checked {
+            width: 100px;
+        }
+
+        #instruction {
+            font-size: 14px;
+            margin: 0;
+            padding-bottom: 5px;
+        }
+
+        #thanks {
+            font-size: 14px;
+            margin: 0;
+            padding: 16px;
+        }
+
+        #thanks h5 {
+            font-weight: bold;
+            display: block;
+            margin: 0;
+
+        }
+
+        #resettext {
+            font-size: 14px;
+            margin: 0;
+            padding: 16px;
+        }
+
+        #btnrow {
+            padding: 16px;
+            text-align: center;
+        }
+
+        #btnrow .btn {
+            font-size: 14px;
+            background: #00BAB9;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: normal;
+            text-decoration: none;
+            padding: 10px 16px;
+            display: inline-block;
+        }
+
+        #helptext {
+            font-size: 14px;
+            margin: 0;
+            padding: 16px;
+            color: #afafaf;
+            border-top: 1px solid #f1f1f1;
+        }
+
+        .obgyn-title {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        #headertbl {
+            border-collapse: collapse;
+        }
+
+        #headertbl td {
+            border: 1px solid #343434;
+        }
+
+        .hospitalName {
+            font-size: 26px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        #headertbl td .hospitalName table td {
+            border: 0;
+        }
+
+        #headertbl td .doctorname {
+            margin-top: 10px;
+        }
+
+        #headertbl td .doctorname td {
+            border: 0;
+            text-align: center;
+            font-size: 20px;
+            line-height: 20px;
+        }
+
+        .colum1 {
+            padding: 10px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .colum1 h3 {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+            color: #343434;
+        }
+
+        .colum1 h5 {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0;
+            color: #343434;
+        }
+
+        .hospitalName .plus {
+            font-size: 36px;
+            opacity: 0.7;
+            line-height: 32px;
+        }
+
+        .colum3 {
+            width: 200px;
+            text-align: right;
+            vertical-align: top;
+            padding: 10px;
+        }
+
+        .colum3 .call {
+            font-size: 13px;
+        }
+
+        .colum3 .call label {
+            font-weight: bold;
+        }
+
+        .colum3 .designation {
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .colum3 .speciality {
+            font-weight: bold;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        #reporttable {
+            border-collapse: collapse;
+        }
+
+        #reporttable td {
+            border: 1px solid #343434;
+            padding: 5px 10px;
+        }
+
+        #reporttable2 {
+            border-collapse: collapse;
+        }
+
+        #reporttable2 th,
+        #reporttable2 td {
+            border: 1px solid #343434;
+            padding: 5px 10px;
+        }
+
+        #reporttable2 td {
+            font-weight: normal;
+        }
+
+        .lefttable td {
+            padding: 2px 10px;
+        }
+
+        .rxtbl {
+            border-collapse: collapse;
+        }
+
+        .rxtbl td {
+            padding: 3px 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="obygyn">
+        <div id="obygyn-header">
+            <table width="100%" id="headertbl">
+                <tr>
+                    <td class="colum1">
+                        <div class="hospitalName">
+                            <table width="100%">
+                                <tr>
+                                    <td class="plus">+
+                                    </td>
+                                    <td>SHRADDHA HOSPITAL
+                                    </td>
+                                    <td class="plus">+
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                        <h3>Sonography,Laparoscopy & Maternity Home,</h3>
+                        <h5>College Road,Santrampur,</h5>
+                        <h5>Di:Mahisagar,PIN:389260.</h5>
+                    </td>
+                    <td style="width: 100px; text-align: center;">
+                        <img src="logo.png" width="80" />
+                    </td>
+                    <td class="colum3">
+                        <div class="call"><label>Mo:</label> +917621060776</div>
+                        <div class="call"><label>Phone:</label> (02675) 299323</div>
+                        <table width="100%" class="doctorname">
+                            <tr>
+                                <td><img src="img1.png" width="30" />
+                                </td>
+                                <td>Dr.B.K.Patel
+                                </td>
+                                <td><img src="img1.png" width="30" />
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="designation">
+                            (M.B.B.S,D.G.O)
+                        </div>
+                        <div class="speciality">Obstetrician & Gynecologists</div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="obgyn-title" style="margin-bottom: 10px; font-size: 18px; padding:  0px;">
+            -: Birth Report :-</div>
+
+        <table width="100%" id="reporttable2" style="font-size: 14px;font-weight: bold;color: #343434;">
+
+            <tr>
+                <td>
+                    <strong>Mother's Name:</strong>
+                </td>
+                <td colspan="2">
+                    Mittalben hasmukhbhai makwana
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0;">
+                    &nbsp;
+                </td>
+                <td style="padding: 0;" colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Father's Name:</strong>
+                </td>
+                <td colspan="2">
+                    Hasmukhbhai iswarbhai makwana
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0;">
+                    &nbsp;
+                </td>
+                <td style="padding: 0;" colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Village:</strong>
+                </td>
+                <td>
+                    at-hindoliya,ta-fatepura,di-dahod,pin:389172
+                </td>
+                <td>
+                    <strong>Age:</strong> 25 years
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0;">
+                    &nbsp;
+                </td>
+                <td style="padding: 0;" colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Date:</strong>
+                </td>
+                <td colspan="2">
+                    31-12-2021
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0;">
+                    &nbsp;
+                </td>
+                <td style="padding: 0;" colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Time:</strong>
+                </td>
+                <td colspan="2">
+                    3:40 AM
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0;">
+                    &nbsp;
+                </td>
+                <td style="padding: 0;" colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Gender:</strong>
+                </td>
+                <td colspan="2">
+                    Male
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0;">
+                    &nbsp;
+                </td>
+                <td style="padding: 0;" colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Weight:</strong>
+                </td>
+                <td colspan="2">
+                    2.6kg
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0;">
+                    &nbsp;
+                </td>
+                <td style="padding: 0;" colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Child Status:</strong>
+                </td>
+                <td colspan="2">
+                    Present
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0;">
+                    &nbsp;
+                </td>
+                <td style="padding: 0;" colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>child count:</strong>
+                </td>
+                <td colspan="2">
+                    0/1
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0;">
+                    &nbsp;
+                </td>
+                <td style="padding: 0;" colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Episiotomy By:</strong>
+                </td>
+                <td colspan="2">
+
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0;">
+                    &nbsp;
+                </td>
+                <td style="padding: 0;" colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align: center;">
+                    note text goes here note text goes here note text goes here note text goes here note text goes here
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    &nbsp;
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</body>
+
+</html>
