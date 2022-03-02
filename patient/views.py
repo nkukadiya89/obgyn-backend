@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
+from patient_opd.models import PatientOpdModel
 from user.models import User
 from utility.search_filter import filtering_query
 from .models import PatientModel
@@ -77,6 +78,10 @@ class PatientAPI(APIView):
             serializer = PatientSerializers(patient, data=json.loads(request.data["data"]))
 
             if serializer.is_valid():
+                patient_opd = PatientOpdModel.objects.filter(patient_id=patient.patient_id).first()
+                patient_opd.patient_type = patient.patient_type
+                patient_opd.save()
+
                 serializer.save()
                 patient.registered_no = \
                     str(now()).replace("-", "").replace(":", "").replace(" ", "").replace(".", "").split("+")[0][:16]

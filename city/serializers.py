@@ -1,9 +1,9 @@
 from django.db.models import Q
 from rest_framework import serializers
-from taluka.serializers import TalukaSerializers
+
 from district.serializers import DistrictSerializers
 from state.serializers import StateSerializers
-
+from taluka.serializers import TalukaSerializers
 from .models import CityModel
 
 

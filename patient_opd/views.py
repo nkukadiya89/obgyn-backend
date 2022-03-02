@@ -12,7 +12,6 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 from patient.models import PatientModel
 from patient.serializers import PatientSerializers
-from patient.utility.code_generate import generate_patient_user_code
 from user.models import User
 from utility.search_filter import filtering_query
 from .models import PatientOpdModel
@@ -127,6 +126,7 @@ class PatientOpdAPI(APIView):
             opd_data["regd_no"] = str(patient.registered_no)
 
             patient_opd = PatientOpdModel()
+            opd_data["patient_type"] = patient.patient_type
             serializer = PatientOpdSerializers(patient_opd, data=opd_data)
 
             if serializer.is_valid():

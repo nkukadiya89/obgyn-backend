@@ -3,6 +3,7 @@ from django.utils.timezone import now
 
 from patient.models import PatientModel
 from patient_opd.models import PatientOpdModel
+from manage_fields.models import ManageFieldsModel
 
 # Create your models here.
 class PatientHistolapModel(models.Model):
@@ -12,9 +13,9 @@ class PatientHistolapModel(models.Model):
     regd_no = models.CharField(max_length=100, default="")
 
     admission_date = models.DateField(null=True)
-    procedure_name = models.CharField(max_length=100, null=True)
-    right_tube = models.CharField(max_length=50, null=True)
-    left_tube = models.CharField(max_length=50, null=True)
+    procedure_name = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="procedure_name")
+    right_tube = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="right_tube")
+    left_tube = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="left_tube")
     uterus = models.CharField(max_length=100, null=True)
     pod = models.CharField(max_length=100, null=True)
     endo_cavity = models.CharField(max_length=100, null=True)

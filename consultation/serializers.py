@@ -9,9 +9,7 @@ class ConsultationSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(ConsultationSerializers, self).to_representation(instance)
 
-        for fld_nm in ["ho", "co", "temprature", "puls", "bp", "resperistion", "spo2", "pallor", "lcterus", "oedema",
-                       "rs", "cvs", "breast", "pv", "tt", "blood_group", "urine_sugar", "urine_protein", "hiv", "hbsag",
-                       "vdrl"]:
+        for fld_nm in ["eb_pp", "ps", "pv", "advice", "fu"]:
             fld_name = fld_nm + "_name"
             search_instance = "instance" + "." + fld_nm
             if fld_nm in ret:
