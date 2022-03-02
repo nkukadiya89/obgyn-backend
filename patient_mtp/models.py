@@ -3,6 +3,7 @@ from django.utils.timezone import now
 
 from patient.models import PatientModel
 from patient_opd.models import PatientOpdModel
+from manage_fields.models import ManageFieldsModel
 
 # Create your models here.
 class PatientMtpModel(models.Model):
@@ -12,7 +13,7 @@ class PatientMtpModel(models.Model):
     regd_no = models.CharField(max_length=100, default="")
 
     second_rmp = models.CharField(max_length=25, null=True)
-    reason_for_mtp = models.TextField(null=True)
+    reason_for_mtp = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="reason_for_mtp")
     contraception = models.CharField(max_length=100, null=True)
     mtp_complication = models.CharField(max_length=500, null=True)
     discharge_date = models.DateField(null=True)

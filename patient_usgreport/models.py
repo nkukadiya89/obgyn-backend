@@ -3,6 +3,7 @@ from django.utils.timezone import now
 
 from patient.models import PatientModel
 from patient_opd.models import PatientOpdModel
+from manage_fields.models import ManageFieldsModel
 
 
 # Create your models here.
@@ -13,7 +14,7 @@ class PatientUSGReportModel(models.Model):
     regd_no = models.CharField(max_length=100, default="")
 
     report_date = models.DateField(default=now)
-    no_of_foetus = models.IntegerField(default=0)
+    no_of_foetus = models.CharField(max_length=25, default="")
     cardiac_activity = models.CharField(max_length=100, default="")
     presentation = models.TextField(null=True)
     ga_weeks = models.IntegerField(default=0)
@@ -40,7 +41,7 @@ class PatientUSGReportModel(models.Model):
     possible_lmp = models.CharField(max_length=100, default="")
     placental_location = models.CharField(max_length=100, default="")
     amount_of_liquor = models.CharField(max_length=100, default="")
-    anomalies = models.CharField(max_length=250, default="")
+    anomalies = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="anomalies")
     remark = models.TextField(null=True)
     usg_report = models.TextField(null=True)
 

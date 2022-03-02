@@ -5,6 +5,7 @@ from diagnosis.serializers import DiagnosisSerializers
 from patient.models import PatientModel
 from .models import PatientDischargeModel
 from django.db.models.query import Q
+from manage_fields.serializers import ManageFieldsSerializers
 
 
 class PatientDischargeSerializers(serializers.ModelSerializer):
@@ -15,7 +16,7 @@ class PatientDischargeSerializers(serializers.ModelSerializer):
             ret["diagnosis_name"] = DiagnosisSerializers(instance.diagnosis).data["diagnosis_name"]
 
         if "advice" in ret:
-            ret["advice_name"] = AdviceSerializers(instance.advice).data["advice"]
+            ret["advice_name"] = ManageFieldsSerializers(instance.advice).data["field_value"]
 
         return ret
 
