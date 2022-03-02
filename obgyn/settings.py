@@ -170,3 +170,8 @@ SIMPLE_JWT = {
     # 'USER_ID_FIELD': 'email',
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+
+REST_FRAMEWORK = {
+    "DATE_INPUT_FORMATS": ["%d-%m-%Y"],
+}
