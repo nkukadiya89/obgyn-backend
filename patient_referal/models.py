@@ -12,7 +12,7 @@ class PatientReferalModel(models.Model):
     patient_opd = models.OneToOneField(PatientOpdModel, on_delete=models.DO_NOTHING, null=True)
     patient = models.ForeignKey(PatientModel, on_delete=models.DO_NOTHING)
     regd_no = models.CharField(max_length=100, default="")
-    indication = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="indication")
+    indication = models.ManyToManyField(ManageFieldsModel)
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
