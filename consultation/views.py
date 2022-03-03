@@ -72,6 +72,14 @@ class ConsultationAPI(APIView):
         data = {}
         if request.method == "POST":
             consultation = ConsultationModel()
+            if "patient_opd_id" not in request.data:
+                data["success"] = False
+                data["msg"] = "OPD is required"
+                data["data"] = request.data
+                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                request.data["patient_opd"] = request.data["patient_opd_id"]
+
             serializer = ConsultationSerializers(consultation, data=request.data)
 
             if serializer.is_valid():
@@ -97,6 +105,14 @@ def patch(request, id):
             consultation = ConsultationModel.objects.get(pk=id)
         else:
             consultation = ConsultationModel.objects.filter(deleted=0)
+        if "patient_opd_id" not in request.data:
+            data["success"] = False
+            data["msg"] = "OPD is required"
+            data["data"] = request.data
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            request.data["patient_opd"] = request.data["patient_opd_id"]
+
     except ConsultationModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"

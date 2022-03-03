@@ -70,6 +70,11 @@ class PatientOvulationProfileAPI(APIView):
         data = {}
         if request.method == "POST":
             patient_ovulation_profile = PatientOvulationProfileModel()
+            if "patient_opd_id" not in request.data:
+                data["success"] = False
+                data["msg"] = "OPD is required"
+                data["data"] = request.data
+                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
             serializer = PatientOvulationProfileSerializers(patient_ovulation_profile, data=request.data)
 
             if serializer.is_valid():
@@ -95,6 +100,12 @@ def patch(request, id):
             patient_ovulation_profile = PatientOvulationProfileModel.objects.get(pk=id)
         else:
             patient_ovulation_profile = PatientOvulationProfileModel.objects.filter(deleted=0)
+        if "patient_opd_id" not in request.data:
+            data["success"] = False
+            data["msg"] = "OPD is required"
+            data["data"] = request.data
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
     except PatientOvulationProfileModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"

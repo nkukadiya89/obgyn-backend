@@ -9,6 +9,10 @@ class ConsultationSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(ConsultationSerializers, self).to_representation(instance)
 
+        if "patient_opd" in ret:
+            ret["patient_opd_id"] = ret["patient_opd"]
+            del ret["patient_opd"]
+
         for fld_nm in ["eb_pp", "ps", "pv", "advice", "fu"]:
             fld_name = fld_nm + "_name"
             search_instance = "instance" + "." + fld_nm
@@ -18,9 +22,6 @@ class ConsultationSerializers(serializers.ModelSerializer):
         return ret
 
     def validate(self, data):
-        if "patient_opd_id" not in data:
-            raise serializers.ValidationError("OPD is required.")
-
         if "regd_no" in data:
             patient = PatientModel.objects.filter(registered_no=data["regd_no"])
             if len(patient) == 0:

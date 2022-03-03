@@ -70,6 +70,11 @@ class PatientUSGFormAPI(APIView):
         data = {}
         if request.method == "POST":
             patient_usgform = PatientUSGFormModel()
+            if "patient_opd_id" not in request.data:
+                data["success"] = False
+                data["msg"] = "OPD is required"
+                data["data"] = request.data
+                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
             serializer = PatientUSGFormSerializers(patient_usgform, data=request.data)
 
             if serializer.is_valid():
@@ -95,6 +100,12 @@ def patch(request, id):
             patient_usgform = PatientUSGFormModel.objects.get(pk=id)
         else:
             patient_usgform = PatientUSGFormModel.objects.filter(deleted=0)
+        if "patient_opd_id" not in request.data:
+            data["success"] = False
+            data["msg"] = "OPD is required"
+            data["data"] = request.data
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
     except PatientUSGFormModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"

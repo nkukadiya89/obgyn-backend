@@ -70,6 +70,11 @@ class PatientHistolapAPI(APIView):
         data = {}
         if request.method == "POST":
             patient_histolap = PatientHistolapModel()
+            if "patient_opd_id" not in request.data:
+                data["success"] = False
+                data["msg"] = "OPD is required"
+                data["data"] = request.data
+                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
             serializer = PatientHistolapSerializers(patient_histolap, data=request.data)
 
             if serializer.is_valid():
@@ -95,6 +100,12 @@ def patch(request, id):
             patient_histolap = PatientHistolapModel.objects.get(pk=id)
         else:
             patient_histolap = PatientHistolapModel.objects.filter(deleted=0)
+        if "patient_opd_id" not in request.data:
+            data["success"] = False
+            data["msg"] = "OPD is required"
+            data["data"] = request.data
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
     except PatientHistolapModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"

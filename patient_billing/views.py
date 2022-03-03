@@ -70,6 +70,12 @@ class PatientBillingAPI(APIView):
         data = {}
         if request.method == "POST":
             patient_billing = PatientBillingModel()
+            if "patient_opd_id" not in request.data:
+                data["success"] = False
+                data["msg"] = "OPD is required"
+                data["data"] = request.data
+                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
             serializer = PatientBillingSerializers(patient_billing, data=request.data)
 
             if serializer.is_valid():
@@ -95,6 +101,11 @@ def patch(request, id):
             patient_billing = PatientBillingModel.objects.get(pk=id)
         else:
             patient_billing = PatientBillingModel.objects.filter(deleted=0)
+        if "patient_opd_id" not in request.data:
+            data["success"] = False
+            data["msg"] = "OPD is required"
+            data["data"] = request.data
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
     except PatientBillingModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"
