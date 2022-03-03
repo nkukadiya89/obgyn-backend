@@ -12,6 +12,10 @@ class PatientDischargeSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(PatientDischargeSerializers, self).to_representation(instance)
 
+        if "patient_opd" in ret:
+            ret["patient_opd_id"] = ret["patient_opd"]
+            del ret["patient_opd"]
+
         if "diagnosis" in ret:
             ret["diagnosis_name"] = DiagnosisSerializers(instance.diagnosis).data["diagnosis_name"]
 

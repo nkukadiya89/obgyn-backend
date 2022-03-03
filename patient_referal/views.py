@@ -70,7 +70,16 @@ class PatientReferalAPI(APIView):
         data = {}
         if request.method == "POST":
             patient_referal = PatientReferalModel()
+            if "patient_opd_id" not in request.data:
+                data["success"] = False
+                data["msg"] = "OPD is required"
+                data["data"] = request.data
+                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                request.data["patient_opd"] = request.data["patient_opd_id"]
+
             serializer = PatientReferalSerializers(patient_referal, data=request.data)
+
 
             if serializer.is_valid():
                 serializer.save()
@@ -96,6 +105,15 @@ def patch(request, id):
             patient_referal = PatientReferalModel.objects.get(pk=id)
         else:
             patient_referal = PatientReferalModel.objects.filter(deleted=0)
+
+        if "patient_opd_id" not in request.data:
+            data["success"] = False
+            data["msg"] = "OPD is required"
+            data["data"] = request.data
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            request.data["patient_opd"] = request.data["patient_opd_id"]
+
     except PatientReferalModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"

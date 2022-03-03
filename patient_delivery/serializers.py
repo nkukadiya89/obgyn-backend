@@ -14,6 +14,10 @@ class PatientDeliverySerializers(serializers.ModelSerializer):
         ret["husband_father_name"] = patient.data["husband_father_name"]
         ret["grand_father_name"] = patient.data["grand_father_name"]
         ret["phone"] = patient.data["phone"]
+
+        if "patient_opd" in ret:
+            ret["patient_opd_id"] = ret["patient_opd"]
+            del ret["patient_opd"]
         return ret
 
     def validate(self, data):

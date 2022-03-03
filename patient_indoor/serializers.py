@@ -5,6 +5,14 @@ from .models import PatientIndoorModel, IndoorAdviceModel
 
 
 class PatientIndoorSerializers(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        ret = super(PatientIndoorSerializers, self).to_representation(instance)
+
+        if "patient_opd" in ret:
+            ret["patient_opd_id"] = ret["patient_opd"]
+            del ret["patient_opd"]
+        return ret
+
     def validate(self, data):
         if "patient_opd_id" not in data:
             raise serializers.ValidationError("OPD is required.")

@@ -31,7 +31,7 @@ class ManageFieldsModel(models.Model):
     created_at = models.DateTimeField(default=now)
 
     def __str__(self):
-        return f"({self.mf_id},{self.field_name})"
+        return f"({self.mf_id},{self.field_value})"
 
     class Meta:
         db_table = "manage_field"

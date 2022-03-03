@@ -3,11 +3,16 @@ from rest_framework import serializers
 from manage_fields.models import ManageFieldsModel
 from patient.models import PatientModel
 from .models import PatientReferalModel
+from patient_opd.models import PatientOpdModel
 
 
 class PatientReferalSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(PatientReferalSerializers, self).to_representation(instance)
+
+        if "patient_opd" in ret:
+            ret["patient_opd_id"] = ret["patient_opd"]
+            del ret["patient_opd"]
 
         if "indication" in ret:
             indication_list = []
@@ -20,8 +25,6 @@ class PatientReferalSerializers(serializers.ModelSerializer):
         return ret
 
     def validate(self, data):
-        if "patient_opd_id" not in data:
-            raise serializers.ValidationError("OPD is required.")
 
         if "regd_no" in data:
             patient = PatientModel.objects.filter(registered_no=data["regd_no"])

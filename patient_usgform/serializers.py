@@ -17,6 +17,10 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(PatientUSGFormSerializers, self).to_representation(instance)
 
+        if "patient_opd" in ret:
+            ret["patient_opd_id"] = ret["patient_opd"]
+            del ret["patient_opd"]
+
         if "indication" in ret:
             indication_list = []
             for each_indication in ret["indication"]:
