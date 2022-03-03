@@ -25,7 +25,7 @@ class ConsultationModel(models.Model):
     edd_date = models.DateField(default=now)
 
     no_of_male = models.IntegerField(default=0, null=True)
-    no_of_femaile = models.IntegerField(default=0, null=True)
+    no_of_female = models.IntegerField(default=0, null=True)
 
     ftnd_male_live = models.IntegerField(default=0, null=True)
     ftnd_male_dead = models.IntegerField(default=0, null=True)
