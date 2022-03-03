@@ -578,6 +578,8 @@ class ModelFilterPATIENTREFERAL:
                 model = model.filter(patient_referal_id=fld_value)
             if fld_name == "indication":
                 model = model.filter(indication__icontains=fld_value)
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -632,6 +634,8 @@ class ModelFilterUSGFORMCHILD:
                 model = model.filter(child_year=fld_value)
             if fld_name == "child_month":
                 model = model.filter(child_month=fld_value)
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -680,6 +684,8 @@ class ModelFilterPATIENTDISCHARGE:
                 model = model.filter(discharge_time=fld_value)
             if fld_name == "remark":
                 model = model.filter(remark__icontains=fld_value)
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -710,6 +716,8 @@ class ModelFilterPATIENTUSGREPORT:
                 model = model.filter(report_date=fld_value)
             if fld_name == "anomalies":
                 model = model.filter(anomalies_icontains=fld_value)
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -745,6 +753,8 @@ class ModelFilterPATIENTOVULATIONPROFILE:
                 model = model.filter(ut_blood_flow__icontains=fld_value)
             if fld_name == "diagnosis":
                 model = model.filter(ovarian_blood_flow=fld_value)
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -778,6 +788,8 @@ class ModelFilterMTP:
                 model = model.filter(mtp_complication__icontains=fld_value)
             if fld_name == "discharge_date":
                 model = model.filter(discharge_date=fld_value)
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
 
         return model
 
@@ -810,6 +822,8 @@ class ModelFilterHISTOLAP:
                 model = model.filter(procedure_name=fld_value)
             if fld_name == "discharge_date":
                 model = model.filter(discharge_date=fld_value)
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
 
         return model
 
@@ -843,6 +857,8 @@ class ModelFilterPATIENTBILLING:
                 model = model.filter(diagnosis_id=fld_value)
             if fld_name == "procedure_name":
                 model = model.filter(procedure_name__icontains=fld_value)
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
 
         return model
 
@@ -869,6 +885,8 @@ class ModelFilterPATIENTVOUCHER:
                 model = model.filter(voucher_no__icontains=fld_value)
             if fld_name == "bill_date":
                 model = model.filter(bill_date=fld_value)
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
 
         return model
 
@@ -923,6 +941,8 @@ class ModelFilterPATIENTINDOOR:
                 model = model.filter(diagnosis_id=fld_value)
             if fld_name == "operation":
                 model = model.filter(operation__icontains=fld_value)
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
 
         return model
 
