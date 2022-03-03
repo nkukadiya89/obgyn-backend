@@ -18,7 +18,7 @@ class ConsultationSerializers(serializers.ModelSerializer):
         return ret
 
     def validate(self, data):
-        if "patient_opd" not in data:
+        if "patient_opd_id" not in data:
             raise serializers.ValidationError("OPD is required.")
 
         if "regd_no" in data:
