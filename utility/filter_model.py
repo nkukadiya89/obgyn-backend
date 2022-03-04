@@ -799,7 +799,6 @@ class ModelFilterPATIENTMTP:
             model = model.filter(
                 Q(regd_no__icontains=search) |
                 Q(second_rmp__icontains=search) |
-                Q(reason_for_mtp__icontains=search) |
                 Q(contraception__icontains=search) |
                 Q(mtp_complication__icontains=search) |
                 Q(remark__icontains=search)
