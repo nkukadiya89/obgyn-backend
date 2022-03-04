@@ -767,7 +767,7 @@ class ModelFilterPATIENTOVULATIONPROFILE:
             )
         return model
 
-class ModelFilterMTP:
+class ModelFilterPATIENTMTP:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
@@ -807,7 +807,7 @@ class ModelFilterMTP:
         return model
 
 
-class ModelFilterHISTOLAP:
+class ModelFilterPATIENTHISTOLAP:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
