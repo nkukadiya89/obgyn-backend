@@ -767,7 +767,7 @@ class ModelFilterPATIENTOVULATIONPROFILE:
             )
         return model
 
-class ModelFilterMTP:
+class ModelFilterPATIENTMTP:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
@@ -799,7 +799,6 @@ class ModelFilterMTP:
             model = model.filter(
                 Q(regd_no__icontains=search) |
                 Q(second_rmp__icontains=search) |
-                Q(reason_for_mtp__icontains=search) |
                 Q(contraception__icontains=search) |
                 Q(mtp_complication__icontains=search) |
                 Q(remark__icontains=search)
@@ -807,7 +806,7 @@ class ModelFilterMTP:
         return model
 
 
-class ModelFilterHISTOLAP:
+class ModelFilterPATIENTHISTOLAP:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
