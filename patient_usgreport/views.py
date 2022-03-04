@@ -75,6 +75,8 @@ class PatientUSGReportAPI(APIView):
                 data["msg"] = "OPD is required"
                 data["data"] = request.data
                 return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                request.data["patient_opd"] = request.data["patient_opd_id"]
             serializer = PatientUSGReportSerializers(patient_usgreport, data=request.data)
 
             if serializer.is_valid():
@@ -105,6 +107,8 @@ def patch(request, id):
             data["msg"] = "OPD is required"
             data["data"] = request.data
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            request.data["patient_opd"] = request.data["patient_opd_id"]
 
     except PatientUSGReportModel.DoesNotExist:
         data["success"] = False

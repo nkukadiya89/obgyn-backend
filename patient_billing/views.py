@@ -75,6 +75,8 @@ class PatientBillingAPI(APIView):
                 data["msg"] = "OPD is required"
                 data["data"] = request.data
                 return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                request.data["patient_opd"] = request.data["patient_opd_id"]
 
             serializer = PatientBillingSerializers(patient_billing, data=request.data)
 
@@ -106,6 +108,9 @@ def patch(request, id):
             data["msg"] = "OPD is required"
             data["data"] = request.data
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            request.data["patient_opd"] = request.data["patient_opd_id"]
+
     except PatientBillingModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"
