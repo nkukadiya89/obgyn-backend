@@ -53,6 +53,7 @@ class ConsultationModel(models.Model):
     cvs = models.CharField(max_length=25, default="")
     breast = models.CharField(max_length=25, default="")
     pa_gyn = models.BooleanField(default=False, null=True)
+    pa_value = models.CharField(max_length=25,default="")
     pa_obs = models.BooleanField(default=False, null=True)
     ut_weeks = models.IntegerField(default=0)
     ut_days = models.IntegerField(default=0)
