@@ -36,4 +36,4 @@ class ConsultationSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = ConsultationModel
-        exclude = ('created_at', 'patient')
+        exclude = ('created_at', 'patient', 'opd_date')
