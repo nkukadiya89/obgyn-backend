@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'patient_billing',
     'patient_voucher',
     'patient_indoor',
+    'template_header',
 ]
 
 MIDDLEWARE = [

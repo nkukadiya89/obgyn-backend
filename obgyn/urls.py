@@ -38,4 +38,5 @@ urlpatterns = [
     path('patient/', include('patient.urls')),
     path('opd/', include('patient_opd.urls')),
     path('report/', include('reports.urls')),
+    path('template-header/', include('template_header.urls')),
 ]
