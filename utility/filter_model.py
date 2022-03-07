@@ -995,3 +995,21 @@ class ModelFilterINDOORADVICE:
             )
         return model
 
+
+class ModelFilterTEMPLATEHEADER:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "template_header":
+                model = model.filter(template_header__icontains=fld_value)
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            model = model.filter(
+                Q(template_header__icontains=search) |
+                Q(language__language__icontains=search)
+            )
+        return model
