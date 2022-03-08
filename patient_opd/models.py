@@ -13,6 +13,7 @@ class PatientOpdModel(models.Model):
 
     patient_opd_id = models.AutoField(primary_key=True)
     opd_date = models.DateField(default=now)
+    opd_time = models.CharField(max_length=10, default="")
     regd_no = models.CharField(max_length=100, default="")
     patient = models.ForeignKey(PatientModel, on_delete=models.DO_NOTHING)
     status = models.BooleanField(default=False,
