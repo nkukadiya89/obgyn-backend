@@ -2,10 +2,13 @@ from django.shortcuts import render, HttpResponse
 from rest_framework import status
 
 from patient_opd.models import PatientOpdModel
+from template_header.models import TemplateHeaderModel
 
 
 def view_report(request, id):
+
     patient_opd = PatientOpdModel.objects.filter(pk=id).select_related('consultationmodel')
+    template_header = TemplateHeaderModel.objects.filter(pk=1).first()
 
     patient_opd = patient_opd.first()
     if patient_opd == None:
@@ -28,4 +31,4 @@ def view_report(request, id):
                                   patient_opd.patient.district.district_name, " ",
                                   patient_opd.patient.taluka.taluka_name, " ", patient_opd.patient.state.state_name])
     context["report_date"] = str(patient_opd.opd_date)
-    return render(request, template_name, {"context": context})
+    return render(request, template_name, {"context": context, "template_header":template_header.header_text.replace("'","\"")})
