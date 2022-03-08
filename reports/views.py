@@ -5,17 +5,16 @@ from patient_opd.models import PatientOpdModel
 from template_header.models import TemplateHeaderModel
 
 
-def view_report(request, id):
-
+def view_report(request, id, language_id=None):
     patient_opd = PatientOpdModel.objects.filter(pk=id).select_related('consultationmodel')
-    template_header = TemplateHeaderModel.objects.filter(pk=1).first()
+
+    if language_id:
+        template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id).first()
+    else:
+        template_header = TemplateHeaderModel.objects.filter(pk=1).first()
 
     patient_opd = patient_opd.first()
     if patient_opd == None:
-        data = {}
-        # data["success"] = False
-        # data["msg"] = "Record Does not exist"
-        # data["data"] = []
         return HttpResponse("Record Does not exist", status=status.HTTP_400_BAD_REQUEST)
 
     template_name = "reports/en/report-1.html"
@@ -31,4 +30,5 @@ def view_report(request, id):
                                   patient_opd.patient.district.district_name, " ",
                                   patient_opd.patient.taluka.taluka_name, " ", patient_opd.patient.state.state_name])
     context["report_date"] = str(patient_opd.opd_date)
-    return render(request, template_name, {"context": context, "template_header":template_header.header_text.replace("'","\"")})
+    return render(request, template_name,
+                  {"context": context, "template_header": template_header.header_text.replace("'", "\"")})
