@@ -540,8 +540,8 @@ class ModelFilterPATIENTOPD:
                 model = model.filter(patient_id=fld_value)
             if fld_name == "opd_date":
                 model = model.filter(opd_date=fld_value)
-            if fld_name == "registered_no":
-                model = model.filter(registered_no=fld_value)
+            if fld_name == "regd_no":
+                model = model.filter(regd_no=fld_value)
             if fld_name == "first_name":
                 model = model.filter(patient__first_name__icontains=fld_value)
             if fld_name == "last_name":
@@ -563,7 +563,8 @@ class ModelFilterPATIENTOPD:
                 Q(patient__patient_detail__icontains=search) |
                 Q(patient__husband_father_name__icontains=search) |
                 Q(patient__grand_father_name__icontains=search) |
-                Q(patient__city__city_name__icontains=search)
+                Q(patient__city__city_name__icontains=search) |
+                Q(regd_no__iexact=search)
             )
         return model
 
