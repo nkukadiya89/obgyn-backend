@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
+from patient_opd.models import PatientOpdModel
 from utility.search_filter import filtering_query
 from .models import PatientHistolapModel
 from .serializers import PatientHistolapSerializers
@@ -81,6 +82,10 @@ class PatientHistolapAPI(APIView):
 
             if serializer.is_valid():
                 serializer.save()
+                patient_opd = PatientOpdModel.objects.filter(pk=request.data["patient_opd_id"].first())
+                patient_opd.status = True
+                patient_opd.save()
+
                 data["success"] = True
                 data["msg"] = "Data updated successfully"
                 data["data"] = serializer.data
