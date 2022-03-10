@@ -253,55 +253,54 @@
         }
     </style>
 </head>
+<script type="text/javascript">
+
+      function generateBarcode(value,target){
+        var value = value;
+        var btype = "code128";
+        var renderer = "css"
+
+
+        var settings = {
+          output:renderer,
+          color: '#000000',
+          barWidth: '1',
+          barHeight: '30',
+          moduleSize: '5',
+          posX: '10',
+          posY: '20',
+          addQuietZone: '1'
+        };
+
+
+	  $(target).html("").show().barcode(value, btype, settings);
+      }
+
+      function showConfig1D(){
+        $('.config .barcode1D').show();
+        $('.config .barcode2D').hide();
+      }
+
+      function showConfig2D(){
+        $('.config .barcode1D').hide();
+        $('.config .barcode2D').show();
+      }
+
+      $(function(){
+        regd_no = $("#regdno_value").val();
+        generateBarcode(regd_no,"#regdno_target");
+
+        mob_no = $("#mob_no").val();
+        alert(mob_no);
+        generateBarcode(mob_no,"#mobno_target");
+      });
+</script>
+
 
 <body>
     <div id="obygyn">
         <div class="obgyn-title">-: USG REPORT :-</div>
-        <div id="obygyn-header">
-            <table width="100%" id="headertbl">
-                <tr>
-                    <td class="colum1">
-                        <div class="hospitalName">
-                            <table width="100%">
-                                <tr>
-                                    <td class="plus">+
-                                    </td>
-                                    <td>SHRADDHA HOSPITAL
-                                    </td>
-                                    <td class="plus">+
-                                    </td>
-                                </tr>
-                            </table>
-
-                        </div>
-                        <h3>Sonography,Laparoscopy & Maternity Home,</h3>
-                        <h5>College Road,Santrampur,</h5>
-                        <h5>Di:Mahisagar,PIN:389260.</h5>
-                    </td>
-                    <td style="width: 100px; text-align: center;">
-                        <img src="logo.png" width="80" />
-                    </td>
-                    <td class="colum3">
-                        <div class="call"><label>Mo:</label> +917621060776</div>
-                        <div class="call"><label>Phone:</label> (02675) 299323</div>
-                        <table width="100%" class="doctorname">
-                            <tr>
-                                <td><img src="img1.png" width="30" />
-                                </td>
-                                <td>Dr.B.K.Patel
-                                </td>
-                                <td><img src="img1.png" width="30" />
-                                </td>
-                            </tr>
-                        </table>
-                        <div class="designation">
-                            (M.B.B.S,D.G.O)
-                        </div>
-                        <div class="speciality">Obstetrician & Gynecologists</div>
-                    </td>
-                </tr>
-            </table>
-        </div>
+        {{template_header | safe }}
         <div class="obgyn-title">-: USG REPORT :-</div>
 
         <table width="100%" id="reporttable" style="font-size: 14px;font-weight: bold;color: #343434;">
@@ -310,19 +309,21 @@
                     Receipt Date:
                 </td>
                 <td>
-                    01-01-2022
+                    {{context.receipt_date}}
                 </td>
                 <td style="width: 80px;">
                     Regd. No:
                 </td>
                 <td>
-                    <img src="barcode.jpg" width="100" />
+                    <div id="regdno_target" class="barcodeTarget"></div>
+                    <input type="hidden" id="regdno_value" value="{{context.regd_no}}"/>
                 </td>
                 <td style="width: 100px;">
                     Mobile No:
                 </td>
                 <td style="width: 100px;">
-                    <img src="barcode.jpg" width="70" />
+                    <div id="mobno_target" class="barcodeTarget"></div>
+                    <input type="hidden" id="mob_no" value="{{context.mobile_no}}"/>
                 </td>
                 <td style="width: 100px;" rowspan="3">
 
@@ -333,13 +334,13 @@
                     Name:
                 </td>
                 <td colspan="3" style="text-align: center;">
-                    ---
+                    {{ context.name }}
                 </td>
                 <td>
                     Hb:
                 </td>
                 <td>
-
+                    {{ context.hb }}
                 </td>
             </tr>
             <tr>
@@ -347,13 +348,13 @@
                     Address:
                 </td>
                 <td colspan="3" style="text-align: center;">
-                    AT--
+                    {{ context.address }}
                 </td>
                 <td>
                     Blood Group:
                 </td>
                 <td>
-
+                    {{ context.blood_group }}
                 </td>
             </tr>
             <tr>
@@ -361,19 +362,19 @@
                     H/O:
                 </td>
                 <td>
-
+                    {{ context.ho }}
                 </td>
                 <td>
                     C/O:
                 </td>
                 <td colspan="2">
-
+                    {{ context.co }}
                 </td>
                 <td>
                     Age:
                 </td>
                 <td>
-
+                    {{ context.age }}
                 </td>
             </tr>
 
@@ -389,15 +390,15 @@
                                 EXAMINATION</td>
                         </tr>
                         <tr>
-                            <td colspan="2">M/H:-</td>
-                            <td colspan="2">LMP:-</td>
+                            <td colspan="2">M/H:-{{ context.mh }}</td>
+                            <td colspan="2">LMP:-{{ context.lmp }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2">EDD:-</td>
-                            <td colspan="2">*EDD:-</td>
+                            <td colspan="2">EDD:-{{ context.edd }}</td>
+                            <td colspan="2">*EDD:-{{ context.edds }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2">O/H ML:-</td>
+                            <td colspan="2">O/H ML:-{{ context.ohml }}</td>
                             <td colspan="2"></td>
                         </tr>
                         <tr>
@@ -407,13 +408,13 @@
                         </tr>
                         <tr>
                             <td colspan="2" style="text-align: right;">Live:</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <td>{{ context.ftnd_male_live }}</td>
+                            <td>{{ context.ftnd_female_live }}</td>
                         </tr>
                         <tr>
                             <td colspan="2" style="text-align: right;">Dead:</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <td>{{ context.ftnd_male_dead }}</td>
+                            <td>{{ context.ftnd_female_dead }}</td>
                         </tr>
                         <tr>
                             <td colspan="2">FTLSCS/S:-</td>
@@ -422,41 +423,41 @@
                         </tr>
                         <tr>
                             <td colspan="2" style="text-align: right;">Live:</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <td>{{ context.ftlscs_male_live }}</td>
+                            <td>{{ context.ftlscs_female_live }}</td>
                         </tr>
                         <tr>
                             <td colspan="2" style="text-align: right;">Dead:</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <td>{{ context.ftlscs_male_dead }}</td>
+                            <td>{{ context.ftlscs_female_dead }}</td>
                         </tr>
                         <tr>
                             <td colspan="2">P/H,P/H,F/H:-</td>
-                            <td colspan="2">Not Significant</td>
+                            <td colspan="2">{{ context.phfh }}</td>
                         </tr>
                         <tr>
                             <td colspan="2">T/P/R/BP:-</td>
-                            <td colspan="2">N/76/20/</td>
+                            <td colspan="2">{{ context.tprbp }}</td>
                         </tr>
                         <tr>
                             <td colspan="2">P/I/O:-</td>
-                            <td colspan="2">+/A/A</td>
+                            <td colspan="2">{{ context.pio }}</td>
                         </tr>
                         <tr>
                             <td colspan="2">RS/CVS:-</td>
-                            <td colspan="2">NAD</td>
+                            <td colspan="2">{{ context.rscvs }}</td>
                         </tr>
                         <tr>
                             <td colspan="2">P/A:-</td>
-                            <td colspan="2">Soft</td>
+                            <td colspan="2">{{ context.pa }}</td>
                         </tr>
                         <tr>
                             <td colspan="2">P/S:-</td>
-                            <td colspan="2">not done</td>
+                            <td colspan="2">{{ context.ps }}</td>
                         </tr>
                         <tr>
                             <td colspan="2">P/V:-</td>
-                            <td colspan="2">not done</td>
+                            <td colspan="2">{{ context.pv }}</td>
                         </tr>
                     </table>
                 </td>

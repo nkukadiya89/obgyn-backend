@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
+from patient_opd.models import PatientOpdModel
 from utility.search_filter import filtering_query
 from .models import ConsultationModel
 from .serializers import ConsultationSerializers
@@ -79,11 +80,13 @@ class ConsultationAPI(APIView):
                 return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
             else:
                 request.data["patient_opd"] = request.data["patient_opd_id"]
-
             serializer = ConsultationSerializers(consultation, data=request.data)
 
             if serializer.is_valid():
                 serializer.save()
+                patient_opd = PatientOpdModel.objects.filter(pk=request.data["patient_opd_id"].first())
+                patient_opd.status = True
+                patient_opd.save()
                 data["success"] = True
                 data["msg"] = "Data updated successfully"
                 data["data"] = serializer.data
