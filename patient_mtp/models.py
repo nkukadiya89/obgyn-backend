@@ -16,6 +16,7 @@ class PatientMtpModel(models.Model):
     reason_for_mtp = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="reason_for_mtp")
     contraception = models.CharField(max_length=100, null=True)
     mtp_complication = models.CharField(max_length=500, null=True)
+    termination_date = models.DateField(null=True)
     discharge_date = models.DateField(null=True)
     remark = models.TextField(null=True)
 
