@@ -23,6 +23,7 @@ class PatientDeliveryModel(models.Model):
     sr_no = models.CharField(max_length=50, default="")
     birth_date = models.DateField(null=True)
     birth_time = models.CharField(max_length=10, null=True)
+    husband_name = models.CharField(max_length=50, null=True)
     child_name = models.CharField(max_length=100, default="")
     child_gender = models.CharField(max_length=10, choices=gender_choice, default="MALE")
     delivery_type = models.CharField(max_length=10, choices=delivery_type_choice, default="NORMAL")

@@ -46,6 +46,7 @@ class PatientModel(User):
     grand_title = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="grand_title",
                                     null=True)
     age = models.IntegerField(default=0)
+    religion = models.CharField(max_length=25, default="" ,null=True)
 
     class Meta:
         db_table = 'patient'

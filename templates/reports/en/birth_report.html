@@ -270,52 +270,7 @@
 
 <body>
     <div id="obygyn">
-        <div id="obygyn-header">
-            <table width="100%" id="headertbl">
-                <tr>
-                    <td class="colum1">
-                        <div class="hospitalName">
-                            <table width="100%">
-                                <tr>
-                                    <td class="plus">+
-                                    </td>
-                                    <td>SHRADDHA HOSPITAL
-                                    </td>
-                                    <td class="plus">+
-                                    </td>
-                                </tr>
-                            </table>
-
-                        </div>
-                        <h3>Sonography,Laparoscopy & Maternity Home,</h3>
-                        <h5>College Road,Santrampur,</h5>
-                        <h5>Di:Mahisagar,PIN:389260.</h5>
-                    </td>
-                    <td style="width: 100px; text-align: center;">
-                        <img src="logo.png" width="80" />
-                    </td>
-                    <td class="colum3">
-                        <div class="call"><label>Mo:</label> +917621060776</div>
-                        <div class="call"><label>Phone:</label> (02675) 299323</div>
-                        <table width="100%" class="doctorname">
-                            <tr>
-                                <td><img src="img1.png" width="30" />
-                                </td>
-                                <td>Dr.B.K.Patel
-                                </td>
-                                <td><img src="img1.png" width="30" />
-                                </td>
-                            </tr>
-                        </table>
-                        <div class="designation">
-                            (M.B.B.S,D.G.O)
-                        </div>
-                        <div class="speciality">Obstetrician & Gynecologists</div>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
+        {{ template_header |safe }}
         <div class="obgyn-title" style="margin-bottom: 10px; font-size: 18px; padding:  0px;">
             -: Birth Report :-</div>
 
@@ -326,7 +281,7 @@
                     <strong>Mother's Name:</strong>
                 </td>
                 <td colspan="2">
-                    Mittalben hasmukhbhai makwana
+                    {{ context.mother_name }}
                 </td>
             </tr>
             <tr>
@@ -342,7 +297,7 @@
                     <strong>Father's Name:</strong>
                 </td>
                 <td colspan="2">
-                    Hasmukhbhai iswarbhai makwana
+                    {{ context.father_name }}
                 </td>
             </tr>
             <tr>
@@ -358,10 +313,10 @@
                     <strong>Village:</strong>
                 </td>
                 <td>
-                    at-hindoliya,ta-fatepura,di-dahod,pin:389172
+                    {{ context.address }}
                 </td>
                 <td>
-                    <strong>Age:</strong> 25 years
+                    <strong>Age:</strong> {{ context.age }} years
                 </td>
             </tr>
             <tr>
@@ -377,7 +332,7 @@
                     <strong>Date:</strong>
                 </td>
                 <td colspan="2">
-                    31-12-2021
+                    {{ context.date }}
                 </td>
             </tr>
             <tr>
@@ -393,7 +348,7 @@
                     <strong>Time:</strong>
                 </td>
                 <td colspan="2">
-                    3:40 AM
+                    {{ context.time }}
                 </td>
             </tr>
             <tr>
@@ -409,7 +364,7 @@
                     <strong>Gender:</strong>
                 </td>
                 <td colspan="2">
-                    Male
+                    {{ context.gender }}
                 </td>
             </tr>
             <tr>
@@ -425,7 +380,7 @@
                     <strong>Weight:</strong>
                 </td>
                 <td colspan="2">
-                    2.6kg
+                    {{ context.weight }}
                 </td>
             </tr>
             <tr>
@@ -441,7 +396,7 @@
                     <strong>Child Status:</strong>
                 </td>
                 <td colspan="2">
-                    Present
+                    {{ context.child_status }}
                 </td>
             </tr>
             <tr>
@@ -457,7 +412,7 @@
                     <strong>child count:</strong>
                 </td>
                 <td colspan="2">
-                    0/1
+                   {{ context.child_count }}
                 </td>
             </tr>
             <tr>
@@ -473,7 +428,7 @@
                     <strong>Episiotomy By:</strong>
                 </td>
                 <td colspan="2">
-
+                    Dr.B.K.Patel <b><i>(Fix Name)</i></b>
                 </td>
             </tr>
             <tr>

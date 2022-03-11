@@ -257,51 +257,7 @@
 <body>
     <div id="obygyn">
 
-        <div id="obygyn-header">
-            <table width="100%" id="headertbl">
-                <tr>
-                    <td class="colum1">
-                        <div class="hospitalName">
-                            <table width="100%">
-                                <tr>
-                                    <td class="plus">+
-                                    </td>
-                                    <td>SHRADDHA HOSPITAL
-                                    </td>
-                                    <td class="plus">+
-                                    </td>
-                                </tr>
-                            </table>
-
-                        </div>
-                        <h3>Sonography,Laparoscopy & Maternity Home,</h3>
-                        <h5>College Road,Santrampur,</h5>
-                        <h5>Di:Mahisagar,PIN:389260.</h5>
-                    </td>
-                    <td style="width: 100px; text-align: center;">
-                        <img src="logo.png" width="80" />
-                    </td>
-                    <td class="colum3">
-                        <div class="call"><label>Mo:</label> +917621060776</div>
-                        <div class="call"><label>Phone:</label> (02675) 299323</div>
-                        <table width="100%" class="doctorname">
-                            <tr>
-                                <td><img src="img1.png" width="30" />
-                                </td>
-                                <td>Dr.B.K.Patel
-                                </td>
-                                <td><img src="img1.png" width="30" />
-                                </td>
-                            </tr>
-                        </table>
-                        <div class="designation">
-                            (M.B.B.S,D.G.O)
-                        </div>
-                        <div class="speciality">Obstetrician & Gynecologists</div>
-                    </td>
-                </tr>
-            </table>
-        </div>
+        {{template_header | safe }}
         <div class="obgyn-title">-: DISCHARGE CARD :-</div>
 
         <table width="100%" id="reporttable" style="font-size: 14px;font-weight: bold;color: #343434;">
@@ -315,13 +271,13 @@
                     Addmission Date:
                 </td>
                 <td>
-                    22-12-2021
+                    {{ context.admission_date }}
                 </td>
                 <td style="width: 100px;">
                     Dishcharge Date:
                 </td>
                 <td style="width: 100px;">
-                    22-12-2021
+                    {{ context.discharge_date }}
                 </td>
             </tr>
             <tr>
@@ -329,7 +285,7 @@
                     Name:-
                 </td>
                 <td colspan="2">
-                    JAMNABEN RAMESH VANZARA
+                    {{ context.name }}
                 </td>
             </tr>
             <tr>
@@ -337,7 +293,7 @@
                     Address:-
                 </td>
                 <td colspan="2">
-                    SUKHASAR,TA-FATEPURA,DI-DAHOD
+                    {{ context.address }}
                 </td>
             </tr>
             <tr>
@@ -345,7 +301,7 @@
                     Complain of:-
                 </td>
                 <td colspan="2">
-                    bleeding P/V
+                    {{ context.complain_of }}
                 </td>
             </tr>
             <tr>
@@ -353,7 +309,7 @@
                     Diagnosis:-
                 </td>
                 <td colspan="2">
-                    DUS
+                    {{ context.diagnosis }}
                 </td>
             </tr>
             <tr>
@@ -361,7 +317,7 @@
                     Name of procedure:-
                 </td>
                 <td colspan="2">
-                    LEPROSCOPICK
+                    {{ context.name_of_operation }}
                 </td>
             </tr>
             <tr>
@@ -369,7 +325,7 @@
                     Time od Date of OT:-
                 </td>
                 <td colspan="2">
-                    3:15PM ON 22-12-2021
+                    {{ context.ot_time_date }}
                 </td>
             </tr>
             <tr>
@@ -377,7 +333,7 @@
                     Treatment Given:-
                 </td>
                 <td colspan="2">
-                    Antibiotic,analgesic,IV fluid
+                    {{ context.treatment_given }}
                 </td>
             </tr>
             <tr>
@@ -385,7 +341,7 @@
                     Advice:-
                 </td>
                 <td colspan="2">
-                    -
+                    {{ context.advice }}
                 </td>
             </tr>
             <tr>
@@ -393,7 +349,7 @@
                     Remark:-
                 </td>
                 <td colspan="2">
-
+                    {{ context.remark }}
                 </td>
             </tr>
         </table>

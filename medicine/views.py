@@ -114,7 +114,6 @@ class MedicineTypeAPI(APIView):
     def delete(self, request):
         data = {}
         del_id = json.loads(request.body.decode('utf-8'))
-        print(del_id)
         if "id" not in del_id:
             data["success"] = False
             data["msg"] = "Record ID not provided"
