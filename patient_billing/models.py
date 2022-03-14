@@ -17,6 +17,7 @@ class PatientBillingModel(models.Model):
     admission_date = models.DateTimeField(null=True)
     admission_time = models.CharField(max_length=10, null=True)
     ot_date = models.DateTimeField(null=True)
+    ot_time = models.CharField(max_length=10, null=True)
     discharge_date = models.DateTimeField(null=True)
     discharge_time = models.CharField(max_length=10, null=True)
     diagnosis = models.ForeignKey(DiagnosisModel, on_delete=models.DO_NOTHING)
