@@ -13,6 +13,7 @@ class PatientHistolapModel(models.Model):
     regd_no = models.CharField(max_length=100, default="")
 
     admission_date = models.DateField(null=True)
+    admission_time = models.CharField(max_length=10, null=True)
     procedure_name = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="procedure_name")
     right_tube = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="right_tube")
     left_tube = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="left_tube")
@@ -21,6 +22,7 @@ class PatientHistolapModel(models.Model):
     endo_cavity = models.CharField(max_length=100, null=True)
     cervical_canal = models.CharField(max_length=100, null=True)
     discharge_date = models.DateField(null=True)
+    discharge_time = models.CharField(max_length=10, null=True)
     remark = models.TextField(null=True)
 
     created_by = models.IntegerField(default=1, unique=False)

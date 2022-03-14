@@ -18,6 +18,7 @@ class PatientMtpModel(models.Model):
     mtp_complication = models.CharField(max_length=500, null=True)
     termination_date = models.DateField(null=True)
     discharge_date = models.DateField(null=True)
+    discharge_time = models.CharField(max_length=10, null=True)
     remark = models.TextField(null=True)
 
     created_by = models.IntegerField(default=1, unique=False)

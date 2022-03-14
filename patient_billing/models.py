@@ -15,8 +15,10 @@ class PatientBillingModel(models.Model):
 
     invoice_no = models.CharField(max_length=25, null=True)
     admission_date = models.DateTimeField(null=True)
+    admission_time = models.CharField(max_length=10, null=True)
     ot_date = models.DateTimeField(null=True)
     discharge_date = models.DateTimeField(null=True)
+    discharge_time = models.CharField(max_length=10, null=True)
     diagnosis = models.ForeignKey(DiagnosisModel, on_delete=models.DO_NOTHING)
     procedure_name = models.CharField(max_length=100, null=True, default="")
     no_of_visit = models.IntegerField(default=0)
