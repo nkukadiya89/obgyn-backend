@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from manage_fields.models import ManageFieldsModel
+from manage_fields.serializers import ManageFieldsSerializers
 from patient.models import PatientModel
 from .models import PatientUSGFormModel, USGFormChildModel
 
@@ -21,13 +21,12 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
             ret["patient_opd_id"] = ret["patient_opd"]
             del ret["patient_opd"]
 
-        if "indication" in ret:
-            indication_list = []
-            for each_indication in ret["indication"]:
-                indication = ManageFieldsModel.objects.get(mf_id=each_indication).field_value
-                indication_list.append(indication)
+        for fld_nm in ["indication", "result_of_sonography", "any_indication_mtp"]:
+            fld_name = fld_nm + "_name"
+            search_instance = "instance" + "." + fld_nm
+            if fld_nm in ret:
+                ret[fld_name] = ManageFieldsSerializers(eval(search_instance)).data["field_value"]
 
-            ret["indication_name"] = indication_list
 
         usg_child_list = USGFormChildModel.objects.filter(patient_usgform_id=instance.patient_usgform_id)
         usg_child_lst = []
