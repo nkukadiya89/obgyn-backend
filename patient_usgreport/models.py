@@ -39,7 +39,7 @@ class PatientUSGReportModel(models.Model):
     avg_day = models.IntegerField(default=0)
     avg_edd = models.IntegerField(default=0)
     possible_lmp = models.CharField(max_length=100, default="")
-    placental_location = models.CharField(max_length=100, default="")
+    placental_location = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="placental_location")
     amount_of_liquor = models.CharField(max_length=100, default="")
     anomalies = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="anomalies")
     remark = models.TextField(null=True)
