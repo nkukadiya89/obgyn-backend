@@ -18,7 +18,7 @@ class PatientUSGFormModel(models.Model):
     lmp_date = models.DateField(null=True)
     diagnosis = models.ForeignKey(DiagnosisModel, on_delete=models.DO_NOTHING)
     indication = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="puf_indication")
-    usg_image_no = models.IntegerField(default=0, null=True)
+    usg_image_no = models.CharField(max_length=25, null=True)
     result_of_sonography = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="result_of_sonography")
     serial_no_month = models.IntegerField(default=0)
     serial_no_year = models.IntegerField(default=0)
