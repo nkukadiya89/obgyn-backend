@@ -13,9 +13,9 @@ class PatientMtpModel(models.Model):
     regd_no = models.CharField(max_length=100, default="")
 
     second_rmp = models.CharField(max_length=25, null=True)
-    admission_date = models.DateTimeField(null=True)
+    admission_date = models.DateField(null=True)
     admission_time = models.CharField(max_length=10, null=True)
-    procedure_date = models.DateTimeField(null=True)
+    procedure_date = models.DateField(null=True)
     procedure_time = models.CharField(max_length=10, null=True)
     reason_for_mtp = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="reason_for_mtp")
     contraception = models.CharField(max_length=100, null=True)
