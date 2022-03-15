@@ -14,6 +14,8 @@ class PatientHistolapModel(models.Model):
 
     admission_date = models.DateField(null=True)
     admission_time = models.CharField(max_length=10, null=True)
+    procedure_date = models.DateTimeField(null=True)
+    procedure_time = models.CharField(max_length=10, null=True)
     procedure_name = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="procedure_name")
     right_tube = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="right_tube")
     left_tube = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="left_tube")
