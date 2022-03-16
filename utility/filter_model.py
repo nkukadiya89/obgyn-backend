@@ -201,10 +201,17 @@ class ModelFilterDIAGNOSIS:
     def search(self, model, query_string):
         search = query_string["search"]
         if search:
-            model = model.filter(
-                Q(diagnosis_name__icontains=search) |
-                Q(medicine__medicine__icontains=search)
-            )
+            if search.isnumeric():
+                model = model.filter(
+                    Q(ut_weeks=search) |
+                    Q(ut_days=search)
+                )
+            else:
+                model = model.filter(
+                    Q(diagnosis_name__icontains=search) |
+                    Q(diagnosis_name__icontains=search) |
+                    Q(medicine__medicine__icontains=search)
+                )
         return model
 
 class ModelFilterMEDICINE:
