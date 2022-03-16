@@ -37,4 +37,4 @@ class DiagnosisSerializers(serializers.ModelSerializer):
     # medicine = MedicineSerializers(many=True)
     class Meta:
         model = DiagnosisModel
-        fields = ['diagnosis_id', 'diagnosis_name', 'medicine', 'created_by', 'deleted']
+        fields = ['diagnosis_id', 'diagnosis_name', 'medicine', 'ut_weeks', 'ut_days', 'created_by', 'deleted']

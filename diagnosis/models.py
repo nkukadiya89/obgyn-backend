@@ -9,6 +9,8 @@ class DiagnosisModel(models.Model):
     diagnosis_id = models.AutoField(primary_key=True)
     diagnosis_name = models.CharField(max_length=150, default="")
     medicine = models.ManyToManyField(MedicineModel)
+    ut_weeks = models.IntegerField(null=True)
+    ut_days = models.IntegerField(null=True)
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
