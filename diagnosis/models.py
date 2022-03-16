@@ -7,7 +7,7 @@ from medicine.models import MedicineModel
 # Create your models here.
 class DiagnosisModel(models.Model):
     diagnosis_id = models.AutoField(primary_key=True)
-    diagnosis_name = models.CharField(max_length=150, default="")
+    diagnosis_name = models.CharField(max_length=150, default="", null=True)
     medicine = models.ManyToManyField(MedicineModel)
     ut_weeks = models.IntegerField(null=True)
     ut_days = models.IntegerField(null=True)
