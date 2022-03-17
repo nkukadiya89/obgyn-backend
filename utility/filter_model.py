@@ -493,8 +493,7 @@ class ModelFilterPATIENTPRESCRIPTION:
         if search:
             model = model.filter(
                 Q(regd_no__iexact=search) |
-                Q(diagnosis__diagnosis_name=search) |
-                Q(medicine__medicine__icontains=search)
+                Q(diagnosis__diagnosis_name=search)
             )
         return model
 
