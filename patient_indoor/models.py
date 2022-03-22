@@ -5,6 +5,7 @@ from advice.models import AdviceModel
 from diagnosis.models import DiagnosisModel
 from patient.models import PatientModel
 from patient_opd.models import PatientOpdModel
+from manage_fields.models import ManageFieldsModel
 
 
 # Create your models here.
@@ -30,11 +31,11 @@ class PatientIndoorModel(models.Model):
     pa_gyn = models.CharField(max_length=25, default="", null=True)
     pa_obs = models.CharField(max_length=25, default="", null=True)
     ut_weeks = models.IntegerField(default=0, null=True)
-    eb_pp = models.CharField(max_length=25, default="", null=True)
+    eb_pp = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="eb_pp_indr")
     fhs = models.CharField(max_length=25, default="", null=True)
     ut = models.CharField(max_length=25, default="", null=True)
-    ps = models.CharField(max_length=25, default="", null=True)
-    pv = models.CharField(max_length=25, default="", null=True)
+    ps = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="ps_indr")
+    pv = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="pv_indr")
     ut_contra = models.CharField(max_length=25, default="", null=True)
     adm_date = models.DateField(null=True)
     adm_time = models.CharField(max_length=15, default="", null=True)
@@ -42,7 +43,7 @@ class PatientIndoorModel(models.Model):
     oper_time = models.CharField(max_length=15, default="", null=True)
     disch_date = models.DateField(null=True)
     disch_time = models.CharField(max_length=15, default="", null=True)
-    operation = models.CharField(max_length=50, default="", null=True)
+    operation = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="operation_indr")
     diagnosis = models.ForeignKey(DiagnosisModel, on_delete=models.DO_NOTHING, null=True)
     field_order = models.CharField(max_length=25, default="", null=True)
 
