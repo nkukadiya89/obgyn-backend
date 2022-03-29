@@ -11,6 +11,7 @@ class DiagnosisModel(models.Model):
     medicine = models.ManyToManyField(MedicineModel)
     ut_weeks = models.IntegerField(null=True)
     ut_days = models.IntegerField(null=True)
+    advice = models.CharField(max_length=100, null=True)
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
