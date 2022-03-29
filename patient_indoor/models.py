@@ -63,8 +63,6 @@ class IndoorAdviceModel(models.Model):
     patient_indoor = models.ForeignKey(PatientIndoorModel, on_delete=models.CASCADE)
 
     advice = models.ForeignKey(AdviceModel, on_delete=models.DO_NOTHING)
-    advice_date = models.DateField(null=True)
-    advice_time = models.CharField(max_length=15, null=True)
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
