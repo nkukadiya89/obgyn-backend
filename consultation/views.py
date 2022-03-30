@@ -85,7 +85,7 @@ class ConsultationAPI(APIView):
             if serializer.is_valid():
                 serializer.save()
                 patient_opd = PatientOpdModel.objects.filter(pk=request.data["patient_opd_id"]).first()
-                patient_opd.status = True
+                patient_opd.status = "consultation"
                 patient_opd.save()
                 data["success"] = True
                 data["msg"] = "Data updated successfully"
