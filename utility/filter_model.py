@@ -53,6 +53,8 @@ class ModelFilterUSER:
                 model = model.filter(default_language_id=fld_value)
             if fld_name == "designation":
                 model = model.filter(designation__icontains=fld_value)
+            if fld_name == "hospital":
+                model = model.filter(hospital_id=fld_value)
         return model
 
     def search(self, model, query_string):
