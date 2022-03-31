@@ -53,7 +53,7 @@ class ModelFilterUSER:
                 model = model.filter(default_language_id=fld_value)
             if fld_name == "designation":
                 model = model.filter(designation__icontains=fld_value)
-            if fld_name == "hospital":
+            if fld_name == "hospital_id":
                 model = model.filter(hospital_id=fld_value)
         return model
 
