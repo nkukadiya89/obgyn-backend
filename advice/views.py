@@ -11,7 +11,7 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 from utility.search_filter import filtering_query
 from .models import AdviceModel, AdviceGroupModel
-from .serializers import AdviceSerializers,AdviceGroupSerializers
+from .serializers import AdviceSerializers, AdviceGroupSerializers
 
 
 class AdviceAPI(APIView):
@@ -19,7 +19,6 @@ class AdviceAPI(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     search_fields = ["advice_name"]
-
 
     # ================= Update all Fields of a record =========================
     def put(self, request, id):
@@ -75,8 +74,21 @@ class AdviceAPI(APIView):
             advice = AdviceModel()
             serializer = AdviceSerializers(advice, data=request.data)
 
-            if serializer.is_valid():
+            if "advice_group" in request.data:
+                if int(request.data.get('advice_group')) > 0:
+                    request.data.pop("advice_group_name")
+
+            if serializer.is_valid() and False:
                 serializer.save()
+                if "advice_group_name" in request.data:
+                    advice_group_name = str(request.data.get('advice_group_name')).strip()
+                    advice_group = AdviceGroupModel.objects.filter(advice_group=advice_group_name).first()
+                    if advice_group == None:
+                        advice_group = AdviceGroupModel.objects.create(advice_group=advice_group_name,
+                                                                       created_by=request.data.get('created_by'),
+                                                                       deleted=0)
+                    advice_group.advice.add(advice.advice_id)
+
                 data["success"] = True
                 data["msg"] = "Data updated successfully"
                 data["data"] = serializer.data
@@ -119,13 +131,14 @@ def patch(request, id):
         data["data"] = []
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticatedOrReadOnly])
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
-    data={}
+    data = {}
     try:
         if id:
             advice = AdviceModel.objects.filter(pk=id, deleted=0)
@@ -149,13 +162,11 @@ def get(request, id=None):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-
 class AdviceGroupAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     search_fields = ["advice_group"]
-
 
     # ================= Update all Fields of a record =========================
     def put(self, request, id):
@@ -255,13 +266,14 @@ def patch_group(request, id):
         data["data"] = []
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticatedOrReadOnly])
 # ================= Retrieve Single or Multiple records=========================
 def get_group(request, id=None):
     query_string = request.query_params
-    data={}
+    data = {}
     try:
         if id:
             advice_group = AdviceGroupModel.objects.filter(pk=id, deleted=0)
