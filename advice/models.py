@@ -27,7 +27,7 @@ class AdviceModel(models.Model):
 class AdviceGroupModel(models.Model):
     advice_group_id = models.AutoField(primary_key=True)
     advice_group = models.CharField(max_length=50, default="")
-    advice = models.ManyToManyField(AdviceModel)
+    advice = models.ManyToManyField(AdviceModel, blank=True)
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
