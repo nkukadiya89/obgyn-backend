@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Permission
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -10,11 +11,20 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         attrs['email'] = attrs.get('email').lower()
         data = {}
         token = super(CustomTokenObtainPairSerializer, self).validate(attrs)
+        group_permission = Permission.objects.filter(group__user=self.user)
+        permission_list = {}
+        for permission in group_permission:
+            if permission.content_type.app_label in permission_list:
+                permission_name = permission_list[permission.content_type.app_label]
+                permission_list[permission.content_type.app_label] = ",".join(
+                    [permission_name, permission.name.split(" ")[1]])
+            else:
+                permission_list[permission.content_type.app_label] = permission.name.split(" ")[1]
         token.update({"userData": {'userName': self.user.username, 'userId': self.user.id,
                                    "defaultLanguageId": LanguageModel.objects.get(
                                        pk=self.user.default_language_id).language_id,
                                    "defaultLanguage": LanguageModel.objects.get(pk=self.user.default_language_id).code,
-                                   "user_type": self.user.user_type}})
+                                   "user_type": self.user.user_type, "permission": permission_list}})
         token.update()
         data["success"] = True
         data["msg"] = "Login Successful"

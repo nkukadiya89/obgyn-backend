@@ -9,15 +9,14 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
+from utility.search_filter import filtering_query
 from .models import SurgicalItemModel, SurgicalItemGroupModel
 from .serializers import SurgicalItemSerializers, SurgicalItemGroupSerializers
-from utility.search_filter import filtering_query
 
 
 class SurgicalItemAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
     permission_classes = [IsAuthenticatedOrReadOnly]
-
 
     # ================= Update all Fields of a record =========================
     def put(self, request, id):
@@ -75,6 +74,19 @@ class SurgicalItemAPI(APIView):
 
             if serializer.is_valid():
                 serializer.save()
+
+                if "surgical_item_group_name" in request.data:
+                    surgical_item_group_name = str(request.data.get('surgical_item_group_name')).strip()
+                    surgical_item_group = SurgicalItemGroupModel.objects.filter(
+                        drug_group_name=surgical_item_group_name).first()
+                    
+                    if surgical_item_group == None:
+                        surgical_item_group = SurgicalItemGroupModel.objects.create(
+                            drug_group_name=surgical_item_group_name,
+                            created_by=request.data.get('created_by'),
+                            deleted=0)
+                    surgical_item_group.surgical_item.add(surgical_item.surgical_item_id)
+
                 data["success"] = True
                 data["msg"] = "Data updated successfully"
                 data["data"] = serializer.data
@@ -253,6 +265,7 @@ def get(request, id=None):
         data["data"] = serilizer.data
         return Response(data=data, status=status.HTTP_200_OK)
 
+
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
@@ -268,7 +281,8 @@ def get_group(request, id=None):
             surgical_item_group = SurgicalItemGroupModel.objects.filter(deleted=0)
 
             data["total_record"] = len(surgical_item_group)
-            surgical_item_group, data = filtering_query(surgical_item_group, query_string, "si_group_id", "SURGICALITEMGROUP")
+            surgical_item_group, data = filtering_query(surgical_item_group, query_string, "si_group_id",
+                                                        "SURGICALITEMGROUP")
 
     except SurgicalItemGroupModel.DoesNotExist:
         data["success"] = False
