@@ -28,7 +28,7 @@ class SurgicalItemModel(models.Model):
 class SurgicalItemGroupModel(models.Model):
     si_group_id = models.AutoField(primary_key=True)
     drug_group_name = models.CharField(max_length=150, default="")
-    surgical_item = models.ManyToManyField(SurgicalItemModel)
+    surgical_item = models.ManyToManyField(SurgicalItemModel, blank=True)
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
