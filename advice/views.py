@@ -76,7 +76,8 @@ class AdviceAPI(APIView):
 
             if "advice_group" in request.data:
                 if int(request.data.get('advice_group')) > 0:
-                    request.data.pop("advice_group_name")
+                    if "advice_group_name" in request.data:
+                        request.data.pop("advice_group_name")
 
             if serializer.is_valid() and False:
                 serializer.save()

@@ -79,7 +79,7 @@ class SurgicalItemAPI(APIView):
                     surgical_item_group_name = str(request.data.get('surgical_item_group_name')).strip()
                     surgical_item_group = SurgicalItemGroupModel.objects.filter(
                         drug_group_name=surgical_item_group_name).first()
-                    
+
                     if surgical_item_group == None:
                         surgical_item_group = SurgicalItemGroupModel.objects.create(
                             drug_group_name=surgical_item_group_name,
