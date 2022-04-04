@@ -78,6 +78,7 @@ class AdviceAPI(APIView):
                 if int(request.data.get('advice_group')) > 0:
                     if "advice_group_name" in request.data:
                         request.data.pop("advice_group_name")
+                advice_group = AdviceGroupModel.objects.filter(pk=request.data.get('advice_group')).first()
 
             if serializer.is_valid():
                 serializer.save()
@@ -88,7 +89,8 @@ class AdviceAPI(APIView):
                         advice_group = AdviceGroupModel.objects.create(advice_group=advice_group_name,
                                                                        created_by=request.data.get('created_by'),
                                                                        deleted=0)
-                    advice_group.advice.add(advice.advice_id)
+
+                advice_group.advice.add(advice.advice_id)
 
                 data["success"] = True
                 data["msg"] = "Data updated successfully"
