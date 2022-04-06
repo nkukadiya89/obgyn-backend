@@ -2,6 +2,7 @@ from django.db.models import Q
 from rest_framework import serializers
 from language.serializers import LanguageSerializers
 from state.serializers import StateSerializers
+from user.serializers import UserSerializers
 
 from .models import TemplateHeaderModel
 
@@ -12,6 +13,9 @@ class TemplateHeaderSerializers(serializers.ModelSerializer):
 
         if "language" in ret:
             ret["language_name"] = LanguageSerializers(instance.language).data["code"]
+
+        if "hospital" in ret:
+            ret["hospital_name"] = UserSerializers(instance.hospital).data["hospital_name"]
         return ret
 
     def validate(self, data):

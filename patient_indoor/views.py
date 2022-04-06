@@ -13,6 +13,7 @@ from patient_opd.models import PatientOpdModel
 from utility.search_filter import filtering_query
 from .models import PatientIndoorModel, IndoorAdviceModel
 from .serializers import PatientIndoorSerializers, IndoorAdviceSerializers
+from .utils_views import indoor_advice_insert
 
 
 class PatientIndoorAPI(APIView):
@@ -82,6 +83,9 @@ class PatientIndoorAPI(APIView):
 
             if serializer.is_valid():
                 serializer.save()
+
+                indoor_advice_insert(request.data.get('advice'), serializer.data["patient_indoor_id"],
+                                     request.data.get('created_by'))
                 patient_opd = PatientOpdModel.objects.filter(pk=request.data["patient_opd_id"]).first()
                 patient_opd.status = "indoor"
                 patient_opd.save()
@@ -167,8 +171,7 @@ def get(request, id=None):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-
-#================ INDOOR ADVICE ===============================
+# ================ INDOOR ADVICE ===============================
 class IndoorAdviceAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -300,4 +303,3 @@ def indoor_advice_get(request, id=None):
         data["msg"] = "OK"
         data["data"] = serilizer.data
         return Response(data=data, status=status.HTTP_200_OK)
-
