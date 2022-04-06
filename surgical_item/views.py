@@ -75,8 +75,8 @@ class SurgicalItemAPI(APIView):
             if serializer.is_valid():
                 serializer.save()
 
-                if "surgical_item_group_name" in request.data:
-                    surgical_item_group_name = str(request.data.get('surgical_item_group_name')).strip()
+                if "drug_group_name" in request.data:
+                    surgical_item_group_name = str(request.data.get('drug_group_name')).strip()
                     surgical_item_group = SurgicalItemGroupModel.objects.filter(
                         drug_group_name=surgical_item_group_name).first()
 
