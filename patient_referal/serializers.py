@@ -15,12 +15,13 @@ class PatientReferalSerializers(serializers.ModelSerializer):
             del ret["patient_opd"]
 
         if "indication" in ret:
-            indication_list = []
+            indication_list = {}
             for each_indication in ret["indication"]:
-                indication = ManageFieldsModel.objects.get(mf_id=each_indication).field_value
-                indication_list.append(indication)
+                indication = ManageFieldsModel.objects.get(mf_id=each_indication)
+                indication_list[indication.mf_id] = indication.field_value
 
             ret["indication_name"] = indication_list
+            # ret.pop("indication")
 
         return ret
 
