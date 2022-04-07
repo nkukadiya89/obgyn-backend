@@ -11,11 +11,13 @@ class DiagnosisSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(DiagnosisSerializers, self).to_representation(instance)
 
-        medicine_name_list=[]
+        medicine_name_list={}
         for medicine1 in ret["medicine"]:
-            medicine_name = MedicineModel.objects.get(pk=medicine1).medicine
-            medicine_name_list.append(medicine_name)
+            medicine_name = MedicineModel.objects.get(pk=medicine1)
+            medicine_name_list[medicine_name.medicine_id]= medicine_name.medicine
+
             ret['medicine_name'] = medicine_name_list
+            # ret.pop("medicine")
 
         return ret
 

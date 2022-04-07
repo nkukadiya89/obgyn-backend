@@ -26,6 +26,7 @@ class AdviceSerializers(serializers.ModelSerializer):
             raise serializers.ValidationError("Advice already exist.")
 
         return data
+
     advice_id = serializers.IntegerField(read_only=True)
 
     class Meta:
@@ -37,11 +38,14 @@ class AdviceGroupSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(AdviceGroupSerializers, self).to_representation(instance)
 
-        advice_name_list = []
-        for advice1 in ret["advice"]:
-            advice = AdviceModel.objects.get(pk=advice1).advice
-            advice_name_list.append(advice)
+        advice_name_list = {}
+        if "advice" in ret:
+            for advice1 in ret["advice"]:
+                advice = AdviceModel.objects.get(pk=advice1)
+                advice_name_list[advice.advice_id] = advice.advice
+
             ret['advice_name'] = advice_name_list
+            # ret.pop("advice")
 
         return ret
 
@@ -59,6 +63,7 @@ class AdviceGroupSerializers(serializers.ModelSerializer):
             raise serializers.ValidationError("Advice Group already exist.")
 
         return data
+
     advice_group_id = serializers.IntegerField(read_only=True)
 
     class Meta:

@@ -32,11 +32,13 @@ class SurgicalItemGroupSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(SurgicalItemGroupSerializers, self).to_representation(instance)
 
-        surgical_item_name_list = []
+        surgical_item_name_list = {}
         for surgical_item1 in ret["surgical_item"]:
-            surgical_item = SurgicalItemModel.objects.get(pk=surgical_item1).drug_name
-            surgical_item_name_list.append(surgical_item)
-            ret['surgical_item_name'] = surgical_item_name_list
+            surgical_item = SurgicalItemModel.objects.get(pk=surgical_item1)
+            surgical_item_name_list[surgical_item.surgical_item_id] = surgical_item.drug_name
+
+        ret['surgical_item_name'] = surgical_item_name_list
+        # ret.pop("surgical_item")
 
         return ret
 
