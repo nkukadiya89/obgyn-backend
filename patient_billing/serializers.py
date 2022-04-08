@@ -11,6 +11,9 @@ class PatientBillingSerializers(serializers.ModelSerializer):
         if "patient_opd" in ret:
             ret["patient_opd_id"] = ret["patient_opd"]
             del ret["patient_opd"]
+
+        # if "ot_date" in ret:
+        #     ret["ot_date"] = datetime.strftime(datetime.strptime(str(ret["ot_date"]),"%Y-%m-%d"),"%d-%m-%Y")
         return ret
 
     def validate(self, data):
@@ -33,9 +36,10 @@ class PatientBillingSerializers(serializers.ModelSerializer):
 
     patient_billing_id = serializers.IntegerField(read_only=True)
     total_rs = serializers.IntegerField(read_only=True)
-    admission_date = serializers.DateField(format="%d-%m-%Y")
-    ot_date = serializers.DateField(format="%d-%m-%Y")
-    discharge_date = serializers.DateField(format="%d-%m-%Y")
+
+    # admission_date = serializers.DateField(format="%d-%m-%Y")
+    # ot_date = serializers.DateField(format="%d-%m-%Y")
+    # discharge_date = serializers.DateField(format="%d-%m-%Y")
 
     class Meta:
         model = PatientBillingModel
