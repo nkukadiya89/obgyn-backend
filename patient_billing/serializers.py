@@ -12,8 +12,6 @@ class PatientBillingSerializers(serializers.ModelSerializer):
             ret["patient_opd_id"] = ret["patient_opd"]
             del ret["patient_opd"]
 
-        # if "ot_date" in ret:
-        #     ret["ot_date"] = datetime.strftime(datetime.strptime(str(ret["ot_date"]),"%Y-%m-%d"),"%d-%m-%Y")
         return ret
 
     def validate(self, data):
@@ -25,12 +23,14 @@ class PatientBillingSerializers(serializers.ModelSerializer):
             data["patient_id"] = patient[0].patient_id
         else:
             raise serializers.ValidationError("Patient is missing")
+        data["consulting_fees"] = float(data["rs_per_visit"]) * int(data["no_of_visit"])
+        data["usg_rs"] = float(data["rs_per_usg"]) * int(data["no_of_usg"])
+        data["room_rs"] = float(data["rs_per_room"]) * int(data["room_no_of_day"])
+        data["nursing_rs"] = float(data["nursing_rs"]) * int(data["nursing_no_of_days"])
 
-        data["total_rs"] = float(data["rs_per_visit"]) + float(data["consulting_fees"]) + float(
-            data["rs_per_usg"]) + float(data["usg_rs"]) + float(data["rs_per_room"]) + float(
-            data["room_rs"]) + float(data["operative_charge_rs"]) + float(data["medicine_rs"]) + float(
-            data["rs_per_day"]) + float(data["nursing_rs"]) + float(data["other_charge"]) + float(
-            data["other_rs"])
+        data["total_rs"] = float(data["consulting_fees"]) + float(data["usg_rs"]) + \
+                           float(data["room_rs"]) + float(data["operative_charge_rs"]) + float(
+            data["medicine_rs"]) + float(data["nursing_rs"]) + float(data["other_rs"])
 
         return data
 
