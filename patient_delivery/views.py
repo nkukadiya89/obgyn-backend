@@ -73,13 +73,6 @@ class PatientDeliveryAPI(APIView):
         data = {}
         if request.method == "POST":
             patient_delivery = PatientDeliveryModel()
-            if "patient_opd_id" not in request.data:
-                data["success"] = False
-                data["msg"] = "OPD is required"
-                data["data"] = request.data
-                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                request.data["patient_opd"] = request.data["patient_opd_id"]
             serializer = PatientDeliverySerializers(patient_delivery, data=request.data)
 
             if serializer.is_valid():
