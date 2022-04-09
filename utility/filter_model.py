@@ -1,8 +1,6 @@
 import re
-import datetime
 
 from django.db.models import Q
-
 
 
 def camel_to_snake(variable_name):
@@ -66,8 +64,8 @@ class ModelFilterUSER:
                 Q(middle_name__icontains=search) |
                 Q(user_type__icontains=search) |
                 Q(hospital_name__icontains=search) |
-                Q(area__icontains=search)|
-                Q(phone__icontains=search)|
+                Q(area__icontains=search) |
+                Q(phone__icontains=search) |
                 Q(state__state_name__icontains=search) |
                 Q(city__city_name__icontains=search) |
                 Q(email__icontains=search) |
@@ -83,6 +81,7 @@ class ModelFilterUSER:
                 Q(hospital_id__hospital_name__icontains=search)
             )
         return model
+
 
 class ModelFilterCITY:
     def filter_fields(self, model, filter_fields):
@@ -108,6 +107,7 @@ class ModelFilterCITY:
             )
         return model
 
+
 class ModelFilterDISTRICT:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
@@ -129,6 +129,7 @@ class ModelFilterDISTRICT:
                 Q(state__state_name__icontains=search)
             )
         return model
+
 
 class ModelFilterTALUKA:
     def filter_fields(self, model, filter_fields):
@@ -153,6 +154,7 @@ class ModelFilterTALUKA:
             )
         return model
 
+
 class ModelFilterSTATE:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
@@ -170,6 +172,7 @@ class ModelFilterSTATE:
             )
         return model
 
+
 class ModelFilterLANGUAGE:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
@@ -186,6 +189,7 @@ class ModelFilterLANGUAGE:
                 Q(language__icontains=search)
             )
         return model
+
 
 class ModelFilterDIAGNOSIS:
     def filter_fields(self, model, filter_fields):
@@ -216,6 +220,7 @@ class ModelFilterDIAGNOSIS:
                 )
         return model
 
+
 class ModelFilterMEDICINE:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
@@ -233,23 +238,39 @@ class ModelFilterMEDICINE:
                 model = model.filter(for_day=fld_value)
             if fld_name == "company":
                 model = model.filter(company=fld_value)
+            if fld_name == "diagnosis_id":
+                model = model.filter(diagnosismodel__diagnosis_id=fld_value)
+            if fld_name == "ut_weeks":
+                model = model.filter(diagnosismodel__ut_weeks=fld_value)
+            if fld_name == "ut_days":
+                model = model.filter(diagnosismodel__ut_days=fld_value)
 
         return model
 
     def search(self, model, query_string):
         search = query_string["search"]
+        print("akash")
         if search:
-            model = model.filter(
-                Q(medicine__icontains=search) |
-                Q(contain__icontains=search) |
-                Q(company__icontains=search) |
-                Q(morning_timing__timing__icontains=search) |
-                Q(noon_timing__timing__icontains=search) |
-                Q(evening_timing__timing__icontains=search) |
-                Q(bed_timing__timing__icontains=search) |
-                Q(medicine_type__medicine_type__icontains=search)
-            )
+            if search.isnumeric():
+                model = model.filter(
+                    Q(diagnosismodel__diagnosis_id=search) |
+                    Q(diagnosismodel__ut_weeks=search) |
+                    Q(diagnosismodel__ut_days=search)
+                )
+            else:
+                model = model.filter(
+                    Q(medicine__icontains=search) |
+                    Q(contain__icontains=search) |
+                    Q(company__icontains=search) |
+                    Q(morning_timing__timing__icontains=search) |
+                    Q(noon_timing__timing__icontains=search) |
+                    Q(evening_timing__timing__icontains=search) |
+                    Q(bed_timing__timing__icontains=search) |
+                    Q(medicine_type__medicine_type__icontains=search) |
+                    Q(diagnosismodel__diagnosis_name__icontains=search)
+                )
         return model
+
 
 class ModelFilterMEDICINETYPE:
     def filter_fields(self, model, filter_fields):
@@ -267,6 +288,7 @@ class ModelFilterMEDICINETYPE:
                 Q(medicine_type__icontains=search)
             )
         return model
+
 
 class ModelFilterSURGICALITEM:
     def filter_fields(self, model, filter_fields):
@@ -293,6 +315,7 @@ class ModelFilterSURGICALITEM:
             )
         return model
 
+
 class ModelFilterSURGICALITEMGROUP:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
@@ -312,6 +335,7 @@ class ModelFilterSURGICALITEMGROUP:
             )
         return model
 
+
 class ModelFilterFIELDMASTER:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
@@ -330,6 +354,7 @@ class ModelFilterFIELDMASTER:
                 Q(field_master_name__icontains=search)
             )
         return model
+
 
 class ModelFilterMANAGEFIELDS:
     def filter_fields(self, model, filter_fields):
@@ -356,6 +381,7 @@ class ModelFilterMANAGEFIELDS:
             )
         return model
 
+
 class ModelFilterADVICE:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
@@ -379,6 +405,7 @@ class ModelFilterADVICE:
             )
         return model
 
+
 class ModelFilterADVICEGROUP:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
@@ -398,6 +425,7 @@ class ModelFilterADVICEGROUP:
                 Q(advice__advice__icontains=search)
             )
         return model
+
 
 class ModelFilterTIMING:
     def filter_fields(self, model, filter_fields):
@@ -423,6 +451,7 @@ class ModelFilterTIMING:
                 Q(language__language__icontains=search)
             )
         return model
+
 
 class ModelFilterCONSULTATION:
     def filter_fields(self, model, filter_fields):
@@ -481,6 +510,7 @@ class ModelFilterCONSULTATION:
             )
         return model
 
+
 class ModelFilterPATIENTPRESCRIPTION:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
@@ -498,6 +528,7 @@ class ModelFilterPATIENTPRESCRIPTION:
                 Q(diagnosis__diagnosis_name=search)
             )
         return model
+
 
 class ModelFilterPATIENT:
     def filter_fields(self, model, filter_fields):
@@ -543,6 +574,7 @@ class ModelFilterPATIENT:
             )
         return model
 
+
 class ModelFilterPATIENTOPD:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
@@ -580,6 +612,7 @@ class ModelFilterPATIENTOPD:
             )
         return model
 
+
 class ModelFilterPATIENTREFERAL:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
@@ -607,6 +640,7 @@ class ModelFilterPATIENTREFERAL:
             )
         return model
 
+
 class ModelFilterPATIENTUSGFORM:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
@@ -633,6 +667,7 @@ class ModelFilterPATIENTUSGFORM:
                 Q(diagnosis__dianosis_name=search)
             )
         return model
+
 
 class ModelFilterUSGFORMCHILD:
     def filter_fields(self, model, filter_fields):
@@ -716,6 +751,7 @@ class ModelFilterPATIENTDISCHARGE:
             )
         return model
 
+
 class ModelFilterPATIENTUSGREPORT:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
@@ -749,6 +785,7 @@ class ModelFilterPATIENTUSGREPORT:
             )
         return model
 
+
 class ModelFilterPATIENTOVULATIONPROFILE:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
@@ -779,6 +816,7 @@ class ModelFilterPATIENTOVULATIONPROFILE:
                 Q(ovarian_blood_flow__icontains=search)
             )
         return model
+
 
 class ModelFilterPATIENTMTP:
     def filter_fields(self, model, filter_fields):
@@ -848,6 +886,7 @@ class ModelFilterPATIENTHISTOLAP:
             )
         return model
 
+
 class ModelFilterPATIENTBILLING:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
@@ -884,6 +923,7 @@ class ModelFilterPATIENTBILLING:
             )
         return model
 
+
 class ModelFilterPATIENTVOUCHER:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
@@ -911,6 +951,7 @@ class ModelFilterPATIENTVOUCHER:
             )
         return model
 
+
 class ModelFilterVOUCHERITEM:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
@@ -931,6 +972,7 @@ class ModelFilterVOUCHERITEM:
                 Q(surgical_item__drug_name_icontains=search)
             )
         return model
+
 
 class ModelFilterPATIENTINDOOR:
     def filter_fields(self, model, filter_fields):
@@ -970,6 +1012,7 @@ class ModelFilterPATIENTINDOOR:
                 Q(diagnosis__diagnosis_name__icontains=search)
             )
         return model
+
 
 class ModelFilterINDOORADVICE:
     def filter_fields(self, model, filter_fields):
