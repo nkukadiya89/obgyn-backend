@@ -1,7 +1,10 @@
 from django.db import models
+from django.db.models.query import Q
+from django.db.models.signals import post_save
 from django.utils.timezone import now
 
 from diagnosis.models import DiagnosisModel
+from financial_year.models import FinancialYearModel
 from patient.models import PatientModel
 from patient_opd.models import PatientOpdModel
 
@@ -50,3 +53,31 @@ class PatientBillingModel(models.Model):
 
     class Meta:
         db_table = "patient_billing"
+
+
+def billing_post_save(sender, instance, *args, **kwargs):
+    if kwargs["created"]:
+        fy = FinancialYearModel.objects.filter(start_date__lte=now(), end_date__gte=now()).values_list(
+            'financial_year').first()
+
+        billing = PatientBillingModel.objects.filter(~Q(pk=instance.patient_billing_id)).filter(deleted=0,
+                                                                                                invoice_no__icontains=
+                                                                                                fy[0]).last()
+
+        if billing:
+            inv_no = billing.invoice_no
+
+            if not inv_no or len(inv_no) == 0:
+                inv_no = "I/00001/" + fy[0]
+            else:
+                serial_no = inv_no.split("/")[1]
+                serial_no = int(serial_no) + 1
+                inv_no = "I/" + '{:05}'.format(serial_no) + "/" + fy[0]
+        else:
+            inv_no = "I/00001/" + fy[0]
+
+        instance.invoice_no = inv_no
+        instance.save()
+
+
+post_save.connect(billing_post_save, sender=PatientBillingModel)

@@ -12,7 +12,7 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from patient_opd.models import PatientOpdModel
 from utility.search_filter import filtering_query
 from .models import PatientDeliveryModel
-from .serializers import PatientDeliverySerializers
+from .serializers import PatientDeliverySerializers, change_payload
 
 
 class PatientDeliveryAPI(APIView):
@@ -99,13 +99,6 @@ def patch(request, id):
             patient_delivery = PatientDeliveryModel.objects.get(pk=id)
         else:
             patient_delivery = PatientDeliveryModel.objects.filter(deleted=0)
-        if "patient_opd_id" not in request.data:
-            data["success"] = False
-            data["msg"] = "OPD is required"
-            data["data"] = request.data
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            request.data["patient_opd"] = request.data["patient_opd_id"]
 
     except PatientDeliveryModel.DoesNotExist:
         data["success"] = False
@@ -114,6 +107,7 @@ def patch(request, id):
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == "POST":
+        change_payload(request)
         serializer = PatientDeliverySerializers(patient_delivery, request.data, partial=True)
 
         if serializer.is_valid():

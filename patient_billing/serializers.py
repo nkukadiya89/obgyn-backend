@@ -14,6 +14,10 @@ class PatientBillingSerializers(serializers.ModelSerializer):
 
         return ret
 
+    def generate_invoice_no(self):
+        invoice_no = "new No"
+        return invoice_no
+
     def validate(self, data):
 
         if "regd_no" in data:
@@ -32,6 +36,8 @@ class PatientBillingSerializers(serializers.ModelSerializer):
                            float(data["room_rs"]) + float(data["operative_charge_rs"]) + float(
             data["medicine_rs"]) + float(data["nursing_rs"]) + float(data["other_rs"])
 
+        if not self.partial:
+            data["invoice_no"] = self.generate_invoice_no()
         return data
 
     patient_billing_id = serializers.IntegerField(read_only=True)
@@ -44,3 +50,5 @@ class PatientBillingSerializers(serializers.ModelSerializer):
     class Meta:
         model = PatientBillingModel
         exclude = ('created_at', 'patient')
+
+
