@@ -90,7 +90,7 @@ class AdviceAPI(APIView):
                                                                        created_by=request.data.get('created_by'),
                                                                        deleted=0)
 
-                advice_group.advice.add(advice.advice_id)
+                    advice_group.advice.add(advice.advice_id)
 
                 data["success"] = True
                 data["msg"] = "Data updated successfully"

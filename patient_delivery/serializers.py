@@ -43,3 +43,9 @@ class PatientDeliverySerializers(serializers.ModelSerializer):
     class Meta:
         model = PatientDeliveryModel
         exclude = ('created_at', 'patient')
+
+
+def change_payload(request):
+    request.data["delivery_type"] = request.data["delivery_type"].upper()
+    request.data["child_gender"] = request.data["child_gender"].upper()
+    return request

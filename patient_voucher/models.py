@@ -1,9 +1,12 @@
 from django.db import models
+from django.db.models.query import Q
+from django.db.models.signals import post_save
 from django.utils.timezone import now
 
 from patient.models import PatientModel
 from patient_opd.models import PatientOpdModel
 from surgical_item.models import SurgicalItemModel
+from financial_year.models import FinancialYearModel
 
 # Create your models here.
 class PatientVoucherModel(models.Model):
@@ -45,3 +48,30 @@ class VoucherItemModel(models.Model):
 
     class Meta:
         db_table = "voucher_item"
+
+def voucher_post_save(sender, instance, *args, **kwargs):
+    if kwargs["created"]:
+        fy = FinancialYearModel.objects.filter(start_date__lte=now(), end_date__gte=now()).values_list(
+            'financial_year').first()
+
+        voucher = PatientVoucherModel.objects.filter(~Q(pk=instance.patient_voucher_id)).filter(deleted=0,
+                                                                                                voucher_no__icontains=
+                                                                                                fy[0]).last()
+
+        if voucher:
+            inv_no = voucher.voucher_no
+
+            if not inv_no or len(inv_no) == 0:
+                inv_no = "V/00001/" + fy[0]
+            else:
+                serial_no = inv_no.split("/")[1]
+                serial_no = int(serial_no) + 1
+                inv_no = "V/" + '{:05}'.format(serial_no) + "/" + fy[0]
+        else:
+            inv_no = "V/00001/" + fy[0]
+
+        instance.voucher_no = inv_no
+        instance.save()
+
+
+post_save.connect(voucher_post_save, sender=PatientVoucherModel)
