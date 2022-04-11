@@ -1069,3 +1069,46 @@ class ModelFilterTEMPLATEHEADER:
                 Q(language__language__icontains=search)
             )
         return model
+
+
+class ModelFilterPATIENTDELIVERY:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "patient_delivery_id":
+                model = model.filter(patient_delivery_id=fld_value)
+            if fld_name == "regd_no":
+                model = model.filter(regd_no=fld_value)
+            if fld_name == "baby_no":
+                model = model.filter(baby_no=fld_value)
+            if fld_name == "child_name":
+                model = model.filter(child_name__icontains=fld_value)
+            if fld_name == "birth_date":
+                model = model.filter(birth_date__date=fld_value)
+            if fld_name == "village":
+                model = model.filter(village__icontains=fld_value)
+            if fld_name == "taluka":
+                model = model.filter(taluka__icontains=fld_value)
+            if fld_name == "district":
+                model = model.filter(district__icontains=fld_value)
+
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            if search.isnumeric():
+                model = model.filter(
+                    Q(patient_delivery_id=search) |
+                    Q(regd_no=search) |
+                    Q(baby_no=search)
+                )
+            else:
+                model = model.filter(
+                    Q(district__icontains=search) |
+                    Q(taluka__icontains=search) |
+                    Q(village__icontains=search) |
+                    Q(child_name__icontains=search)
+                )
+        return model
