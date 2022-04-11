@@ -24,6 +24,13 @@ class DiagnosisSerializers(serializers.ModelSerializer):
         diagnosis_name = data.get('diagnosis_name')
         ut_weeks = data.get("ut_weeks")
         ut_days = data.get("ut_days")
+        diagnosis_type = data.get("diagnosis_type")
+
+        if diagnosis_type.upper() not in ["D", "U"]:
+            raise serializers.ValidationError("Diagnosis type not valid")
+
+        data["diagnosis_type"] = data.get('diagnosis_type').upper()
+
         if diagnosis_name and len(diagnosis_name) > 0:
             duplicate_diagnosis = DiagnosisModel.objects.filter(deleted=0, diagnosis_name__iexact=diagnosis_name)
         else:
@@ -44,5 +51,5 @@ class DiagnosisSerializers(serializers.ModelSerializer):
     # medicine = MedicineSerializers(many=True)
     class Meta:
         model = DiagnosisModel
-        fields = ['diagnosis_id', 'diagnosis_name', 'medicine', 'ut_weeks', 'ut_days', 'advice', 'created_by',
+        fields = ['diagnosis_id','diagnosis_type', 'diagnosis_name', 'medicine', 'ut_weeks', 'ut_days', 'advice', 'created_by',
                   'deleted']

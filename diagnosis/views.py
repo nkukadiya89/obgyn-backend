@@ -72,7 +72,6 @@ class DiagnosisAPI(APIView):
         if request.method == "POST":
             diagnosis = DiagnosisModel()
             serializer = DiagnosisSerializers(diagnosis, data=request.data)
-
             if serializer.is_valid():
                 serializer.save()
                 data["success"] = True

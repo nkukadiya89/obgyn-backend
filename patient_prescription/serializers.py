@@ -1,76 +1,51 @@
-from rest_framework import serializers
 from django.db.models.query import Q
+from rest_framework import serializers
 
-from diagnosis.serializers import DiagnosisSerializers
-from medicine.models import MedicineModel
+from medicine.models import TimingModel, MedicineTypeModel
+from medicine.serializers import MedicineSerializers
 from patient.models import PatientModel
 from .models import PatientPrescriptionModel
-from medicine.models import TimingModel, MedicineTypeModel
 
 
 class PatientPrescriptionSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(PatientPrescriptionSerializers, self).to_representation(instance)
 
-        if "diagnosis" in ret:
-            ret["diagnosis_name"] = DiagnosisSerializers(instance.diagnosis).data["diagnosis_name"]
-            medicine = DiagnosisSerializers(instance.diagnosis).data["medicine"]
-            medicine_name_list = []
-            for medicine1 in medicine:
-                ret_medicine = {}
-                ret_medicine["medicine_name"] = MedicineModel.objects.get(pk=medicine1).medicine
-                ret_medicine["for_day"] = MedicineModel.objects.get(pk=medicine1).for_day
-                ret_medicine["per_day"] = MedicineModel.objects.get(pk=medicine1).per_day
+        if "medicine" in ret:
+            ret["medicine_name"] = MedicineSerializers(instance.medicine).data["medicine"]
+            ret["for_day"] = MedicineSerializers(instance.medicine).data["for_day"]
+            ret["per_day"] = MedicineSerializers(instance.medicine).data["per_day"]
 
-                medicine_type_id = MedicineModel.objects.get(pk=medicine1).medicine_type_id
-                try:
-                    ret_medicine["medicine_type"] = medicine_type_id
-                    ret_medicine["medicine_type_name"] = MedicineTypeModel.objects.get(pk=medicine_type_id).medicine_type
-                except:
-                    ret_medicine["medicine_type"] = None
-                    ret_medicine["medicine_type_name"] = None
+            ret["medicine_type"] = {}
+            medicine_type_id = MedicineSerializers(instance.medicine).data["medicine_type"]
+            if medicine_type_id:
+                ret["medicine_type"][medicine_type_id] = MedicineTypeModel.objects.get(
+                    pk=medicine_type_id).medicine_type
 
-                try:
-                    morning_timing_id = MedicineModel.objects.get(pk=medicine1).morning_timing_id
-                    ret_medicine["morning_timing"] = morning_timing_id
-                    ret_medicine["morning_timing_name"] = TimingModel.objects.get(pk=morning_timing_id).timing
-                except:
-                    ret_medicine["morning_timing"] = None
-                    ret_medicine["morning_timing_name"] = None
+            ret["morning_timing"] = {}
+            morning_timing_id = MedicineSerializers(instance.medicine).data["morning_timing"]
+            if morning_timing_id:
+                ret["morning_timing"][morning_timing_id] = TimingModel.objects.get(pk=morning_timing_id).timing
 
-                try:
-                    noon_timing_id = MedicineModel.objects.get(pk=medicine1).noon_timing_id
-                    ret_medicine["noon_timing"] = noon_timing_id
-                    ret_medicine["noon_timing_name"] = TimingModel.objects.get(pk=noon_timing_id).timing
-                except:
-                    ret_medicine["noon_timing"] = None
-                    ret_medicine["noon_timing_name"] = None
+            ret["noon_timing"] = {}
+            noon_timing_id = MedicineSerializers(instance.medicine).data["noon_timing"]
+            if noon_timing_id:
+                ret["noon_timing"][noon_timing_id] = TimingModel.objects.get(pk=noon_timing_id).timing
 
-                try:
-                    evening_timing_id = MedicineModel.objects.get(pk=medicine1).evening_timing_id
-                    ret_medicine["evening_timing"] = evening_timing_id
-                    ret_medicine["evening_timing_name"] = TimingModel.objects.get(pk=evening_timing_id).timing
-                except:
-                    ret_medicine["evening_timing"] = None
-                    ret_medicine["evening_timing_name"] = None
+            ret["evening_timing"] = {}
+            evening_timing_id = MedicineSerializers(instance.medicine).data["evening_timing"]
+            if evening_timing_id:
+                ret["evening_timing"][evening_timing_id] = TimingModel.objects.get(pk=evening_timing_id).timing
 
-                try:
-                    bed_timing_id = MedicineModel.objects.get(pk=medicine1).bed_timing_id
-                    ret_medicine["bed_timing"] = bed_timing_id
-                    ret_medicine["bed_timing_name"] = TimingModel.objects.get(pk=bed_timing_id).timing
-                except:
-                    ret_medicine["bed_timing"] = None
-                    ret_medicine["bed_timing_name"] = None
-
-                medicine_name_list.append(ret_medicine)
-
-                ret['medicine_name'] = medicine_name_list
-                ret_medicine["total_tablet"] = MedicineModel.objects.get(pk=medicine1).total_tablet
+            ret["bed_timing"] = {}
+            bed_timing_id = MedicineSerializers(instance.medicine).data["bed_timing"]
+            if bed_timing_id:
+                ret["bed_timing"][bed_timing_id] = TimingModel.objects.get(pk=bed_timing_id).timing
 
         return ret
 
     def validate(self, data):
-        diagnosis = data.get('diagnosis')
+        medicine = data.get('medicine')
         consultation = data.get('consultation')
 
         if "regd_no" in data:
@@ -82,13 +57,12 @@ class PatientPrescriptionSerializers(serializers.ModelSerializer):
             raise serializers.ValidationError("Patient is missing")
 
         duplicate_prescription = PatientPrescriptionModel.objects.filter(consultation_id=consultation,
-                                                                         diagnosis_id=diagnosis, deleted=0)
+                                                                         medicine_id=medicine, deleted=0)
 
         if self.partial:
             duplicate_prescription = duplicate_prescription.filter(~Q(pk=self.instance.patient_prescription_id))
         if len(duplicate_prescription) > 0:
             raise serializers.ValidationError("Prescription already exist.")
-
 
         return data
 
@@ -96,4 +70,4 @@ class PatientPrescriptionSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = PatientPrescriptionModel
-        fields = ['patient_prescription_id', 'regd_no', 'consultation', 'diagnosis', 'created_by', 'deleted']
+        fields = ['patient_prescription_id', 'regd_no', 'consultation', 'medicine', 'created_by', 'deleted']

@@ -8,6 +8,7 @@ from medicine.models import MedicineModel
 class DiagnosisModel(models.Model):
     diagnosis_id = models.AutoField(primary_key=True)
     diagnosis_name = models.CharField(max_length=150, default="", null=True)
+    diagnosis_type = models.CharField(max_length=3, default="D")
     medicine = models.ManyToManyField(MedicineModel)
     ut_weeks = models.IntegerField(null=True)
     ut_days = models.IntegerField(null=True)
