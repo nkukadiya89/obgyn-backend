@@ -8,9 +8,10 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
-from .models import MedicineModel, TimingModel, MedicineTypeModel
-from .serializers import MedicineSerializers, MedicineTypeSerializers, TimingSerializers,DynamicFieldModelSerializer
 from utility.search_filter import filtering_query
+from .models import MedicineModel, TimingModel, MedicineTypeModel
+from .serializers import MedicineSerializers, MedicineTypeSerializers, TimingSerializers, DynamicFieldModelSerializer
+from .utils_view import link_diagnosis
 
 
 class MedicineAPI(APIView):
@@ -73,8 +74,17 @@ class MedicineAPI(APIView):
 
             if serializer.is_valid():
                 serializer.save()
+
+                status_flag = True
+                if "diagnosis_id" in request.data:
+                    status_flag = link_diagnosis(request.data.get('diagnosis_id'), serializer.data["medicine_id"])
+
                 data["success"] = True
-                data["msg"] = "Data updated successfully"
+                if not status_flag:
+                    data["msg"] = "Medicine Created successfully but not linked with Diagnosis"
+                else:
+                    data["msg"] = "Data updated successfully"
+                    
                 data["data"] = serializer.data
                 return Response(data=data, status=status.HTTP_201_CREATED)
 
@@ -165,7 +175,7 @@ class TimingAPI(APIView):
 
         try:
             if id:
-                timing = TimingModel.objects.filter(pk=id,deleted=0)
+                timing = TimingModel.objects.filter(pk=id, deleted=0)
             else:
                 timing = TimingModel.objects.filter(deleted=0)
 
@@ -348,7 +358,6 @@ def patch_medicine(request, id):
         data["msg"] = serializer.errors
         data["data"] = []
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 # ================= Retrieve Single or Multiple records=========================

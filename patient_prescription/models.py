@@ -3,7 +3,7 @@ from django.utils.timezone import now
 
 from consultation.models import ConsultationModel
 from patient.models import PatientModel
-from diagnosis.models import DiagnosisModel
+from medicine.models import MedicineModel
 
 
 # Create your models here.
@@ -12,7 +12,7 @@ class PatientPrescriptionModel(models.Model):
     patient = models.ForeignKey(PatientModel, on_delete=models.DO_NOTHING, null=True)
     regd_no = models.CharField(max_length=100, default="")
     consultation = models.ForeignKey(ConsultationModel, on_delete=models.DO_NOTHING, null=True)
-    diagnosis = models.ForeignKey(DiagnosisModel, on_delete=models.DO_NOTHING, null=True)
+    medicine = models.ForeignKey(MedicineModel, on_delete=models.DO_NOTHING, null=True)
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)

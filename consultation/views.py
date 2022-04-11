@@ -13,6 +13,7 @@ from patient_opd.models import PatientOpdModel
 from utility.search_filter import filtering_query
 from .models import ConsultationModel
 from .serializers import ConsultationSerializers
+from .utils_view import add_medicine_for_consultaion
 
 
 class ConsultationAPI(APIView):
@@ -87,6 +88,10 @@ class ConsultationAPI(APIView):
                 patient_opd = PatientOpdModel.objects.filter(pk=request.data["patient_opd_id"]).first()
                 patient_opd.status = "consultation"
                 patient_opd.save()
+
+                if "medicine" in request.data:
+                    add_medicine_for_consultaion(request, serializer.data["consultation_id"])
+
                 data["success"] = True
                 data["msg"] = "Data updated successfully"
                 data["data"] = serializer.data
