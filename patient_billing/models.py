@@ -35,7 +35,7 @@ class PatientBillingModel(models.Model):
     rs_per_room = models.FloatField(default=0.0)
     room_type = models.CharField(max_length=25, default="")
     room_rs = models.FloatField(default=0.0)
-    operative_charge_rs = models.FloatField(default=0.0)
+    procedure_charge = models.FloatField(default=0.0)
     medicine_rs = models.FloatField(default=0.0)
     nursing_no_of_days = models.IntegerField(default=0)
     rs_per_day = models.FloatField(default=0.0)

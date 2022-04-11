@@ -19,7 +19,7 @@ class PatientDeliveryModel(models.Model):
     patient = models.ForeignKey(PatientModel, on_delete=models.DO_NOTHING)
     regd_no = models.CharField(max_length=100, default="")
 
-    baby_no = models.CharField(max_length=100, default="")
+    baby_no = models.IntegerField(default=0, null=True)
     sr_no = models.CharField(max_length=50, default="")
     birth_date = models.DateField(null=True)
     birth_time = models.CharField(max_length=10, null=True)
@@ -45,6 +45,8 @@ class PatientDeliveryModel(models.Model):
     father_occupation = models.CharField(max_length=250, default="")
     mother_occupation = models.CharField(max_length=250, default="")
     baby_status = models.CharField(max_length=15, default="")
+    serial_no_month = models.IntegerField(default=0, null=True)
+    serial_no_year = models.IntegerField(default=0, null=True)
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
