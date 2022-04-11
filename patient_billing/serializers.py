@@ -33,7 +33,7 @@ class PatientBillingSerializers(serializers.ModelSerializer):
         data["nursing_rs"] = float(data["nursing_rs"]) * int(data["nursing_no_of_days"])
 
         data["total_rs"] = float(data["consulting_fees"]) + float(data["usg_rs"]) + \
-                           float(data["room_rs"]) + float(data["operative_charge_rs"]) + float(
+                           float(data["room_rs"]) + float(data["procedure_charge"]) + float(
             data["medicine_rs"]) + float(data["nursing_rs"]) + float(data["other_rs"])
 
         if not self.partial:
