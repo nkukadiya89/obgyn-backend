@@ -279,6 +279,7 @@ class ModelFilterMEDICINEOR:
 
         i = 0
         queries = ""
+
         for variable in pararm_name:
 
             if variable == "diagnosis_id":
@@ -300,7 +301,7 @@ class ModelFilterMEDICINEOR:
             i += 1
         query = "model.filter(" + queries + ")"
         model = eval(query)
-
+        model = model.filter(diagnosismodel__deleted=0)
         model = model.distinct()
         # print(model.query)
         return model
