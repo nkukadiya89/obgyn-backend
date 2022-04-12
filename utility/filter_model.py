@@ -280,17 +280,18 @@ class ModelFilterMEDICINEOR:
             fld_name, fld_val = ffields.split("=")
             filter_fields_dict[fld_name] = fld_val
 
-
-        if "diagnosis_id" in filter_fields_dict:
+        if "diagnosis_id" in filter_fields_dict and "ut_days" in filter_fields_dict and "ut_weeks" in filter_fields_dict:
             model = model.filter(
                 Q(diagnosismodel__diagnosis_id=filter_fields_dict["diagnosis_id"]) | Q(diagnosismodel__deleted=0,
                                                                                        diagnosismodel__ut_days=
                                                                                        filter_fields_dict["ut_days"],
                                                                                        diagnosismodel__ut_weeks=
                                                                                        filter_fields_dict["ut_weeks"]))
-        else:
+        elif "diagnosis_id" not in filter_fields_dict and "ut_days" in filter_fields_dict and "ut_weeks" in filter_fields_dict:
             model = model.filter(diagnosismodel__deleted=0, diagnosismodel__ut_days=filter_fields_dict["ut_days"],
                                  diagnosismodel__ut_weeks=filter_fields_dict["ut_weeks"])
+        elif "diagnosis_id" in filter_fields_dict and "ut_days" not in filter_fields_dict and "ut_weeks" not in filter_fields_dict:
+            model = model.filter(diagnosismodel__diagnosis_id=filter_fields_dict["diagnosis_id"])
 
         model = model.distinct()
         # print(model.query)
