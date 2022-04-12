@@ -277,31 +277,35 @@ class ModelFilterMEDICINEOR:
         pararm_name = [value.split("=")[0] for value in filter_fields]
         param_val = [value.split("=")[1] for value in filter_fields]
 
-        i = 0
-        queries = ""
-        for variable in pararm_name:
-
-            if variable == "diagnosis_id":
-                if queries:
-                    queries = queries + "| Q(diagnosismodel__diagnosis_id=" + param_val[i] + ")"
-                else:
-                    queries = queries + " Q(diagnosismodel__diagnosis_id=" + param_val[i] + ")"
-            if variable == "ut_days":
-                if queries:
-                    queries = queries + " | Q(diagnosismodel__ut_days=" + param_val[i] + ")"
-                else:
-                    queries = queries + "Q(diagnosismodel__ut_days=" + param_val[i] + ")"
-
-            if variable == "ut_weeks":
-                if queries:
-                    queries = queries + " | Q(diagnosismodel__ut_weeks=" + param_val[i] + ")"
-                else:
-                    queries = queries + "Q(diagnosismodel__ut_weeks=" + param_val[i] + ")"
-            i += 1
-        query = "model.filter(" + queries + ")"
-        # print(query)
-        model = eval(query)
+        f_query = " or ".join(filter_fields)
+        model = model.raw(
+            'Select DISTINCT medicine.medicine, diagnosis.ut_days,diagnosis.ut_weeks,medicine.medicine_id From diagnosis Inner Join diagnosis_medicine On diagnosis_medicine.diagnosismodel_id = diagnosis.diagnosis_id Inner Join medicine On diagnosis_medicine.medicinemodel_id = medicine.medicine_id Where ' + f_query + '')
+        # i = 0
+        # queries = ""
+        # for variable in pararm_name:
+        #
+        #     if variable == "diagnosis_id":
+        #         if queries:
+        #             queries = queries + "| Q(diagnosismodel__diagnosis_id=" + param_val[i] + ")"
+        #         else:
+        #             queries = queries + " Q(diagnosismodel__diagnosis_id=" + param_val[i] + ")"
+        #     if variable == "ut_days":
+        #         if queries:
+        #             queries = queries + " | Q(diagnosismodel__ut_days=" + param_val[i] + ")"
+        #         else:
+        #             queries = queries + "Q(diagnosismodel__ut_days=" + param_val[i] + ")"
+        #
+        #     if variable == "ut_weeks":
+        #         if queries:
+        #             queries = queries + " | Q(diagnosismodel__ut_weeks=" + param_val[i] + ")"
+        #         else:
+        #             queries = queries + "Q(diagnosismodel__ut_weeks=" + param_val[i] + ")"
+        #     i += 1
+        # query = "model.filter(" + queries + ")"
+        # # print(query)
+        # model = eval(query)
         # model = model.distinct()
+        print(model)
         return model
 
     def search(self, model, query_string):
@@ -1167,6 +1171,7 @@ class ModelFilterPATIENTDELIVERY:
                     Q(district__icontains=search) |
                     Q(taluka__icontains=search) |
                     Q(village__icontains=search) |
-                    Q(child_name__icontains=search)
+                    Q(child_name__icontains=search) |
+                    Q(patient__first_name__icontains=search)
                 )
         return model
