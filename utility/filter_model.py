@@ -250,7 +250,6 @@ class ModelFilterMEDICINE:
 
     def search(self, model, query_string):
         search = query_string["search"]
-        print("akash")
         if search:
             if search.isnumeric():
                 model = model.filter(
@@ -300,8 +299,9 @@ class ModelFilterMEDICINEOR:
                     queries = queries + "Q(diagnosismodel__ut_weeks=" + param_val[i] + ")"
             i += 1
         query = "model.filter(" + queries + ")"
+        # print(query)
         model = eval(query)
-        model = model.distinct()
+        # model = model.distinct()
         return model
 
     def search(self, model, query_string):
