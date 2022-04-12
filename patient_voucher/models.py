@@ -3,20 +3,34 @@ from django.db.models.query import Q
 from django.db.models.signals import post_save
 from django.utils.timezone import now
 
+from financial_year.models import FinancialYearModel
 from patient.models import PatientModel
 from patient_opd.models import PatientOpdModel
 from surgical_item.models import SurgicalItemModel
-from financial_year.models import FinancialYearModel
+
 
 # Create your models here.
 class PatientVoucherModel(models.Model):
+    voucher_type = (
+        ('S', 'Surgical Item'),
+        ('C', 'Consultation'),
+        ('U', 'USG'),
+        ('R', 'Room'),
+        ('O', 'Operative'),
+        ('M', 'Medicine'),
+        ('N', 'Nursing'),
+        ('E', 'Other')
+    )
+
     patient_voucher_id = models.AutoField(primary_key=True)
     patient_opd = models.ForeignKey(PatientOpdModel, on_delete=models.DO_NOTHING, null=True)
     patient = models.ForeignKey(PatientModel, on_delete=models.DO_NOTHING)
     regd_no = models.CharField(max_length=100, default="")
 
-    voucher_no = models.CharField(max_length=25,default="")
+    voucher_no = models.CharField(max_length=25, default="")
     bill_date = models.DateField(null=True)
+    voucher_type = models.CharField(max_length=2, default="S")
+    amount = models.FloatField(default=0)
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
@@ -27,7 +41,6 @@ class PatientVoucherModel(models.Model):
 
     class Meta:
         db_table = "patient_voucher"
-
 
 
 class VoucherItemModel(models.Model):
@@ -48,6 +61,7 @@ class VoucherItemModel(models.Model):
 
     class Meta:
         db_table = "voucher_item"
+
 
 def voucher_post_save(sender, instance, *args, **kwargs):
     if kwargs["created"]:

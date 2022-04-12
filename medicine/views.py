@@ -84,7 +84,7 @@ class MedicineAPI(APIView):
                     data["msg"] = "Medicine Created successfully but not linked with Diagnosis"
                 else:
                     data["msg"] = "Data updated successfully"
-                    
+
                 data["data"] = serializer.data
                 return Response(data=data, status=status.HTTP_201_CREATED)
 
@@ -376,6 +376,7 @@ def get_medicine(request, id=None):
             medicine = MedicineModel.objects.filter(deleted=0)
 
         data["total_record"] = len(medicine)
+
         medicine, data = filtering_query(medicine, query_string, "medicine_id", "MEDICINE")
 
     except MedicineModel.DoesNotExist:
@@ -394,6 +395,44 @@ def get_medicine(request, id=None):
         data["msg"] = "OK"
         data["data"] = serializer.data
         return Response(data=data, status=status.HTTP_200_OK)
+
+# ================= Retrieve Single or Multiple records=========================
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+# ================= Retrieve Single or Multiple records=========================
+def get_or_medicine(request, id=None):
+    query_string = request.query_params
+
+    data = {}
+    try:
+        if id:
+            medicine = MedicineModel.objects.filter(pk=id, deleted=0)
+        else:
+            medicine = MedicineModel.objects.filter(deleted=0)
+
+        data["total_record"] = len(medicine)
+
+        medicine, data = filtering_query(medicine, query_string, "medicine_id", "MEDICINEOR")
+
+    except MedicineModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record Does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "GET":
+        serializer = MedicineSerializers(medicine, many=True)
+        if "fields" in query_string:
+            if query_string["fields"]:
+                serializer = DynamicFieldModelSerializer(medicine, many=True, fields=query_string["fields"])
+
+        data["success"] = True
+        data["msg"] = "OK"
+        data["data"] = serializer.data
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
 
 
 # ================= Retrieve Single or Multiple records=========================

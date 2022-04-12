@@ -1,12 +1,16 @@
 from django.urls import path
 
 from .views import MedicineAPI, MedicineTypeAPI, TimingAPI, patch_medicine, patch_timing, patch_medicine_type, \
-    get_medicine, get_medicine_type
+    get_medicine, get_or_medicine, get_medicine_type
 
 urlpatterns = [
     path('<int:id>/', MedicineAPI.as_view()),
     path('get/', get_medicine, name="get_medicine"),
     path('get/<int:id>', get_medicine, name="get_medicine"),
+
+    path('get_or/', get_or_medicine, name="get_or_medicine"),
+    path('get_or/<int:id>', get_or_medicine, name="get_or_medicine"),
+
     path('create/', MedicineAPI.as_view()),
     path('delete/', MedicineAPI.as_view()),
     path('update-medicine/<int:id>/', patch_medicine),
