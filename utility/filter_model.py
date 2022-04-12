@@ -1139,7 +1139,7 @@ class ModelFilterPATIENTDELIVERY:
             if fld_name == "district":
                 model = model.filter(district__icontains=fld_value)
             if fld_name == "first_name":
-                model = model.filter(first_name__icontains=fld_value)
+                model = model.filter(patient__first_name__icontains=fld_value)
 
         return model
 
