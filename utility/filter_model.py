@@ -274,34 +274,24 @@ class ModelFilterMEDICINE:
 
 class ModelFilterMEDICINEOR:
     def filter_fields(self, model, filter_fields):
-        pararm_name = [value.split("=")[0] for value in filter_fields]
-        param_val = [value.split("=")[1] for value in filter_fields]
 
-        i = 0
-        queries = ""
+        filter_fields_dict = {}
+        for ffields in filter_fields:
+            fld_name, fld_val = ffields.split("=")
+            filter_fields_dict[fld_name] = fld_val
 
-        for variable in pararm_name:
 
-            if variable == "diagnosis_id":
-                if queries:
-                    queries = queries + "| Q(diagnosismodel__diagnosis_id=" + param_val[i] + ")"
-                else:
-                    queries = queries + " Q(diagnosismodel__diagnosis_id=" + param_val[i] + ")"
-            if variable == "ut_days":
-                if queries:
-                    queries = queries + " | Q(diagnosismodel__ut_days=" + param_val[i] + ")"
-                else:
-                    queries = queries + "Q(diagnosismodel__ut_days=" + param_val[i] + ")"
+        if "diagnosis_id" in filter_fields_dict:
+            model = model.filter(
+                Q(diagnosismodel__diagnosis_id=filter_fields_dict["diagnosis_id"]) | Q(diagnosismodel__deleted=0,
+                                                                                       diagnosismodel__ut_days=
+                                                                                       filter_fields_dict["ut_days"],
+                                                                                       diagnosismodel__ut_weeks=
+                                                                                       filter_fields_dict["ut_weeks"]))
+        else:
+            model = model.filter(diagnosismodel__deleted=0, diagnosismodel__ut_days=filter_fields_dict["ut_days"],
+                                 diagnosismodel__ut_weeks=filter_fields_dict["ut_weeks"])
 
-            if variable == "ut_weeks":
-                if queries:
-                    queries = queries + " | Q(diagnosismodel__ut_weeks=" + param_val[i] + ")"
-                else:
-                    queries = queries + "Q(diagnosismodel__ut_weeks=" + param_val[i] + ")"
-            i += 1
-        query = "model.filter(" + queries + ")"
-        model = eval(query)
-        model = model.filter(diagnosismodel__deleted=0)
         model = model.distinct()
         # print(model.query)
         return model
