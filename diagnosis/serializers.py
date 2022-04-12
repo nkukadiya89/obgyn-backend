@@ -21,9 +21,9 @@ class DiagnosisSerializers(serializers.ModelSerializer):
         return ret
 
     def validate(self, data):
-        diagnosis_name = data.get('diagnosis_name')
-        ut_weeks = data.get("ut_weeks")
-        ut_days = data.get("ut_days")
+        diagnosis_name = data.get('diagnosis_name', "")
+        ut_weeks = data.get("ut_weeks", 0)
+        ut_days = data.get("ut_days", 0)
         diagnosis_type = data.get("diagnosis_type")
 
         if diagnosis_type.upper() not in ["D", "U"]:
@@ -31,13 +31,20 @@ class DiagnosisSerializers(serializers.ModelSerializer):
 
         data["diagnosis_type"] = data.get('diagnosis_type').upper()
 
+        if diagnosis_type.upper() == "U":
+            if int(data.get('ut_weeks')) <= 0 or int(data.get('ut_days')) <= 0:
+                raise serializers.ValidationError("UT Weeks or UT Days not provided.")
+        elif diagnosis_type.upper() == "D":
+            if not diagnosis_name or len(diagnosis_name) == 0:
+                raise serializers.ValidationError("Diagnosis Name not provided.")
+
         if diagnosis_name and len(diagnosis_name) > 0:
             duplicate_diagnosis = DiagnosisModel.objects.filter(deleted=0, diagnosis_name__iexact=diagnosis_name)
         else:
             duplicate_diagnosis = DiagnosisModel.objects.filter(deleted=0, ut_weeks=ut_weeks, ut_days=ut_days)
 
         if self.partial:
-            duplicate_diagnosis = duplicate_diagnosis.filter(~Q(pk=self.instance.city_id)).first()
+            duplicate_diagnosis = duplicate_diagnosis.filter(~Q(pk=self.instance.diagnosis_id)).first()
         else:
             duplicate_diagnosis = duplicate_diagnosis.first()
 
@@ -51,5 +58,6 @@ class DiagnosisSerializers(serializers.ModelSerializer):
     # medicine = MedicineSerializers(many=True)
     class Meta:
         model = DiagnosisModel
-        fields = ['diagnosis_id','diagnosis_type', 'diagnosis_name', 'medicine', 'ut_weeks', 'ut_days', 'advice', 'created_by',
+        fields = ['diagnosis_id', 'diagnosis_type', 'diagnosis_name', 'medicine', 'ut_weeks', 'ut_days', 'advice',
+                  'created_by',
                   'deleted']

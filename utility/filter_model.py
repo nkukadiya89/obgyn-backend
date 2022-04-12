@@ -245,11 +245,57 @@ class ModelFilterMEDICINE:
             if fld_name == "ut_days":
                 model = model.filter(diagnosismodel__ut_days=fld_value)
 
+        model = model.distinct()
         return model
 
     def search(self, model, query_string):
         search = query_string["search"]
         print("akash")
+        if search:
+            if search.isnumeric():
+                model = model.filter(
+                    Q(diagnosismodel__diagnosis_id=search) |
+                    Q(diagnosismodel__ut_weeks=search) |
+                    Q(diagnosismodel__ut_days=search)
+                )
+            else:
+                model = model.filter(
+                    Q(medicine__icontains=search) |
+                    Q(contain__icontains=search) |
+                    Q(company__icontains=search) |
+                    Q(morning_timing__timing__icontains=search) |
+                    Q(noon_timing__timing__icontains=search) |
+                    Q(evening_timing__timing__icontains=search) |
+                    Q(bed_timing__timing__icontains=search) |
+                    Q(medicine_type__medicine_type__icontains=search) |
+                    Q(diagnosismodel__diagnosis_name__icontains=search)
+                )
+        return model
+
+
+class ModelFilterMEDICINEOR:
+    def filter_fields(self, model, filter_fields):
+        print("akashs")
+        print("dfd", filter_fields)
+        pararm_name = [value.split("=")[0] for value in filter_fields]
+        param_val = [value.split("=")[1] for value in filter_fields]
+
+        i = 0
+        for variable in pararm_name:
+
+            if variable == "diagnosis_id":
+                model = model.filter(Q(diagnosismodel__diagnosis_id=param_val[i]))
+            if variable == "ut_days":
+                model = model.filter(Q(diagnosismodel__ut_days=param_val[i]))
+            if variable == "ut_weeks":
+                model = model.filter(Q(diagnosismodel__ut_weeks=param_val[i]))
+            i += 1
+
+        model = model.distinct()
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
         if search:
             if search.isnumeric():
                 model = model.filter(
@@ -1092,6 +1138,8 @@ class ModelFilterPATIENTDELIVERY:
                 model = model.filter(taluka__icontains=fld_value)
             if fld_name == "district":
                 model = model.filter(district__icontains=fld_value)
+            if fld_name == "first_name":
+                model = model.filter(first_name__icontains=fld_value)
 
         return model
 
