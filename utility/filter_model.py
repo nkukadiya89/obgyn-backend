@@ -275,22 +275,32 @@ class ModelFilterMEDICINE:
 
 class ModelFilterMEDICINEOR:
     def filter_fields(self, model, filter_fields):
-        print("akashs")
-        print("dfd", filter_fields)
         pararm_name = [value.split("=")[0] for value in filter_fields]
         param_val = [value.split("=")[1] for value in filter_fields]
 
         i = 0
+        queries = ""
         for variable in pararm_name:
 
             if variable == "diagnosis_id":
-                model = model.filter(Q(diagnosismodel__diagnosis_id=param_val[i]))
+                if queries:
+                    queries = queries + "| Q(diagnosismodel__diagnosis_id=" + param_val[i] + ")"
+                else:
+                    queries = queries + " Q(diagnosismodel__diagnosis_id=" + param_val[i] + ")"
             if variable == "ut_days":
-                model = model.filter(Q(diagnosismodel__ut_days=param_val[i]))
-            if variable == "ut_weeks":
-                model = model.filter(Q(diagnosismodel__ut_weeks=param_val[i]))
-            i += 1
+                if queries:
+                    queries = queries + " | Q(diagnosismodel__ut_days=" + param_val[i] + ")"
+                else:
+                    queries = queries + "Q(diagnosismodel__ut_days=" + param_val[i] + ")"
 
+            if variable == "ut_weeks":
+                if queries:
+                    queries = queries + " | Q(diagnosismodel__ut_weeks=" + param_val[i] + ")"
+                else:
+                    queries = queries + "Q(diagnosismodel__ut_weeks=" + param_val[i] + ")"
+            i += 1
+        query = "model.filter(" + queries + ")"
+        model = eval(query)
         model = model.distinct()
         return model
 
