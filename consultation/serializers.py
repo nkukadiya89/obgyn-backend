@@ -1,8 +1,11 @@
+from re import T
 from rest_framework import serializers
 
 from manage_fields.serializers import ManageFieldsSerializers
 from patient.models import PatientModel
 from .models import ConsultationModel
+from patient_prescription.models import PatientPrescriptionModel
+
 
 
 class ConsultationSerializers(serializers.ModelSerializer):
@@ -18,6 +21,11 @@ class ConsultationSerializers(serializers.ModelSerializer):
             search_instance = "instance" + "." + fld_nm
             if fld_nm in ret:
                 ret[fld_name] = ManageFieldsSerializers(eval(search_instance)).data["field_value"]
+
+        medicine = PatientPrescriptionModel.objects.filter(consultation_id=instance.consultation_id).values_list('medicine_id',flat=True)
+
+        if len(medicine)>0:
+            ret["medicine"] = medicine
 
         return ret
 
@@ -37,3 +45,4 @@ class ConsultationSerializers(serializers.ModelSerializer):
     class Meta:
         model = ConsultationModel
         exclude = ('created_at', 'patient', 'opd_date')
+        

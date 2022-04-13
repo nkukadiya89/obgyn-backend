@@ -16,6 +16,7 @@ from .serializers import ConsultationSerializers
 from .utils_view import add_medicine_for_consultaion
 
 
+
 class ConsultationAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
     permission_classes = [IsAuthenticatedOrReadOnly]
