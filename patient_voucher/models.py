@@ -11,7 +11,7 @@ from surgical_item.models import SurgicalItemModel
 
 # Create your models here.
 class PatientVoucherModel(models.Model):
-    voucher_type = (
+    voucher_type_choice = (
         ('S', 'Surgical Item'),
         ('C', 'Consultation'),
         ('U', 'USG'),
@@ -70,19 +70,21 @@ def voucher_post_save(sender, instance, *args, **kwargs):
 
         voucher = PatientVoucherModel.objects.filter(~Q(pk=instance.patient_voucher_id)).filter(deleted=0,
                                                                                                 voucher_no__icontains=
-                                                                                                fy[0]).last()
+                                                                                                fy[0],
+                                                                                                voucher_type=instance.voucher_type).last()
+        print(voucher)
 
         if voucher:
             inv_no = voucher.voucher_no
 
             if not inv_no or len(inv_no) == 0:
-                inv_no = "V/00001/" + fy[0]
+                inv_no = instance.voucher_type + "/00001/" + fy[0]
             else:
                 serial_no = inv_no.split("/")[1]
                 serial_no = int(serial_no) + 1
-                inv_no = "V/" + '{:05}'.format(serial_no) + "/" + fy[0]
+                inv_no = instance.voucher_type + "/" + '{:05}'.format(serial_no) + "/" + fy[0]
         else:
-            inv_no = "V/00001/" + fy[0]
+            inv_no = instance.voucher_type + "/00001/" + fy[0]
 
         instance.voucher_no = inv_no
         instance.save()
