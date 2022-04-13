@@ -13,6 +13,7 @@ from patient_opd.models import PatientOpdModel
 from utility.search_filter import filtering_query
 from .models import PatientVoucherModel, VoucherItemModel
 from .serializers import PatientVoucherSerializers, VoucherItemSerializers
+from .utils_views import insert_surgical_item
 
 
 class PatientVoucherAPI(APIView):
@@ -85,6 +86,9 @@ class PatientVoucherAPI(APIView):
                 patient_opd = PatientOpdModel.objects.filter(pk=request.data["patient_opd_id"]).first()
                 patient_opd.status = "voucher"
                 patient_opd.save()
+
+                if "surgical_item" in request.data:
+                    insert_surgical_item(request, serializer.data["patient_voucher_id"])
 
                 data["success"] = True
                 data["msg"] = "Data updated successfully"
