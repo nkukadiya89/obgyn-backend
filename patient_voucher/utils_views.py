@@ -4,7 +4,6 @@ from patient_voucher.serializers import VoucherItemSerializers
 
 def insert_surgical_item(request, patient_voucher_id):
     if "surgical_item" in request.data:
-        print("akash kj")
         surgical_item_list = request.data.get('surgical_item')
 
         surgical_item_dict = {}
@@ -19,4 +18,3 @@ def insert_surgical_item(request, patient_voucher_id):
             serializer = VoucherItemSerializers(surgical_item, data=surgical_item_dict)
             if serializer.is_valid():
                 serializer.save()
-                print("akash")
