@@ -63,7 +63,7 @@ class ConsultationModel(models.Model):
     ut = models.CharField(max_length=25, default="")
     ps = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="ps")
     pv = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="pv")
-    tt = models.CharField(max_length=25, default="", null=True)
+    # tt = models.CharField(max_length=25, default="", null=True)
     diagnosis = models.ForeignKey(DiagnosisModel, on_delete=models.DO_NOTHING, null=True)
     advice = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="advice")
     fu = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="fu")
