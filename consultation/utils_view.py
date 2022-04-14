@@ -5,6 +5,11 @@ from patient_prescription.serializers import PatientPrescriptionSerializers
 def add_medicine_for_consultaion(request, consultation_id):
     medicine_list = request.data.get('medicine')
 
+    #delete already existing medicine against provided consultation_id
+    prescription = PatientPrescriptionModel.objects.filter(consultation_id=consultation_id)
+    prescription.delete()
+    
+
     prescription_data = {}
     for medicine in medicine_list:
         prescription = PatientPrescriptionModel()

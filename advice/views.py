@@ -12,6 +12,7 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from utility.search_filter import filtering_query
 from .models import AdviceModel, AdviceGroupModel
 from .serializers import AdviceSerializers, AdviceGroupSerializers
+from .utils_view import insert_advice_group
 
 
 class AdviceAPI(APIView):
@@ -74,23 +75,11 @@ class AdviceAPI(APIView):
             advice = AdviceModel()
             serializer = AdviceSerializers(advice, data=request.data)
 
-            if "advice_group" in request.data:
-                if int(request.data.get('advice_group')) > 0:
-                    if "advice_group_name" in request.data:
-                        request.data.pop("advice_group_name")
-                advice_group = AdviceGroupModel.objects.filter(pk=request.data.get('advice_group')).first()
 
             if serializer.is_valid():
                 serializer.save()
                 if "advice_group_name" in request.data:
-                    advice_group_name = str(request.data.get('advice_group_name')).strip()
-                    advice_group = AdviceGroupModel.objects.filter(advice_group=advice_group_name).first()
-                    if advice_group == None:
-                        advice_group = AdviceGroupModel.objects.create(advice_group=advice_group_name,
-                                                                       created_by=request.data.get('created_by'),
-                                                                       deleted=0)
-
-                    advice_group.advice.add(advice.advice_id)
+                    insert_advice_group(request, serializer.data["advice_id"])
 
                 data["success"] = True
                 data["msg"] = "Data updated successfully"
