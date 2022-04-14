@@ -1,3 +1,4 @@
+from re import T
 from django.db import models
 from django.utils.timezone import now
 
@@ -9,7 +10,7 @@ class DiagnosisModel(models.Model):
     diagnosis_id = models.AutoField(primary_key=True)
     diagnosis_name = models.CharField(max_length=150, default="", null=True)
     diagnosis_type = models.CharField(max_length=3, default="D")
-    medicine = models.ManyToManyField(MedicineModel)
+    medicine = models.ManyToManyField(MedicineModel,blank=True)
     ut_weeks = models.IntegerField(null=True)
     ut_days = models.IntegerField(null=True)
     advice = models.CharField(max_length=100, null=True)
