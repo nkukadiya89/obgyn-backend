@@ -63,7 +63,6 @@ class ConsultationModel(models.Model):
     ut = models.CharField(max_length=25, default="")
     ps = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="ps")
     pv = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="pv")
-    # tt = models.CharField(max_length=25, default="", null=True)
     diagnosis = models.ForeignKey(DiagnosisModel, on_delete=models.DO_NOTHING, null=True)
     advice = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="advice")
     fu = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="fu")
@@ -79,6 +78,7 @@ class ConsultationModel(models.Model):
     hbsag = models.CharField(max_length=25, default="", null=True)
     tsh = models.CharField(max_length=25, default="", null=True)
     vdrl = models.CharField(max_length=25, default="", null=True)
+    other = models.TextField(null=True)
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
