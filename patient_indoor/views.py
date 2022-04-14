@@ -130,6 +130,9 @@ def patch(request, id):
 
         if serializer.is_valid():
             serializer.save()
+            if "advice" in request.data:
+                indoor_advice_insert(request.data.get('advice'), serializer.data["patient_indoor_id"],
+                                        request.data.get('created_by'))
             data["success"] = True
             data["msg"] = "Data updated successfully"
             data["data"] = serializer.data

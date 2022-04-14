@@ -133,6 +133,10 @@ def patch(request, id):
 
         if serializer.is_valid():
             serializer.save()
+
+            if "medicine" in request.data:
+                add_medicine_for_consultaion(request, serializer.data["consultation_id"])
+
             data["success"] = True
             data["msg"] = "Data updated successfully"
             data["data"] = serializer.data
