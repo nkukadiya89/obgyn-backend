@@ -202,6 +202,8 @@ class ModelFilterDIAGNOSIS:
                 model = model.filter(ut_weeks=fld_value)
             if fld_name == "ut_days":
                 model = model.filter(ut_days=fld_value)
+            if fld_name == 'diagnosis_type':
+                model = model.filter(diagnosis_type=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -216,7 +218,8 @@ class ModelFilterDIAGNOSIS:
                 model = model.filter(
                     Q(diagnosis_name__icontains=search) |
                     Q(diagnosis_name__icontains=search) |
-                    Q(medicine__medicine__icontains=search)
+                    Q(medicine__medicine__icontains=search) |
+                    Q(diagnosis_type__icontains=search)
                 )
         return model
 
@@ -231,7 +234,8 @@ class ModelFilterMEDICINE:
             if fld_name == "contain":
                 model = model.filter(contain__icontains=fld_value)
             if fld_name == "medicine_type":
-                model = model.filter(medicine_type__medicine_type__icontains=fld_value)
+                model = model.filter(
+                    medicine_type__medicine_type__icontains=fld_value)
             if fld_name == "per_day":
                 model = model.filter(per_day=fld_value)
             if fld_name == "for_day":
@@ -283,15 +287,15 @@ class ModelFilterMEDICINEOR:
         if "diagnosis_id" in filter_fields_dict and "ut_days" in filter_fields_dict and "ut_weeks" in filter_fields_dict:
             model = model.filter(
                 Q(diagnosismodel__diagnosis_id=filter_fields_dict["diagnosis_id"]) | Q(diagnosismodel__deleted=0,
-                                                                                       diagnosismodel__ut_days=
-                                                                                       filter_fields_dict["ut_days"],
-                                                                                       diagnosismodel__ut_weeks=
-                                                                                       filter_fields_dict["ut_weeks"]))
+                                                                                       diagnosismodel__ut_days=filter_fields_dict[
+                                                                                           "ut_days"],
+                                                                                       diagnosismodel__ut_weeks=filter_fields_dict["ut_weeks"]))
         elif "diagnosis_id" not in filter_fields_dict and "ut_days" in filter_fields_dict and "ut_weeks" in filter_fields_dict:
             model = model.filter(diagnosismodel__deleted=0, diagnosismodel__ut_days=filter_fields_dict["ut_days"],
                                  diagnosismodel__ut_weeks=filter_fields_dict["ut_weeks"])
         elif "diagnosis_id" in filter_fields_dict and "ut_days" not in filter_fields_dict and "ut_weeks" not in filter_fields_dict:
-            model = model.filter(diagnosismodel__diagnosis_id=filter_fields_dict["diagnosis_id"])
+            model = model.filter(
+                diagnosismodel__diagnosis_id=filter_fields_dict["diagnosis_id"])
 
         model = model.distinct()
         # print(model.query)
@@ -415,7 +419,8 @@ class ModelFilterMANAGEFIELDS:
             if fld_name == "field_master":
                 model = model.filter(field_master_id=fld_value)
             if fld_name == 'field_master_name':
-                model = model.filter(field_master__field_master_name__icontains=fld_value)
+                model = model.filter(
+                    field_master__field_master_name__icontains=fld_value)
             if fld_name == 'language':
                 model = model.filter(language_id=fld_value)
         return model
@@ -483,7 +488,7 @@ class ModelFilterTIMING:
             fld_value = fields.split("=")[1]
             if fld_name == 'timing':
                 model = model.filter(timing__icontains=fld_value)
-            if fld_name == "language":
+            if fld_name == "language_name":
                 model = model.filter(language__language__icontains=fld_value)
             if fld_name == "code":
                 model = model.filter(language__code__icontains=fld_value)
@@ -700,7 +705,8 @@ class ModelFilterPATIENTUSGFORM:
             if fld_name == "patient_usgform_id":
                 model = model.filter(patient_usgform_id=fld_value)
             if fld_name == "diagnosis":
-                model = model.filter(diagnosis__diagnosis_name__icontains=fld_value)
+                model = model.filter(
+                    diagnosis__diagnosis_name__icontains=fld_value)
             if fld_name == "patient_opd_id":
                 model = model.filter(patient_opd_id=fld_value)
         return model
