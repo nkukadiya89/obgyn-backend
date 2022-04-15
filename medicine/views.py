@@ -77,15 +77,16 @@ class MedicineAPI(APIView):
             if serializer.is_valid():
                 serializer.save()
 
-                status_flag = True
+                data["msg"] = "Data updated successfully"
+
                 if "diagnosis_name" in request.data and "diagnosis_type" in request.data:
-                    status_flag = link_diagnosis(request, serializer.data["medicine_id"])
+                    if not link_diagnosis(request, serializer.data["medicine_id"]):
+                        data["msg"] = "Medicine Created successfully but not linked with Diagnosis"
+                if "diagnosis_name" in request.data and "diagnosis_type" not in request.data:
+                    data["msg"] = "Medicine Created successfully but not linked with Diagnosis"
+                
 
                 data["success"] = True
-                if not status_flag:
-                    data["msg"] = "Medicine Created successfully but not linked with Diagnosis"
-                else:
-                    data["msg"] = "Data updated successfully"
 
                 data["data"] = serializer.data
                 return Response(data=data, status=status.HTTP_201_CREATED)
