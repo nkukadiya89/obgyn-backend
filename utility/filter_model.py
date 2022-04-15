@@ -1,3 +1,4 @@
+from operator import mod
 import re
 
 from django.db.models import Q
@@ -328,13 +329,20 @@ class ModelFilterMEDICINETYPE:
             fld_value = fields.split("=")[1]
             if fld_name == "medicine_type":
                 model = model.filter(medicine_type__icontains=fld_value)
+            if fld_name == "language_id":
+                model = model.filter(language_id=fld_value)
+            if fld_name == "language":
+                model = model.filter(language__language=fld_value)
+            
         return model
 
     def search(self, model, query_string):
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(medicine_type__icontains=search)
+                Q(medicine_type__icontains=search) |
+                Q(language__language=search) |
+                Q(language__code=search)
             )
         return model
 
