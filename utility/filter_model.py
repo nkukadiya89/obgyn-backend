@@ -203,7 +203,7 @@ class ModelFilterDIAGNOSIS:
             if fld_name == "ut_days":
                 model = model.filter(ut_days=fld_value)
             if fld_name == 'diagnosis_type':
-                model = model.filter(diagnosis_type=fld_value)
+                model = model.filter(diagnosis_type__icontains=fld_value)
         return model
 
     def search(self, model, query_string):
