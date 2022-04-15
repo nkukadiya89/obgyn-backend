@@ -1,10 +1,39 @@
 from diagnosis.models import DiagnosisModel
+from diagnosis.serializers import DiagnosisSerializers
 
 
-def link_diagnosis(diagnosis_id, medicine_id):
-    diagnosis = DiagnosisModel.objects.filter(pk=diagnosis_id).first()
+def link_diagnosis(request, medicine_id):
+
+    diagnosis_type = request.data.get('diagnosis_type', "D")
+    if diagnosis_type.upper() == "D":
+        diagnosis = DiagnosisModel.objects.filter(
+            deleted=0, created_by=request.data.get('created_by'), diagnosis_name__iexact=request.data.get('diagnosis_name'), diagnosis_type="D").first()
+    elif diagnosis_type.upper() == "U":
+        diagnosis = DiagnosisModel.objects.filter(
+            deleted=0, created_by=request.data.get('created_by'), ut_days=request.data.get('ut_days'), ut_weeks=request.data.get('ut_weeks'), diagnosis_type="U").first()
+
     if diagnosis == None:
-        return False
+        diagnosis = DiagnosisModel()
+        diagnosis_dict = {}
+        if diagnosis_type == "D":
+            diagnosis_dict["diagnosis_type"] = "D"
+            diagnosis_dict["diagnosis_name"] = request.data.get(
+                'diagnosis_name', "")
+        else:
+            diagnosis_dict["diagnosis_type"] = "U"
+            diagnosis_dict["ut_days"] = request.data.get('ut_days')
+            diagnosis_dict["ut_weeks"] = request.data.get('ut_weeks')
+
+        diagnosis_dict["medicine"] = [medicine_id]
+        diagnosis_dict["created_by"] = request.data.get('created_by')
+        diagnosis_dict["deleted"] = 0
+
+        serializer = DiagnosisSerializers(diagnosis, data=diagnosis_dict)
+        if serializer.is_valid():
+            serializer.save()
+
+        diagnosis = DiagnosisModel.objects.get(
+            pk=serializer.data["diagnosis_id"])
 
     diagnosis.medicine.add(medicine_id)
     diagnosis.save()
