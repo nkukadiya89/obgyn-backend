@@ -13,6 +13,8 @@ from utility.search_filter import filtering_query
 from .models import AdviceModel, AdviceGroupModel
 from .serializers import AdviceSerializers, AdviceGroupSerializers
 from .utils_view import insert_advice_group
+from django.db.models import Q
+
 
 
 class AdviceAPI(APIView):
@@ -135,7 +137,7 @@ def get(request, id=None):
         if id:
             advice = AdviceModel.objects.filter(pk=id, deleted=0)
         else:
-            advice = AdviceModel.objects.filter(deleted=0)
+            advice = AdviceModel.objects.filter(Q(deleted=0, created_by=1)  | Q(created_by=request.data.get('created_by')))
 
         data["total_record"] = len(advice)
         advice, data = filtering_query(advice, query_string, "advice_id", "ADVICE")
@@ -270,7 +272,7 @@ def get_group(request, id=None):
         if id:
             advice_group = AdviceGroupModel.objects.filter(pk=id, deleted=0)
         else:
-            advice_group = AdviceGroupModel.objects.filter(deleted=0)
+            advice_group = AdviceGroupModel.objects.filter(Q(deleted=0, created_by=1)  | Q(created_by=request.data.get('created_by')))
 
         data["total_record"] = len(advice_group)
         advice_group, data = filtering_query(advice_group, query_string, "advice_group_id", "ADVICEGROUP")

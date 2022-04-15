@@ -99,15 +99,17 @@ class MedicineSerializers(serializers.ModelSerializer):
 
             morning_timing = data.get("morning_timing")
             noon_timing = data.get("noon_timing")
-            evening_timing = data.get("eveningTiming")
-            bed_timing = data.get("bedtiming")
-            duplicate_medicin = MedicineModel.objects.filter(deleted=0).filter(deleted=0, medicine__iexact=medicine,
+            evening_timing = data.get("evening_timing")
+            bed_timing = data.get("bed_timing")
+
+            duplicate_medicin = MedicineModel.objects.filter(deleted=0, medicine__iexact=medicine,
                                                                                morning_timing_id=morning_timing,
                                                                                noon_timing_id=noon_timing,
                                                                                evening_timing_id=evening_timing,
                                                                                bed_timing_id=bed_timing,
                                                                                for_day=for_day, per_day=per_day)
 
+            print(duplicate_medicin)
             if self.partial:
                 duplicate_medicin = duplicate_medicin.filter(~Q(pk=self.instance.medicine_id)).first()
             else:

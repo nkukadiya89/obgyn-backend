@@ -12,6 +12,7 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from utility.search_filter import filtering_query
 from .models import SurgicalItemModel, SurgicalItemGroupModel
 from .serializers import SurgicalItemSerializers, SurgicalItemGroupSerializers
+from django.db.models import Q
 
 
 class SurgicalItemAPI(APIView):
@@ -247,7 +248,7 @@ def get(request, id=None):
         if id:
             surgical_item = SurgicalItemModel.objects.filter(pk=id, deleted=0)
         else:
-            surgical_item = SurgicalItemModel.objects.filter(deleted=0)
+            surgical_item = SurgicalItemModel.objects.filter(Q(deleted=0, created_by=1)  | Q(created_by=request.data.get('created_by')))
 
         data["total_record"] = len(surgical_item)
         surgical_item, data = filtering_query(surgical_item, query_string, "surgical_item_id", "SURGICALITEM")
@@ -278,7 +279,7 @@ def get_group(request, id=None):
         if id:
             surgical_item_group = SurgicalItemGroupModel.objects.filter(pk=id, deleted=0)
         else:
-            surgical_item_group = SurgicalItemGroupModel.objects.filter(deleted=0)
+            surgical_item_group = SurgicalItemGroupModel.objects.filter(Q(deleted=0, created_by=1)  | Q(created_by=request.data.get('created_by')))
 
             data["total_record"] = len(surgical_item_group)
             surgical_item_group, data = filtering_query(surgical_item_group, query_string, "si_group_id",

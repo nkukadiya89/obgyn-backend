@@ -25,6 +25,7 @@ class DiagnosisSerializers(serializers.ModelSerializer):
         ut_weeks = data.get("ut_weeks", 0)
         ut_days = data.get("ut_days", 0)
         diagnosis_type = data.get("diagnosis_type")
+        created_by = data.get('created_by')
 
         if diagnosis_type.upper() not in ["D", "U"]:
             raise serializers.ValidationError("Diagnosis type not valid")
@@ -33,18 +34,23 @@ class DiagnosisSerializers(serializers.ModelSerializer):
 
         if diagnosis_type.upper() == "U":
             if int(data.get('ut_weeks')) <= 0 or int(data.get('ut_days')) <= 0:
-                raise serializers.ValidationError("UT Weeks or UT Days not provided.")
+                raise serializers.ValidationError(
+                    "UT Weeks or UT Days not provided.")
         elif diagnosis_type.upper() == "D":
             if not diagnosis_name or len(diagnosis_name) == 0:
-                raise serializers.ValidationError("Diagnosis Name not provided.")
+                raise serializers.ValidationError(
+                    "Diagnosis Name not provided.")
 
-        if diagnosis_name and len(diagnosis_name) > 0:
-            duplicate_diagnosis = DiagnosisModel.objects.filter(deleted=0, diagnosis_name__iexact=diagnosis_name)
-        else:
-            duplicate_diagnosis = DiagnosisModel.objects.filter(deleted=0, ut_weeks=ut_weeks, ut_days=ut_days)
+        if diagnosis_type == "D":
+            duplicate_diagnosis = DiagnosisModel.objects.filter(
+                deleted=0, diagnosis_name__iexact=diagnosis_name, created_by=created_by)
+        elif diagnosis_type == "U":
+            duplicate_diagnosis = DiagnosisModel.objects.filter(
+                deleted=0, ut_weeks=ut_weeks, ut_days=ut_days, created_by=created_by)
 
         if self.partial:
-            duplicate_diagnosis = duplicate_diagnosis.filter(~Q(pk=self.instance.diagnosis_id)).first()
+            duplicate_diagnosis = duplicate_diagnosis.filter(
+                ~Q(pk=self.instance.diagnosis_id)).first()
         else:
             duplicate_diagnosis = duplicate_diagnosis.first()
 

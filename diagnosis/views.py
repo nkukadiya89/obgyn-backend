@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
+from django.db.models import Q
 
 from .models import DiagnosisModel
 from .serializers import DiagnosisSerializers
@@ -130,7 +131,7 @@ def get(request, id=None):
         if id:
             diagnosis = DiagnosisModel.objects.filter(pk=id, deleted=0)
         else:
-            diagnosis = DiagnosisModel.objects.filter(deleted=0)
+            diagnosis = DiagnosisModel.objects.filter(Q(deleted=0, created_by=1)  | Q(created_by=request.data.get('created_by')))
         data["total_record"] = len(diagnosis)
         diagnosis, data = filtering_query(diagnosis, query_string, "diagnosis_id", "DIAGNOSIS")
 

@@ -12,6 +12,7 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from .models import ManageFieldsModel, FieldMasterModel
 from .serializers import ManageFieldsSerializers, FieldMasterSerializers
 from utility.search_filter import filtering_query
+from django.db.models import Q
 
 
 class ManageFieldsAPI(APIView):
@@ -129,7 +130,7 @@ def get(request, id=None):
         if id:
             manage_fields = ManageFieldsModel.objects.filter(pk=id,deleted=0)
         else:
-            manage_fields = ManageFieldsModel.objects.filter(deleted=0)
+            manage_fields = ManageFieldsModel.objects.filter(Q(deleted=0, created_by=1)  | Q(created_by=request.data.get('created_by')))
 
         data["total_record"] = len(manage_fields)
         manage_fields, data = filtering_query(manage_fields, query_string, "mf_id", "MANAGEFIELDS")
@@ -267,7 +268,7 @@ def field_get(request, id=None):
         if id:
             field_master = FieldMasterModel.objects.filter(pk=id,deleted=0)
         else:
-            field_master = FieldMasterModel.objects.filter(deleted=0)
+            field_master = FieldMasterModel.objects.filter(Q(deleted=0, created_by=1)  | Q(created_by=request.data.get('created_by')))
 
         data["total_record"] = len(field_master)
         field_master, data = filtering_query(field_master, query_string, "field_master_id", "FIELDMASTER")
