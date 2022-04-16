@@ -12,35 +12,36 @@ class PatientPrescriptionSerializers(serializers.ModelSerializer):
         ret = super(PatientPrescriptionSerializers, self).to_representation(instance)
 
         if "medicine" in ret:
-            ret["medicine_name"] = MedicineSerializers(instance.medicine).data["medicine"]
-            ret["for_day"] = MedicineSerializers(instance.medicine).data["for_day"]
-            ret["per_day"] = MedicineSerializers(instance.medicine).data["per_day"]
+            ret["medicine"] = MedicineSerializers(instance.medicine).data
+            # ret["medicine_name"] = MedicineSerializers(instance.medicine).data["medicine"]
+            # ret["for_day"] = MedicineSerializers(instance.medicine).data["for_day"]
+            # ret["per_day"] = MedicineSerializers(instance.medicine).data["per_day"]
 
-            ret["medicine_type"] = {}
-            medicine_type_id = MedicineSerializers(instance.medicine).data["medicine_type"]
-            if medicine_type_id:
-                ret["medicine_type"][medicine_type_id] = MedicineTypeModel.objects.get(
-                    pk=medicine_type_id).medicine_type
+            # ret["medicine_type"] = {}
+            # medicine_type_id = MedicineSerializers(instance.medicine).data["medicine_type"]
+            # if medicine_type_id:
+            #     ret["medicine_type"][medicine_type_id] = MedicineTypeModel.objects.get(
+            #         pk=medicine_type_id).medicine_type
 
-            ret["morning_timing"] = {}
-            morning_timing_id = MedicineSerializers(instance.medicine).data["morning_timing"]
-            if morning_timing_id:
-                ret["morning_timing"][morning_timing_id] = TimingModel.objects.get(pk=morning_timing_id).timing
+            # ret["morning_timing"] = {}
+            # morning_timing_id = MedicineSerializers(instance.medicine).data["morning_timing"]
+            # if morning_timing_id:
+            #     ret["morning_timing"][morning_timing_id] = TimingModel.objects.get(pk=morning_timing_id).timing
 
-            ret["noon_timing"] = {}
-            noon_timing_id = MedicineSerializers(instance.medicine).data["noon_timing"]
-            if noon_timing_id:
-                ret["noon_timing"][noon_timing_id] = TimingModel.objects.get(pk=noon_timing_id).timing
+            # ret["noon_timing"] = {}
+            # noon_timing_id = MedicineSerializers(instance.medicine).data["noon_timing"]
+            # if noon_timing_id:
+            #     ret["noon_timing"][noon_timing_id] = TimingModel.objects.get(pk=noon_timing_id).timing
 
-            ret["evening_timing"] = {}
-            evening_timing_id = MedicineSerializers(instance.medicine).data["evening_timing"]
-            if evening_timing_id:
-                ret["evening_timing"][evening_timing_id] = TimingModel.objects.get(pk=evening_timing_id).timing
+            # ret["evening_timing"] = {}
+            # evening_timing_id = MedicineSerializers(instance.medicine).data["evening_timing"]
+            # if evening_timing_id:
+            #     ret["evening_timing"][evening_timing_id] = TimingModel.objects.get(pk=evening_timing_id).timing
 
-            ret["bed_timing"] = {}
-            bed_timing_id = MedicineSerializers(instance.medicine).data["bed_timing"]
-            if bed_timing_id:
-                ret["bed_timing"][bed_timing_id] = TimingModel.objects.get(pk=bed_timing_id).timing
+            # ret["bed_timing"] = {}
+            # bed_timing_id = MedicineSerializers(instance.medicine).data["bed_timing"]
+            # if bed_timing_id:
+            #     ret["bed_timing"][bed_timing_id] = TimingModel.objects.get(pk=bed_timing_id).timing
 
         return ret
 

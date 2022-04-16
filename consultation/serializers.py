@@ -1,5 +1,6 @@
 from re import T
 from rest_framework import serializers
+from diagnosis.serializers import DiagnosisSerializers
 
 from manage_fields.serializers import ManageFieldsSerializers
 from patient.models import PatientModel
@@ -17,7 +18,10 @@ class ConsultationSerializers(serializers.ModelSerializer):
             ret["patient_opd_id"] = ret["patient_opd"]
             del ret["patient_opd"]
 
-        for fld_nm in ["eb_pp", "ps", "pv", "advice", "fu"]:
+        if "diagnosis" in ret:
+            ret["diagnosis_name"] = DiagnosisSerializers(instance.diagnosis).data["diagnosis_name"]
+
+        for fld_nm in ["eb_pp", "ps", "pv", "fu"]:
             fld_name = fld_nm + "_name"
             search_instance = "instance" + "." + fld_nm
             if fld_nm in ret:
@@ -26,7 +30,7 @@ class ConsultationSerializers(serializers.ModelSerializer):
         medicine = PatientPrescriptionModel.objects.filter(consultation_id=instance.consultation_id)
 
         medicine = PatientPrescriptionSerializers(medicine, many=True)
-        ret["medicine"] = medicine.data
+        ret["prescription"] = medicine.data
 
         return ret
 
