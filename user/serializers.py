@@ -50,7 +50,7 @@ class DynamicFieldModelSerializer(serializers.ModelSerializer):
                   'phone', 'state', 'district', 'taluka', 'city', 'area', 'pincode', 'email', 'landline', 'fax_number',
                   'degree',
                   'speciality', 'aadhar_card', 'registration_no', 'default_language', 'designation', 'hospital',
-                  'username',
+                  'username','rs_per_visit','rs_per_usg','rs_per_room','operative_charge','rs_per_day_nursing',
                   'user_code', 'created_by']
 
 
@@ -132,5 +132,5 @@ class UserSerializers(serializers.ModelSerializer):
         fields = ['id', 'first_name', 'last_name', 'middle_name', 'password', 'user_type', 'hospital_name',
                   'phone', 'state', 'city', 'area', 'pincode', 'email', 'landline', 'fax_number', 'degree',
                   'speciality', 'aadhar_card', 'registration_no', 'default_language', 'designation', 'hospital',
-                  'username', 'uid',
+                  'username', 'uid','rs_per_visit','rs_per_usg','rs_per_room','operative_charge','rs_per_day_nursing',
                   'user_code', 'created_by']

@@ -1,3 +1,5 @@
+from operator import mod
+from re import T
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager  ## A new class is imported. ##
 from django.db import models
@@ -88,6 +90,14 @@ class User(AbstractUser):
     # FIELDS FOR STAFF
     designation = models.CharField(max_length=25, null=True)
     uid = models.CharField(max_length=100, default="")
+
+    #SETTINGS FIELDS
+    rs_per_visit = models.FloatField(default=0, null=True)
+    rs_per_usg = models.FloatField(default=0, null=True)
+    rs_per_room = models.FloatField(default=0, null=True)
+    operative_charge = models.FloatField(default=0, null=True)
+    rs_per_day_nursing = models.FloatField(default=0, null=True)
+    
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
