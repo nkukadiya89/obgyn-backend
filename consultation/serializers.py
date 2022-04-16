@@ -5,6 +5,7 @@ from manage_fields.serializers import ManageFieldsSerializers
 from patient.models import PatientModel
 from .models import ConsultationModel
 from patient_prescription.models import PatientPrescriptionModel
+from patient_prescription.serializers import PatientPrescriptionSerializers
 
 
 
@@ -22,10 +23,10 @@ class ConsultationSerializers(serializers.ModelSerializer):
             if fld_nm in ret:
                 ret[fld_name] = ManageFieldsSerializers(eval(search_instance)).data["field_value"]
 
-        medicine = PatientPrescriptionModel.objects.filter(consultation_id=instance.consultation_id).values_list('medicine_id',flat=True)
+        medicine = PatientPrescriptionModel.objects.filter(consultation_id=instance.consultation_id)
 
-        if len(medicine)>0:
-            ret["medicine"] = medicine
+        medicine = PatientPrescriptionSerializers(medicine, many=True)
+        ret["medicine"] = medicine.data
 
         return ret
 
