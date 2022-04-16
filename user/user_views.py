@@ -24,7 +24,11 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                                    "defaultLanguageId": LanguageModel.objects.get(
                                        pk=self.user.default_language_id).language_id,
                                    "defaultLanguage": LanguageModel.objects.get(pk=self.user.default_language_id).code,
-                                   "user_type": self.user.user_type, "permission": permission_list}})
+                                   "user_type": self.user.user_type, "permission": permission_list,
+                                   "rs_per_visit": self.user.rs_per_visit,"rs_per_usg": self.user.rs_per_usg,
+                                   "rs_per_room": self.user.rs_per_room,"operative_charge": self.user.operative_charge,
+                                   "rs_per_day_nursing": self.user.rs_per_day_nursing,
+                                   }})
         token.update()
         data["success"] = True
         data["msg"] = "Login Successful"
