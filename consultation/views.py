@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from patient.models import PatientModel
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
@@ -90,6 +91,8 @@ class ConsultationAPI(APIView):
                 patient_opd.status = "consultation"
                 patient_opd.save()
 
+                PatientModel.objects.filter(registered_no=request.data["regd_no"]).update(first_edd=request.data["first_edd"])
+
                 if "medicine" in request.data:
                     add_medicine_for_consultaion(request, serializer.data["consultation_id"])
 
@@ -133,6 +136,7 @@ def patch(request, id):
 
         if serializer.is_valid():
             serializer.save()
+            PatientModel.objects.filter(registered_no=request.data["regd_no"]).update(first_edd=request.data["first_edd"])
 
             if "medicine" in request.data:
                 add_medicine_for_consultaion(request, serializer.data["consultation_id"])
