@@ -16,12 +16,15 @@ class ConsultationSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(ConsultationSerializers, self).to_representation(instance)
 
+
         if "patient_opd" in ret:
             ret["patient_opd_id"] = ret["patient_opd"]
             del ret["patient_opd"]
 
         if "diagnosis" in ret:
             ret["diagnosis_name"] = DiagnosisSerializers(instance.diagnosis).data["diagnosis_name"]
+        
+        ret["first_edd"] = PatientModel.objects.filter(registered_no=instance.regd_no).values('first_edd')[0]["first_edd"]
 
         for fld_nm in ["eb_pp", "ps", "pv", "fu"]:
             fld_name = fld_nm + "_name"
