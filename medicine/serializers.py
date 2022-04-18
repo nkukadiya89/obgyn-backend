@@ -63,7 +63,7 @@ class MedicineTypeSerializers(serializers.ModelSerializer):
 class MedicineSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(MedicineSerializers, self).to_representation(instance)
-
+        
         if "medicine_type" in ret:
             ret['medicine_type_name'] = MedicineTypeSerializers(instance.medicine_type).data["medicine_type"]
 
