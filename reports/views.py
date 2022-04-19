@@ -7,8 +7,10 @@ from patient_mtp.models import PatientMtpModel
 from patient_opd.models import PatientOpdModel
 from reports.report_sync import download_report
 from template_header.models import TemplateHeaderModel
+from django.views.decorators.csrf import csrf_exempt
 
 
+@csrf_exempt
 def usg_report(request, id, language_id=None):
     patient_opd = PatientOpdModel.objects.filter(pk=id).select_related('consultationmodel')
 
@@ -38,6 +40,7 @@ def usg_report(request, id, language_id=None):
                   {"context": context, "template_header": template_header.header_text.replace("'", "\"")})
 
 
+@csrf_exempt
 def consultation_report(request, id, language_id=None):
     patient_opd = PatientOpdModel.objects.filter(pk=id).select_related('consultationmodel')
 
@@ -97,6 +100,7 @@ def consultation_report(request, id, language_id=None):
                   {"context": context, "template_header": template_header.header_text.replace("'", "\"")})
 
 
+@csrf_exempt
 def discharge_report(request, id, language_id=None):
     patient_opd = PatientOpdModel.objects.filter(pk=id).select_related('patientdischargemodel').first()
     if language_id:
@@ -127,6 +131,7 @@ def discharge_report(request, id, language_id=None):
                   {"context": context, "template_header": template_header.header_text.replace("'", "\"")})
 
 
+@csrf_exempt
 def birth_report(request, id, language_id=None):
     patient = PatientModel.objects.filter(pk=id).first()
     patient_delivery = PatientDeliveryModel.objects.filter(patient=patient).first()
@@ -156,12 +161,10 @@ def birth_report(request, id, language_id=None):
                   {"context": context, "template_header": template_header.header_text.replace("'", "\"")})
 
 
+@csrf_exempt
 def mtp_list_report(request, id, language_id=None):
-    from_date = "2022-01-01" #request.body.get('from_date')
-    to_date = "2022-12-31 "#request.body.get('to_date')
-
-
-
+    from_date = request.body.get('from_date')
+    to_date = request.body.get('to_date')
 
     patient_mtp_list = PatientMtpModel.objects.all()
 
@@ -199,6 +202,7 @@ def mtp_list_report(request, id, language_id=None):
                   {"context_list": context_list, "template_header": template_header.header_text.replace("'", "\"")})
 
 
+@csrf_exempt
 def referal_slip_report(request, id, language_id=None):
     if language_id:
         template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id).first()
@@ -212,11 +216,13 @@ def referal_slip_report(request, id, language_id=None):
                   {"context": context, "template_header": template_header.header_text.replace("'", "\"")})
 
 
+@csrf_exempt
 def download_pdf_report(request, report_name, id, language_id=None):
     url = "/report/" + report_name + "/" + str(id) + "/" + str(language_id)
     return download_report(request, url, "usg_report.pdf", "A4", "Potrait")
 
 
+@csrf_exempt
 def view_report(request, id, language_id=None):
     template_name = "reports/en/report-3.html"
     return render(request, template_name)
