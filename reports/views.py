@@ -47,12 +47,12 @@ def consultation_report(request, id, language_id=None):
     
     consultation = ConsultationModel.objects.filter(pk=id).first()
     if consultation == None:
-        return HttpResponse("Record Does not exist", status=status.HTTP_400_BAD_REQUEST)
+        return HttpResponse("Consultation Record Does not exist", status=status.HTTP_400_BAD_REQUEST)
 
     language = LanguageModel.objects.filter(pk=language_id).first()
 
     if language == None:
-        return HttpResponse("Language Does not exist", status=status.HTTP_400_BAD_REQUEST)
+        return HttpResponse("Invalid Language selected", status=status.HTTP_400_BAD_REQUEST)
 
     patient_opd = PatientOpdModel.objects.filter(pk=id).select_related('consultationmodel')
 
@@ -66,7 +66,7 @@ def consultation_report(request, id, language_id=None):
 
     patient_opd = patient_opd.first()
     if patient_opd == None:
-        return HttpResponse("Record Does not exist", status=status.HTTP_400_BAD_REQUEST)
+        return HttpResponse("OPD Record Does not exist", status=status.HTTP_400_BAD_REQUEST)
         
     context = {}
     context["receipt_date"] = str(patient_opd.opd_date)
