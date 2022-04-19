@@ -7,6 +7,8 @@ from patient_mtp.models import PatientMtpModel
 from patient_opd.models import PatientOpdModel
 from reports.report_sync import download_report
 from template_header.models import TemplateHeaderModel
+from consultation.models import ConsultationModel
+from language.models import LanguageModel
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -42,16 +44,30 @@ def usg_report(request, id, language_id=None):
 
 @csrf_exempt
 def consultation_report(request, id, language_id=None):
+    
+    consultation = ConsultationModel.objects.filter(pk=id).first()
+    if consultation == None:
+        return HttpResponse("Record Does not exist", status=status.HTTP_400_BAD_REQUEST)
+
+    language = LanguageModel.objects.filter(pk=language_id).first()
+
+    if language == None:
+        return HttpResponse("Language Does not exist", status=status.HTTP_400_BAD_REQUEST)
+
     patient_opd = PatientOpdModel.objects.filter(pk=id).select_related('consultationmodel')
+
 
     if language_id:
         template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id).first()
     else:
         template_header = TemplateHeaderModel.objects.filter(pk=1).first()
 
+    
+
     patient_opd = patient_opd.first()
     if patient_opd == None:
         return HttpResponse("Record Does not exist", status=status.HTTP_400_BAD_REQUEST)
+        
     context = {}
     context["receipt_date"] = str(patient_opd.opd_date)
     context["regd_no"] = patient_opd.patient.registered_no
