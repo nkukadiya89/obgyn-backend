@@ -56,7 +56,7 @@ def consultation_report(request, id, language_id=None):
     context["receipt_date"] = str(patient_opd.opd_date)
     context["regd_no"] = patient_opd.patient.registered_no
     context["name"] = "".join(
-        [patient_opd.patient.first_name, " ", patient_opd.patient.middle_name, " ", patient_opd.patient.last_name])
+        [patient_opd.patient.first_name if patient_opd.patient.first_name else "", " ", patient_opd.patient.middle_name if patient_opd.patient.middle_name else "", " ", patient_opd.patient.last_name if patient_opd.patient.last_name else ""])
     context["mobile_no"] = patient_opd.patient.phone
     context["address"] = "".join([" ", patient_opd.patient.city.city_name, " ",
                                   patient_opd.patient.district.district_name, " ",
