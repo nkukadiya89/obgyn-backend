@@ -57,7 +57,7 @@ class AdviceAPI(APIView):
 
         try:
             advice = AdviceModel.objects.filter(advice_id__in=del_id["id"])
-        except AdviceModel:
+        except AdviceModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
             data["data"] = []

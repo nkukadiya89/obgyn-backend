@@ -58,7 +58,7 @@ class ConsultationAPI(APIView):
 
         try:
             consultation = ConsultationModel.objects.filter(consultation_id__in=del_id["id"])
-        except ConsultationModel:
+        except ConsultationModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
             data["data"] = []

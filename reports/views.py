@@ -1,4 +1,5 @@
 from django.shortcuts import render, HttpResponse
+
 from rest_framework import status
 
 from patient.models import PatientModel
@@ -54,8 +55,12 @@ def consultation_report(request, id, language_id=None):
     if language == None:
         return HttpResponse("Invalid Language selected", status=status.HTTP_400_BAD_REQUEST)
 
-    patient_opd = PatientOpdModel.objects.filter(pk=id).select_related('consultationmodel')
+    patient_opd = PatientOpdModel.objects.filter(pk=id)
+    if len(patient_opd) > 0:
+        return HttpResponse("OPD Record Does not exist", status=status.HTTP_400_BAD_REQUEST)
 
+    patient_opd = patient_opd.select_related('consultationmodel')
+    patient_opd = patient_opd.first()
 
     if language_id:
         template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id).first()
@@ -64,9 +69,6 @@ def consultation_report(request, id, language_id=None):
 
     
 
-    patient_opd = patient_opd.first()
-    if patient_opd == None:
-        return HttpResponse("OPD Record Does not exist", status=status.HTTP_400_BAD_REQUEST)
         
     context = {}
     context["receipt_date"] = str(patient_opd.opd_date)

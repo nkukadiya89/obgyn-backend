@@ -52,7 +52,7 @@ class DistrictAPI(APIView):
 
         try:
             district = DistrictModel.objects.filter(district_id__in=del_id["id"])
-        except DistrictModel:
+        except DistrictModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
             data["data"] = []
