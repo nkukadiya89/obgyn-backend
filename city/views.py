@@ -55,7 +55,7 @@ class CityAPI(APIView):
 
         try:
             city = CityModel.objects.filter(city_id__in=del_id["id"])
-        except CityModel:
+        except CityModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
             data["data"] = []
