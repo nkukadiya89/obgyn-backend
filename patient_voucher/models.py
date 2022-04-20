@@ -27,7 +27,7 @@ class PatientVoucherModel(models.Model):
     patient = models.ForeignKey(PatientModel, on_delete=models.DO_NOTHING)
     regd_no = models.CharField(max_length=100, default="")
 
-    voucher_no = models.CharField(max_length=25, default="")
+    voucher_no = models.CharField(max_length=25, default="", null=True)
     bill_date = models.DateField(null=True)
     voucher_type = models.CharField(max_length=2, default="S")
     amount = models.FloatField(default=0)
