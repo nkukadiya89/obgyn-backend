@@ -38,6 +38,7 @@ class DynamicFieldModelSerializer(serializers.ModelSerializer):
         if "district" in ret: ret['district_name'] = DistrictSerializers(instance.district).data["district_name"]
         if "taluka" in ret: ret['taluka_name'] = TalukaSerializers(instance.taluka).data["taluka_name"]
         if "city" in ret: ret['city_name'] = CitySerializers(instance.city).data["city_name"]
+
         if "default_language" in ret: ret['default_language_name'] = \
             LanguageSerializers(instance.default_language).data[
                 "language"]
@@ -130,7 +131,7 @@ class UserSerializers(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'middle_name', 'password', 'user_type', 'hospital_name',
-                  'phone', 'state', 'city', 'area', 'pincode', 'email', 'landline', 'fax_number', 'degree',
+                  'phone', 'state', 'city','taluka','district', 'area', 'pincode', 'email', 'landline', 'fax_number', 'degree',
                   'speciality', 'aadhar_card', 'registration_no', 'default_language', 'designation', 'hospital',
                   'username', 'uid','rs_per_visit','rs_per_usg','rs_per_room','operative_charge','rs_per_day_nursing',
                   'user_code', 'created_by']
