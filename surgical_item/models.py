@@ -39,3 +39,13 @@ class SurgicalItemGroupModel(models.Model):
 
     class Meta:
         db_table = "surgical_item_group"
+
+
+class SurgicalItemGroupSurgicalItem(models.Model):
+    id = models.AutoField(primary_key=True)
+    surgicalitemgroupmodel_id = models.IntegerField()
+    surgicalitemmodel_id = models.IntegerField()
+
+    class Meta:
+        db_table = "surgical_item_group_surgical_item"
+        managed = False

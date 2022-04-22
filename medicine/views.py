@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from django.db.models import Q
+from diagnosis.models import DiagnosisMedicineModel
 
 from utility.search_filter import filtering_query
 from .models import MedicineModel, TimingModel, MedicineTypeModel
@@ -142,7 +143,8 @@ class MedicineTypeAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":
-            result = medicine_type.update(deleted=1)
+            result = medicine_type.delete()
+            DiagnosisMedicineModel.objects.filter(medicine_id__in=del_id["id"]).delete()
             data["success"] = True
             data["msg"] = "Data deleted successfully."
             data["deleted"] = result

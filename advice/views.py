@@ -10,7 +10,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 from utility.search_filter import filtering_query
-from .models import AdviceModel, AdviceGroupModel
+from .models import AdviceModel, AdviceGroupModel, AdviceGroupAdviceModel
 from .serializers import AdviceSerializers, AdviceGroupSerializers
 from .utils_view import insert_advice_group
 from django.db.models import Q
@@ -64,7 +64,9 @@ class AdviceAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":
-            result = advice.update(deleted=1)
+            result = advice.delete()
+
+            AdviceGroupAdviceModel.objects.filter(advicemodel_id__in=del_id["id"]).delete()
             data["success"] = True
             data["msg"] = "Data deleted successfully."
             data["deleted"] = result
@@ -196,7 +198,7 @@ class AdviceGroupAPI(APIView):
 
         try:
             advice_group = AdviceGroupModel.objects.filter(advice_group_id__in=del_id["id"])
-        except AdviceGroupModel:
+        except AdviceGroupModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
             data["data"] = []

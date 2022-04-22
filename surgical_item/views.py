@@ -10,7 +10,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 from utility.search_filter import filtering_query
-from .models import SurgicalItemModel, SurgicalItemGroupModel
+from .models import SurgicalItemModel, SurgicalItemGroupModel, SurgicalItemGroupSurgicalItem
 from .serializers import SurgicalItemSerializers, SurgicalItemGroupSerializers
 from django.db.models import Q
 
@@ -60,7 +60,9 @@ class SurgicalItemAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":
-            result = surgical_item.update(deleted=1)
+            result = surgical_item.delete()
+            SurgicalItemGroupSurgicalItem.objects.filter(surgical_item_id__in=del_id["id"]).delete()
+            
             data["success"] = True
             data["msg"] = "Data deleted successfully."
             data["deleted"] = result

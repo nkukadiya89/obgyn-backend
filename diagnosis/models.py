@@ -33,3 +33,4 @@ class DiagnosisMedicineModel(models.Model):
     class Meta:
         db_table = "diagnosis_medicine"
         managed = False
+

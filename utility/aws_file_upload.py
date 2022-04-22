@@ -40,7 +40,7 @@ def upload_file_to_bucket(upload_file, allowed_type, folder_name, p_value, file_
     picture_format = 'image/' + file_to_upload.format.lower()
 
     tempfile = settings.MEDIA_ROOT + file_name + file_type
-    file_to_upload.save(tempfile, optimize=True, quality=10)
+    file_to_upload.save(tempfile)
 
     s3_file = f"{folder_name}" + str(p_value) + "_" + file_name + file_type
 

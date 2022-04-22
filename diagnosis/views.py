@@ -61,7 +61,7 @@ class DiagnosisAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":
-            result = diagnosis.update(deleted=1)
+            result = diagnosis.delete()
             data["success"] = True
             data["msg"] = "Data deleted successfully."
             data["deleted"] = result
