@@ -83,9 +83,14 @@ class PatientIndoorAPI(APIView):
 
             if serializer.is_valid():
                 serializer.save()
+                
+                if "advice" in request.data:
+                    print("value of advice",request.data.get('advice'))
+                    if request.data.get('advice'):
+                        indoor_advice_insert(request.data.get('advice'), serializer.data["patient_indoor_id"],
+                                                request.data.get('created_by'))
 
-                indoor_advice_insert(request.data.get('advice'), serializer.data["patient_indoor_id"],
-                                     request.data.get('created_by'))
+
                 patient_opd = PatientOpdModel.objects.filter(pk=request.data["patient_opd_id"]).first()
                 patient_opd.status = "indoor"
                 patient_opd.save()
@@ -111,6 +116,7 @@ def patch(request, id):
             patient_indoor = PatientIndoorModel.objects.get(pk=id)
         else:
             patient_indoor = PatientIndoorModel.objects.filter(deleted=0)
+
         if "patient_opd_id" not in request.data:
             data["success"] = False
             data["msg"] = "OPD is required"
@@ -131,8 +137,10 @@ def patch(request, id):
         if serializer.is_valid():
             serializer.save()
             if "advice" in request.data:
-                indoor_advice_insert(request.data.get('advice'), serializer.data["patient_indoor_id"],
-                                        request.data.get('created_by'))
+                print("value of advice",request.data.get('advice'))
+                if request.data.get('advice'):
+                    indoor_advice_insert(request.data.get('advice'), serializer.data["patient_indoor_id"],
+                                            request.data.get('created_by'))
             data["success"] = True
             data["msg"] = "Data updated successfully"
             data["data"] = serializer.data
