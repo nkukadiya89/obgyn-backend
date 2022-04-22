@@ -1,6 +1,6 @@
 import json
 
-from django.utils.timezone import now
+
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -16,6 +16,7 @@ from user.models import User
 from utility.search_filter import filtering_query
 from .models import PatientOpdModel
 from .serializers import PatientOpdSerializers
+from user.user_views import generate_regd_no
 
 
 class PatientOpdAPI(APIView):
@@ -36,7 +37,7 @@ class PatientOpdAPI(APIView):
 
         try:
             patient_opd = PatientOpdModel.objects.filter(patient_opd_id__in=del_id["id"])
-        except PatientOpdModel:
+        except PatientOpdModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
             data["data"] = []
@@ -52,27 +53,31 @@ class PatientOpdAPI(APIView):
     def post(self, request):
         data = {}
         if request.method == "POST":
+            patient_opd_data = json.loads(request.data["data"])["patient_opd"]
+            patient_data = json.loads(request.data["data"])["patient"]
+            if "phone" in patient_data: 
+                if len(str(patient_data["phone"])) < 5:
+                    patient_data["phone"] = "F_" + generate_regd_no()
 
-            if "regd_no" in json.loads(request.data["data"])["patient_opd"]:
-                regd_no = json.loads(request.data["data"])["patient_opd"].get("regd_no")
+            if "regd_no" in patient_opd_data:
+                regd_no = patient_opd_data.get("regd_no")
                 if len(regd_no) > 0:
                     patient = PatientModel.objects.get(registered_no=str(regd_no))
-                    patient_serializer = PatientSerializers(patient, data=json.loads(request.data["data"])["patient"],
+                    patient_serializer = PatientSerializers(patient, data=patient_data,
                                                             partial=True)
                 else:
                     patient = PatientModel()
-                    patient_serializer = PatientSerializers(patient, data=json.loads(request.data["data"])["patient"])
+                    patient_serializer = PatientSerializers(patient, data=patient_data)
 
             else:
                 patient = PatientModel()
-                patient_serializer = PatientSerializers(patient, data=json.loads(request.data["data"])["patient"])
+                patient_serializer = PatientSerializers(patient, data=patient_data)
 
             if patient_serializer.is_valid():
                 patient_serializer.save()
                 if not patient_serializer.partial:
-                    patient.registered_no = \
-                        str(now()).replace("-", "").replace(":", "").replace(" ", "").replace(".", "").split("+")[0][
-                        :16]
+                    patient.registered_no = generate_regd_no()
+                        
                     patient.save()
 
                 user = User.objects.filter(pk=patient.user_ptr_id).first()
@@ -92,7 +97,7 @@ class PatientOpdAPI(APIView):
                 data["msg"] = patient_serializer.errors
                 data["data"] = patient_serializer.data
                 return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-            opd_data = json.loads(request.data["data"])["patient_opd"]
+            opd_data = patient_opd_data
             opd_data["regd_no"] = str(patient.registered_no)
 
             patient_opd = PatientOpdModel()
@@ -128,8 +133,11 @@ def patch(request, id):
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == "POST":
-        serializer = PatientOpdSerializers(patient_opd, json.loads(request.data["data"])["patient_opd"], partial=True)
-        patient_serializer = PatientSerializers(patient, json.loads(request.data["data"])["patient"], partial=True)
+        patient_opd_data = json.loads(request.data["data"])["patient_opd"]
+        patient_data = json.loads(request.data["data"])["patient"]
+
+        serializer = PatientOpdSerializers(patient_opd, patient_opd_data, partial=True)
+        patient_serializer = PatientSerializers(patient, patient_data, partial=True)
 
         if serializer.is_valid():
             serializer.save()
