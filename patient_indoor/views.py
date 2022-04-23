@@ -1,7 +1,11 @@
 import json
 
 from rest_framework import status
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -44,7 +48,7 @@ class PatientIndoorAPI(APIView):
 
     def delete(self, request):
         data = {}
-        del_id = json.loads(request.body.decode('utf-8'))
+        del_id = json.loads(request.body.decode("utf-8"))
 
         if "id" not in del_id:
             data["success"] = False
@@ -53,7 +57,9 @@ class PatientIndoorAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
-            patient_indoor = PatientIndoorModel.objects.filter(patient_indoor_id__in=del_id["id"])
+            patient_indoor = PatientIndoorModel.objects.filter(
+                patient_indoor_id__in=del_id["id"]
+            )
         except PatientIndoorModel:
             data["success"] = False
             data["msg"] = "Record does not exist"
@@ -83,15 +89,13 @@ class PatientIndoorAPI(APIView):
 
             if serializer.is_valid():
                 serializer.save()
-                
-                if "advice" in request.data:
-                    print("value of advice",request.data.get('advice'))
-                    if request.data.get('advice'):
-                        indoor_advice_insert(request.data.get('advice'), serializer.data["patient_indoor_id"],
-                                                request.data.get('created_by'))
 
+                if "advice_lst" in request.data:
+                        indoor_advice_insert(request,serializer.data["patient_indoor_id"])
 
-                patient_opd = PatientOpdModel.objects.filter(pk=request.data["patient_opd_id"]).first()
+                patient_opd = PatientOpdModel.objects.filter(
+                    pk=request.data["patient_opd_id"]
+                ).first()
                 patient_opd.status = "indoor"
                 patient_opd.save()
 
@@ -106,7 +110,7 @@ class PatientIndoorAPI(APIView):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def patch(request, id):
@@ -132,15 +136,20 @@ def patch(request, id):
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == "POST":
-        serializer = PatientIndoorSerializers(patient_indoor, request.data, partial=True)
+        serializer = PatientIndoorSerializers(
+            patient_indoor, request.data, partial=True
+        )
 
         if serializer.is_valid():
             serializer.save()
             if "advice" in request.data:
-                print("value of advice",request.data.get('advice'))
-                if request.data.get('advice'):
-                    indoor_advice_insert(request.data.get('advice'), serializer.data["patient_indoor_id"],
-                                            request.data.get('created_by'))
+                print("value of advice", request.data.get("advice"))
+                if request.data.get("advice"):
+                    indoor_advice_insert(
+                        request.data.get("advice"),
+                        serializer.data["patient_indoor_id"],
+                        request.data.get("created_by"),
+                    )
             data["success"] = True
             data["msg"] = "Data updated successfully"
             data["data"] = serializer.data
@@ -152,7 +161,7 @@ def patch(request, id):
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticatedOrReadOnly])
 # ================= Retrieve Single or Multiple records=========================
@@ -166,7 +175,9 @@ def get(request, id=None):
             patient_indoor = PatientIndoorModel.objects.filter(deleted=0)
 
         data["total_record"] = len(patient_indoor)
-        patient_indoor, data = filtering_query(patient_indoor, query_string, "patient_indoor_id", "PATIENTINDOOR")
+        patient_indoor, data = filtering_query(
+            patient_indoor, query_string, "patient_indoor_id", "PATIENTINDOOR"
+        )
 
     except PatientIndoorModel.DoesNotExist:
         data["success"] = False
@@ -211,7 +222,7 @@ class IndoorAdviceAPI(APIView):
 
     def delete(self, request):
         data = {}
-        del_id = json.loads(request.body.decode('utf-8'))
+        del_id = json.loads(request.body.decode("utf-8"))
 
         if "id" not in del_id:
             data["success"] = False
@@ -220,7 +231,9 @@ class IndoorAdviceAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
-            indoor_advice = IndoorAdviceModel.objects.filter(indoor_advice_id__in=del_id["id"])
+            indoor_advice = IndoorAdviceModel.objects.filter(
+                indoor_advice_id__in=del_id["id"]
+            )
         except IndoorAdviceModel:
             data["success"] = False
             data["msg"] = "Record does not exist"
@@ -254,7 +267,7 @@ class IndoorAdviceAPI(APIView):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def indoor_advice_patch(request, id):
@@ -286,7 +299,7 @@ def indoor_advice_patch(request, id):
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticatedOrReadOnly])
 # ================= Retrieve Single or Multiple records=========================
@@ -300,7 +313,9 @@ def indoor_advice_get(request, id=None):
             indoor_advice = IndoorAdviceModel.objects.filter(deleted=0)
 
         data["total_record"] = len(indoor_advice)
-        indoor_advice, data = filtering_query(indoor_advice, query_string, "indoor_advice_id", "INDOORADVICE")
+        indoor_advice, data = filtering_query(
+            indoor_advice, query_string, "indoor_advice_id", "INDOORADVICE"
+        )
 
     except IndoorAdviceModel.DoesNotExist:
         data["success"] = False
