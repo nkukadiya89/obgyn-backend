@@ -3,6 +3,8 @@ from rest_framework import serializers
 from patient.models import PatientModel
 from .models import PatientIndoorModel, IndoorAdviceModel
 from manage_fields.serializers import ManageFieldsSerializers
+from advice.serializers import AdviceSerializers
+from advice.models import AdviceModel
 
 
 class PatientIndoorSerializers(serializers.ModelSerializer):
@@ -18,6 +20,11 @@ class PatientIndoorSerializers(serializers.ModelSerializer):
             search_instance = "instance" + "." + fld_nm
             if fld_nm in ret:
                 ret[fld_name] = ManageFieldsSerializers(eval(search_instance)).data["field_value"]
+
+        advice = AdviceModel.objects.filter(indooradvicemodel__patient_indoor_id=instance.patient_indoor_id)
+
+        advice = AdviceSerializers(advice, many=True)
+        ret["advice_lst"] = advice.data
 
         return ret
 
