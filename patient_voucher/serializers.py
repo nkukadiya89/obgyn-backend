@@ -1,7 +1,10 @@
+from re import T
 from rest_framework import serializers
 
 from patient.models import PatientModel
 from .models import PatientVoucherModel, VoucherItemModel
+from surgical_item.models import SurgicalItemModel
+from surgical_item.serializers import SurgicalItemSerializers
 
 
 class PatientVoucherSerializers(serializers.ModelSerializer):
@@ -12,7 +15,14 @@ class PatientVoucherSerializers(serializers.ModelSerializer):
         if "patient_opd" in ret:
             ret["patient_opd_id"] = ret["patient_opd"]
             del ret["patient_opd"]
+        
+        # surgical_item = SurgicalItemModel.objects.filter(voucheritemmodel__patient_voucher_id=instance.patient_voucher_id)
+        # surgical_item = SurgicalItemSerializers(surgical_item,many=True)
+        # ret["surgical_item"] = surgical_item.data
 
+        voucher_item = VoucherItemModel.objects.filter(patient_voucher_id=instance.patient_voucher_id)
+        voucher_item = VoucherItemSerializers(voucher_item, many=True)
+        ret["voucher_item"] = voucher_item.data
         return ret
 
     def validate(self, data):
@@ -34,8 +44,18 @@ class PatientVoucherSerializers(serializers.ModelSerializer):
 
 
 class VoucherItemSerializers(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        ret = super(VoucherItemSerializers, self).to_representation(instance)
+
+        surgical_item = SurgicalItemModel.objects.filter(voucheritemmodel__voucher_item_id=instance.voucher_item_id)
+        surgical_item = SurgicalItemSerializers(surgical_item,many=True)
+        ret["surgical_item"] = surgical_item.data
+
+        return ret
+
     def validate(self, data):
         data["total_amount"] = float(data["unit"]) * float(data["rate"])
+        
 
         return data
 
