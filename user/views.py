@@ -14,6 +14,7 @@ from utility.search_filter import user_filtering_query
 from .models import User
 from .serializers import UserSerializers, DynamicFieldModelSerializer
 from django.utils.timezone import now
+from obgyn_config.views import update_global_charges
 
 
 # Create your views here.
@@ -84,6 +85,7 @@ def update_user(request, id):
             if serializer.is_valid():
                 user = serializer.save()
 
+                update_global_charges(request)
                 if "password" in request.data:
                     user.set_password(request.data["password"])
                     user.save()
