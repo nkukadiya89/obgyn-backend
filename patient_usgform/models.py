@@ -5,6 +5,7 @@ from diagnosis.models import DiagnosisModel
 from patient.models import PatientModel
 from patient_opd.models import PatientOpdModel
 from manage_fields.models import ManageFieldsModel
+from user.models import User
 
 
 # Create your models here.
@@ -22,11 +23,11 @@ class PatientUSGFormModel(models.Model):
     result_of_sonography = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="result_of_sonography")
     serial_no_month = models.IntegerField(default=0, null=True)
     serial_no_year = models.IntegerField(default=0, null=True)
-    ref_by_dr = models.CharField(max_length=150, default="", null=True)
+    ref_by_dr = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, related_name="ref_by_dr")
     village = models.CharField(max_length=100, default="", null=True)
     taluka = models.CharField(max_length=100, default="", null=True)
     doctor_center_taluka_district = models.CharField(max_length=250,null=True)
-    any_other = models.CharField(max_length=150,null=True)
+    any_other = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="any_other")
     doctor_address = models.TextField(null=True)
     name_of_doctor = models.CharField(max_length=150,null=True)
     consent_obtained_date = models.DateField(default=now, null=True)
