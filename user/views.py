@@ -5,7 +5,7 @@ from django.shortcuts import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -14,6 +14,7 @@ from utility.search_filter import user_filtering_query
 from .models import User
 from .serializers import UserSerializers, DynamicFieldModelSerializer
 from django.utils.timezone import now
+from obgyn_config.views import update_global_charges
 
 
 # Create your views here.
@@ -63,8 +64,8 @@ def register_view(request):
 
 
 @api_view(['POST'])
-# @authentication_classes([JWTAuthentication])
-# @permission_classes([IsAuthenticated])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def update_user(request, id):
     data = {}
 
@@ -84,6 +85,7 @@ def update_user(request, id):
             if serializer.is_valid():
                 user = serializer.save()
 
+                update_global_charges(request)
                 if "password" in request.data:
                     user.set_password(request.data["password"])
                     user.save()

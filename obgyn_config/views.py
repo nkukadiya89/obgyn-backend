@@ -58,3 +58,26 @@ def update_obgyn_config(request):
                 obgyn_config.monthly_usg = user.monthly_usg + 1
         
         obgyn_config.save()
+
+
+def update_global_charges(request):
+    user = request.user
+    obgyn_config = ObgynConfigModel.objects.filter(user_id=user.id).first()
+
+    if obgyn_config == None:
+        obgyn_config = ObgynConfigModel.objects.create(user_id=user.id,deleted=0)
+
+    
+
+    if "rs_per_visit" in request.data:
+        obgyn_config.rs_per_visit = request.data.get("rs_per_visit",0)
+    if "rs_per_usg" in request.data:
+        obgyn_config.rs_per_usg = request.data.get("rs_per_usg",0)
+    if "rs_per_room" in request.data:
+        obgyn_config.rs_per_room = request.data.get("rs_per_room",0)
+    if "operative_charge" in request.data:
+        obgyn_config.operative_charge = request.data.get("operative_charge",0)
+    if "rs_per_day_nursing" in request.data:
+        obgyn_config.rs_per_day_nursing = request.data.get("rs_per_day_nursing",0)
+    
+    obgyn_config.save()

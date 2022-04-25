@@ -84,7 +84,7 @@ class PatientUSGFormAPI(APIView):
 
             if serializer.is_valid():
                 serializer.save()
-                if "child" in request.data:
+                if "usg_child" in request.data:
                     insert_child_usgform(request,serializer.data["patient_usgform_id"])
                 
                 update_obgyn_config(request)

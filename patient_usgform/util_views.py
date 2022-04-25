@@ -3,8 +3,8 @@ from patient_usgform.serializers import USGFormChildSerializers
 
 
 def insert_child_usgform(request, patient_usgform_id):
-    if "child" in request.data:
-        child_list = request.data.get('child')
+    if "usg_child" in request.data:
+        child_list = request.data.get('usg_child')
 
         child_dict = {}
         for child in child_list:
