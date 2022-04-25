@@ -3,6 +3,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.utils.timezone import now
 from language.models import LanguageModel
+from obgyn_config.models import ObgynConfigModel
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -20,15 +21,28 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                     [permission_name, permission.name.split(" ")[1]])
             else:
                 permission_list[permission.content_type.app_label] = permission.name.split(" ")[1]
+        
+        obgyn_config = ObgynConfigModel.objects.filter(user_id=self.user.id).first()
+        if obgyn_config == None:
+            rs_per_visit=rs_per_usg=rs_per_room=operative_charge=rs_per_day_nursing=monthly_usg=yearly_usg=0
+        else:
+            rs_per_visit=obgyn_config.rs_per_visit
+            rs_per_usg=obgyn_config.rs_per_usg
+            rs_per_room=obgyn_config.rs_per_room
+            operative_charge=obgyn_config.operative_charge
+            rs_per_day_nursing=obgyn_config.rs_per_day_nursing
+            monthly_usg=obgyn_config.monthly_usg
+            yearly_usg=obgyn_config.yearly_usg
         token.update({"userData": {'userName': self.user.username, 'userId': self.user.id,
                                    "defaultLanguageId": LanguageModel.objects.get(
                                        pk=self.user.default_language_id).language_id,
                                    "defaultLanguage": LanguageModel.objects.get(pk=self.user.default_language_id).code,
                                    "hospital_id":self.user.hospital_id,
                                    "user_type": self.user.user_type, "permission": permission_list,
-                                   "rs_per_visit": self.user.rs_per_visit,"rs_per_usg": self.user.rs_per_usg,
-                                   "rs_per_room": self.user.rs_per_room,"operative_charge": self.user.operative_charge,
-                                   "rs_per_day_nursing": self.user.rs_per_day_nursing,
+                                   "rs_per_visit": rs_per_visit,"rs_per_usg": rs_per_usg,
+                                   "rs_per_room": rs_per_room,"operative_charge": operative_charge,
+                                   "rs_per_day_nursing": rs_per_day_nursing,"monthly_usg": monthly_usg,
+                                   "yearly_usg": yearly_usg,
                                    }})
         token.update()
         data["success"] = True

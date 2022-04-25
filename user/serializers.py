@@ -51,7 +51,7 @@ class DynamicFieldModelSerializer(serializers.ModelSerializer):
                   'phone', 'state', 'district', 'taluka', 'city', 'area', 'pincode', 'email', 'landline', 'fax_number',
                   'degree',
                   'speciality', 'aadhar_card', 'registration_no', 'default_language', 'designation', 'hospital',
-                  'username','rs_per_visit','rs_per_usg','rs_per_room','operative_charge','rs_per_day_nursing',
+                  'username',
                   'user_code', 'created_by']
 
 
@@ -59,7 +59,9 @@ class UserSerializers(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         ret = super(UserSerializers, self).to_representation(instance)
-        ret.pop('password')
+
+        if "password" in ret:
+            ret.pop('password')
 
         if instance.user_type == "HOSPITAL":
             ret.pop('first_name')
@@ -133,5 +135,4 @@ class UserSerializers(serializers.ModelSerializer):
         fields = ['id', 'first_name', 'last_name', 'middle_name', 'password', 'user_type', 'hospital_name',
                   'phone', 'state', 'city','taluka','district', 'area', 'pincode', 'email', 'landline', 'fax_number', 'degree',
                   'speciality', 'aadhar_card', 'registration_no', 'default_language', 'designation', 'hospital',
-                  'username', 'uid','rs_per_visit','rs_per_usg','rs_per_room','operative_charge','rs_per_day_nursing',
-                  'user_code', 'created_by']
+                  'username', 'uid','user_code', 'created_by']

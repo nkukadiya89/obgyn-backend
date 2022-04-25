@@ -90,13 +90,6 @@ class User(AbstractUser):
     # FIELDS FOR STAFF
     designation = models.CharField(max_length=25, null=True)
     uid = models.CharField(max_length=100, default="")
-
-    #SETTINGS FIELDS
-    rs_per_visit = models.FloatField(default=0, null=True)
-    rs_per_usg = models.FloatField(default=0, null=True)
-    rs_per_room = models.FloatField(default=0, null=True)
-    operative_charge = models.FloatField(default=0, null=True)
-    rs_per_day_nursing = models.FloatField(default=0, null=True)
     
 
     created_by = models.IntegerField(default=1, unique=False)

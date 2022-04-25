@@ -14,6 +14,7 @@ from utility.search_filter import filtering_query
 from .models import PatientUSGFormModel, USGFormChildModel
 from .serializers import PatientUSGFormSerializers, USGFormChildSerializers
 from .util_views import insert_child_usgform
+from obgyn_config.views import update_obgyn_config
 
 
 class PatientUSGFormAPI(APIView):
@@ -85,6 +86,8 @@ class PatientUSGFormAPI(APIView):
                 serializer.save()
                 if "child" in request.data:
                     insert_child_usgform(request,serializer.data["patient_usgform_id"])
+                
+                update_obgyn_config(request)
                 patient_opd = PatientOpdModel.objects.filter(pk=request.data["patient_opd_id"]).first()
                 patient_opd.status = "usgform"
                 patient_opd.save()

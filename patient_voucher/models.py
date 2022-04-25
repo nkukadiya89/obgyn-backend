@@ -72,8 +72,6 @@ def voucher_post_save(sender, instance, *args, **kwargs):
                                                                                                 voucher_no__icontains=
                                                                                                 fy[0],
                                                                                                 voucher_type=instance.voucher_type).last()
-        print(voucher)
-
         if voucher:
             inv_no = voucher.voucher_no
 
