@@ -86,12 +86,15 @@ class PatientUSGFormAPI(APIView):
                 serializer.save()
                 if "usg_child" in request.data:
                     insert_child_usgform(request,serializer.data["patient_usgform_id"])
+                    serializer = PatientUSGFormSerializers(patient_usgform)
                 
                 update_obgyn_config(request)
                 patient_opd = PatientOpdModel.objects.filter(pk=request.data["patient_opd_id"]).first()
                 patient_opd.status = "usgform"
                 patient_opd.save()
 
+                
+                
                 data["success"] = True
                 data["msg"] = "Data updated successfully"
                 data["data"] = serializer.data
