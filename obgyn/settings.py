@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'patient_indoor',
     'template_header',
     'financial_year',
+    'obgyn_config',
 ]
 
 MIDDLEWARE = [

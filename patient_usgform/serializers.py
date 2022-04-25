@@ -31,8 +31,8 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
 
             ret["indication_name"] = indication_list
 
-        if "ref_by_dr" in ret:
-            ret["ref_by_dr_name"] = UserSerializers(instance.ref_by_dr).data["first_name"].title() + " "+ UserSerializers(instance.ref_by_dr).data["last_name"].title()
+        if "name_of_doctor" in ret:
+            ret["name_of_doctor_name"] = UserSerializers(instance.name_of_doctor).data["first_name"].title() + " "+ UserSerializers(instance.name_of_doctor).data["last_name"].title()
 
         for fld_nm in ["result_of_sonography", "any_indication_mtp","any_other"]:
             fld_name = fld_nm + "_name"
