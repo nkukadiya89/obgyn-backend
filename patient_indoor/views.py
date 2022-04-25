@@ -92,7 +92,7 @@ class PatientIndoorAPI(APIView):
 
                 if "advice_lst" in request.data:
                         indoor_advice_insert(request,serializer.data["patient_indoor_id"])
-                        serializer = PatientIndoorSerializers(patient_indoor)
+                serializer = PatientIndoorSerializers(patient_indoor)
 
                 patient_opd = PatientOpdModel.objects.filter(
                     pk=request.data["patient_opd_id"]

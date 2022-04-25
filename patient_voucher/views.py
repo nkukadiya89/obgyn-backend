@@ -89,7 +89,7 @@ class PatientVoucherAPI(APIView):
 
                 if "surgical_item" in request.data:
                     insert_surgical_item(request, serializer.data["patient_voucher_id"])
-                    serializer = PatientVoucherSerializers(patient_voucher)
+                serializer = PatientVoucherSerializers(patient_voucher)
 
                 data["success"] = True
                 data["msg"] = "Data updated successfully"
