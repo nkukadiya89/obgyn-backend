@@ -24,6 +24,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                                    "defaultLanguageId": LanguageModel.objects.get(
                                        pk=self.user.default_language_id).language_id,
                                    "defaultLanguage": LanguageModel.objects.get(pk=self.user.default_language_id).code,
+                                   "hospital_id":self.user.hospital_id,
                                    "user_type": self.user.user_type, "permission": permission_list,
                                    "rs_per_visit": self.user.rs_per_visit,"rs_per_usg": self.user.rs_per_usg,
                                    "rs_per_room": self.user.rs_per_room,"operative_charge": self.user.operative_charge,
