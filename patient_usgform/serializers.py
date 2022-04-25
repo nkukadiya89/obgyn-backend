@@ -46,7 +46,7 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
         for usg_child in usg_child_list:
             usg_childs = {}
             usg_childs["usgform_child_id"] = usg_child.usgform_child_id
-            usg_childs["gender"] = usg_child.child_gender
+            usg_childs["child_gender"] = usg_child.child_gender
             usg_childs["child_year"] = usg_child.child_year
             usg_childs["child_month"] = usg_child.child_month
 
