@@ -4,6 +4,7 @@ from manage_fields.serializers import ManageFieldsSerializers
 from patient.models import PatientModel
 from manage_fields.models import ManageFieldsModel
 from .models import PatientUSGFormModel, USGFormChildModel
+from user.serializers import UserSerializers
 
 
 class USGFormChildSerializers(serializers.ModelSerializer):
@@ -30,8 +31,10 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
 
             ret["indication_name"] = indication_list
 
+        if "ref_by_dr" in ret:
+            ret["ref_by_dr_name"] = UserSerializers(instance.ref_by_dr).data["first_name"].title() + " "+ UserSerializers(instance.ref_by_dr).data["last_name"].title()
 
-        for fld_nm in ["result_of_sonography", "any_indication_mtp"]:
+        for fld_nm in ["result_of_sonography", "any_indication_mtp","any_other"]:
             fld_name = fld_nm + "_name"
             search_instance = "instance" + "." + fld_nm
             if fld_nm in ret:
