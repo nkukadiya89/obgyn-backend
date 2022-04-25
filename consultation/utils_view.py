@@ -6,8 +6,9 @@ def add_medicine_for_consultaion(request, consultation_id):
     medicine_list = request.data.get('medicine')
 
     #delete already existing medicine against provided consultation_id
-    prescription = PatientPrescriptionModel.objects.filter(consultation_id=consultation_id)
-    prescription.delete()
+    if len(medicine_list) > 0:
+        prescription = PatientPrescriptionModel.objects.filter(consultation_id=consultation_id)
+        prescription.delete()
     
 
     prescription_data = {}
