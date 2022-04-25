@@ -53,7 +53,7 @@ class PatientUSGReportAPI(APIView):
 
         try:
             patient_usgreport = PatientUSGReportModel.objects.filter(patient_usgreport_id__in=del_id["id"])
-        except PatientUSGReportModel:
+        except PatientUSGReportModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
             data["data"] = []
