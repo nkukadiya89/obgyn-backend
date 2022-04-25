@@ -24,7 +24,7 @@ class PatientUSGFormModel(models.Model):
     serial_no_year = models.IntegerField(default=0)
     ref_by_dr = models.CharField(max_length=150, default="")
     village = models.CharField(max_length=100, default="")
-    taluka = models.CharField(max_length=100, default="")
+    taluka = models.CharField(max_length=100, default="", null=True)
     doctor_center_taluka_district = models.CharField(max_length=250,null=True)
     any_other = models.CharField(max_length=150,null=True)
     doctor_address = models.TextField(null=True)
