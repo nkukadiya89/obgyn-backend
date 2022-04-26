@@ -79,6 +79,7 @@ class UserSerializers(serializers.ModelSerializer):
         if instance.user_type == "DOCTOR":
             obgyn_config = ObgynConfigModel.objects.filter(user_id=instance.id).first()
             if obgyn_config:
+                ret["rs_per_visit"] = obgyn_config.rs_per_visit
                 ret["rs_per_usg"]=obgyn_config.rs_per_usg
                 ret["rs_per_room"]=obgyn_config.rs_per_room
                 ret["operative_charge"]=obgyn_config.operative_charge
