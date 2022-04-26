@@ -135,6 +135,10 @@ def patch(request, id):
 
         if serializer.is_valid():
             serializer.save()
+            if "usg_child" in request.data:
+                insert_child_usgform(request,serializer.data["patient_usgform_id"])
+            serializer = PatientUSGFormSerializers(patient_usgform)
+
             data["success"] = True
             data["msg"] = "Data updated successfully"
             data["data"] = serializer.data
