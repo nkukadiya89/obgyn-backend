@@ -7,6 +7,7 @@ from language.serializers import LanguageSerializers
 from state.serializers import StateSerializers
 from taluka.serializers import TalukaSerializers
 from user.models import User
+from obgyn_config.models import ObgynConfigModel
 
 
 class DynamicFieldModelSerializer(serializers.ModelSerializer):
@@ -32,6 +33,12 @@ class DynamicFieldModelSerializer(serializers.ModelSerializer):
             if "first_name" in ret: ret.pop('first_name')
             if "last_name" in ret: ret.pop('last_name')
             if "middle_name" in ret: ret.pop('middle_name')
+        if instance.user_type == "DOCTOR":
+            ret["rs_per_visit"]=instance.obgyn_config.rs_per_visit
+            ret["rs_per_usg"]=instance.obgyn_config.rs_per_usg
+            ret["rs_per_room"]=instance.obgyn_config.rs_per_room
+            ret["operative_charge"]=instance.obgyn_config.operative_charge
+            ret["rs_per_day_nursing"]=instance.obgyn_config.rs_per_day_nursing
 
         if "state" in ret: ret['state_name'] = StateSerializers(instance.state).data["state_name"]
         if "city" in ret: ret['city_name'] = CitySerializers(instance.city).data["city_name"]
@@ -43,6 +50,7 @@ class DynamicFieldModelSerializer(serializers.ModelSerializer):
             LanguageSerializers(instance.default_language).data[
                 "language"]
         if "hospital" in ret: ret['hospitalname'] = UserSerializers(instance.hospital).data["hospital_name"]
+        
         return ret
 
     class Meta:
@@ -63,10 +71,18 @@ class UserSerializers(serializers.ModelSerializer):
         if "password" in ret:
             ret.pop('password')
 
+        print(type(instance.obgynconfigmodel_set))
         if instance.user_type == "HOSPITAL":
             ret.pop('first_name')
             ret.pop('last_name')
             ret.pop('middle_name')
+        if instance.user_type == "DOCTOR":
+            obgyn_config = ObgynConfigModel.objects.filter(user_id=instance.id).first()
+            if obgyn_config:
+                ret["rs_per_usg"]=obgyn_config.rs_per_usg
+                ret["rs_per_room"]=obgyn_config.rs_per_room
+                ret["operative_charge"]=obgyn_config.operative_charge
+                ret["rs_per_day_nursing"]=obgyn_config.rs_per_day_nursing
 
         ret['state_name'] = StateSerializers(instance.state).data["state_name"]
         ret['city_name'] = CitySerializers(instance.city).data["city_name"]
