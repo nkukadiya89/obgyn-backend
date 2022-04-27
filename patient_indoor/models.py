@@ -15,7 +15,7 @@ class PatientIndoorModel(models.Model):
     patient = models.ForeignKey(PatientModel, on_delete=models.DO_NOTHING)
     regd_no = models.CharField(max_length=100, default="")
 
-    indoor_case_number = models.CharField(max_length=100, default="")
+    indoor_case_number = models.CharField(max_length=100, default="", null=True)
     indoor_date = models.DateField(null=True)
     indoor_time = models.CharField(max_length=15, null=True)
     complain = models.CharField(max_length=500, null=True)

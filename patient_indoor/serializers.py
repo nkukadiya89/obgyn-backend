@@ -40,6 +40,7 @@ class PatientIndoorSerializers(serializers.ModelSerializer):
         return data
 
     patient_indoor_id = serializers.IntegerField(read_only=True)
+    
 
     class Meta:
         model = PatientIndoorModel
