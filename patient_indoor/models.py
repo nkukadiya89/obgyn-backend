@@ -1,6 +1,9 @@
 from django.db import models
+from django.db.models.query import Q
+from django.db.models.signals import post_save
 from django.utils.timezone import now
 
+from financial_year.models import FinancialYearModel
 from advice.models import AdviceModel
 from diagnosis.models import DiagnosisModel
 from patient.models import PatientModel
@@ -73,3 +76,31 @@ class IndoorAdviceModel(models.Model):
 
     class Meta:
         db_table = "indoor_advice"
+
+
+def indoor_post_save(sender, instance, *args, **kwargs):
+    if kwargs["created"]:
+        fy = FinancialYearModel.objects.filter(start_date__lte=now(), end_date__gte=now()).values_list(
+            'financial_year').first()
+
+        indoor = PatientIndoorModel.objects.filter(~Q(pk=instance.patient_indoor_id)).filter(deleted=0,
+                                                                                                indoor_case_number__icontains=
+                                                                                                fy[0]).last()
+
+        if indoor:
+            case_no = indoor.indoor_case_number
+
+            if not case_no or len(case_no) == 0:
+                case_no = "I/00001/" + fy[0]
+            else:
+                serial_no = case_no.split("/")[1]
+                serial_no = int(serial_no) + 1
+                case_no = "ICN/" + '{:05}'.format(serial_no) + "/" + fy[0]
+        else:
+            case_no = "ICN/00001/" + fy[0]
+
+        instance.indoor_case_number = case_no
+        instance.save()
+
+
+post_save.connect(indoor_post_save, sender=PatientIndoorModel)
