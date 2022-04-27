@@ -27,6 +27,8 @@ class DiagnosisSerializers(serializers.ModelSerializer):
         diagnosis_type = data.get("diagnosis_type")
         created_by = data.get('created_by')
 
+        print(data["medicine"])
+
         if diagnosis_type.upper() not in ["D", "U"]:
             raise serializers.ValidationError("Diagnosis type not valid")
 

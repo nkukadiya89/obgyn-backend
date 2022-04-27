@@ -1,3 +1,4 @@
+from re import T
 from django.db import models
 from django.db.models.query import Q
 from django.db.models.signals import post_save
@@ -41,7 +42,7 @@ class PatientBillingModel(models.Model):
     nursing_no_of_days = models.IntegerField(default=0)
     rs_per_day = models.FloatField(default=0.0)
     nursing_rs = models.FloatField(default=0.0)
-    other_charge = models.FloatField(default=0.0)
+    other_charge = models.CharField(max_length=250, null=True)
     other_rs = models.FloatField(default=0.0)
     total_rs = models.FloatField(default=0.0)
 
