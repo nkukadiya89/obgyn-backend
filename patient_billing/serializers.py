@@ -3,6 +3,7 @@ from rest_framework import serializers
 from patient.models import PatientModel
 from .models import PatientBillingModel
 from manage_fields.serializers import ManageFieldsSerializers
+from diagnosis.serializers import DiagnosisSerializers
 
 
 class PatientBillingSerializers(serializers.ModelSerializer):
@@ -15,6 +16,9 @@ class PatientBillingSerializers(serializers.ModelSerializer):
 
         if "procedure_name" in ret:
             ret["procedure_name_name"] = ManageFieldsSerializers(instance.procedure_name).data["field_value"]
+        
+        if "diagnosis" in ret:
+            ret["diagnosis_name"] = DiagnosisSerializers(instance.diagnosis).data["diagnosis_name"]
 
         return ret
 

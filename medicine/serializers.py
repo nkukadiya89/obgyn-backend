@@ -109,7 +109,6 @@ class MedicineSerializers(serializers.ModelSerializer):
                                                                                bed_timing_id=bed_timing,
                                                                                for_day=for_day, per_day=per_day)
 
-            print(duplicate_medicin)
             if self.partial:
                 duplicate_medicin = duplicate_medicin.filter(~Q(pk=self.instance.medicine_id)).first()
             else:
