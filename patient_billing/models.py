@@ -7,6 +7,7 @@ from diagnosis.models import DiagnosisModel
 from financial_year.models import FinancialYearModel
 from patient.models import PatientModel
 from patient_opd.models import PatientOpdModel
+from manage_fields.models import ManageFieldsModel
 
 
 # Create your models here.
@@ -24,7 +25,7 @@ class PatientBillingModel(models.Model):
     discharge_date = models.DateField(null=True)
     discharge_time = models.CharField(max_length=10, null=True)
     diagnosis = models.ForeignKey(DiagnosisModel, on_delete=models.DO_NOTHING)
-    procedure_name = models.CharField(max_length=100, null=True, default="")
+    procedure_name = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="billing_procedure_name", null=True)
     no_of_visit = models.IntegerField(default=0)
     rs_per_visit = models.FloatField(default=0.0)
     consulting_fees = models.FloatField(default=0.0)
