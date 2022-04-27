@@ -961,8 +961,6 @@ class ModelFilterPATIENTBILLING:
                 model = model.filter(discharge_date=fld_value)
             if fld_name == "diagnosis":
                 model = model.filter(diagnosis_id=fld_value)
-            if fld_name == "procedure_name":
-                model = model.filter(procedure_name__icontains=fld_value)
             if fld_name == "patient_opd_id":
                 model = model.filter(patient_opd_id=fld_value)
 
@@ -973,8 +971,7 @@ class ModelFilterPATIENTBILLING:
         if search:
             model = model.filter(
                 Q(regd_no__icontains=search) |
-                Q(invoice_no__icontains=search) |
-                Q(procedure_name__icontains=search)
+                Q(invoice_no__icontains=search)
             )
         return model
 
