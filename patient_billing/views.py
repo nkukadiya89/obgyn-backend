@@ -87,7 +87,7 @@ class PatientBillingAPI(APIView):
                 patient_opd.status = "billing"
                 patient_opd.save()
         
-                patient_billing = PatientBillingModel.objects.filter(deleted=0, regd_no=serializer.data["regd_no"])
+                patient_billing = PatientBillingModel.objects.filter(deleted=0, regd_no=serializer.data["regd_no"]).order_by('-created_at')
                 serializer = PatientBillingSerializers(patient_billing, many=True)
     
                 data["total_record"] = len(patient_billing)
@@ -132,7 +132,7 @@ def patch(request, id):
         if serializer.is_valid():
             serializer.save()
 
-            patient_billing = PatientBillingModel.objects.filter(deleted=0, regd_no=serializer.data["regd_no"])
+            patient_billing = PatientBillingModel.objects.filter(deleted=0, regd_no=serializer.data["regd_no"]).order_by('-created_at')
             serializer = PatientBillingSerializers(patient_billing, many=True)
             data["total_record"] = len(patient_billing)
             data["success"] = True
