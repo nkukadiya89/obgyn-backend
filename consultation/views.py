@@ -141,6 +141,7 @@ def patch(request, id):
 
             if "medicine" in request.data:
                 add_medicine_for_consultaion(request, serializer.data["consultation_id"])
+            serializer = ConsultationSerializers(consultation)
 
             data["success"] = True
             data["msg"] = "Data updated successfully"
