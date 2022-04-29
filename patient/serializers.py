@@ -22,6 +22,10 @@ class PatientSerializers(serializers.ModelSerializer):
         ret['grand_title_name'] = ManageFieldsSerializers(instance.grand_title).data["field_value"]
         ret['taluka_name'] = TalukaSerializers(instance.taluka).data["taluka_name"]
         ret["district_name"] = DistrictSerializers(instance.district).data["district_name"]
+
+        if "phone" in ret:
+            if "F_" in instance.phone:
+                ret["phone"] = ""
         return ret
 
     def validate(self, data):
