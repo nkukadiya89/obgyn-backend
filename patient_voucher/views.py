@@ -131,6 +131,10 @@ def patch(request, id):
 
         if serializer.is_valid():
             serializer.save()
+            if "surgical_item" in request.data:
+                insert_surgical_item(request, serializer.data["patient_voucher_id"])
+            serializer = PatientVoucherSerializers(patient_voucher)
+
             data["success"] = True
             data["msg"] = "Data updated successfully"
             data["data"] = serializer.data
