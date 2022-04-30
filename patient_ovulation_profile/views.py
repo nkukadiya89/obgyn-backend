@@ -87,7 +87,7 @@ class PatientOvulationProfileAPI(APIView):
                 patient_opd.status = "ovulation_profile"
                 patient_opd.save()
 
-                patient_ovulation_profile = PatientOvulationProfileModel.objects.filter(deleted=0, regd_no=serializer.data["patient_ovulation_profile_id"]).order_by('-created_at')
+                patient_ovulation_profile = PatientOvulationProfileModel.objects.filter(deleted=0, regd_no=serializer.data["regd_no"]).order_by('-created_at')
                 serializer = PatientOvulationProfileSerializers(patient_ovulation_profile, many=True)
 
                 data["success"] = True
@@ -131,7 +131,7 @@ def patch(request, id):
         if serializer.is_valid():
             serializer.save()
 
-            patient_ovulation_profile = PatientOvulationProfileModel.objects.filter(deleted=0, regd_no=serializer.data["patient_ovulation_profile_id"]).order_by('-created_at')
+            patient_ovulation_profile = PatientOvulationProfileModel.objects.filter(deleted=0, regd_no=serializer.data["regd_no"]).order_by('-created_at')
             serializer = PatientOvulationProfileSerializers(patient_ovulation_profile, many=True)
 
             data["success"] = True
