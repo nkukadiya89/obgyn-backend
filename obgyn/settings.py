@@ -155,13 +155,14 @@ USE_TZ = True
 MEDIA_ROOT = path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 
-STATIC_ROOT = path.join(BASE_DIR, 'staticfiles')
 
-STATIC_URL = '/static/'
+STATIC_DIR = path.join(BASE_DIR, 'static')
 
+STATIC_URL = 'staticfiles/'
 STATICFILES_DIRS = [
-    path.join(BASE_DIR, 'static')
+    STATIC_DIR
 ]
+STATIC_ROOT = path.join(BASE_DIR, 'staticfiles')
 
 AUTH_USER_MODEL = 'user.User'
 
