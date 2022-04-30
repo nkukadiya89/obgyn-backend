@@ -1,3 +1,4 @@
+from email.headerregistry import Group
 from django.db.models import Q
 from rest_framework import serializers
 
@@ -8,7 +9,7 @@ from state.serializers import StateSerializers
 from taluka.serializers import TalukaSerializers
 from user.models import User
 from obgyn_config.models import ObgynConfigModel
-
+from django.contrib.auth.models import Group
 
 class DynamicFieldModelSerializer(serializers.ModelSerializer):
 
@@ -153,3 +154,10 @@ class UserSerializers(serializers.ModelSerializer):
                   'phone', 'state', 'city','taluka','district', 'area', 'pincode', 'email', 'landline', 'fax_number', 'degree',
                   'speciality', 'aadhar_card', 'registration_no', 'default_language', 'designation', 'hospital',
                   'username', 'uid','user_code', 'created_by']
+
+
+class GroupSerializers(serializers.ModelSerializer):
+
+    class Meta:
+        model = Group
+        fields = '__all__'

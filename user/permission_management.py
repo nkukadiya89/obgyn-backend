@@ -7,8 +7,9 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
-
+import json
 from user.models import User
+from .serializers import GroupSerializers
 
 
 @api_view(['POST'])
@@ -28,6 +29,31 @@ def create_new_group(request):
 
     return Response(data=data, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([AllowAny])
+def list_group(request,id=None):
+    data={}
+    try:
+        if id:
+            group=Group.objects.get(pk=id)
+        else:
+            group = Group.objects.all()
+        
+        print(group)
+        data["total_record"] = len(group)
+    except Group.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record Does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "GET":
+        serializers = GroupSerializers(group, many=True)
+        data["success"] = True
+        data["msg"] = "OK"
+        data["data"] = serializers.data
+        return Response(data=data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
