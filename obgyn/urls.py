@@ -19,6 +19,10 @@ from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
 from user.user_views import CustomTokenObtainPairView
 
+from django.conf import settings
+from django.conf.urls.static import static
+
+
 urlpatterns = [
     path('gettoken/', CustomTokenObtainPairView.as_view(), name="get_token"),
     path('refreshtoken/', TokenRefreshView.as_view(), name="refresh_token"),
@@ -39,4 +43,5 @@ urlpatterns = [
     path('opd/', include('patient_opd.urls')),
     path('report/', include('reports.urls')),
     path('template-header/', include('template_header.urls')),
-]
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
