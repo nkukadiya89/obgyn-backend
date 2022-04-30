@@ -1,10 +1,12 @@
 from re import T
 from rest_framework import serializers
+from medicine.models import MedicineModel
 
 from patient.models import PatientModel
 from .models import PatientVoucherModel, VoucherItemModel
 from surgical_item.models import SurgicalItemModel
 from surgical_item.serializers import SurgicalItemSerializers
+from medicine.serializers import MedicineSerializers
 
 
 class PatientVoucherSerializers(serializers.ModelSerializer):
@@ -50,8 +52,11 @@ class VoucherItemSerializers(serializers.ModelSerializer):
         # surgical_item = SurgicalItemModel.objects.filter(voucheritemmodel__voucher_item_id=instance.voucher_item_id)
         # surgical_item = SurgicalItemSerializers(surgical_item,many=True)
         # ret["surgical_item"] = surgical_item.data
-
-
+        # print
+        # print("surgical_item", ret["surgical_item"])
+        if "surgical_item" in ret:
+            medicine = MedicineModel.objects.filter(pk=ret["surgical_item"]).first()
+            ret["surgical_item_name"] = medicine.medicine
         return ret
 
     def validate(self, data):
