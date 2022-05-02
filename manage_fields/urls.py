@@ -1,20 +1,20 @@
 from django.urls import path
 
-from .views import ManageFieldsAPI, patch, get, FieldMasterAPI, field_patch,field_get
+from .views import *
 
 urlpatterns = [
     path('<int:id>/', ManageFieldsAPI.as_view()),
-    path('get/', get),
-    path('get/<int:id>', get),
-    path('create/', ManageFieldsAPI.as_view()),
-    path('delete/', ManageFieldsAPI.as_view()),
-    path('update/<int:id>/', patch),
+    path('get/', get_mf),
+    path('get/<int:id>', get_mf),
+    path('create/', create_mf),
+    path('delete/', delete_mf),
+    path('update/<int:id>/', patch_mf),
 
     path('field/<int:id>/', FieldMasterAPI.as_view()),
-    path('field/get/', field_get),
-    path('field/get/<int:id>', field_get),
-    path('field/create/', FieldMasterAPI.as_view()),
-    path('field/delete/', FieldMasterAPI.as_view()),
-    path('field/update/<int:id>/', field_patch),
+    path('field/get/', get_mfm),
+    path('field/get/<int:id>', get_mfm),
+    path('field/create/', create_mfm),
+    path('field/delete/', delete_mfm),
+    path('field/update/<int:id>/', patch_mfm),
 
 ]
