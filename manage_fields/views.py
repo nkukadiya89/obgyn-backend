@@ -1,8 +1,12 @@
 import json
 
 from rest_framework import status
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+)
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -13,11 +17,14 @@ from .models import ManageFieldsModel, FieldMasterModel
 from .serializers import ManageFieldsSerializers, FieldMasterSerializers
 from utility.search_filter import filtering_query
 from django.db.models import Q
+from .decorators import *
 
 
 class ManageFieldsAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
+
+    queryset = ManageFieldsModel.objects.filter(deleted=0)
 
     # ================= Update all Fields of a record =========================
     def put(self, request, id):
@@ -41,55 +48,61 @@ class ManageFieldsAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # ================= Delete Record =========================
-    def delete(self, request):
-        data = {}
-        del_id = json.loads(request.body.decode('utf-8'))
-        if "id" not in del_id:
-            data["success"] = False
-            data["msg"] = "Record ID not provided"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        try:
-            manage_fields = ManageFieldsModel.objects.filter(mf_id__in=del_id["id"])
-        except ManageFieldsModel.DoesNotExist:
-            data["success"] = False
-            data["msg"] = "Record does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        if request.method == "DELETE":
-            result = manage_fields.update(deleted=1)
-            data["success"] = True
-            data["msg"] = "Data deleted successfully."
-            data["deleted"] = result
-            return Response(data=data, status=status.HTTP_200_OK)
-
-    # ================= Create New Record=========================
-    def post(self, request):
-        data = {}
-        if request.method == "POST":
-            manage_fields = ManageFieldsModel()
-            serializer = ManageFieldsSerializers(manage_fields, data=request.data)
-
-            if serializer.is_valid():
-                serializer.save()
-                data["success"] = True
-                data["msg"] = "Data updated successfully"
-                data["data"] = serializer.data
-                return Response(data=data, status=status.HTTP_201_CREATED)
-
-            data["success"] = False
-            data["msg"] = serializer.errors
-            data["data"] = serializer.data
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['POST'])
+# ================= Delete Record =========================
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
-def patch(request, id):
+@update_decorator_mf
+def delete_mf(request):
+    data = {}
+    del_id = json.loads(request.body.decode("utf-8"))
+    if "id" not in del_id:
+        data["success"] = False
+        data["msg"] = "Record ID not provided"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    try:
+        manage_fields = ManageFieldsModel.objects.filter(mf_id__in=del_id["id"])
+    except ManageFieldsModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "DELETE":
+        result = manage_fields.update(deleted=1)
+        data["success"] = True
+        data["msg"] = "Data deleted successfully."
+        data["deleted"] = result
+        return Response(data=data, status=status.HTTP_200_OK)
+
+# ================= Create New Record=========================
+@api_view(["POST"])
+@authentication_classes([JWTAuthentication])
+@post_decorator_mf
+def create_mf(request):
+    data = {}
+    if request.method == "POST":
+        manage_fields = ManageFieldsModel()
+        serializer = ManageFieldsSerializers(manage_fields, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            data["success"] = True
+            data["msg"] = "Data updated successfully"
+            data["data"] = serializer.data
+            return Response(data=data, status=status.HTTP_201_CREATED)
+
+        data["success"] = False
+        data["msg"] = serializer.errors
+        data["data"] = serializer.data
+        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+@authentication_classes([JWTAuthentication])
+@update_decorator_mf
+def patch_mf(request, id):
     data = {}
 
     try:
@@ -119,21 +132,26 @@ def patch(request, id):
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticatedOrReadOnly])
+@get_decorator_mf
 # ================= Retrieve Single or Multiple records=========================
-def get(request, id=None):
+def get_mf(request, id=None):
     query_string = request.query_params
     data = {}
     try:
         if id:
-            manage_fields = ManageFieldsModel.objects.filter(pk=id,deleted=0)
+            manage_fields = ManageFieldsModel.objects.filter(pk=id, deleted=0)
         else:
-            manage_fields = ManageFieldsModel.objects.filter(Q(deleted=0, created_by=1)  | Q(created_by=request.data.get('created_by')))
+            manage_fields = ManageFieldsModel.objects.filter(
+                Q(deleted=0, created_by=1)
+                | Q(created_by=request.data.get("created_by"))
+            )
 
         data["total_record"] = len(manage_fields)
-        manage_fields, data = filtering_query(manage_fields, query_string, "mf_id", "MANAGEFIELDS")
+        manage_fields, data = filtering_query(
+            manage_fields, query_string, "mf_id", "MANAGEFIELDS"
+        )
 
     except ManageFieldsModel.DoesNotExist:
         data["success"] = False
@@ -149,11 +167,11 @@ def get(request, id=None):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-
-
 class FieldMasterAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    # permission_classes = [DjangoModelPermissions]
+
+    queryset = FieldMasterModel.objects.filter(deleted=0)
 
     # ================= Update all Fields of a record =========================
     def put(self, request, id):
@@ -177,57 +195,65 @@ class FieldMasterAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # ================= Delete Record =========================
-    def delete(self, request):
-        data = {}
-        del_id = json.loads(request.body.decode('utf-8'))
-        if "id" not in del_id:
-            data["success"] = False
-            data["msg"] = "Record ID not provided"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        try:
-            field_master = FieldMasterModel.objects.filter(field_master_id__in=del_id["id"])
-        except FieldMasterModel.DoesNotExist:
-            data["success"] = False
-            data["msg"] = "Record does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        if request.method == "DELETE":
-            result = field_master.update(deleted=1)
-            data["success"] = True
-            data["msg"] = "Data deleted successfully."
-            data["deleted"] = result
-            return Response(data=data, status=status.HTTP_200_OK)
-
-    # ================= Create New Record=========================
-    def post(self, request):
-        data = {}
-        if request.method == "POST":
-            field_master = FieldMasterModel()
-            serializer = FieldMasterSerializers(field_master, data=request.data)
-
-            if serializer.is_valid():
-                serializer.save()
-                data["success"] = True
-                data["msg"] = "Data updated successfully"
-                all_fields_master = FieldMasterModel.objects.filter(deleted=0)
-                all_serilizer = FieldMasterSerializers(all_fields_master, many=True)
-                data["data"] = all_serilizer.data
-                return Response(data=data, status=status.HTTP_201_CREATED)
-
-            data["success"] = False
-            data["msg"] = serializer.errors
-            data["data"] = serializer.data
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['POST'])
+# ================= Delete Record =========================
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
-def field_patch(request, id):
+@update_decorator_mfm
+def delete_mfm(self, request):
+    data = {}
+    del_id = json.loads(request.body.decode("utf-8"))
+    if "id" not in del_id:
+        data["success"] = False
+        data["msg"] = "Record ID not provided"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    try:
+        field_master = FieldMasterModel.objects.filter(
+            field_master_id__in=del_id["id"]
+        )
+    except FieldMasterModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "DELETE":
+        result = field_master.update(deleted=1)
+        data["success"] = True
+        data["msg"] = "Data deleted successfully."
+        data["deleted"] = result
+        return Response(data=data, status=status.HTTP_200_OK)
+
+# ================= Create New Record=========================
+@api_view(["POST"])
+@authentication_classes([JWTAuthentication])
+@post_decorator_mfm
+def create_mfm(request):
+    data = {}
+    if request.method == "POST":
+        field_master = FieldMasterModel()
+        serializer = FieldMasterSerializers(field_master, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            data["success"] = True
+            data["msg"] = "Data updated successfully"
+            all_fields_master = FieldMasterModel.objects.filter(deleted=0).order_by('-created_at')
+            all_serilizer = FieldMasterSerializers(all_fields_master, many=True)
+            data["data"] = all_serilizer.data
+            return Response(data=data, status=status.HTTP_201_CREATED)
+
+        data["success"] = False
+        data["msg"] = serializer.errors
+        data["data"] = serializer.data
+        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+@authentication_classes([JWTAuthentication])
+@update_decorator_mfm
+def patch_mfm(request, id):
     data = {}
 
     try:
@@ -257,21 +283,28 @@ def field_patch(request, id):
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticatedOrReadOnly])
+@get_decorator_mfm
 # ================= Retrieve Single or Multiple records=========================
-def field_get(request, id=None):
+def get_mfm(request, id=None):
+
     query_string = request.query_params
     data = {}
     try:
         if id:
-            field_master = FieldMasterModel.objects.filter(pk=id,deleted=0)
+            field_master = FieldMasterModel.objects.filter(pk=id, deleted=0)
         else:
-            field_master = FieldMasterModel.objects.filter(Q(deleted=0, created_by=1)  | Q(created_by=request.data.get('created_by')))
+            field_master = FieldMasterModel.objects.filter(
+                Q(deleted=0, created_by=1)
+                | Q(created_by=request.data.get("created_by"))
+            )
 
         data["total_record"] = len(field_master)
-        field_master, data = filtering_query(field_master, query_string, "field_master_id", "FIELDMASTER")
+        field_master, data = filtering_query(
+            field_master, query_string, "field_master_id", "FIELDMASTER"
+        )
 
     except FieldMasterModel.DoesNotExist:
         data["success"] = False

@@ -13,7 +13,7 @@ class FieldMasterModel(models.Model):
     created_at = models.DateTimeField(default=now)
 
     def __str__(self):
-        return f"({self.field_master_id},{self.field_name})"
+        return f"({self.field_master_id},{self.field_master_name})"
 
     class Meta:
         db_table = "field_master"
