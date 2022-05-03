@@ -59,7 +59,7 @@ class DynamicFieldModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'middle_name', 'user_type', 'hospital_name',
-                  'phone', 'state', 'district', 'taluka', 'city', 'area', 'pincode', 'email', 'landline', 'fax_number',
+                  'phone', 'state', 'district', 'taluka', 'city', 'area', 'pincode','landmark', 'email', 'landline', 'fax_number',
                   'degree',
                   'speciality', 'aadhar_card', 'registration_no', 'default_language', 'designation', 'hospital',
                   'username',
@@ -154,7 +154,7 @@ class UserSerializers(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'middle_name', 'password', 'user_type', 'hospital_name',
-                  'phone', 'state', 'city','taluka','district', 'area', 'pincode', 'email', 'landline', 'fax_number', 'degree',
+                  'phone', 'state', 'city','taluka','district', 'area', 'pincode','landmark', 'email', 'landline', 'fax_number', 'degree',
                   'speciality', 'aadhar_card', 'registration_no', 'default_language', 'designation', 'hospital',
                   'username', 'uid','user_code', 'created_by']
 
