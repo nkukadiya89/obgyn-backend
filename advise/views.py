@@ -12,6 +12,7 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from utility.search_filter import filtering_query
 from .models import AdviseModel
 from .serializers import AdviseSerializers
+from utility.decorator import validate_permission
 
 
 class AdviseAPI(APIView):
@@ -43,35 +44,42 @@ class AdviseAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request):
-        data = {}
-        del_id = json.loads(request.body.decode('utf-8'))
 
-        if "id" not in del_id:
+@api_view(["DELETE"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("advise","change")
+def delete(request):
+    data = {}
+    del_id = json.loads(request.body.decode('utf-8'))
+
+    if "id" not in del_id:
             data["success"] = False
             data["msg"] = "Record ID not provided"
             data["data"] = []
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-        try:
+    try:
             advise = AdviseModel.objects.filter(advise_id__in=del_id["id"])
-        except AdviseModel:
+    except AdviseModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
             data["data"] = []
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-        if request.method == "DELETE":
-            result = advise.update(deleted=1)
-            data["success"] = True
-            data["msg"] = "Data deleted successfully."
-            data["deleted"] = result
-            return Response(data=data, status=status.HTTP_200_OK)
+    if request.method == "DELETE":
+        result = advise.update(deleted=1)
+        data["success"] = True
+        data["msg"] = "Data deleted successfully."
+        data["deleted"] = result
+        return Response(data=data, status=status.HTTP_200_OK)
 
     # ================= Create New Record=========================
-    def post(self, request):
-        data = {}
-        if request.method == "POST":
+@api_view(["POST"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("advise","add")
+def post(request):
+    data = {}
+    if request.method == "POST":
             advise = AdviseModel()
             serializer = AdviseSerializers(advise, data=request.data)
 
@@ -90,7 +98,7 @@ class AdviseAPI(APIView):
 
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+@validate_permission("advise","change")
 def patch(request, id):
     data = {}
     try:
@@ -121,7 +129,7 @@ def patch(request, id):
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticatedOrReadOnly])
+@validate_permission("advise","view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params

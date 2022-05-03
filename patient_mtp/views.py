@@ -1,7 +1,11 @@
 import json
 
 from rest_framework import status
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -13,6 +17,7 @@ from patient_opd.models import PatientOpdModel
 from utility.search_filter import filtering_query
 from .models import PatientMtpModel
 from .serializers import PatientMtpSerializers
+from utility.decorator import validate_permission
 
 
 class PatientMtpAPI(APIView):
@@ -41,65 +46,76 @@ class PatientMtpAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request):
-        data = {}
-        del_id = json.loads(request.body.decode('utf-8'))
 
-        if "id" not in del_id:
-            data["success"] = False
-            data["msg"] = "Record ID not provided"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+@api_view(["DELETE"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("patient_mtp", "change")
+def delete(request):
+    data = {}
+    del_id = json.loads(request.body.decode("utf-8"))
 
-        try:
-            patient_mtp = PatientMtpModel.objects.filter(patient_mtp_id__in=del_id["id"])
-        except PatientMtpModel:
-            data["success"] = False
-            data["msg"] = "Record does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+    if "id" not in del_id:
+        data["success"] = False
+        data["msg"] = "Record ID not provided"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-        if request.method == "DELETE":
-            result = patient_mtp.update(deleted=1)
-            data["success"] = True
-            data["msg"] = "Data deleted successfully."
-            data["deleted"] = result
-            return Response(data=data, status=status.HTTP_200_OK)
+    try:
+        patient_mtp = PatientMtpModel.objects.filter(patient_mtp_id__in=del_id["id"])
+    except PatientMtpModel:
+        data["success"] = False
+        data["msg"] = "Record does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "DELETE":
+        result = patient_mtp.update(deleted=1)
+        data["success"] = True
+        data["msg"] = "Data deleted successfully."
+        data["deleted"] = result
+        return Response(data=data, status=status.HTTP_200_OK)
 
     # ================= Create New Record=========================
-    def post(self, request):
-        data = {}
-        if request.method == "POST":
-            patient_mtp = PatientMtpModel()
-            if "patient_opd_id" not in request.data:
-                data["success"] = False
-                data["msg"] = "OPD is required"
-                data["data"] = request.data
-                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                request.data["patient_opd"] = request.data["patient_opd_id"]
-            serializer = PatientMtpSerializers(patient_mtp, data=request.data)
-
-            if serializer.is_valid():
-                serializer.save()
-                patient_opd = PatientOpdModel.objects.filter(pk=request.data["patient_opd_id"]).first()
-                patient_opd.status = "mtp"
-                patient_opd.save()
-
-                data["success"] = True
-                data["msg"] = "Data updated successfully"
-                data["data"] = serializer.data
-                return Response(data=data, status=status.HTTP_201_CREATED)
-
-            data["success"] = False
-            data["msg"] = serializer.errors
-            data["data"] = serializer.data
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+@validate_permission("patient_mtp", "add")
+def post(request):
+    data = {}
+    if request.method == "POST":
+        patient_mtp = PatientMtpModel()
+        if "patient_opd_id" not in request.data:
+            data["success"] = False
+            data["msg"] = "OPD is required"
+            data["data"] = request.data
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            request.data["patient_opd"] = request.data["patient_opd_id"]
+        serializer = PatientMtpSerializers(patient_mtp, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            patient_opd = PatientOpdModel.objects.filter(
+                pk=request.data["patient_opd_id"]
+            ).first()
+            patient_opd.status = "mtp"
+            patient_opd.save()
+
+            data["success"] = True
+            data["msg"] = "Data updated successfully"
+            data["data"] = serializer.data
+            return Response(data=data, status=status.HTTP_201_CREATED)
+
+        data["success"] = False
+        data["msg"] = serializer.errors
+        data["data"] = serializer.data
+        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("patient_mtp","change")
 def patch(request, id):
     data = {}
     try:
@@ -137,9 +153,9 @@ def patch(request, id):
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticatedOrReadOnly])
+@validate_permission("patient_mtp","view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
@@ -151,7 +167,9 @@ def get(request, id=None):
             patient_mtp = PatientMtpModel.objects.filter(deleted=0)
 
         data["total_record"] = len(patient_mtp)
-        patient_mtp, data = filtering_query(patient_mtp, query_string, "patient_mtp_id", "PATIENTMTP")
+        patient_mtp, data = filtering_query(
+            patient_mtp, query_string, "patient_mtp_id", "PATIENTMTP"
+        )
 
     except PatientMtpModel.DoesNotExist:
         data["success"] = False
@@ -165,4 +183,3 @@ def get(request, id=None):
         data["msg"] = "OK"
         data["data"] = serilizer.data
         return Response(data=data, status=status.HTTP_200_OK)
-

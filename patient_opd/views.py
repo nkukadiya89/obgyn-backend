@@ -2,7 +2,11 @@ import json
 
 
 from rest_framework import status
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -17,6 +21,7 @@ from utility.search_filter import filtering_query
 from .models import PatientOpdModel
 from .serializers import PatientOpdSerializers
 from user.user_views import generate_regd_no
+from utility.decorator import validate_permission
 
 
 class PatientOpdAPI(APIView):
@@ -25,101 +30,110 @@ class PatientOpdAPI(APIView):
 
     search_fields = ["patient_opd_id"]
 
-    def delete(self, request):
-        data = {}
-        del_id = json.loads(request.body.decode('utf-8'))
 
-        if "id" not in del_id:
-            data["success"] = False
-            data["msg"] = "Record ID not provided"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+@api_view(["DELETE"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("patient_opd", "change")
+def delete(request):
+    data = {}
+    del_id = json.loads(request.body.decode("utf-8"))
 
-        try:
-            patient_opd = PatientOpdModel.objects.filter(patient_opd_id__in=del_id["id"])
-        except PatientOpdModel.DoesNotExist:
-            data["success"] = False
-            data["msg"] = "Record does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+    if "id" not in del_id:
+        data["success"] = False
+        data["msg"] = "Record ID not provided"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-        if request.method == "DELETE":
-            result = patient_opd.update(deleted=1)
-            data["success"] = True
-            data["msg"] = "Data deleted successfully."
-            data["deleted"] = result
-            return Response(data=data, status=status.HTTP_200_OK)
+    try:
+        patient_opd = PatientOpdModel.objects.filter(patient_opd_id__in=del_id["id"])
+    except PatientOpdModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-    def post(self, request):
-        data = {}
-        if request.method == "POST":
-            patient_opd_data = json.loads(request.data["data"])["patient_opd"]
-            patient_data = json.loads(request.data["data"])["patient"]
-            if "phone" in patient_data: 
-                if len(str(patient_data["phone"])) < 5:
-                    patient_data["phone"] = "F_" + generate_regd_no()
+    if request.method == "DELETE":
+        result = patient_opd.update(deleted=1)
+        data["success"] = True
+        data["msg"] = "Data deleted successfully."
+        data["deleted"] = result
+        return Response(data=data, status=status.HTTP_200_OK)
 
-            if "regd_no" in patient_opd_data:
-                regd_no = patient_opd_data.get("regd_no")
-                if len(regd_no) > 0:
-                    patient = PatientModel.objects.get(registered_no=str(regd_no))
-                    patient_serializer = PatientSerializers(patient, data=patient_data,
-                                                            partial=True)
-                else:
-                    patient = PatientModel()
-                    patient_serializer = PatientSerializers(patient, data=patient_data)
 
+@api_view(["POST"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("patient_opd", "add")
+def post(request):
+    data = {}
+    if request.method == "POST":
+        patient_opd_data = json.loads(request.data["data"])["patient_opd"]
+        patient_data = json.loads(request.data["data"])["patient"]
+        if "phone" in patient_data:
+            if len(str(patient_data["phone"])) < 5:
+                patient_data["phone"] = "F_" + generate_regd_no()
+
+        if "regd_no" in patient_opd_data:
+            regd_no = patient_opd_data.get("regd_no")
+            if len(regd_no) > 0:
+                patient = PatientModel.objects.get(registered_no=str(regd_no))
+                patient_serializer = PatientSerializers(
+                    patient, data=patient_data, partial=True
+                )
             else:
                 patient = PatientModel()
                 patient_serializer = PatientSerializers(patient, data=patient_data)
 
-            if patient_serializer.is_valid():
-                patient_serializer.save()
-                if not patient_serializer.partial:
-                    patient.registered_no = generate_regd_no()
-                        
+        else:
+            patient = PatientModel()
+            patient_serializer = PatientSerializers(patient, data=patient_data)
+
+        if patient_serializer.is_valid():
+            patient_serializer.save()
+            if not patient_serializer.partial:
+                patient.registered_no = generate_regd_no()
+
+                patient.save()
+
+            user = User.objects.filter(pk=patient.user_ptr_id).first()
+            if user != None:
+                user.set_password(request.POST.get("password"))
+                user.save()
+                # generate_patient_user_code(user)
+
+            if "media" in request.data:
+                if len(request.data["media"]) > 0:
+                    file = request.data["media"]
+                    patient.upload_file(file)
                     patient.save()
 
-                user = User.objects.filter(pk=patient.user_ptr_id).first()
-                if user != None:
-                    user.set_password(request.POST.get("password"))
-                    user.save()
-                    # generate_patient_user_code(user)
-
-                if "media" in request.data:
-                    if len(request.data["media"]) > 0:
-                        file = request.data["media"]
-                        patient.upload_file(file)
-                        patient.save()
-
-            else:
-                data["success"] = False
-                data["msg"] = patient_serializer.errors
-                data["data"] = patient_serializer.data
-                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-            opd_data = patient_opd_data
-            opd_data["regd_no"] = str(patient.registered_no)
-
-            patient_opd = PatientOpdModel()
-            opd_data["patient_type"] = patient.patient_type
-            serializer = PatientOpdSerializers(patient_opd, data=opd_data)
-
-            if serializer.is_valid():
-                serializer.save()
-                data["success"] = True
-                data["msg"] = "Data updated successfully"
-                data["data"] = serializer.data
-                return Response(data=data, status=status.HTTP_201_CREATED)
-
+        else:
             data["success"] = False
-            data["msg"] = serializer.errors
-            data["data"] = serializer.data
+            data["msg"] = patient_serializer.errors
+            data["data"] = patient_serializer.data
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+        opd_data = patient_opd_data
+        opd_data["regd_no"] = str(patient.registered_no)
+
+        patient_opd = PatientOpdModel()
+        opd_data["patient_type"] = patient.patient_type
+        serializer = PatientOpdSerializers(patient_opd, data=opd_data)
+
+        if serializer.is_valid():
+            serializer.save()
+            data["success"] = True
+            data["msg"] = "Data updated successfully"
+            data["data"] = serializer.data
+            return Response(data=data, status=status.HTTP_201_CREATED)
+
+        data["success"] = False
+        data["msg"] = serializer.errors
+        data["data"] = serializer.data
+        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+@validate_permission("patient_opd", "change")
 def patch(request, id):
     data = {}
     try:
@@ -167,9 +181,9 @@ def patch(request, id):
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticatedOrReadOnly])
+@validate_permission("patient_opd", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
@@ -181,7 +195,9 @@ def get(request, id=None):
             patient_opd = PatientOpdModel.objects.filter(deleted=0)
 
         data["total_record"] = len(patient_opd)
-        patient_opd, data = filtering_query(patient_opd, query_string, "patient_opd_id", "PATIENTOPD")
+        patient_opd, data = filtering_query(
+            patient_opd, query_string, "patient_opd_id", "PATIENTOPD"
+        )
 
     except PatientOpdModel.DoesNotExist:
         data["success"] = False

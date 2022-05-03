@@ -1,7 +1,11 @@
 import json
 
 from rest_framework import status
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -13,6 +17,7 @@ from patient_opd.models import PatientOpdModel
 from utility.search_filter import filtering_query
 from .models import PatientDeliveryModel
 from .serializers import PatientDeliverySerializers, change_payload
+from utility.decorator import validate_permission
 
 
 class PatientDeliveryAPI(APIView):
@@ -43,55 +48,66 @@ class PatientDeliveryAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request):
-        data = {}
-        del_id = json.loads(request.body.decode('utf-8'))
 
-        if "id" not in del_id:
-            data["success"] = False
-            data["msg"] = "Record ID not provided"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+@api_view(["DELETE"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("patient_delivery", "change")
+def delete(self, request):
+    data = {}
+    del_id = json.loads(request.body.decode("utf-8"))
 
-        try:
-            patient_delivery = PatientDeliveryModel.objects.filter(patient_delivery_id__in=del_id["id"])
-        except PatientDeliveryModel:
-            data["success"] = False
-            data["msg"] = "Record does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+    if "id" not in del_id:
+        data["success"] = False
+        data["msg"] = "Record ID not provided"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-        if request.method == "DELETE":
-            result = patient_delivery.update(deleted=1)
-            data["success"] = True
-            data["msg"] = "Data deleted successfully."
-            data["deleted"] = result
-            return Response(data=data, status=status.HTTP_200_OK)
+    try:
+        patient_delivery = PatientDeliveryModel.objects.filter(
+            patient_delivery_id__in=del_id["id"]
+        )
+    except PatientDeliveryModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "DELETE":
+        result = patient_delivery.update(deleted=1)
+        data["success"] = True
+        data["msg"] = "Data deleted successfully."
+        data["deleted"] = result
+        return Response(data=data, status=status.HTTP_200_OK)
 
     # ================= Create New Record=========================
-    def post(self, request):
-        data = {}
-        if request.method == "POST":
-            patient_delivery = PatientDeliveryModel()
-            serializer = PatientDeliverySerializers(patient_delivery, data=request.data)
-
-            if serializer.is_valid():
-                serializer.save()
-
-                data["success"] = True
-                data["msg"] = "Data updated successfully"
-                data["data"] = serializer.data
-                return Response(data=data, status=status.HTTP_201_CREATED)
-
-            data["success"] = False
-            data["msg"] = serializer.errors
-            data["data"] = serializer.data
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+@validate_permission("patient_delivery", "add")
+def post(request):
+    data = {}
+    if request.method == "POST":
+        patient_delivery = PatientDeliveryModel()
+        serializer = PatientDeliverySerializers(patient_delivery, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+
+            data["success"] = True
+            data["msg"] = "Data updated successfully"
+            data["data"] = serializer.data
+            return Response(data=data, status=status.HTTP_201_CREATED)
+
+        data["success"] = False
+        data["msg"] = serializer.errors
+        data["data"] = serializer.data
+        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("patient_delivery","change")
 def patch(request, id):
     data = {}
     try:
@@ -108,7 +124,9 @@ def patch(request, id):
 
     if request.method == "POST":
         change_payload(request)
-        serializer = PatientDeliverySerializers(patient_delivery, request.data, partial=True)
+        serializer = PatientDeliverySerializers(
+            patient_delivery, request.data, partial=True
+        )
 
         if serializer.is_valid():
             serializer.save()
@@ -123,9 +141,9 @@ def patch(request, id):
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticatedOrReadOnly])
+@validate_permission("patient_delivery","view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
@@ -137,7 +155,9 @@ def get(request, id=None):
             patient_delivery = PatientDeliveryModel.objects.filter(deleted=0)
 
         data["total_record"] = len(patient_delivery)
-        patient_delivery, data = filtering_query(patient_delivery, query_string, "patient_delivery_id", "PATIENTDELIVERY")
+        patient_delivery, data = filtering_query(
+            patient_delivery, query_string, "patient_delivery_id", "PATIENTDELIVERY"
+        )
 
     except PatientDeliveryModel.DoesNotExist:
         data["success"] = False

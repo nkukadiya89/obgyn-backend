@@ -198,8 +198,8 @@ class FieldMasterAPI(APIView):
 # ================= Delete Record =========================
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-# @validate_permission("field_master","change")
-def delete_mfm(self, request):
+@validate_permission("field_master","change")
+def delete_mfm(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
     if "id" not in del_id:
