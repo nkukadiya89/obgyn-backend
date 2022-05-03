@@ -24,6 +24,7 @@ class PatientSerializers(serializers.ModelSerializer):
         ret['taluka_name'] = TalukaSerializers(instance.taluka).data["taluka_name"]
         ret["district_name"] = DistrictSerializers(instance.district).data["district_name"]
 
+        ret["landmark"] = instance.landmark
 
         if "phone" in ret:
             if "F_" in instance.phone:
@@ -82,7 +83,7 @@ class PatientSerializers(serializers.ModelSerializer):
         fields = ['patient_id', 'first_name', 'last_name', 'middle_name','name_title', 'phone', 'state',
                   'city', 'married', 'department', 'patient_type', 'patient_detail', 'date_of_opd', 'registered_no',
                   'grand_father_name','grand_title', 'husband_father_name','husband_title', 'age', 'taluka', 'district', 'created_by', 'deleted',
-                  'hospital', 'profile_image']
+                  'hospital', 'profile_image', "landmark"]
         extra_kwargs = {
             "city": {"required": True},
             "state": {"required": True},
