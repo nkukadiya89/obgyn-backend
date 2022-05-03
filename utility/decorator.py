@@ -4,7 +4,7 @@ from functools import wraps
 def validate_permission(app_name, method_type):
     def method_wrapper(func):
         @wraps(func)
-        def check_permission(request):
+        def check_permission(request,id=None):
             permission = app_name + "."+ method_type.lower() + "_" + app_name.replace("_","") + "model"
             if not request.user.has_perm(permission):
                 raise PermissionDenied
