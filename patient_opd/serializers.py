@@ -35,6 +35,7 @@ class PatientOpdSerializers(serializers.ModelSerializer):
             ret['name_title'] = patient[0].name_title_id
             ret['husband_title'] = patient[0].husband_title_id
             ret['grand_title'] = patient[0].grand_title_id
+            ret["landmark"] = patient[0].landmark
 
             ret['name_title_name'] = ManageFieldsSerializers(patient[0].name_title).data["field_value"]
             ret['husband_title_name'] = ManageFieldsSerializers(patient[0].husband_title).data["field_value"]
