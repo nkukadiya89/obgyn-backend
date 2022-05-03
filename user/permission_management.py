@@ -40,7 +40,6 @@ def list_group(request,id=None):
         else:
             group = Group.objects.all()
         
-        print(group)
         data["total_record"] = len(group)
     except Group.DoesNotExist:
         data["success"] = False
@@ -112,7 +111,6 @@ def assign_permission_group(request):
 
     group = Group.objects.get(pk=group_id)
     for codename in codename_list:
-        print(codename)
         code_id = Permission.objects.filter(codename=codename).values('id')[0].get('id')
         group.permissions.add(code_id)
 

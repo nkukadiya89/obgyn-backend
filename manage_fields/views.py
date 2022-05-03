@@ -17,8 +17,8 @@ from .models import ManageFieldsModel, FieldMasterModel
 from .serializers import ManageFieldsSerializers, FieldMasterSerializers
 from utility.search_filter import filtering_query
 from django.db.models import Q
+from utility.decorator import decorator
 from .decorators import *
-
 
 class ManageFieldsAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
@@ -51,7 +51,7 @@ class ManageFieldsAPI(APIView):
 # ================= Delete Record =========================
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@update_decorator_mf
+@decorator("manage_fields","change")
 def delete_mf(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -79,7 +79,7 @@ def delete_mf(request):
 # ================= Create New Record=========================
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@post_decorator_mf
+@decorator("manage_fields","add")
 def create_mf(request):
     data = {}
     if request.method == "POST":
@@ -101,7 +101,7 @@ def create_mf(request):
 
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@update_decorator_mf
+@decorator("manage_fields","change")
 def patch_mf(request, id):
     data = {}
 
@@ -134,7 +134,7 @@ def patch_mf(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@get_decorator_mf
+@decorator("manage_fields","view")
 # ================= Retrieve Single or Multiple records=========================
 def get_mf(request, id=None):
     query_string = request.query_params
@@ -198,7 +198,7 @@ class FieldMasterAPI(APIView):
 # ================= Delete Record =========================
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@update_decorator_mfm
+@decorator("field_master","change")
 def delete_mfm(self, request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -228,7 +228,7 @@ def delete_mfm(self, request):
 # ================= Create New Record=========================
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@post_decorator_mfm
+@decorator("field_master","add")
 def create_mfm(request):
     data = {}
     if request.method == "POST":
@@ -252,7 +252,7 @@ def create_mfm(request):
 
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@update_decorator_mfm
+@decorator("field_master","change")
 def patch_mfm(request, id):
     data = {}
 
@@ -286,7 +286,7 @@ def patch_mfm(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@get_decorator_mfm
+@decorator("field_master","view")
 # ================= Retrieve Single or Multiple records=========================
 def get_mfm(request, id=None):
 

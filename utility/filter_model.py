@@ -298,7 +298,6 @@ class ModelFilterMEDICINEOR:
                 diagnosismodel__diagnosis_id=filter_fields_dict["diagnosis_id"])
 
         model = model.distinct()
-        # print(model.query)
         return model
 
     def search(self, model, query_string):

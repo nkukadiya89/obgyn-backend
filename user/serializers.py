@@ -40,6 +40,8 @@ class DynamicFieldModelSerializer(serializers.ModelSerializer):
             ret["rs_per_room"]=instance.obgyn_config.rs_per_room
             ret["operative_charge"]=instance.obgyn_config.operative_charge
             ret["rs_per_day_nursing"]=instance.obgyn_config.rs_per_day_nursing
+            ret["monthly_usg"] = instance.obgn_config.monthly_usg
+            ret["yearly_usg"] = instance.obgyn_config.yearly_usg
 
         if "state" in ret: ret['state_name'] = StateSerializers(instance.state).data["state_name"]
         if "city" in ret: ret['city_name'] = CitySerializers(instance.city).data["city_name"]
@@ -72,7 +74,6 @@ class UserSerializers(serializers.ModelSerializer):
         if "password" in ret:
             ret.pop('password')
 
-        print(type(instance.obgynconfigmodel_set))
         if instance.user_type == "HOSPITAL":
             ret.pop('first_name')
             ret.pop('last_name')
@@ -85,6 +86,8 @@ class UserSerializers(serializers.ModelSerializer):
                 ret["rs_per_room"]=obgyn_config.rs_per_room
                 ret["operative_charge"]=obgyn_config.operative_charge
                 ret["rs_per_day_nursing"]=obgyn_config.rs_per_day_nursing
+                ret["monthly_usg"] = obgyn_config.monthly_usg
+                ret["yearly_usg"] = obgyn_config.yearly_usg
 
         ret['state_name'] = StateSerializers(instance.state).data["state_name"]
         ret['city_name'] = CitySerializers(instance.city).data["city_name"]

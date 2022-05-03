@@ -11,7 +11,6 @@ from django.contrib.auth.models import Permission
 def get_decorator_mf(func):
     @wraps(func)
     def check_permission(request):
-        # print(Permission.objects.filter(user=request.user.id).first().__dict__)
         if not request.user.has_perm("manage_fields.view_managefieldsmodel"):
             raise PermissionDenied
         return func(request)
@@ -48,7 +47,6 @@ def delete_decorator_mf(func):
 def get_decorator_mfm(func):
     @wraps(func)
     def check_permission(request):
-        # print(Permission.objects.filter(user=request.user.id).first().__dict__)
         if not request.user.has_perm("manage_fields.view_fieldmastermodel"):
             raise PermissionDenied
         return func(request)
@@ -79,3 +77,6 @@ def delete_decorator_mf(func):
             raise PermissionDenied
         return func(request)
     return check_permission
+
+
+
