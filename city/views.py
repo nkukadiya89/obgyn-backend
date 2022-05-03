@@ -12,7 +12,7 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from utility.search_filter import filtering_query
 from .models import CityModel
 from .serializers import CitySerializers
-
+from utility.decorator import validate_permission
 
 class CityAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
@@ -43,54 +43,62 @@ class CityAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request):
-        data = {}
-        del_id = json.loads(request.body.decode('utf-8'))
 
-        if "id" not in del_id:
-            data["success"] = False
-            data["msg"] = "Record ID not provided"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-        try:
-            city = CityModel.objects.filter(city_id__in=del_id["id"])
-        except CityModel.DoesNotExist:
-            data["success"] = False
-            data["msg"] = "Record does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+@api_view(['DELETE'])
+@authentication_classes([JWTAuthentication])
+@validate_permission("city","change")
+def delete(request):
+    data = {}
+    del_id = json.loads(request.body.decode('utf-8'))
 
-        if request.method == "DELETE":
-            result = city.update(deleted=1)
+    if "id" not in del_id:
+        data["success"] = False
+        data["msg"] = "Record ID not provided"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    try:
+        city = CityModel.objects.filter(city_id__in=del_id["id"])
+    except CityModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "DELETE":
+        result = city.update(deleted=1)
+        data["success"] = True
+        data["msg"] = "Data deleted successfully."
+        data["deleted"] = result
+        return Response(data=data, status=status.HTTP_200_OK)
+
+# ================= Create New Record=========================
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@validate_permission("city","add")
+def create(request):
+    data = {}
+    if request.method == "POST":
+        city = CityModel()
+        serializer = CitySerializers(city, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
             data["success"] = True
-            data["msg"] = "Data deleted successfully."
-            data["deleted"] = result
-            return Response(data=data, status=status.HTTP_200_OK)
-
-    # ================= Create New Record=========================
-    def post(self, request):
-        data = {}
-        if request.method == "POST":
-            city = CityModel()
-            serializer = CitySerializers(city, data=request.data)
-
-            if serializer.is_valid():
-                serializer.save()
-                data["success"] = True
-                data["msg"] = "Data updated successfully"
-                data["data"] = serializer.data
-                return Response(data=data, status=status.HTTP_201_CREATED)
-
-            data["success"] = False
-            data["msg"] = serializer.errors
+            data["msg"] = "Data updated successfully"
             data["data"] = serializer.data
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=data, status=status.HTTP_201_CREATED)
+
+        data["success"] = False
+        data["msg"] = serializer.errors
+        data["data"] = serializer.data
+        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+@validate_permission("city","change")
 def patch(request, id):
     data = {}
     try:
@@ -121,7 +129,7 @@ def patch(request, id):
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticatedOrReadOnly])
+@validate_permission("city","view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
