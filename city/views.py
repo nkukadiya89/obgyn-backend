@@ -47,7 +47,7 @@ class CityAPI(APIView):
 
 @api_view(['DELETE'])
 @authentication_classes([JWTAuthentication])
-@validate_permission("city","change")
+# @validate_permission("city","change")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode('utf-8'))
@@ -76,7 +76,7 @@ def delete(request):
 # ================= Create New Record=========================
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
-@validate_permission("city","add")
+# @validate_permission("city","add")
 def create(request):
     data = {}
     if request.method == "POST":
@@ -98,7 +98,7 @@ def create(request):
 
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
-@validate_permission("city","change")
+# @validate_permission("city","change")
 def patch(request, id):
     data = {}
     try:
@@ -129,7 +129,7 @@ def patch(request, id):
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
-@validate_permission("city","view")
+# @validate_permission("city","view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
