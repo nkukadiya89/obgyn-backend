@@ -21,9 +21,10 @@ class PatientVoucherSerializers(serializers.ModelSerializer):
         # surgical_item = SurgicalItemModel.objects.filter(voucheritemmodel__patient_voucher_id=instance.patient_voucher_id)
         # surgical_item = SurgicalItemSerializers(surgical_item,many=True)
         # ret["surgical_item"] = surgical_item.data
-
         voucher_item = VoucherItemModel.objects.filter(patient_voucher_id=instance.patient_voucher_id)
         voucher_item = VoucherItemSerializers(voucher_item, many=True)
+
+
         ret["surgical_item"] = voucher_item.data
         return ret
 
@@ -54,10 +55,18 @@ class VoucherItemSerializers(serializers.ModelSerializer):
         # ret["surgical_item"] = surgical_item.data
         # print
         # print("surgical_item", ret["surgical_item"])
+        if "rate" in ret:
+            ret["mrp"] = ret["rate"]
+            del ret["rate"]
+        
+        if "voucher_item_id" in ret:
+            ret["surgical_item_id"] = ret["voucher_item_id"]
+            del ret["voucher_item_id"]
+
         if "surgical_item" in ret:
             medicine = MedicineModel.objects.filter(pk=ret["surgical_item"]).first()
             if medicine:
-                ret["surgical_item_name"] = medicine.medicine
+                ret["drug_name"] = medicine.medicine
         return ret
 
     def validate(self, data):
