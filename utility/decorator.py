@@ -1,7 +1,7 @@
 from django.core.exceptions import PermissionDenied
 from functools import wraps
 
-def decorator(app_name, method_type):
+def validate_permission(app_name, method_type):
     def method_wrapper(func):
         @wraps(func)
         def check_permission(request):
