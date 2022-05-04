@@ -87,7 +87,7 @@ def delete(request):
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("medicine", "add")
-def post(request):
+def create(request):
     data = {}
     if request.method == "POST":
         medicine = MedicineModel()
@@ -185,7 +185,7 @@ def delete(request):
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("medicine_type", "add")
-def post(request):
+def create(request):
     data = {}
     if request.method == "POST":
         medicine_type = MedicineTypeModel()
@@ -300,7 +300,7 @@ def delete(request):
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("timing", "add")
-def post(request):
+def create(request):
     data = {}
     if request.method == "POST":
         timing = TimingModel()

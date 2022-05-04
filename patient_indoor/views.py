@@ -83,7 +83,7 @@ def delete(request):
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("patient_indoor", "add")
-def post(request):
+def create(request):
     data = {}
     if request.method == "POST":
         patient_indoor = PatientIndoorModel()
@@ -263,7 +263,7 @@ def delete(request):
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("indoor_advice", "add")
-def post(request):
+def create(request):
     data = {}
     if request.method == "POST":
         indoor_advice = IndoorAdviceModel()

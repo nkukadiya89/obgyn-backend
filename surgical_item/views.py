@@ -91,7 +91,7 @@ def delete(request):
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("surgical_item", "add")
-def post(request):
+def create(request):
     data = {}
     if request.method == "POST":
         surgical_item = SurgicalItemModel()
@@ -190,7 +190,7 @@ def delete(request):
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("surgical_item_group", "add")
-def post(request):
+def create(request):
     data = {}
     if request.method == "POST":
         surgical_item_group = SurgicalItemGroupModel()

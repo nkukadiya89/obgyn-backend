@@ -86,7 +86,7 @@ def delete(request):
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("advice", "add")
-def post(request):
+def create(request):
     data = {}
     if request.method == "POST":
         advice = AdviceModel()
@@ -236,7 +236,7 @@ def delete(request):
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("advice_group", "add")
-def post(request):
+def create(request):
     data = {}
     if request.method == "POST":
         advice_group = AdviceGroupModel()

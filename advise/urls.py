@@ -1,12 +1,14 @@
 from django.urls import path
 
-from .views import AdviseAPI, patch, get
+from advice.views import delete
+
+from .views import AdviseAPI, patch, get, create, delete
 
 urlpatterns = [
     path('<int:id>/', AdviseAPI.as_view()),
     path('get/', get),
     path('get/<int:id>', get),
-    path('create/', AdviseAPI.as_view()),
-    path('delete/', AdviseAPI.as_view()),
+    path('create/', create),
+    path('delete/', delete),
     path('update/<int:id>/', patch, name="update"),
 ]

@@ -82,7 +82,7 @@ def delete(request):
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("template_header", "add")
-def post(request):
+def create(request):
     data = {}
     if request.method == "POST":
         template_header = TemplateHeaderModel()

@@ -114,7 +114,7 @@ def delete(request):
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("taluka", "add")
-def post(request):
+def create(request):
     data = {}
     if request.method == "POST":
         taluka = TalukaModel()

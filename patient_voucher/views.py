@@ -1,7 +1,11 @@
 import json
 
 from rest_framework import status
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -14,6 +18,7 @@ from utility.search_filter import filtering_query
 from .models import PatientVoucherModel, VoucherItemModel
 from .serializers import PatientVoucherSerializers, VoucherItemSerializers
 from .utils_views import insert_surgical_item
+from utility.decorator import validate_permission
 
 
 class PatientVoucherAPI(APIView):
@@ -42,69 +47,81 @@ class PatientVoucherAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request):
-        data = {}
-        del_id = json.loads(request.body.decode('utf-8'))
 
-        if "id" not in del_id:
-            data["success"] = False
-            data["msg"] = "Record ID not provided"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        try:
-            patient_voucher = PatientVoucherModel.objects.filter(patient_voucher_id__in=del_id["id"])
-        except PatientVoucherModel:
-            data["success"] = False
-            data["msg"] = "Record does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        if request.method == "DELETE":
-            result = patient_voucher.update(deleted=1)
-            data["success"] = True
-            data["msg"] = "Data deleted successfully."
-            data["deleted"] = result
-            return Response(data=data, status=status.HTTP_200_OK)
-
-    # ================= Create New Record=========================
-    def post(self, request):
-        data = {}
-        if request.method == "POST":
-            patient_voucher = PatientVoucherModel()
-            if "patient_opd_id" not in request.data:
-                data["success"] = False
-                data["msg"] = "OPD is required"
-                data["data"] = request.data
-                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                request.data["patient_opd"] = request.data["patient_opd_id"]
-            serializer = PatientVoucherSerializers(patient_voucher, data=request.data)
-
-            if serializer.is_valid():
-                serializer.save()
-                patient_opd = PatientOpdModel.objects.filter(pk=request.data["patient_opd_id"]).first()
-                patient_opd.status = "voucher"
-                patient_opd.save()
-
-                if "surgical_item" in request.data:
-                    insert_surgical_item(request, serializer.data["patient_voucher_id"])
-                serializer = PatientVoucherSerializers(patient_voucher)
-
-                data["success"] = True
-                data["msg"] = "Data updated successfully"
-                data["data"] = serializer.data
-                return Response(data=data, status=status.HTTP_201_CREATED)
-
-            data["success"] = False
-            data["msg"] = serializer.errors
-            data["data"] = serializer.data
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['POST'])
+@api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+@validate_permission("patient_voucher", "change")
+def delete(request):
+    data = {}
+    del_id = json.loads(request.body.decode("utf-8"))
+
+    if "id" not in del_id:
+        data["success"] = False
+        data["msg"] = "Record ID not provided"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    try:
+        patient_voucher = PatientVoucherModel.objects.filter(
+            patient_voucher_id__in=del_id["id"]
+        )
+    except PatientVoucherModel:
+        data["success"] = False
+        data["msg"] = "Record does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "DELETE":
+        result = patient_voucher.update(deleted=1)
+        data["success"] = True
+        data["msg"] = "Data deleted successfully."
+        data["deleted"] = result
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+# ================= Create New Record=========================
+@api_view(["POST"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("patient_voucher", "add")
+def create(request):
+    data = {}
+    if request.method == "POST":
+        patient_voucher = PatientVoucherModel()
+        if "patient_opd_id" not in request.data:
+            data["success"] = False
+            data["msg"] = "OPD is required"
+            data["data"] = request.data
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            request.data["patient_opd"] = request.data["patient_opd_id"]
+        serializer = PatientVoucherSerializers(patient_voucher, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            patient_opd = PatientOpdModel.objects.filter(
+                pk=request.data["patient_opd_id"]
+            ).first()
+            patient_opd.status = "voucher"
+            patient_opd.save()
+
+            if "surgical_item" in request.data:
+                insert_surgical_item(request, serializer.data["patient_voucher_id"])
+            serializer = PatientVoucherSerializers(patient_voucher)
+
+            data["success"] = True
+            data["msg"] = "Data updated successfully"
+            data["data"] = serializer.data
+            return Response(data=data, status=status.HTTP_201_CREATED)
+
+        data["success"] = False
+        data["msg"] = serializer.errors
+        data["data"] = serializer.data
+        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("patient_voucher", "change")
 def patch(request, id):
     data = {}
     try:
@@ -127,7 +144,9 @@ def patch(request, id):
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == "POST":
-        serializer = PatientVoucherSerializers(patient_voucher, request.data, partial=True)
+        serializer = PatientVoucherSerializers(
+            patient_voucher, request.data, partial=True
+        )
 
         if serializer.is_valid():
             serializer.save()
@@ -146,9 +165,9 @@ def patch(request, id):
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticatedOrReadOnly])
+@validate_permission("patient_voucher", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
@@ -160,7 +179,9 @@ def get(request, id=None):
             patient_voucher = PatientVoucherModel.objects.filter(deleted=0)
 
         data["total_record"] = len(patient_voucher)
-        patient_voucher, data = filtering_query(patient_voucher, query_string, "patient_voucher_id", "PATIENTVOUCHER")
+        patient_voucher, data = filtering_query(
+            patient_voucher, query_string, "patient_voucher_id", "PATIENTVOUCHER"
+        )
 
     except PatientVoucherModel.DoesNotExist:
         data["success"] = False
@@ -176,7 +197,8 @@ def get(request, id=None):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-#====================== VOUCHER ITEM====================================
+# ====================== VOUCHER ITEM====================================
+
 
 class VoucherItemAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
@@ -204,9 +226,12 @@ class VoucherItemAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request):
+@api_view(["DELETE"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("voucher_item", "change")
+def delete(request):
         data = {}
-        del_id = json.loads(request.body.decode('utf-8'))
+        del_id = json.loads(request.body.decode("utf-8"))
 
         if "id" not in del_id:
             data["success"] = False
@@ -215,7 +240,9 @@ class VoucherItemAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
-            voucher_item = VoucherItemModel.objects.filter(voucher_item_id__in=del_id["id"])
+            voucher_item = VoucherItemModel.objects.filter(
+                voucher_item_id__in=del_id["id"]
+            )
         except VoucherItemModel:
             data["success"] = False
             data["msg"] = "Record does not exist"
@@ -230,7 +257,10 @@ class VoucherItemAPI(APIView):
             return Response(data=data, status=status.HTTP_200_OK)
 
     # ================= Create New Record=========================
-    def post(self, request):
+@api_view(["POST"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("voucher_item", "add")
+def create(request):
         data = {}
         if request.method == "POST":
             voucher_item = VoucherItemModel()
@@ -249,9 +279,9 @@ class VoucherItemAPI(APIView):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+@validate_permission("voucher_item", "change")
 def voucher_item_patch(request, id):
     data = {}
     try:
@@ -281,9 +311,9 @@ def voucher_item_patch(request, id):
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticatedOrReadOnly])
+@validate_permission("voucher_item", "view")
 # ================= Retrieve Single or Multiple records=========================
 def voucher_item_get(request, id=None):
     query_string = request.query_params
@@ -295,7 +325,9 @@ def voucher_item_get(request, id=None):
             voucher_item = VoucherItemModel.objects.filter(deleted=0)
 
         data["total_record"] = len(voucher_item)
-        voucher_item, data = filtering_query(voucher_item, query_string, "voucher_item_id", "VOUCHERITEM")
+        voucher_item, data = filtering_query(
+            voucher_item, query_string, "voucher_item_id", "VOUCHERITEM"
+        )
 
     except VoucherItemModel.DoesNotExist:
         data["success"] = False
@@ -309,4 +341,3 @@ def voucher_item_get(request, id=None):
         data["msg"] = "OK"
         data["data"] = serilizer.data
         return Response(data=data, status=status.HTTP_200_OK)
-
