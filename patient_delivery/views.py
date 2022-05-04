@@ -107,7 +107,7 @@ def post(request):
 
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_delivery","change")
+@validate_permission_id("patient_delivery","change")
 def patch(request, id):
     data = {}
     try:
