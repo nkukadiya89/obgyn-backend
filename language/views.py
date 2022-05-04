@@ -16,7 +16,7 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from .models import LanguageModel
 from .serializers import LanguageSerializers
 from utility.search_filter import filtering_query
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class LanguageAPI(APIView):

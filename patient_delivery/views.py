@@ -17,7 +17,7 @@ from patient_opd.models import PatientOpdModel
 from utility.search_filter import filtering_query
 from .models import PatientDeliveryModel
 from .serializers import PatientDeliverySerializers, change_payload
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class PatientDeliveryAPI(APIView):
@@ -52,7 +52,7 @@ class PatientDeliveryAPI(APIView):
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("patient_delivery", "change")
-def delete(self, request):
+def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
 

@@ -12,7 +12,7 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from utility.search_filter import filtering_query
 from .models import AdviseModel
 from .serializers import AdviseSerializers
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class AdviseAPI(APIView):

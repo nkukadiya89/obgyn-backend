@@ -15,7 +15,7 @@ from utility.search_filter import filtering_query
 from .models import ConsultationModel
 from .serializers import ConsultationSerializers
 from .utils_view import add_medicine_for_consultaion
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 

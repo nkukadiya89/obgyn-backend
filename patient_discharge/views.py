@@ -17,7 +17,7 @@ from patient_opd.models import PatientOpdModel
 from .models import PatientDischargeModel
 from .serializers import PatientDischargeSerializers
 from utility.search_filter import filtering_query
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class PatientDischargeAPI(APIView):

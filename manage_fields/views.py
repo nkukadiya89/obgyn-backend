@@ -17,7 +17,7 @@ from .models import ManageFieldsModel, FieldMasterModel
 from .serializers import ManageFieldsSerializers, FieldMasterSerializers
 from utility.search_filter import filtering_query
 from django.db.models import Q
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class ManageFieldsAPI(APIView):

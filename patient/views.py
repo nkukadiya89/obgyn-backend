@@ -19,7 +19,7 @@ from user.models import User
 from utility.search_filter import filtering_query
 from .models import PatientModel
 from .serializers import PatientSerializers
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class PatientAPI(APIView):

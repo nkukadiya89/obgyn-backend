@@ -21,7 +21,7 @@ from utility.search_filter import filtering_query
 from .models import PatientOpdModel
 from .serializers import PatientOpdSerializers
 from user.user_views import generate_regd_no
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class PatientOpdAPI(APIView):
