@@ -18,6 +18,7 @@ from utility.search_filter import filtering_query
 from .models import PatientIndoorModel, IndoorAdviceModel
 from .serializers import PatientIndoorSerializers, IndoorAdviceSerializers
 from .utils_views import indoor_advice_insert
+from utility.decorator import validate_permission
 
 
 class PatientIndoorAPI(APIView):
@@ -46,74 +47,82 @@ class PatientIndoorAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request):
-        data = {}
-        del_id = json.loads(request.body.decode("utf-8"))
 
-        if "id" not in del_id:
+@api_view(["DELETE"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("patient_indoor", "change")
+def delete(request):
+    data = {}
+    del_id = json.loads(request.body.decode("utf-8"))
+
+    if "id" not in del_id:
+        data["success"] = False
+        data["msg"] = "Record ID not provided"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    try:
+        patient_indoor = PatientIndoorModel.objects.filter(
+            patient_indoor_id__in=del_id["id"]
+        )
+    except PatientIndoorModel:
+        data["success"] = False
+        data["msg"] = "Record does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "DELETE":
+        result = patient_indoor.update(deleted=1)
+        data["success"] = True
+        data["msg"] = "Data deleted successfully."
+        data["deleted"] = result
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+# ================= Create New Record=========================
+@api_view(["POST"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("patient_indoor", "add")
+def post(request):
+    data = {}
+    if request.method == "POST":
+        patient_indoor = PatientIndoorModel()
+        if "patient_opd_id" not in request.data:
             data["success"] = False
-            data["msg"] = "Record ID not provided"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        try:
-            patient_indoor = PatientIndoorModel.objects.filter(
-                patient_indoor_id__in=del_id["id"]
-            )
-        except PatientIndoorModel:
-            data["success"] = False
-            data["msg"] = "Record does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        if request.method == "DELETE":
-            result = patient_indoor.update(deleted=1)
-            data["success"] = True
-            data["msg"] = "Data deleted successfully."
-            data["deleted"] = result
-            return Response(data=data, status=status.HTTP_200_OK)
-
-    # ================= Create New Record=========================
-    def post(self, request):
-        data = {}
-        if request.method == "POST":
-            patient_indoor = PatientIndoorModel()
-            if "patient_opd_id" not in request.data:
-                data["success"] = False
-                data["msg"] = "OPD is required"
-                data["data"] = request.data
-                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                request.data["patient_opd"] = request.data["patient_opd_id"]
-            serializer = PatientIndoorSerializers(patient_indoor, data=request.data)
-
-            if serializer.is_valid():
-                serializer.save()
-
-                if "advice_lst" in request.data:
-                        indoor_advice_insert(request,serializer.data["patient_indoor_id"])
-                serializer = PatientIndoorSerializers(patient_indoor)
-
-                patient_opd = PatientOpdModel.objects.filter(
-                    pk=request.data["patient_opd_id"]
-                ).first()
-                patient_opd.status = "indoor"
-                patient_opd.save()
-
-                data["success"] = True
-                data["msg"] = "Data updated successfully"
-                data["data"] = serializer.data
-                return Response(data=data, status=status.HTTP_201_CREATED)
-
-            data["success"] = False
-            data["msg"] = serializer.errors
-            data["data"] = serializer.data
+            data["msg"] = "OPD is required"
+            data["data"] = request.data
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            request.data["patient_opd"] = request.data["patient_opd_id"]
+        serializer = PatientIndoorSerializers(patient_indoor, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+
+            if "advice_lst" in request.data:
+                indoor_advice_insert(request, serializer.data["patient_indoor_id"])
+            serializer = PatientIndoorSerializers(patient_indoor)
+
+            patient_opd = PatientOpdModel.objects.filter(
+                pk=request.data["patient_opd_id"]
+            ).first()
+            patient_opd.status = "indoor"
+            patient_opd.save()
+
+            data["success"] = True
+            data["msg"] = "Data updated successfully"
+            data["data"] = serializer.data
+            return Response(data=data, status=status.HTTP_201_CREATED)
+
+        data["success"] = False
+        data["msg"] = serializer.errors
+        data["data"] = serializer.data
+        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+@validate_permission("patient_indoor", "change")
 def patch(request, id):
     data = {}
     try:
@@ -145,8 +154,8 @@ def patch(request, id):
             serializer.save()
             if "advice_lst" in request.data:
                 if request.data.get("advice_lst"):
-                    indoor_advice_insert(request,serializer.data["patient_indoor_id"])
-            
+                    indoor_advice_insert(request, serializer.data["patient_indoor_id"])
+
             serializer = PatientIndoorSerializers(patient_indoor)
             data["success"] = True
             data["msg"] = "Data updated successfully"
@@ -161,7 +170,7 @@ def patch(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticatedOrReadOnly])
+@validate_permission("patient_indoor", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
@@ -218,56 +227,64 @@ class IndoorAdviceAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request):
-        data = {}
-        del_id = json.loads(request.body.decode("utf-8"))
 
-        if "id" not in del_id:
-            data["success"] = False
-            data["msg"] = "Record ID not provided"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+@api_view(["DELETE"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("indoor_advice", "change")
+def delete(request):
+    data = {}
+    del_id = json.loads(request.body.decode("utf-8"))
 
-        try:
-            indoor_advice = IndoorAdviceModel.objects.filter(
-                indoor_advice_id__in=del_id["id"]
-            )
-        except IndoorAdviceModel:
-            data["success"] = False
-            data["msg"] = "Record does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+    if "id" not in del_id:
+        data["success"] = False
+        data["msg"] = "Record ID not provided"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-        if request.method == "DELETE":
-            result = indoor_advice.update(deleted=1)
+    try:
+        indoor_advice = IndoorAdviceModel.objects.filter(
+            indoor_advice_id__in=del_id["id"]
+        )
+    except IndoorAdviceModel:
+        data["success"] = False
+        data["msg"] = "Record does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "DELETE":
+        result = indoor_advice.update(deleted=1)
+        data["success"] = True
+        data["msg"] = "Data deleted successfully."
+        data["deleted"] = result
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+# ================= Create New Record=========================
+@api_view(["POST"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("indoor_advice", "add")
+def post(request):
+    data = {}
+    if request.method == "POST":
+        indoor_advice = IndoorAdviceModel()
+        serializer = IndoorAdviceSerializers(indoor_advice, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
             data["success"] = True
-            data["msg"] = "Data deleted successfully."
-            data["deleted"] = result
-            return Response(data=data, status=status.HTTP_200_OK)
-
-    # ================= Create New Record=========================
-    def post(self, request):
-        data = {}
-        if request.method == "POST":
-            indoor_advice = IndoorAdviceModel()
-            serializer = IndoorAdviceSerializers(indoor_advice, data=request.data)
-
-            if serializer.is_valid():
-                serializer.save()
-                data["success"] = True
-                data["msg"] = "Data updated successfully"
-                data["data"] = serializer.data
-                return Response(data=data, status=status.HTTP_201_CREATED)
-
-            data["success"] = False
-            data["msg"] = serializer.errors
+            data["msg"] = "Data updated successfully"
             data["data"] = serializer.data
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=data, status=status.HTTP_201_CREATED)
+
+        data["success"] = False
+        data["msg"] = serializer.errors
+        data["data"] = serializer.data
+        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+@validate_permission("indoor_advice", "change")
 def indoor_advice_patch(request, id):
     data = {}
     try:
@@ -299,7 +316,7 @@ def indoor_advice_patch(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticatedOrReadOnly])
+@validate_permission("indoor_advice", "view")
 # ================= Retrieve Single or Multiple records=========================
 def indoor_advice_get(request, id=None):
     query_string = request.query_params

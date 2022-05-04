@@ -1,7 +1,11 @@
 import json
 
 from rest_framework import status
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -10,9 +14,14 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 from utility.search_filter import filtering_query
-from .models import SurgicalItemModel, SurgicalItemGroupModel, SurgicalItemGroupSurgicalItem
+from .models import (
+    SurgicalItemModel,
+    SurgicalItemGroupModel,
+    SurgicalItemGroupSurgicalItem,
+)
 from .serializers import SurgicalItemSerializers, SurgicalItemGroupSerializers
 from django.db.models import Q
+from utility.decorator import validate_permission
 
 
 class SurgicalItemAPI(APIView):
@@ -42,63 +51,80 @@ class SurgicalItemAPI(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # ================= Delete Record =========================
-    def delete(self, request):
-        data = {}
-        del_id = json.loads(request.body.decode('utf-8'))
-        if "id" not in del_id:
-            data["success"] = False
-            data["msg"] = "Record ID not provided"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-        try:
-            surgical_item = SurgicalItemModel.objects.filter(surgical_item_id__in=del_id["id"])
-        except SurgicalItemModel.DoesNotExist:
-            data["success"] = False
-            data["msg"] = "Record does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
-        if request.method == "DELETE":
-            result = surgical_item.delete()
-            SurgicalItemGroupSurgicalItem.objects.filter(surgical_item_id__in=del_id["id"]).delete()
-            
+@api_view(["DELETE"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("surgical_item", "change")
+def delete(request):
+    data = {}
+    del_id = json.loads(request.body.decode("utf-8"))
+    if "id" not in del_id:
+        data["success"] = False
+        data["msg"] = "Record ID not provided"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    try:
+        surgical_item = SurgicalItemModel.objects.filter(
+            surgical_item_id__in=del_id["id"]
+        )
+    except SurgicalItemModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "DELETE":
+        result = surgical_item.delete()
+        SurgicalItemGroupSurgicalItem.objects.filter(
+            surgical_item_id__in=del_id["id"]
+        ).delete()
+
+        data["success"] = True
+        data["msg"] = "Data deleted successfully."
+        data["deleted"] = result
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+# ================= Create New Record=========================
+@api_view(["POST"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("surgical_item", "add")
+def post(request):
+    data = {}
+    if request.method == "POST":
+        surgical_item = SurgicalItemModel()
+        serializer = SurgicalItemSerializers(surgical_item, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+
+            if "drug_group_name" in request.data:
+                surgical_item_group_name = str(
+                    request.data.get("drug_group_name")
+                ).strip()
+                surgical_item_group = SurgicalItemGroupModel.objects.filter(
+                    drug_group_name=surgical_item_group_name
+                ).first()
+
+                if surgical_item_group == None:
+                    surgical_item_group = SurgicalItemGroupModel.objects.create(
+                        drug_group_name=surgical_item_group_name,
+                        created_by=request.data.get("created_by"),
+                        deleted=0,
+                    )
+                surgical_item_group.surgical_item.add(surgical_item.surgical_item_id)
+
             data["success"] = True
-            data["msg"] = "Data deleted successfully."
-            data["deleted"] = result
-            return Response(data=data, status=status.HTTP_200_OK)
-
-    # ================= Create New Record=========================
-    def post(self, request):
-        data = {}
-        if request.method == "POST":
-            surgical_item = SurgicalItemModel()
-            serializer = SurgicalItemSerializers(surgical_item, data=request.data)
-
-            if serializer.is_valid():
-                serializer.save()
-
-                if "drug_group_name" in request.data:
-                    surgical_item_group_name = str(request.data.get('drug_group_name')).strip()
-                    surgical_item_group = SurgicalItemGroupModel.objects.filter(
-                        drug_group_name=surgical_item_group_name).first()
-
-                    if surgical_item_group == None:
-                        surgical_item_group = SurgicalItemGroupModel.objects.create(
-                            drug_group_name=surgical_item_group_name,
-                            created_by=request.data.get('created_by'),
-                            deleted=0)
-                    surgical_item_group.surgical_item.add(surgical_item.surgical_item_id)
-
-                data["success"] = True
-                data["msg"] = "Data updated successfully"
-                data["data"] = serializer.data
-                return Response(data=data, status=status.HTTP_201_CREATED)
-
-            data["success"] = False
-            data["msg"] = serializer.errors
+            data["msg"] = "Data updated successfully"
             data["data"] = serializer.data
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=data, status=status.HTTP_201_CREATED)
+
+        data["success"] = False
+        data["msg"] = serializer.errors
+        data["data"] = serializer.data
+        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
 class SurgicalItemGroupAPI(APIView):
@@ -128,53 +154,66 @@ class SurgicalItemGroupAPI(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # ================= Delete Record =========================
-    def delete(self, request):
-        data = {}
-        del_id = json.loads(request.body.decode('utf-8'))
-        if "id" not in del_id:
-            data["success"] = False
-            data["msg"] = "Record ID not provided"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        try:
-            surgical_item_group = SurgicalItemGroupModel.objects.filter(si_group_id__in=del_id["id"])
-        except SurgicalItemGroupModel.DoesNotExist:
-            data["success"] = False
-            data["msg"] = "Record does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        if request.method == "DELETE":
-            result = surgical_item_group.update(deleted=1)
-            data["success"] = True
-            data["msg"] = "Data deleted successfully."
-            data["deleted"] = result
-            return Response(data=data, status=status.HTTP_200_OK)
-
-    # ================= Create New Record=========================
-    def post(self, request):
-        data = {}
-        if request.method == "POST":
-            surgical_item_group = SurgicalItemGroupModel()
-            serializer = SurgicalItemGroupSerializers(surgical_item_group, data=request.data)
-
-            if serializer.is_valid():
-                serializer.save()
-                data["success"] = True
-                data["msg"] = "Data updated successfully"
-                data["data"] = serializer.data
-                return Response(data=data, status=status.HTTP_201_CREATED)
-
-            data["success"] = False
-            data["msg"] = serializer.errors
-            data["data"] = serializer.data
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+@validate_permission("surgical_item_group", "change")
+def delete(request):
+    data = {}
+    del_id = json.loads(request.body.decode("utf-8"))
+    if "id" not in del_id:
+        data["success"] = False
+        data["msg"] = "Record ID not provided"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    try:
+        surgical_item_group = SurgicalItemGroupModel.objects.filter(
+            si_group_id__in=del_id["id"]
+        )
+    except SurgicalItemGroupModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "DELETE":
+        result = surgical_item_group.update(deleted=1)
+        data["success"] = True
+        data["msg"] = "Data deleted successfully."
+        data["deleted"] = result
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+# ================= Create New Record=========================
+@api_view(["POST"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("surgical_item_group", "add")
+def post(request):
+    data = {}
+    if request.method == "POST":
+        surgical_item_group = SurgicalItemGroupModel()
+        serializer = SurgicalItemGroupSerializers(
+            surgical_item_group, data=request.data
+        )
+
+        if serializer.is_valid():
+            serializer.save()
+            data["success"] = True
+            data["msg"] = "Data updated successfully"
+            data["data"] = serializer.data
+            return Response(data=data, status=status.HTTP_201_CREATED)
+
+        data["success"] = False
+        data["msg"] = serializer.errors
+        data["data"] = serializer.data
+        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("surgical_item_group", "change")
 def patch_surgical_group(request, id):
     data = {}
 
@@ -190,7 +229,9 @@ def patch_surgical_group(request, id):
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == "POST":
-        serializer = SurgicalItemGroupSerializers(surgical_item_group, request.data, partial=True)
+        serializer = SurgicalItemGroupSerializers(
+            surgical_item_group, request.data, partial=True
+        )
 
         if serializer.is_valid():
             serializer.save()
@@ -205,9 +246,9 @@ def patch_surgical_group(request, id):
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+@validate_permission("surgical_item", "change")
 def patch(request, id):
     data = {}
 
@@ -238,9 +279,9 @@ def patch(request, id):
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+@validate_permission("surgical_item", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
@@ -250,10 +291,15 @@ def get(request, id=None):
         if id:
             surgical_item = SurgicalItemModel.objects.filter(pk=id, deleted=0)
         else:
-            surgical_item = SurgicalItemModel.objects.filter(Q(deleted=0, created_by=1)  | Q(created_by=request.data.get('created_by')))
+            surgical_item = SurgicalItemModel.objects.filter(
+                Q(deleted=0, created_by=1)
+                | Q(created_by=request.data.get("created_by"))
+            )
 
         data["total_record"] = len(surgical_item)
-        surgical_item, data = filtering_query(surgical_item, query_string, "surgical_item_id", "SURGICALITEM")
+        surgical_item, data = filtering_query(
+            surgical_item, query_string, "surgical_item_id", "SURGICALITEM"
+        )
 
     except SurgicalItemModel.DoesNotExist:
         data["success"] = False
@@ -269,9 +315,9 @@ def get(request, id=None):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+@validate_permission("surgical_item_group", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get_group(request, id=None):
     query_string = request.query_params
@@ -279,13 +325,19 @@ def get_group(request, id=None):
     data = {}
     try:
         if id:
-            surgical_item_group = SurgicalItemGroupModel.objects.filter(pk=id, deleted=0)
+            surgical_item_group = SurgicalItemGroupModel.objects.filter(
+                pk=id, deleted=0
+            )
         else:
-            surgical_item_group = SurgicalItemGroupModel.objects.filter(Q(deleted=0, created_by=1)  | Q(created_by=request.data.get('created_by')))
+            surgical_item_group = SurgicalItemGroupModel.objects.filter(
+                Q(deleted=0, created_by=1)
+                | Q(created_by=request.data.get("created_by"))
+            )
 
             data["total_record"] = len(surgical_item_group)
-            surgical_item_group, data = filtering_query(surgical_item_group, query_string, "si_group_id",
-                                                        "SURGICALITEMGROUP")
+            surgical_item_group, data = filtering_query(
+                surgical_item_group, query_string, "si_group_id", "SURGICALITEMGROUP"
+            )
 
     except SurgicalItemGroupModel.DoesNotExist:
         data["success"] = False
