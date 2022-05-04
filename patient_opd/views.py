@@ -133,7 +133,7 @@ def post(request):
 
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_opd", "change")
+@validate_permission_id("patient_opd", "change")
 def patch(request, id):
     data = {}
     try:
@@ -183,7 +183,7 @@ def patch(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_opd", "view")
+@validate_permission_id("patient_opd", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
