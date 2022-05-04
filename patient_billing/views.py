@@ -17,7 +17,7 @@ from patient_opd.models import PatientOpdModel
 from utility.search_filter import filtering_query
 from .models import PatientBillingModel
 from .serializers import PatientBillingSerializers
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class PatientBillingAPI(APIView):
