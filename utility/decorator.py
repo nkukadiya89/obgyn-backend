@@ -9,6 +9,6 @@ def validate_permission(app_name, method_type):
             if not request.user.has_perm(permission):
                 pass
                 # raise PermissionDenied
-            return func(request)
+            return func(request,id)
         return check_permission
     return method_wrapper
