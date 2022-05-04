@@ -21,7 +21,7 @@ from utility.search_filter import filtering_query
 from .models import PatientOpdModel
 from .serializers import PatientOpdSerializers
 from user.user_views import generate_regd_no
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class PatientOpdAPI(APIView):
@@ -63,7 +63,7 @@ def delete(request):
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("patient_opd", "add")
-def post(request):
+def create(request):
     data = {}
     if request.method == "POST":
         patient_opd_data = json.loads(request.data["data"])["patient_opd"]
@@ -133,7 +133,7 @@ def post(request):
 
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_opd", "change")
+@validate_permission_id("patient_opd", "change")
 def patch(request, id):
     data = {}
     try:
@@ -183,7 +183,7 @@ def patch(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_opd", "view")
+@validate_permission_id("patient_opd", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params

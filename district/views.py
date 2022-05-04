@@ -16,7 +16,7 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from utility.search_filter import filtering_query
 from .models import DistrictModel
 from .serializers import DistrictSerializers
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class DistrictAPI(APIView):
@@ -49,7 +49,7 @@ class DistrictAPI(APIView):
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("district", "change")
-def delete(request):
+def delete(request,id=None):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
 
@@ -80,7 +80,7 @@ def delete(request):
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("distirct", "add")
-def post(request):
+def create(request):
     data = {}
     if request.method == "POST":
         district = DistrictModel()
@@ -101,7 +101,7 @@ def post(request):
 
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("disrtict","change")
+@validate_permission_id("disrtict","change")
 def patch(request, id):
     data = {}
     try:
@@ -133,7 +133,7 @@ def patch(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("district","view")
+@validate_permission_id("district","view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params

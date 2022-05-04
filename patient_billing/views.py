@@ -17,7 +17,7 @@ from patient_opd.models import PatientOpdModel
 from utility.search_filter import filtering_query
 from .models import PatientBillingModel
 from .serializers import PatientBillingSerializers
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class PatientBillingAPI(APIView):
@@ -83,7 +83,7 @@ def delete(request):
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("patient_billing", "add")
-def post(request):
+def create(request):
     data = {}
     if request.method == "POST":
         patient_billing = PatientBillingModel()
@@ -124,7 +124,7 @@ def post(request):
 
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_billing", "change")
+@validate_permission_id("patient_billing", "change")
 def patch(request, id):
     data = {}
     try:

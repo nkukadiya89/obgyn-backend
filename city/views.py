@@ -12,7 +12,7 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from utility.search_filter import filtering_query
 from .models import CityModel
 from .serializers import CitySerializers
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 class CityAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
@@ -98,7 +98,7 @@ def create(request):
 
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
-# @validate_permission("city","change")
+# @validate_permission_id("city","change")
 def patch(request, id):
     data = {}
     try:

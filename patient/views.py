@@ -19,7 +19,7 @@ from user.models import User
 from utility.search_filter import filtering_query
 from .models import PatientModel
 from .serializers import PatientSerializers
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class PatientAPI(APIView):
@@ -86,7 +86,7 @@ def delete(request):
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("patient", "add")
-def post(request):
+def create(request):
     data = {}
     if request.method == "POST":
         patient = PatientModel()
@@ -134,7 +134,7 @@ def post(request):
 
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient", "change")
+@validate_permission_id("patient", "change")
 def patch(request, id):
     data = {}
 

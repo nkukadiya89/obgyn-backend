@@ -18,9 +18,6 @@ class PatientVoucherSerializers(serializers.ModelSerializer):
             ret["patient_opd_id"] = ret["patient_opd"]
             del ret["patient_opd"]
         
-        # surgical_item = SurgicalItemModel.objects.filter(voucheritemmodel__patient_voucher_id=instance.patient_voucher_id)
-        # surgical_item = SurgicalItemSerializers(surgical_item,many=True)
-        # ret["surgical_item"] = surgical_item.data
         voucher_item = VoucherItemModel.objects.filter(patient_voucher_id=instance.patient_voucher_id)
         voucher_item = VoucherItemSerializers(voucher_item, many=True)
 
@@ -50,11 +47,6 @@ class VoucherItemSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(VoucherItemSerializers, self).to_representation(instance)
 
-        # surgical_item = SurgicalItemModel.objects.filter(voucheritemmodel__voucher_item_id=instance.voucher_item_id)
-        # surgical_item = SurgicalItemSerializers(surgical_item,many=True)
-        # ret["surgical_item"] = surgical_item.data
-        # print
-        # print("surgical_item", ret["surgical_item"])
         if "rate" in ret:
             ret["mrp"] = ret["rate"]
             del ret["rate"]

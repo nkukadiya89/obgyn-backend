@@ -12,7 +12,7 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from utility.search_filter import filtering_query
 from .models import AdviseModel
 from .serializers import AdviseSerializers
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class AdviseAPI(APIView):
@@ -98,7 +98,7 @@ def post(request):
 
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
-@validate_permission("advise","change")
+@validate_permission_id("advise","change")
 def patch(request, id):
     data = {}
     try:

@@ -17,7 +17,7 @@ from patient_opd.models import PatientOpdModel
 from utility.search_filter import filtering_query
 from .models import PatientHistolapModel
 from .serializers import PatientHistolapSerializers
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class PatientHistolapAPI(APIView):
@@ -83,7 +83,7 @@ def delete(request):
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("patient_histolap", "add")
-def post(request):
+def create(request):
     data = {}
     if request.method == "POST":
         patient_histolap = PatientHistolapModel()
@@ -117,7 +117,7 @@ def post(request):
 
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_histolap", "change")
+@validate_permission_id("patient_histolap", "change")
 def patch(request, id):
     data = {}
     try:

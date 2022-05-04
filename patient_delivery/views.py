@@ -17,7 +17,7 @@ from patient_opd.models import PatientOpdModel
 from utility.search_filter import filtering_query
 from .models import PatientDeliveryModel
 from .serializers import PatientDeliverySerializers, change_payload
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class PatientDeliveryAPI(APIView):
@@ -85,7 +85,7 @@ def delete(request):
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("patient_delivery", "add")
-def post(request):
+def create(request):
     data = {}
     if request.method == "POST":
         patient_delivery = PatientDeliveryModel()
@@ -107,7 +107,7 @@ def post(request):
 
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_delivery","change")
+@validate_permission_id("patient_delivery","change")
 def patch(request, id):
     data = {}
     try:

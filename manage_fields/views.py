@@ -17,7 +17,7 @@ from .models import ManageFieldsModel, FieldMasterModel
 from .serializers import ManageFieldsSerializers, FieldMasterSerializers
 from utility.search_filter import filtering_query
 from django.db.models import Q
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class ManageFieldsAPI(APIView):
@@ -101,7 +101,7 @@ def create_mf(request):
 
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-# @validate_permission("manage_fields","change")
+# @validate_permission_id("manage_fields","change")
 def patch_mf(request, id):
     data = {}
 
@@ -252,7 +252,7 @@ def create_mfm(request):
 
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-# @validate_permission("field_master","change")
+# @validate_permission_id("field_master","change")
 def patch_mfm(request, id):
     data = {}
 

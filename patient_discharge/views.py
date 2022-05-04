@@ -17,7 +17,7 @@ from patient_opd.models import PatientOpdModel
 from .models import PatientDischargeModel
 from .serializers import PatientDischargeSerializers
 from utility.search_filter import filtering_query
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class PatientDischargeAPI(APIView):
@@ -85,7 +85,7 @@ def delete(request):
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("patient_discharge", "add")
-def post(request):
+def create(request):
     data = {}
     if request.method == "POST":
         patient_discharge = PatientDischargeModel()
@@ -119,10 +119,9 @@ def post(request):
 
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_discharge","change")
+@validate_permission_id("patient_discharge","change")
 def patch(request, id):
     data = {}
-
     try:
         if id:
             patient_discharge = PatientDischargeModel.objects.get(pk=id)
