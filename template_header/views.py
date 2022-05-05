@@ -50,7 +50,7 @@ class TemplateHeaderAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("template_header", "change")
+@validate_permission("template_header", "delete")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))

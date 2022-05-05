@@ -51,7 +51,7 @@ class PatientUSGFormAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_usgform", "change")
+@validate_permission("patient_usgform", "delete")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -228,7 +228,7 @@ class USGFormChildAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_usgform", "change")
+@validate_permission("patient_usgform", "delete")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -261,7 +261,7 @@ def delete(request):
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("patient_usgform", "add")
-def delete(request):
+def create(request):
     data = {}
     if request.method == "POST":
         usgform_child = USGFormChildModel()

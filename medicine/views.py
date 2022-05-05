@@ -57,7 +57,7 @@ class MedicineAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("medicine", "change")
+@validate_permission("medicine", "delete")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -153,7 +153,7 @@ class MedicineTypeAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("medicine_type", "change")
+@validate_permission("medicine_type", "delete")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -270,7 +270,7 @@ def get(request, id=None):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("timing", "change")
+@validate_permission("timing", "delete")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))

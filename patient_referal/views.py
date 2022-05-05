@@ -51,7 +51,7 @@ class PatientReferalAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_referal", "change")
+@validate_permission("patient_referal", "delete")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))

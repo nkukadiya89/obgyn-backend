@@ -52,7 +52,7 @@ class AdviceAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("advice", "change")
+@validate_permission("advice", "delete")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -110,7 +110,7 @@ def create(request):
 
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("advice", "change")
+@validate_permission_id("advice", "change")
 def patch(request, id):
     data = {}
     try:
@@ -204,7 +204,7 @@ class AdviceGroupAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("advice_group", "change")
+@validate_permission("advice_group", "delete")
 def delete_group(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))

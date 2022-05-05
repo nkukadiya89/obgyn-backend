@@ -49,7 +49,7 @@ class PatientHistolapAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_histolap", "change")
+@validate_permission("patient_histolap", "delete")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))

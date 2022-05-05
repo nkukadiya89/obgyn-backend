@@ -50,7 +50,7 @@ class PatientIndoorAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_indoor", "change")
+@validate_permission("patient_indoor", "delete")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -230,7 +230,7 @@ class IndoorAdviceAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("indoor_advice", "change")
+@validate_permission("indoor_advice", "delete")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))

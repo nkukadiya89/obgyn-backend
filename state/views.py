@@ -50,7 +50,7 @@ class StateAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("state", "change")
+@validate_permission("state", "delete")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))

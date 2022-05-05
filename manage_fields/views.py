@@ -51,7 +51,7 @@ class ManageFieldsAPI(APIView):
 # ================= Delete Record =========================
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-# @validate_permission("manage_fields","change")
+# @validate_permission("manage_fields","delete")
 def delete_mf(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -198,7 +198,7 @@ class FieldMasterAPI(APIView):
 # ================= Delete Record =========================
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("field_master","change")
+@validate_permission("field_master","delete")
 def delete_mfm(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))

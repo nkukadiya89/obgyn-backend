@@ -55,7 +55,7 @@ class SurgicalItemAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("surgical_item", "change")
+@validate_permission("surgical_item", "delete")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -158,7 +158,7 @@ class SurgicalItemGroupAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("surgical_item_group", "change")
+@validate_permission("surgical_item_group", "delete")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
