@@ -22,7 +22,7 @@ class PatientOpdSerializers(serializers.ModelSerializer):
             ret["first_name"] = patient[0].first_name
             ret["middle_name"] = patient[0].middle_name
             ret["last_name"] = patient[0].last_name
-            ret["phone"] = patient[0].phone
+            ret["phone"] = patient[0].phone if "F_" not in patient[0].phone else ""
             ret["department"] = patient[0].department
             ret["regd_no"] = patient[0].registered_no
             ret["married"] = patient[0].married
