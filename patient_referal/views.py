@@ -17,7 +17,7 @@ from patient_opd.models import PatientOpdModel
 from .models import PatientReferalModel
 from .serializers import PatientReferalSerializers
 from utility.search_filter import filtering_query
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class PatientReferalAPI(APIView):
@@ -163,7 +163,7 @@ def patch(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_referal", "view")
+@validate_permission_id("patient_referal", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params

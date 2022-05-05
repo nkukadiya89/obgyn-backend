@@ -16,7 +16,7 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from .models import TemplateHeaderModel
 from .serializers import TemplateHeaderSerializers
 from utility.search_filter import filtering_query
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class TemplateHeaderAPI(APIView):
@@ -138,7 +138,7 @@ def patch(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("template_header", "view")
+@validate_permission_id("template_header", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params

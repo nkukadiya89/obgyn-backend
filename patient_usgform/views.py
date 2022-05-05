@@ -19,7 +19,7 @@ from .models import PatientUSGFormModel, USGFormChildModel
 from .serializers import PatientUSGFormSerializers, USGFormChildSerializers
 from .util_views import insert_child_usgform
 from obgyn_config.views import update_obgyn_config
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class PatientUSGFormAPI(APIView):
@@ -169,7 +169,7 @@ def patch(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_usgform", "view")
+@validate_permission_id("patient_usgform", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params

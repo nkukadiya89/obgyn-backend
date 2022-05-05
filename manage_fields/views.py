@@ -134,7 +134,7 @@ def patch_mf(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-# @validate_permission("manage_fields","view")
+# @validate_permission_id("manage_fields","view")
 # ================= Retrieve Single or Multiple records=========================
 def get_mf(request, id=None):
     query_string = request.query_params
@@ -286,7 +286,7 @@ def patch_mfm(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-# @validate_permission("field_master","view")
+# @validate_permission_id("field_master","view")
 # ================= Retrieve Single or Multiple records=========================
 def get_mfm(request, id=None):
 

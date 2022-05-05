@@ -21,7 +21,7 @@ from .models import (
 )
 from .serializers import SurgicalItemSerializers, SurgicalItemGroupSerializers
 from django.db.models import Q
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class SurgicalItemAPI(APIView):
@@ -281,7 +281,7 @@ def patch(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("surgical_item", "view")
+@validate_permission_id("surgical_item", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
@@ -317,7 +317,7 @@ def get(request, id=None):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("surgical_item_group", "view")
+@validate_permission_id("surgical_item_group", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get_group(request, id=None):
     query_string = request.query_params

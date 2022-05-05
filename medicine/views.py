@@ -23,7 +23,7 @@ from .serializers import (
     DynamicFieldModelSerializer,
 )
 from .utils_view import link_diagnosis
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class MedicineAPI(APIView):
@@ -213,7 +213,7 @@ class TimingAPI(APIView):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("timing", "view")
+@validate_permission_id("timing", "view")
 def get(request, id=None):
     data = {}
     query_string = request.query_params
@@ -423,7 +423,7 @@ def patch_medicine(request, id):
 # ================= Retrieve Single or Multiple records=========================
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("medicine", "view")
+@validate_permission_id("medicine", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get_medicine(request, id=None):
     query_string = request.query_params
@@ -469,7 +469,7 @@ def get_medicine(request, id=None):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("medicine", "view")
+@validate_permission_id("medicine", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get_or_medicine(request, id=None):
     query_string = request.query_params
@@ -513,7 +513,7 @@ def get_or_medicine(request, id=None):
 # ================= Retrieve Single or Multiple records=========================
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("medicine_type", "view")
+@validate_permission_id("medicine_type", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get_medicine_type(request, id=None):
     query_string = request.query_params
