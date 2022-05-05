@@ -12,7 +12,7 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from utility.search_filter import filtering_query
 from .models import AdviceModel, AdviceGroupModel, AdviceGroupAdviceModel
 from .serializers import AdviceSerializers, AdviceGroupSerializers
-from .utils_view import insert_advice_group
+from .utils_view import insert_advice_group, delete_child_records
 from django.db.models import Q
 
 
@@ -64,6 +64,7 @@ class AdviceAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":
+            delete_child_records(advice)
             result = advice.delete()
 
             AdviceGroupAdviceModel.objects.filter(advicemodel_id__in=del_id["id"]).delete()

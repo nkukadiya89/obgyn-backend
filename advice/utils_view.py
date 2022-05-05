@@ -1,4 +1,6 @@
 from advice.models import AdviceGroupModel
+from patient_indoor.models import IndoorAdviceModel
+
 
 
 def insert_advice_group(request,advice_id):
@@ -10,3 +12,11 @@ def insert_advice_group(request,advice_id):
                                                         deleted=0)
 
     advice_group.advice.add(advice_id)
+
+
+
+def delete_child_records(advice_list):
+    for advice in advice_list:
+        indoor_advice = IndoorAdviceModel.objects.filter(advice=advice)
+        # print(indoor_advice.indoor_advice_id)
+        indoor_advice.delete()
