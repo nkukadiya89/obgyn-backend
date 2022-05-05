@@ -13,6 +13,7 @@ from utility.search_filter import filtering_query
 from .models import SurgicalItemModel, SurgicalItemGroupModel, SurgicalItemGroupSurgicalItem
 from .serializers import SurgicalItemSerializers, SurgicalItemGroupSerializers
 from django.db.models import Q
+from .utils_views import delete_child_records
 
 
 class SurgicalItemAPI(APIView):
@@ -60,8 +61,9 @@ class SurgicalItemAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "DELETE":
+            delete_child_records(surgical_item)
             result = surgical_item.delete()
-            SurgicalItemGroupSurgicalItem.objects.filter(surgical_item_id__in=del_id["id"]).delete()
+            SurgicalItemModel.objects.filter(surgical_item_id__in=del_id["id"]).delete()
             
             data["success"] = True
             data["msg"] = "Data deleted successfully."
