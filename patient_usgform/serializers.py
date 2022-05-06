@@ -5,9 +5,20 @@ from patient.models import PatientModel
 from manage_fields.models import ManageFieldsModel
 from .models import PatientUSGFormModel, USGFormChildModel
 from user.serializers import UserSerializers
+from datetime import datetime
 
 
 class USGFormChildSerializers(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        ret = super(USGFormChildSerializers, self).to_representation(instance)
+
+        if "child_dob" in ret:
+            ret["child_year"] = datetime.strptime(ret["child_dob"],"%Y-%m-%d").year
+            ret["child_month"] = datetime.strptime(ret["child_dob"],"%Y-%m-%d").month
+
+            
+        return ret
     usgform_child_id = serializers.IntegerField(read_only=True)
 
     class Meta:

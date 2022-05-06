@@ -13,10 +13,7 @@ from patient_opd.models import PatientOpdModel
 
 class ConsultationModel(models.Model):
 
-    department_choice = (
-        ("OPD", "OPD"),
-        ("IPD", "IPD")
-    )
+    
     patient_type_choice = (
         ("OB", "OB"),
         ("GYN", "GYN")
@@ -29,7 +26,7 @@ class ConsultationModel(models.Model):
     consultation_id = models.AutoField(primary_key=True)
     patient_opd = models.OneToOneField(PatientOpdModel, on_delete=models.DO_NOTHING, null=True)
     patient = models.ForeignKey(PatientModel, on_delete=models.DO_NOTHING, null=True)
-    department = models.CharField(max_length=5, choices=department_choice, default="OPD")
+    
     patient_type = models.CharField(max_length=5, choices=patient_type_choice, default="OB")
     patient_detail = models.CharField(max_length=8, choices=patient_detail_choice, default="PARTIAL")
     parity = models.CharField(max_length=25, default="", null=True)
@@ -55,8 +52,8 @@ class ConsultationModel(models.Model):
     ftlscs_female_live = models.IntegerField(default=0, null=True)
     ftlscs_female_dead = models.IntegerField(default=0, null=True)
 
-    ho = models.CharField(max_length=25, default="", null=True)
-    co = models.CharField(max_length=25, default="", null=True)
+    ho = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="ho")
+    co = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="co")
     possible_lmp = models.DateField(default=now, null=True)
     possible_edd = models.DateField(default=now, null=True)
     temprature = models.CharField(max_length=25, default="", null=True)
@@ -88,7 +85,7 @@ class ConsultationModel(models.Model):
     remark = models.TextField(null=True)
 
     # ================= investigation===================
-    hb = models.CharField(max_length=50, default="", null=True)
+    hb = models.IntegerField( default=0, null=True)
     blood_group = models.CharField(max_length=25, default="", null=True)
     urine_sugar = models.CharField(max_length=25, default="", null=True)
     urine_protein = models.CharField(max_length=25, default="", null=True)
