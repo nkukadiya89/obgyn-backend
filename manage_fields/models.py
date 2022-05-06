@@ -24,7 +24,7 @@ class ManageFieldsModel(models.Model):
     mf_id = models.AutoField(primary_key=True)
     language = models.ForeignKey(LanguageModel, on_delete=models.SET_NULL, null=True)
     field_master = models.ForeignKey(FieldMasterModel, on_delete=models.DO_NOTHING, null=True)
-    field_value = models.CharField(max_length=150, default="")
+    field_value = models.CharField(max_length=500, default="")
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)

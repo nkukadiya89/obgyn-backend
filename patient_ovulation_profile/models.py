@@ -15,6 +15,7 @@ class PatientOvulationProfileModel(models.Model):
 
     op_day = models.CharField(max_length=10, default="")
     op_date = models.DateField(null=True)
+    op_time = models.CharField(max_length=10,null=True)
     ut_blood_flow = models.CharField(max_length=100, default="")
     ovarian_blood_flow = models.CharField(max_length=100, default="")
     right_ovary_mm = models.FloatField(default=0.0)
