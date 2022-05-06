@@ -33,9 +33,9 @@ class DiagnosisSerializers(serializers.ModelSerializer):
         data["diagnosis_type"] = data.get('diagnosis_type').upper()
 
         if diagnosis_type.upper() == "U":
-            if int(data.get('ut_weeks')) <= 0 or int(data.get('ut_days')) <= 0:
+            if int(data.get('ut_weeks')) <= 0:
                 raise serializers.ValidationError(
-                    "UT Weeks or UT Days not provided.")
+                    "UT Weeks not provided.")
         elif diagnosis_type.upper() == "D":
             if not diagnosis_name or len(diagnosis_name) == 0:
                 raise serializers.ValidationError(
@@ -46,7 +46,7 @@ class DiagnosisSerializers(serializers.ModelSerializer):
                 deleted=0, diagnosis_name__iexact=diagnosis_name, created_by=created_by)
         elif diagnosis_type == "U":
             duplicate_diagnosis = DiagnosisModel.objects.filter(
-                deleted=0, ut_weeks=ut_weeks, ut_days=ut_days, created_by=created_by)
+                deleted=0, ut_weeks=ut_weeks, created_by=created_by)
 
         if self.partial:
             duplicate_diagnosis = duplicate_diagnosis.filter(

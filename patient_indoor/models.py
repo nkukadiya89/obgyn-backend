@@ -48,7 +48,6 @@ class PatientIndoorModel(models.Model):
     disch_time = models.CharField(max_length=15, default="", null=True)
     operation = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="operation_indr")
     diagnosis = models.ForeignKey(DiagnosisModel, on_delete=models.DO_NOTHING, null=True)
-    field_order = models.CharField(max_length=25, default="", null=True)
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
