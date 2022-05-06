@@ -14,15 +14,6 @@ class PatientReferalSerializers(serializers.ModelSerializer):
             ret["patient_opd_id"] = ret["patient_opd"]
             del ret["patient_opd"]
 
-        if "indication" in ret:
-            indication_list = {}
-            for each_indication in ret["indication"]:
-                indication = ManageFieldsModel.objects.get(mf_id=each_indication)
-                indication_list[indication.mf_id] = indication.field_value
-
-            ret["indication_name"] = indication_list
-            # ret.pop("indication")
-
         return ret
 
     def validate(self, data):
