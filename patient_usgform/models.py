@@ -58,8 +58,7 @@ class USGFormChildModel(models.Model):
     usgform_child_id = models.AutoField(primary_key=True)
     patient_usgform = models.ForeignKey(PatientUSGFormModel, on_delete=models.DO_NOTHING)
     child_gender = models.CharField(max_length=10, choices=gender_choice, default="MALE")
-    child_year = models.IntegerField(null=True)
-    child_month = models.IntegerField(null=True)
+    child_dob = models.DateField(null=True)
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)

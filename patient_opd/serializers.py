@@ -23,11 +23,8 @@ class PatientOpdSerializers(serializers.ModelSerializer):
             ret["middle_name"] = patient[0].middle_name
             ret["last_name"] = patient[0].last_name
             ret["phone"] = patient[0].phone if "F_" not in patient[0].phone else ""
-            ret["department"] = patient[0].department
             ret["regd_no"] = patient[0].registered_no
             ret["married"] = patient[0].married
-            ret["patient_type"] = patient[0].patient_type
-            ret["patient_detail"] = patient[0].patient_detail
             ret["date_of_opd"] = patient[0].date_of_opd
             ret["husband_father_name"] = patient[0].husband_father_name
             ret["grand_father_name"] = patient[0].grand_father_name
