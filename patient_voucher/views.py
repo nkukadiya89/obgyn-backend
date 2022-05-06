@@ -18,7 +18,7 @@ from utility.search_filter import filtering_query
 from .models import PatientVoucherModel, VoucherItemModel
 from .serializers import PatientVoucherSerializers, VoucherItemSerializers
 from .utils_views import insert_surgical_item
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class PatientVoucherAPI(APIView):
@@ -50,7 +50,7 @@ class PatientVoucherAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_voucher", "change")
+@validate_permission("patient_voucher", "delete")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -167,7 +167,7 @@ def patch(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_voucher", "view")
+@validate_permission_id("patient_voucher", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
@@ -313,7 +313,7 @@ def voucher_item_patch(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("voucher_item", "view")
+@validate_permission_id("voucher_item", "view")
 # ================= Retrieve Single or Multiple records=========================
 def voucher_item_get(request, id=None):
     query_string = request.query_params

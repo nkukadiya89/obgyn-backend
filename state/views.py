@@ -16,7 +16,7 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from .models import StateModel
 from .serializers import StateSerializers
 from utility.search_filter import filtering_query
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class StateAPI(APIView):
@@ -50,7 +50,7 @@ class StateAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("state", "change")
+@validate_permission("state", "delete")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -135,7 +135,7 @@ def patch(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("state", "view")
+@validate_permission_id("state", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params

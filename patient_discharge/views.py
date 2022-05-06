@@ -51,7 +51,7 @@ class PatientDischargeAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_discharge", "change")
+@validate_permission("patient_discharge", "delete")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -161,7 +161,7 @@ def patch(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_discharge","view")
+@validate_permission_id("patient_discharge","view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params

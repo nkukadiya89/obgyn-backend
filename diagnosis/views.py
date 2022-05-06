@@ -17,7 +17,7 @@ from django.db.models import Q
 from .models import DiagnosisModel
 from .serializers import DiagnosisSerializers
 from utility.search_filter import filtering_query
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class DiagnosisAPI(APIView):
@@ -51,7 +51,7 @@ class DiagnosisAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("diagnosis", "change")
+@validate_permission("diagnosis", "delete")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -134,7 +134,7 @@ def patch(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("diagnosis", "view")
+@validate_permission_id("diagnosis", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params

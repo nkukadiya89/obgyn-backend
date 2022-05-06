@@ -18,7 +18,7 @@ from .models import AdviceModel, AdviceGroupModel, AdviceGroupAdviceModel
 from .serializers import AdviceSerializers, AdviceGroupSerializers
 from .utils_view import insert_advice_group
 from django.db.models import Q
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class AdviceAPI(APIView):
@@ -52,7 +52,7 @@ class AdviceAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("advice", "change")
+@validate_permission("advice", "delete")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -110,7 +110,7 @@ def create(request):
 
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("advice", "change")
+@validate_permission_id("advice", "change")
 def patch(request, id):
     data = {}
     try:
@@ -142,7 +142,7 @@ def patch(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("advice", "view")
+@validate_permission_id("advice", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
@@ -204,8 +204,8 @@ class AdviceGroupAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("advice_group", "change")
-def delete(request):
+@validate_permission("advice_group", "delete")
+def delete_group(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
 
@@ -236,7 +236,7 @@ def delete(request):
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("advice_group", "add")
-def create(request):
+def create_group(request):
     data = {}
     if request.method == "POST":
         advice_group = AdviceGroupModel()
@@ -289,7 +289,7 @@ def patch_group(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("advice_group", "view")
+@validate_permission_id("advice_group", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get_group(request, id=None):
     query_string = request.query_params

@@ -16,7 +16,7 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from utility.search_filter import filtering_query
 from .models import TalukaModel
 from .serializers import TalukaSerializers
-from utility.decorator import validate_permission
+from utility.decorator import validate_permission, validate_permission_id
 
 
 class TalukaAPI(APIView):
@@ -82,7 +82,7 @@ class TalukaAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("taluka", "change")
+@validate_permission("taluka", "delete")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -167,7 +167,7 @@ def patch(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("taluka", "view")
+@validate_permission_id("taluka", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params

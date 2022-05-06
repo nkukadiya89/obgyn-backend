@@ -48,7 +48,7 @@ class DistrictAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("district", "change")
+@validate_permission("district", "delete")
 def delete(request,id=None):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
