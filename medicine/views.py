@@ -23,7 +23,7 @@ from .serializers import (
     DynamicFieldModelSerializer,
 )
 from .utils_view import link_diagnosis
-from utility.decorator import validate_permission, validate_permission_id
+from utility.decorator import validate_permission
 
 
 class MedicineAPI(APIView):
@@ -57,7 +57,7 @@ class MedicineAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("medicine", "delete")
+@validate_permission("medicine", "change")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -153,7 +153,7 @@ class MedicineTypeAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("medicine_type", "delete")
+@validate_permission("medicine_type", "change")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -213,7 +213,7 @@ class TimingAPI(APIView):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("timing", "view")
+@validate_permission("timing", "view")
 def get(request, id=None):
     data = {}
     query_string = request.query_params
@@ -270,7 +270,7 @@ def get(request, id=None):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("timing", "delete")
+@validate_permission("timing", "change")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -423,7 +423,7 @@ def patch_medicine(request, id):
 # ================= Retrieve Single or Multiple records=========================
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("medicine", "view")
+@validate_permission("medicine", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get_medicine(request, id=None):
     query_string = request.query_params
@@ -469,7 +469,7 @@ def get_medicine(request, id=None):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("medicine", "view")
+@validate_permission("medicine", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get_or_medicine(request, id=None):
     query_string = request.query_params
@@ -513,7 +513,7 @@ def get_or_medicine(request, id=None):
 # ================= Retrieve Single or Multiple records=========================
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("medicine_type", "view")
+@validate_permission("medicine_type", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get_medicine_type(request, id=None):
     query_string = request.query_params

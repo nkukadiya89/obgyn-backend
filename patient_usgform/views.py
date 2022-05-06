@@ -19,7 +19,7 @@ from .models import PatientUSGFormModel, USGFormChildModel
 from .serializers import PatientUSGFormSerializers, USGFormChildSerializers
 from .util_views import insert_child_usgform
 from obgyn_config.views import update_obgyn_config
-from utility.decorator import validate_permission, validate_permission_id
+from utility.decorator import validate_permission
 
 
 class PatientUSGFormAPI(APIView):
@@ -51,7 +51,7 @@ class PatientUSGFormAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_usgform", "delete")
+@validate_permission("patient_usgform", "change")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -169,7 +169,7 @@ def patch(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("patient_usgform", "view")
+@validate_permission("patient_usgform", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
@@ -228,7 +228,7 @@ class USGFormChildAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_usgform", "delete")
+@validate_permission("patient_usgform", "change")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -261,7 +261,7 @@ def delete(request):
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @validate_permission("patient_usgform", "add")
-def create(request):
+def delete(request):
     data = {}
     if request.method == "POST":
         usgform_child = USGFormChildModel()

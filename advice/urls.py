@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import AdviceAPI, create_group, delete, delete_group, patch, get, create,  AdviceGroupAPI, patch_group, get_group
+from .views import AdviceAPI, delete, patch, get, create,  AdviceGroupAPI, patch_group, get_group
 
 urlpatterns = [
     path('<int:id>/', AdviceAPI.as_view()),
@@ -14,8 +14,8 @@ urlpatterns = [
     path('group/<int:id>/', AdviceGroupAPI.as_view()),
     path('group/get/', get_group),
     path('group/get/<int:id>', get_group),
-    path('group/create/', create_group),
-    path('group/delete/', delete_group),
+    path('group/create/', create),
+    path('group/delete/', delete),
     path('group/update/<int:id>/', patch_group, name="update"),
 
 ]

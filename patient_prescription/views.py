@@ -17,7 +17,7 @@ from patient_opd.models import PatientOpdModel
 from utility.search_filter import filtering_query
 from .models import PatientPrescriptionModel
 from .serializers import PatientPrescriptionSerializers
-from utility.decorator import validate_permission, validate_permission_id
+from utility.decorator import validate_permission
 
 
 class PatientPrescriptionAPI(APIView):
@@ -55,7 +55,7 @@ class PatientPrescriptionAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_prescription", "delete")
+@validate_permission("patient_prescription", "change")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -147,7 +147,7 @@ def patch(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("patient_prescription", "view")
+@validate_permission("patient_prescription", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
