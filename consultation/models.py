@@ -12,9 +12,26 @@ from patient_opd.models import PatientOpdModel
 # Create your models here.
 
 class ConsultationModel(models.Model):
+
+    department_choice = (
+        ("OPD", "OPD"),
+        ("IPD", "IPD")
+    )
+    patient_type_choice = (
+        ("OB", "OB"),
+        ("GYN", "GYN")
+    )
+    patient_detail_choice = (
+        ("FULL", "FULL"),
+        ("PARTIAL", "PARTIAL")
+    )
+
     consultation_id = models.AutoField(primary_key=True)
     patient_opd = models.OneToOneField(PatientOpdModel, on_delete=models.DO_NOTHING, null=True)
     patient = models.ForeignKey(PatientModel, on_delete=models.DO_NOTHING, null=True)
+    department = models.CharField(max_length=5, choices=department_choice, default="OPD")
+    patient_type = models.CharField(max_length=5, choices=patient_type_choice, default="OB")
+    patient_detail = models.CharField(max_length=8, choices=patient_detail_choice, default="PARTIAL")
     parity = models.CharField(max_length=25, default="", null=True)
     prev_del_type = models.CharField(max_length=25, default="", null=True)
     present_history = models.CharField(max_length=250, default="", null=True)

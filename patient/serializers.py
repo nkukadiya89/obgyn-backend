@@ -71,9 +71,6 @@ class PatientSerializers(serializers.ModelSerializer):
     last_name = serializers.CharField(required=True)
     phone = serializers.CharField(required=True)
     married = serializers.BooleanField(required=True)
-    patient_type = serializers.CharField(required=True)
-    patient_detail = serializers.CharField(required=True)
-    department = serializers.CharField(required=True)
     date_of_opd = serializers.CharField(required=True)
     registered_no = serializers.CharField(read_only=True)
     profile_image = serializers.CharField(read_only=True)
@@ -81,7 +78,7 @@ class PatientSerializers(serializers.ModelSerializer):
     class Meta:
         model = PatientModel
         fields = ['patient_id', 'first_name', 'last_name', 'middle_name','name_title', 'phone', 'state',
-                  'city', 'married', 'department', 'patient_type', 'patient_detail', 'date_of_opd', 'registered_no',
+                  'city', 'married', 'date_of_opd', 'registered_no',
                   'grand_father_name','grand_title', 'husband_father_name','husband_title', 'age', 'taluka', 'district', 'created_by', 'deleted',
                   'hospital', 'profile_image', "landmark"]
         extra_kwargs = {
