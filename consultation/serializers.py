@@ -11,36 +11,61 @@ from medicine.models import MedicineModel
 from medicine.serializers import MedicineSerializers
 
 
-
 class ConsultationSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(ConsultationSerializers, self).to_representation(instance)
-
 
         if "patient_opd" in ret:
             ret["patient_opd_id"] = ret["patient_opd"]
             del ret["patient_opd"]
 
-        
         if "diagnosis" in ret:
-            ret["diagnosis_name"] = DiagnosisSerializers(instance.diagnosis).data["diagnosis_name"]
-        
-        ret["first_edd"] = PatientModel.objects.filter(registered_no=instance.regd_no).values('first_edd')[0]["first_edd"]
+            ret["diagnosis_name"] = DiagnosisSerializers(instance.diagnosis).data[
+                "diagnosis_name"
+            ]
 
-        for fld_nm in ["eb_pp", "ps", "pv", "fu"]:
+        ret["first_edd"] = PatientModel.objects.filter(
+            registered_no=instance.regd_no
+        ).values("first_edd")[0]["first_edd"]
+
+        for fld_nm in ["co", "ho", "eb_pp", "ps", "pv", "fu"]:
             fld_name = fld_nm + "_name"
             search_instance = "instance" + "." + fld_nm
             if fld_nm in ret:
-                ret[fld_name] = ManageFieldsSerializers(eval(search_instance)).data["field_value"]
+                ret[fld_name] = ManageFieldsSerializers(eval(search_instance)).data[
+                    "field_value"
+                ]
 
         # medicine = PatientPrescriptionModel.objects.filter(consultation_id=instance.consultation_id)
-        medicine = MedicineModel.objects.filter(patientprescriptionmodel__consultation_id=instance.consultation_id)
+        medicine = MedicineModel.objects.filter(
+            patientprescriptionmodel__consultation_id=instance.consultation_id
+        )
         medicine = MedicineSerializers(medicine, many=True)
         ret["medicine"] = medicine.data
 
         return ret
 
     def validate(self, data):
+
+        if 4 >= int(data["ut_weeks"]) >= 41:
+            raise serializers.ValidationError("Enter valid UT Weeks")
+
+        if 0 >= int(data["puls"]) >= 200:
+            raise serializers.ValidationError("Enter valid Puls")
+
+        if len(data["BP"]) >= 8:
+            raise serializers.ValidationError("Enter valid BP")
+
+        if len(data["tsh"]) >= 8:
+            raise serializers.ValidationError("Enter valid TSH")
+
+        if  0 >= int(data["resperistion"]) >= 60:
+            raise serializers.ValidationError("Enter valid Resperistion")
+
+        if  0 >= int(data["spo2"]) >= 100:
+            raise serializers.ValidationError("Enter valid SpO2%")
+        
+
         if "regd_no" in data:
             patient = PatientModel.objects.filter(registered_no=data["regd_no"])
             if len(patient) == 0:
@@ -58,5 +83,4 @@ class ConsultationSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = ConsultationModel
-        exclude = ('created_at', 'patient', 'opd_date')
-        
+        exclude = ("created_at", "patient", "opd_date")

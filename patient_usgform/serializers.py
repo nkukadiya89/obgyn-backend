@@ -5,25 +5,37 @@ from patient.models import PatientModel
 from manage_fields.models import ManageFieldsModel
 from .models import PatientUSGFormModel, USGFormChildModel
 from user.serializers import UserSerializers
-from datetime import datetime
+from datetime import datetime, date
+from dateutil.relativedelta import *
 
 
 class USGFormChildSerializers(serializers.ModelSerializer):
-
     def to_representation(self, instance):
         ret = super(USGFormChildSerializers, self).to_representation(instance)
 
         if "child_dob" in ret:
-            ret["child_year"] = datetime.strptime(ret["child_dob"],"%Y-%m-%d").year
-            ret["child_month"] = datetime.strptime(ret["child_dob"],"%Y-%m-%d").month
+            ret["child_year"] = datetime.strptime(ret["child_dob"], "%Y-%m-%d").year
+            ret["child_month"] = datetime.strptime(ret["child_dob"], "%Y-%m-%d").month
 
-            
         return ret
+
+    def validate(self, data):
+
+        data["child_dob"] = (
+            date.today()
+            + relativedelta(years=-data["child_year"])
+            + relativedelta(months=-data["child_month"])
+        )
+        return data
+
     usgform_child_id = serializers.IntegerField(read_only=True)
+    child_dob = serializers.DateField(read_only=True)
+    child_year = serializers.IntegerField()
+    child_month = serializers.IntegerField()
 
     class Meta:
         model = USGFormChildModel
-        exclude = ('created_at',)
+        exclude = ("created_at",)
 
 
 class PatientUSGFormSerializers(serializers.ModelSerializer):
@@ -43,16 +55,23 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
             ret["indication_name"] = indication_list
 
         if "name_of_doctor" in ret:
-            ret["name_of_doctor_name"] = UserSerializers(instance.name_of_doctor).data["first_name"].title() + " "+ UserSerializers(instance.name_of_doctor).data["last_name"].title()
+            ret["name_of_doctor_name"] = (
+                UserSerializers(instance.name_of_doctor).data["first_name"].title()
+                + " "
+                + UserSerializers(instance.name_of_doctor).data["last_name"].title()
+            )
 
-        for fld_nm in ["result_of_sonography", "any_indication_mtp","any_other"]:
+        for fld_nm in ["result_of_sonography", "any_indication_mtp", "any_other"]:
             fld_name = fld_nm + "_name"
             search_instance = "instance" + "." + fld_nm
             if fld_nm in ret:
-                ret[fld_name] = ManageFieldsSerializers(eval(search_instance)).data["field_value"]
+                ret[fld_name] = ManageFieldsSerializers(eval(search_instance)).data[
+                    "field_value"
+                ]
 
-
-        usg_child_list = USGFormChildModel.objects.filter(patient_usgform_id=instance.patient_usgform_id)
+        usg_child_list = USGFormChildModel.objects.filter(
+            patient_usgform_id=instance.patient_usgform_id
+        )
         usg_child_lst = []
         for usg_child in usg_child_list:
             usg_childs = {}
@@ -81,4 +100,4 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = PatientUSGFormModel
-        exclude = ('created_at', 'patient')
+        exclude = ("created_at", "patient")

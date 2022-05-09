@@ -13,7 +13,7 @@ class PatientHistolapSerializers(serializers.ModelSerializer):
             ret["patient_opd_id"] = ret["patient_opd"]
             del ret["patient_opd"]
 
-        for fld_nm in ["procedure_name","right_tube","left_tube"]:
+        for fld_nm in ["procedure_name","right_tube","left_tube","pod","endo_cavity","cervical_canal","uterus"]:
             fld_name = fld_nm + "_name"
             search_instance = "instance" + "." + fld_nm
             if fld_nm in ret:
