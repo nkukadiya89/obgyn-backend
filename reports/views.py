@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 
 from reports.report_sync import download_report
@@ -47,3 +48,28 @@ def download_pdf_report(request, report_name, id, language_id=None):
 def view_report(request, id, language_id=None):
     template_name = "reports/en/report-3.html"
     return render(request, template_name)
+
+
+
+from patient.models import PatientModel
+from django.db.models import Q
+from user.models import User
+
+@csrf_exempt
+def match_regd_no(request):
+    user_list = User.objects.filter(
+        Q(phone__icontains="F") |
+        Q(phone__exact=0) |
+        Q(phone__exact="")
+    )
+
+    for user in user_list:
+        patient_list = PatientModel.objects.filter(id=user.id)
+
+        for patient in patient_list:
+            print(patient.registered_no ,"====",patient.phone)
+
+            patient.phone = "F_"+ str(patient.registered_no)
+            patient.save()
+    
+    return HttpResponse("data")
