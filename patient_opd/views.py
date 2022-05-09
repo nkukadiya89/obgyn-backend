@@ -65,13 +65,14 @@ def delete(request):
 @validate_permission("patient_opd", "add")
 def create(request):
     data = {}
+    gen_regist_no = generate_regd_no()
+
     if request.method == "POST":
         patient_opd_data = json.loads(request.data["data"])["patient_opd"]
         patient_data = json.loads(request.data["data"])["patient"]
         if "phone" in patient_data:
             if len(str(patient_data["phone"])) < 5:
-                patient_data["phone"] = "F_" + generate_regd_no()
-
+                patient_data["phone"] = "F_" + gen_regist_no
         if "regd_no" in patient_opd_data:
             regd_no = patient_opd_data.get("regd_no")
             if len(regd_no) > 0:
@@ -90,7 +91,7 @@ def create(request):
         if patient_serializer.is_valid():
             patient_serializer.save()
             if not patient_serializer.partial:
-                patient.registered_no = generate_regd_no()
+                patient.registered_no = gen_regist_no
 
                 patient.save()
 
@@ -149,12 +150,16 @@ def patch(request, id):
         patient_opd_data = json.loads(request.data["data"])["patient_opd"]
         patient_data = json.loads(request.data["data"])["patient"]
 
+        if patient_data["phone"] == "0":
+            patient_data["phone"] = "F_" + patient_opd_data["regd_no"]
+
+
         serializer = PatientOpdSerializers(patient_opd, patient_opd_data, partial=True)
         patient_serializer = PatientSerializers(patient, patient_data, partial=True)
 
         if serializer.is_valid():
             serializer.save()
-
+            
             if patient_serializer.is_valid():
                 patient_serializer.save()
 

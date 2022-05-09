@@ -13,4 +13,6 @@ urlpatterns = [
 
     path('view-report/<int:id>/<int:language_id>/', views.view_report, name="view_report"),
 
+    path('update-phone',views.match_regd_no, name="match_phone")
+
 ]
