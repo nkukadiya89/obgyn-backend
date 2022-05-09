@@ -34,7 +34,6 @@ class PatientSerializers(serializers.ModelSerializer):
 
         ret["landmark"] = instance.landmark
 
-        del ret["regd_no"]
 
         if "phone" in ret:
             if "F_" in instance.phone:
