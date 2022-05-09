@@ -590,8 +590,6 @@ class ModelFilterPATIENT:
             fld_value = fields.split("=")[1]
             if fld_name == "patient_id":
                 model = model.filter(patient_id=fld_value)
-            if fld_name == "department":
-                model = model.filter(department=fld_value)
             if fld_name == "patient_type":
                 model = model.filter(patient_type=fld_value)
             if fld_name == "patient_detail":
@@ -616,7 +614,6 @@ class ModelFilterPATIENT:
                 Q(middle_name__icontains=search) |
                 Q(last_name__icontains=search) |
                 Q(phone=search) |
-                Q(department__icontains=search) |
                 Q(patient_type__icontains=search) |
                 Q(patient_detail__icontains=search) |
                 Q(registered_no=search) |
@@ -655,7 +652,6 @@ class ModelFilterPATIENTOPD:
                 Q(patient__last_name=search) |
                 Q(patient__registered_no=search) |
                 Q(patient__phone__icontains=search) |
-                Q(patient__department__icontains=search) |
                 Q(patient__patient_type__icontains=search) |
                 Q(patient__patient_detail__icontains=search) |
                 Q(patient__husband_father_name__icontains=search) |
