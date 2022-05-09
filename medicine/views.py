@@ -47,7 +47,7 @@ class MedicineAPI(APIView):
 @api_view(['DELETE'])
 @authentication_classes([JWTAuthentication])
 @validate_permission("medicine","change")
-def delete_medicine(self, request):
+def delete_medicine(request):
     data = {}
     del_id = json.loads(request.body.decode('utf-8'))
     if "id" not in del_id:
@@ -76,7 +76,7 @@ def delete_medicine(self, request):
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @validate_permission("medicine","add")
-def create_medicine(self, request):
+def create_medicine(request):
     data = {}
     if request.method == "POST":
         medicine = MedicineModel()
@@ -135,7 +135,7 @@ class MedicineTypeAPI(APIView):
 @api_view(['DELETE'])
 @authentication_classes([JWTAuthentication])
 @validate_permission("medicine_type","delete")
-def delete_medicine_type(self, request):
+def delete_medicine_type(request):
     data = {}
     del_id = json.loads(request.body.decode('utf-8'))
     if "id" not in del_id:
@@ -164,7 +164,7 @@ def delete_medicine_type(self, request):
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @validate_permission("medicine_type","add")
-def create_medicine_type(self, request):
+def create_medicine_type(request):
     data = {}
     if request.method == "POST":
         medicine_type = MedicineTypeModel()
@@ -214,7 +214,7 @@ class TimingAPI(APIView):
 @api_view(['DELETE'])
 @authentication_classes([JWTAuthentication])
 @validate_permission("timing","change")
-def delete_timing(self, request):
+def delete_timing(request):
     data = {}
     del_id = json.loads(request.body.decode('utf-8'))
     if "id" not in del_id:
@@ -242,7 +242,7 @@ def delete_timing(self, request):
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @validate_permission("timing","add")
-def create_timing(self, request):
+def create_timing(request):
     data = {}
     if request.method == "POST":
         timing = TimingModel()
@@ -265,7 +265,7 @@ def create_timing(self, request):
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
 @validate_permission_id("timing","view")
-def get_timing(self, request, id=None):
+def get_timing(request, id=None):
     data = {}
     query_string = request.query_params
 
