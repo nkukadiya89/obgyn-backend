@@ -79,7 +79,6 @@ class ConsultationSerializers(serializers.ModelSerializer):
     consultation_id = serializers.IntegerField(read_only=True)
     patient_type = serializers.CharField(required=True)
     patient_detail = serializers.CharField(required=True)
-    department = serializers.CharField(required=True)
 
     class Meta:
         model = ConsultationModel
