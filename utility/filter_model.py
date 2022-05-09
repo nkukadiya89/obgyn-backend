@@ -558,6 +558,7 @@ class ModelFilterCONSULTATION:
         if search:
             model = model.filter(
                 Q(regd_no=search) |
+                Q(patient__phone=search) |
                 Q(patient__first_name__icontains=search) |
                 Q(patient__middle_name__icontains=search) |
                 Q(patient__last_name__icontains=search) |
