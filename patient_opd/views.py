@@ -115,7 +115,6 @@ def create(request):
         opd_data["regd_no"] = str(patient.registered_no)
 
         patient_opd = PatientOpdModel()
-        opd_data["patient_type"] = patient.patient_type
         serializer = PatientOpdSerializers(patient_opd, data=opd_data)
 
         if serializer.is_valid():

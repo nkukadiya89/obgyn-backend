@@ -29,12 +29,30 @@ class PatientDeliverySerializers(serializers.ModelSerializer):
         else:
             raise serializers.ValidationError("Patient is missing")
 
-        patient_delivery = PatientDeliveryModel.objects.filter(deleted=0, birth_date=data["birth_date"],
-                                                               birth_time=data["birth_time"],
-                                                               child_name__iexact=data["child_name"],
-                                                               patient_id=data["patient_id"])
+        patient_delivery = PatientDeliveryModel.objects.filter(
+            deleted=0,
+            birth_date=data["birth_date"],
+            birth_time=data["birth_time"],
+            child_name__iexact=data["child_name"],
+            patient_id=data["patient_id"],
+        )
         if len(patient_delivery) > 1:
             raise serializers.ValidationError("Child already registered.")
+
+        if len(str(data["str"])) > 6:
+            raise serializers.ValidationError("Check value of PIN")
+
+        if 0 >= int(data["current_age"]) > 99:
+            raise serializers.ValidationError("Check value of Current Age")
+
+        if 24 >= int(data["weeks"]) > 40:
+            raise serializers.ValidationError("Check value of Weeks")
+
+        if 0 > int(data["no_of_delivery"]) > 15:
+            raise serializers.ValidationError("Check value of Delivery count.")
+
+        if len(str(data["weight"])) > 4:
+            raise serializers.ValidationError("Check value of Weight.")
 
         return data
 
@@ -42,7 +60,7 @@ class PatientDeliverySerializers(serializers.ModelSerializer):
 
     class Meta:
         model = PatientDeliveryModel
-        exclude = ('created_at', 'patient')
+        exclude = ("created_at", "patient")
 
 
 def change_payload(request):

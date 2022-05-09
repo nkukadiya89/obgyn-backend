@@ -60,7 +60,7 @@ class ConsultationModel(models.Model):
     puls = models.IntegerField(default=0, null=True)
     bp = models.CharField(max_length=10, null=True)
     resperistion = models.IntegerField(default=0, null=True)
-    spo2 = models.CharField(max_length=6, null=True)
+    spo2 = models.IntegerField(default=0, null=True)
     pallor = models.CharField(max_length=100, default="", null=True)
     lcterus = models.CharField(max_length=25, default="", null=True)
     oedema = models.CharField(max_length=25, default="", null=True)
@@ -91,7 +91,7 @@ class ConsultationModel(models.Model):
     urine_protein = models.CharField(max_length=25, default="", null=True)
     hiv = models.CharField(max_length=25, default="", null=True)
     hbsag = models.CharField(max_length=25, default="", null=True)
-    tsh = models.CharField(max_length=25, default="", null=True)
+    tsh = models.FloatField(default=0, null=True)
     vdrl = models.CharField(max_length=25, default="", null=True)
     other = models.TextField(null=True)
 

@@ -22,6 +22,15 @@ class PatientOvulationProfileSerializers(serializers.ModelSerializer):
         else:
             raise serializers.ValidationError("Patient is missing")
 
+        if len(data["right_ovary_mm"]) >4:
+            raise serializers.ValidationError("check data for Right ovary value.")
+
+        if len(data["left_ovary_mm"]) >4:
+            raise serializers.ValidationError("check data for Left ovary value.")
+        
+        if len(data["endometrium_mm"]) > 4:
+            raise serializers.ValidationError("check data for Endometrium value.")
+
         return data
 
     patient_ovulation_profile_id = serializers.IntegerField(read_only=True)
