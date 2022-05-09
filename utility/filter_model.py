@@ -515,6 +515,10 @@ class ModelFilterCONSULTATION:
                 model = model.filter(uid__icontains=fld_value)
             if fld_name == "parity":
                 model = model.filter(parity=fld_value)
+            if fld_name == "patient_type":
+                model = model.filter(patient_type=fld_value)
+            if fld_name == "patient_detail":
+                model = model.filter(patient_detail=fld_value)
             if fld_name == "prev_del_type":
                 model = model.filter(prev_del_type=fld_value)
             if fld_name == "regd_no":
@@ -558,6 +562,8 @@ class ModelFilterCONSULTATION:
                 Q(patient__last_name__icontains=search) |
                 Q(patient__grand_father_name__icontains=search) |
                 Q(patient__registration_no__icontains=search) |
+                Q(patient_type__icontains=search) |
+                Q(patient_detail__icontains=search) |
                 Q(parity__icontains=search) |
                 Q(prev_del_type__icontains=search)
             )
@@ -590,10 +596,6 @@ class ModelFilterPATIENT:
             fld_value = fields.split("=")[1]
             if fld_name == "patient_id":
                 model = model.filter(patient_id=fld_value)
-            if fld_name == "patient_type":
-                model = model.filter(patient_type=fld_value)
-            if fld_name == "patient_detail":
-                model = model.filter(patient_detail=fld_value)
             if fld_name == "registered_no":
                 model = model.filter(registered_no=fld_value)
             if fld_name == "grand_father_name":
@@ -614,8 +616,6 @@ class ModelFilterPATIENT:
                 Q(middle_name__icontains=search) |
                 Q(last_name__icontains=search) |
                 Q(phone=search) |
-                Q(patient_type__icontains=search) |
-                Q(patient_detail__icontains=search) |
                 Q(registered_no=search) |
                 Q(grand_father_name__icontains=search) |
                 Q(husband_father_name__icontains=search) |
