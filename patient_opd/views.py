@@ -150,7 +150,7 @@ def patch(request, id):
         patient_opd_data = json.loads(request.data["data"])["patient_opd"]
         patient_data = json.loads(request.data["data"])["patient"]
 
-        if patient_data["phone"] == "0":
+        if patient_data["phone"] == "0" or patient_data["phone"] == "":
             patient_data["phone"] = "F_" + patient_opd_data["regd_no"]
 
 
