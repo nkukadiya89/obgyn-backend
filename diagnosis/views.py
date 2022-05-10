@@ -47,7 +47,7 @@ class DiagnosisAPI(APIView):
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @validate_permission("diagnosis","delete")
-def delete(self, request):
+def delete(request):
     data = {}
     del_id = json.loads(request.body.decode('utf-8'))
     if "id" not in del_id:
@@ -75,7 +75,7 @@ def delete(self, request):
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @validate_permission("diagnosis","add")
-def create(self, request):
+def create(request):
     data = {}
     if request.method == "POST":
         diagnosis = DiagnosisModel()

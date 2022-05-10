@@ -15,7 +15,7 @@ class PatientIndoorSerializers(serializers.ModelSerializer):
             ret["patient_opd_id"] = ret["patient_opd"]
             del ret["patient_opd"]
 
-        for fld_nm in ["eb_pp", "ps", "pv", "operation"]:
+        for fld_nm in ["eb_pp", "ps", "pv", "operation","provisional_diagnosis"]:
             fld_name = fld_nm + "_name"
             search_instance = "instance" + "." + fld_nm
             if fld_nm in ret:
