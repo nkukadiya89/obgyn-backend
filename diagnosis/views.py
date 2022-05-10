@@ -44,7 +44,7 @@ class DiagnosisAPI(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # ================= Delete Record =========================
-@api_view(['POST'])
+@api_view(['DELETE'])
 @authentication_classes([JWTAuthentication])
 @validate_permission("diagnosis","delete")
 def delete(request):
