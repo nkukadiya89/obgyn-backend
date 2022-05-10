@@ -647,7 +647,6 @@ class ModelFilterPATIENTOPD:
 
     def search(self, model, query_string):
         search = query_string["search"]
-        print(search)
         if search:
             model = model.filter(
                 Q(patient__first_name=search) |
