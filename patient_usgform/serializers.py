@@ -86,8 +86,6 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
             usg_childs = {}
             usg_childs["usgform_child_id"] = usg_child.usgform_child_id
             usg_childs["child_gender"] = usg_child.child_gender
-            usg_childs["child_year1"] = usg_child.child_dob.year
-            usg_childs["child_month1"] = usg_child.child_dob.month
             no_of_month = ((date.today().year - usg_child.child_dob.year) * 12) + (
                 date.today().month - usg_child.child_dob.month
             )
