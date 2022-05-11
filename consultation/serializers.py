@@ -46,21 +46,25 @@ class ConsultationSerializers(serializers.ModelSerializer):
         return ret
 
     def validate(self, data):
+        
+        if data["ut_weeks"]:
+            if 4 >= int(data["ut_weeks"]) >= 41:
+                raise serializers.ValidationError("Enter valid UT Weeks")
 
-        if 4 >= int(data["ut_weeks"]) >= 41:
-            raise serializers.ValidationError("Enter valid UT Weeks")
-
-        if 0 >= int(data["puls"]) >= 200:
-            raise serializers.ValidationError("Enter valid Puls")
+        if data["puls"]:
+            if 0 >= int(data["puls"]) >= 200:
+                raise serializers.ValidationError("Enter valid Puls")
 
         if len(data["bp"]) >= 8:
             raise serializers.ValidationError("Enter valid BP")
 
-        if len(str(data["tsh"])) >= 8:
-            raise serializers.ValidationError("Enter valid TSH")
+        if data["tsh"]:
+            if len(str(data["tsh"])) >= 8:
+                raise serializers.ValidationError("Enter valid TSH")
 
-        if  0 >= int(data["resperistion"]) >= 60:
-            raise serializers.ValidationError("Enter valid Resperistion")
+        if data["resperistion"]:
+            if  0 >= int(data["resperistion"]) >= 60:
+                raise serializers.ValidationError("Enter valid Resperistion")
 
         if  0 >= int(data["spo2"]) >= 100:
             raise serializers.ValidationError("Enter valid SpO2%")
