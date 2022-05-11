@@ -66,7 +66,8 @@ def delete_medicine(request):
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == "DELETE":
-        result = medicine.update(deleted=1)
+        result = medicine.delete()
+        DiagnosisMedicineModel.objects.filter(medicinemodel__medicine_id__in=del_id["id"]).delete()
         data["success"] = True
         data["msg"] = "Data deleted successfully."
         data["deleted"] = result
@@ -154,7 +155,7 @@ def delete_medicine_type(request):
 
     if request.method == "DELETE":
         result = medicine_type.delete()
-        DiagnosisMedicineModel.objects.filter(medicine_id__in=del_id["id"]).delete()
+        # DiagnosisMedicineModel.objects.filter(medicine_type_id__in=del_id["id"]).delete()
         data["success"] = True
         data["msg"] = "Data deleted successfully."
         data["deleted"] = result
