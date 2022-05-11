@@ -14,8 +14,17 @@ class USGFormChildSerializers(serializers.ModelSerializer):
         ret = super(USGFormChildSerializers, self).to_representation(instance)
 
         if "child_dob" in ret:
-            ret["child_year"] = datetime.strptime(ret["child_dob"], "%Y-%m-%d").year
-            ret["child_month"] = datetime.strptime(ret["child_dob"], "%Y-%m-%d").month
+            # ret["child_year"] = datetime.strptime(ret["child_dob"], "%Y-%m-%d").year
+            # ret["child_month"] = datetime.strptime(ret["child_dob"], "%Y-%m-%d").month
+            ret["child_year"] = date.today().year - ret["child_dob"].year
+            ret["child_month"] = date.today().month - ret["child_dob"].month
+
+            child_dob = usg_child.child_dob
+            no_of_month = ((date.today().year - child_dob.year) * 12) + (
+                date.today().month - child_dob.month
+            )
+            ret["child_year"] = int(no_of_month / 12)
+            ret["child_month"] = no_of_month % 12
 
         return ret
 
@@ -77,9 +86,14 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
             usg_childs = {}
             usg_childs["usgform_child_id"] = usg_child.usgform_child_id
             usg_childs["child_gender"] = usg_child.child_gender
-            usg_childs["child_year"] = usg_child.child_dob.year
-            usg_childs["child_month"] = usg_child.child_dob.month
-            
+            usg_childs["child_year1"] = usg_child.child_dob.year
+            usg_childs["child_month1"] = usg_child.child_dob.month
+            no_of_month = ((date.today().year - usg_child.child_dob.year) * 12) + (
+                date.today().month - usg_child.child_dob.month
+            )
+            usg_childs["child_year"] = int(no_of_month / 12)
+            usg_childs["child_month"] = no_of_month % 12
+
             usg_child_lst.append(usg_childs)
 
         ret["usg_child"] = usg_child_lst
