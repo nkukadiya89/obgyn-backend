@@ -77,7 +77,7 @@ def delete(request):
 # ================= Create New Record=========================
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("surgical_item","add")
+@validate_permission("surgical_item","add")
 def create(request):
     data = {}
     if request.method == "POST":
