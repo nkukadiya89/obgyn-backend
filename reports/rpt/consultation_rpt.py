@@ -80,6 +80,8 @@ def consultation_rpt(request, id, language_id=None):
     context["ps"] = patient_opd.consultationmodel.ps
     context["pv"] = patient_opd.consultationmodel.pv
 
+    print(context)
+
     template_name = "reports/en/consultation.html"
     return render(request, template_name,
                   {"context": context, "template_header": template_header.header_text.replace("'", "\"")})
