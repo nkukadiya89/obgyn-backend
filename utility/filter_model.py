@@ -410,13 +410,18 @@ class ModelFilterFIELDMASTER:
 
 class ModelFilterMANAGEFIELDS:
     def filter_fields(self, model, filter_fields):
+        print(filter_fields)
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
+
             if fld_name == "field_value":
                 model = model.filter(field_value__icontains=fld_value)
             if fld_name == "field_master":
                 model = model.filter(field_master_id=fld_value)
+            if fld_name == "field_master_lst":
+                fld_value =fld_value.replace("_",",").replace("[","").replace("]","")
+                model = model.filter(field_master_id__in=fld_value.split(","))
             if fld_name == 'field_master_name':
                 model = model.filter(
                     field_master__field_master_name__icontains=fld_value)
