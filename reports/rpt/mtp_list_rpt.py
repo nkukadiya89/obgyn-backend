@@ -7,9 +7,6 @@ from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def mtp_list_rpt(request, id, language_id=None):
-    from_date = request.body.get('from_date')
-    to_date = request.body.get('to_date')
-
     patient_mtp_list = PatientMtpModel.objects.all()
 
 
@@ -21,10 +18,15 @@ def mtp_list_rpt(request, id, language_id=None):
     context_list=[]
     for patient_mtp in patient_mtp_list:
         patient_opd_id=patient_mtp.patient_opd_id
-        patient_opd = PatientOpdModel.objects.filter(pk=patient_opd_id).select_related('patientdischargemodel').first()
+        patient_opd = PatientOpdModel.objects.filter(pk=patient_opd_id).first()
 
+            
         context = {}
-        context["date_of_admission"] = patient_opd.patientdischargemodel.admission_date
+        try:
+            context["date_of_admission"] = patient_opd.patientdischargemodel.admission_date
+        except:
+            context["date_of_admission"] = ""
+
         context["name"] = "".join(
             [patient_opd.patient.first_name, " ", patient_opd.patient.middle_name, " ", patient_opd.patient.last_name])
         context["husband_name"] = patient_opd.patient.husband_father_name
