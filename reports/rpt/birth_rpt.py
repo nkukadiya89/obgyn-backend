@@ -9,6 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 def birth_rpt(request, id, language_id=None):
     patient = PatientModel.objects.filter(pk=id).first()
     patient_delivery = PatientDeliveryModel.objects.filter(patient=patient).first()
+    print(patient_delivery)
     if language_id:
         template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id).first()
     else:
