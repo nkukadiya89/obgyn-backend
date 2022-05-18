@@ -7,6 +7,7 @@ from .models import PatientUSGFormModel, USGFormChildModel
 from user.serializers import UserSerializers
 from datetime import datetime, date
 from dateutil.relativedelta import *
+from obgyn_config.views import get_obgyn_config
 
 
 class USGFormChildSerializers(serializers.ModelSerializer):
@@ -14,18 +15,15 @@ class USGFormChildSerializers(serializers.ModelSerializer):
         ret = super(USGFormChildSerializers, self).to_representation(instance)
 
         if "child_dob" in ret:
-            # ret["child_year"] = datetime.strptime(ret["child_dob"], "%Y-%m-%d").year
-            # ret["child_month"] = datetime.strptime(ret["child_dob"], "%Y-%m-%d").month
-            ret["child_year"] = date.today().year - ret["child_dob"].year
-            ret["child_month"] = date.today().month - ret["child_dob"].month
+            ret["child_year"] = date.today().year - datetime.strptime(ret["child_dob"], "%Y-%m-%d").year
+            ret["child_month"] = date.today().month - datetime.strptime(ret["child_dob"], "%Y-%m-%d").month
 
-            child_dob = usg_child.child_dob
+            child_dob = datetime.strptime(ret["child_dob"], "%Y-%m-%d")
             no_of_month = ((date.today().year - child_dob.year) * 12) + (
                 date.today().month - child_dob.month
             )
             ret["child_year"] = int(no_of_month / 12)
             ret["child_month"] = no_of_month % 12
-
         return ret
 
     def validate(self, data):
@@ -39,8 +37,8 @@ class USGFormChildSerializers(serializers.ModelSerializer):
 
     usgform_child_id = serializers.IntegerField(read_only=True)
     child_dob = serializers.DateField(read_only=True)
-    child_year = serializers.IntegerField()
-    child_month = serializers.IntegerField()
+    child_year = serializers.IntegerField(read_only=True)
+    child_month = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = USGFormChildModel

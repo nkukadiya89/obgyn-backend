@@ -4,6 +4,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django.utils.timezone import now
 from language.models import LanguageModel
 from obgyn_config.models import ObgynConfigModel
+from obgyn_config.views import get_obgyn_config
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -24,15 +25,18 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         
         obgyn_config = ObgynConfigModel.objects.filter(user_id=self.user.id).first()
         if obgyn_config == None:
-            rs_per_visit=rs_per_usg=rs_per_room=operative_charge=rs_per_day_nursing=monthly_usg=yearly_usg=0
+            rs_per_visit=rs_per_usg=rs_per_room=operative_charge=rs_per_day_nursing=0
+            monthly_usg=yearly_usg=1
         else:
+            monthly_usg, yearly_usg = get_obgyn_config(self.user)
             rs_per_visit=obgyn_config.rs_per_visit
             rs_per_usg=obgyn_config.rs_per_usg
             rs_per_room=obgyn_config.rs_per_room
             operative_charge=obgyn_config.operative_charge
             rs_per_day_nursing=obgyn_config.rs_per_day_nursing
-            monthly_usg=obgyn_config.monthly_usg
-            yearly_usg=obgyn_config.yearly_usg
+            monthly_usg=monthly_usg
+            yearly_usg=yearly_usg
+
         token.update({"userData": {'userName': self.user.username, 'userId': self.user.id,
                                    "defaultLanguageId": LanguageModel.objects.get(
                                        pk=self.user.default_language_id).language_id,

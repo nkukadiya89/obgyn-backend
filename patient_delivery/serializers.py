@@ -18,6 +18,8 @@ class PatientDeliverySerializers(serializers.ModelSerializer):
         if "patient_opd" in ret:
             ret["patient_opd_id"] = ret["patient_opd"]
             del ret["patient_opd"]
+
+        
         return ret
 
     def validate(self, data):
