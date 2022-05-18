@@ -44,6 +44,15 @@ class PatientSerializers(serializers.ModelSerializer):
         first_name = data.get("first_name")
         last_name = data.get("last_name")
 
+        husband_father_name = data.get("husband_father_name")
+        grand_father_name = data.get("grand_father_name")
+
+        if not husband_father_name.isalpha():
+            raise serializers.ValidationError("Invalid Husband/Father Name")
+        if not grand_father_name.isalpha():
+            raise serializers.ValidationError("Invalid Grand Father Name")
+
+
         if "phone" in data:
             phone = data.get("phone")
             data["email"] = first_name[:2] + last_name[:2] + phone + "@yopmail.com"

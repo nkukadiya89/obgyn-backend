@@ -22,6 +22,9 @@ class CitySerializers(serializers.ModelSerializer):
 
     def validate(self, data):
         city_name = data.get('city_name')
+        if not city_name.isalpha():
+            raise serializers.ValidationError("Invalid City Name")
+        
         taluka_id = data.get('taluka')
         duplicate_city = CityModel.objects.filter(deleted=0, city_name__iexact=city_name, taluka_id=taluka_id)
 
