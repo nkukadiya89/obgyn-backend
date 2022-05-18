@@ -16,6 +16,9 @@ class DistrictSerializers(serializers.ModelSerializer):
 
     def validate(self, data):
         district_name = data.get('district_name')
+        if not district_name.isalpha():
+            raise serializers.ValidationError("Invalid District Name")
+
         state = data.get('state')
         duplicate_district = DistrictModel.objects.filter(deleted=0, district_name__iexact=district_name, state_id=state)
 

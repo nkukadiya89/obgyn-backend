@@ -18,6 +18,10 @@ class TalukaSerializers(serializers.ModelSerializer):
 
     def validate(self, data):
         taluka_name = data.get('taluka_name')
+
+        if not taluka_name.isalpha():
+            raise serializers.ValidationError("Invalid Taluka Name")
+
         district = data.get('district')
         duplicate_taluka = TalukaModel.objects.filter(deleted=0, taluka_name__iexact=taluka_name, district_id=district)
 
