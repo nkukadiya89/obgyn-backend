@@ -59,7 +59,7 @@ class ConsultationModel(models.Model):
     temprature = models.CharField(max_length=25, default="", null=True)
     puls = models.IntegerField(default=0, null=True)
     bp = models.CharField(max_length=10, null=True)
-    resperistion = models.CharField(max_length=5, null=True)
+    resperistion = models.CharField(max_length=10, null=True)
     spo2 = models.IntegerField(default=0, null=True)
     pallor = models.CharField(max_length=100, default="", null=True)
     lcterus = models.CharField(max_length=25, default="", null=True)

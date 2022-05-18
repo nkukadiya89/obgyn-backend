@@ -6,7 +6,7 @@ from patient_usgform.models import PatientUSGFormModel
 from obgyn_config.models import ObgynConfigModel
 from datetime import date
 import calendar 
-
+from django.utils.timezone import now
 
 # Create your views here.
 
@@ -39,10 +39,10 @@ def update_obgyn_config(request):
         last_date = date(year, month, num_days)
 
         usg_form_y = PatientUSGFormModel.objects.filter(deleted=0,created_at__date__gte=start_date,
-            created_at__date__lte=end_date)
+            created_at__date__lte=end_date, created_by=user.id)
 
         usg_form_m =PatientUSGFormModel.objects.filter(deleted=0,created_at__date__gte=first_date,
-            created_at__date__lte=last_date)
+            created_at__date__lte=last_date, created_by=user.id)
  
         if obgyn_config == None:
             obgyn_config = ObgynConfigModel.objects.create(user_id=user.id,created_by=user.id,deleted=0)
@@ -51,14 +51,51 @@ def update_obgyn_config(request):
             obgyn_config.monthly_usg = 1
             obgyn_config.yearly_usg = 1
         else:
-            obgyn_config.yearly_usg = user.yearly_usg + 1
+            obgyn_config.yearly_usg = len(usg_form_y) + 1
             if usg_form_m == None:
                 obgyn_config.monthly_usg = 1
             else:
-                obgyn_config.monthly_usg = user.monthly_usg + 1
+                obgyn_config.monthly_usg = len(usg_form_m) + 1
         
         obgyn_config.save()
 
+
+def get_obgyn_config(user):
+    month_seq = 0
+    year_seq = 0
+
+    fy =FinancialYearModel.objects.filter(
+            start_date__lte=now(), end_date__gte=now()
+        ).first()
+    
+    start_date = fy.start_date
+    end_date = fy.end_date
+    
+    month = date.today().month
+    year = date.today().year
+    _, num_days = calendar.monthrange(2016, 3)
+    first_date = date(year, month, 1)
+    last_date = date(year, month, num_days)
+
+    usg_form_y = PatientUSGFormModel.objects.filter(deleted=0,created_at__date__gte=start_date,
+            created_at__date__lte=end_date, created_by=user.id)
+    
+    print(len(usg_form_y))
+
+    usg_form_m =PatientUSGFormModel.objects.filter(deleted=0,created_at__date__gte=first_date,
+        created_at__date__lte=last_date, created_by=user.id)
+
+    if usg_form_y == None:
+        month_seq = 1
+        year_seq = 1
+    else:
+        year_seq = len(usg_form_y) + 1
+        if usg_form_m == None:
+            month_seq = 1
+        else:
+            month_seq = len(usg_form_m) + 1
+
+    return month_seq, year_seq
 
 def update_global_charges(request):
     user = request.user
