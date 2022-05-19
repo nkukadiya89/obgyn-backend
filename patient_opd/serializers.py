@@ -40,14 +40,34 @@ class PatientOpdSerializers(serializers.ModelSerializer):
 
             ret["profile_image"] = patient[0].profile_image
             ret["age"] = patient[0].age
-            ret["taluka"] = patient[0].taluka.taluka_id
-            ret["district"] = patient[0].district.district_id
-            ret["city"] = patient[0].city.city_id
-            ret["city_name"] = patient[0].city.city_name
-            ret["taluka_name"] = patient[0].taluka.taluka_name
-            ret["district_name"] = patient[0].district.district_name
-            ret["state"] = patient[0].state.state_id
-            ret["state_name"] = patient[0].state.state_name
+            try:
+                ret["taluka"] = patient[0].taluka.taluka_id
+                ret["taluka_name"] = patient[0].taluka.taluka_name
+            except:
+                ret["taluka"] = ""
+                ret["taluka_name"] = ""
+            
+            try:
+                ret["district"] = patient[0].district.district_id
+                ret["district_name"] = patient[0].district.district_name
+            except:
+                ret["district"] =""
+                ret["district_name"] = ""
+            
+            try:
+                ret["city"] = patient[0].city.city_id
+                ret["city_name"] = patient[0].city.city_name
+            except:
+                ret["city"] = ""
+                ret["city_name"] = ""
+
+            try:
+                ret["state"] = patient[0].state.state_id
+                ret["state_name"] = patient[0].state.state_name
+            except:
+                ret["state"] = ""
+                ret["state_name"] = ""
+
             ret["user_code"] = patient[0].user_code
 
         return ret
