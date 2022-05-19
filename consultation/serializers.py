@@ -63,7 +63,7 @@ class ConsultationSerializers(serializers.ModelSerializer):
                 raise serializers.ValidationError("Enter valid TSH")
 
         if data["resperistion"]:
-            if  0 >= int(data["resperistion"]) >= 60:
+            if  len(data["resperistion"])>6:
                 raise serializers.ValidationError("Enter valid Resperistion")
 
         if  0 >= int(data["spo2"]) >= 100:
