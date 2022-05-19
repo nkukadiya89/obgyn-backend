@@ -2,6 +2,7 @@ import random
 import string
 
 from django.db.models.query import Q
+import re
 from rest_framework import serializers
 
 from city.serializers import CitySerializers
@@ -47,9 +48,9 @@ class PatientSerializers(serializers.ModelSerializer):
         husband_father_name = data.get("husband_father_name")
         grand_father_name = data.get("grand_father_name")
 
-        if not husband_father_name.isalpha():
+        if not bool(re.match('[a-zA-Z\s]+$', husband_father_name)):
             raise serializers.ValidationError("Invalid Husband/Father Name")
-        if not grand_father_name.isalpha():
+        if not bool(re.match('[a-zA-Z\s]+$', grand_father_name)):
             raise serializers.ValidationError("Invalid Grand Father Name")
 
 

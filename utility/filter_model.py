@@ -680,6 +680,8 @@ class ModelFilterPATIENTREFERAL:
                 model = model.filter(indication__icontains=fld_value)
             if fld_name == "patient_opd_id":
                 model = model.filter(patient_opd_id=fld_value)
+            if fld_name == "regd_no":
+                model = model.filter(regd_no=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -709,6 +711,8 @@ class ModelFilterPATIENTUSGFORM:
                     diagnosis__diagnosis_name__icontains=fld_value)
             if fld_name == "patient_opd_id":
                 model = model.filter(patient_opd_id=fld_value)
+            if fld_name == "regd_no":
+                model = model.filter(regd_no=fld_value)
         return model
 
     def search(self, model, query_string):
