@@ -17,6 +17,7 @@ class PatientDeliverySerializers(serializers.ModelSerializer):
 
         if "patient_opd" in ret:
             ret["patient_opd_id"] = ret["patient_opd"]
+            ret["patient_id"] = patient.data["patient_id"]
             del ret["patient_opd"]
 
         
