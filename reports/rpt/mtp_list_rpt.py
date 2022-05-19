@@ -6,7 +6,7 @@ from patient_opd.models import PatientOpdModel
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
-def mtp_list_rpt(request, id, language_id=None):
+def mtp_list_rpt(request, language_id=None):
     patient_mtp_list = PatientMtpModel.objects.all()
 
 
