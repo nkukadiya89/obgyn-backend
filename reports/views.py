@@ -30,8 +30,8 @@ def birth_report(request, id, language_id=None):
     return birth_rpt(request, id, language_id)
 
 @csrf_exempt
-def mtp_list_report(request, id, language_id=None):
-    return mtp_list_rpt(request, id, language_id)
+def mtp_list_report(request, language_id=None):
+    return mtp_list_rpt(request, language_id)
 
 @csrf_exempt
 def referal_slip_report(request, id, language_id=None):
