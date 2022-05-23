@@ -516,6 +516,8 @@ class ModelFilterCONSULTATION:
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
             if fld_name == "uid":
                 model = model.filter(uid__icontains=fld_value)
             if fld_name == "parity":
@@ -672,6 +674,8 @@ class ModelFilterPATIENTREFERAL:
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
             if fld_name == "patient_id":
                 model = model.filter(patient_id=fld_value)
             if fld_name == "patient_referal_id":
@@ -759,6 +763,8 @@ class ModelFilterPATIENTDISCHARGE:
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
             if fld_name == "patient_discharge_id":
                 model = model.filter(patient_discharge_id=fld_value)
             if fld_name == "regd_no":
@@ -816,6 +822,8 @@ class ModelFilterPATIENTUSGREPORT:
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
             if fld_name == "patient_usgreport_id":
                 model = model.filter(patient_usgreport_id=fld_value)
             if fld_name == "regd_no":
@@ -850,6 +858,8 @@ class ModelFilterPATIENTOVULATIONPROFILE:
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
             if fld_name == "patient_ovulation_profile_id":
                 model = model.filter(patient_ovulation_profile_id=fld_value)
             if fld_name == "regd_no":
@@ -882,6 +892,8 @@ class ModelFilterPATIENTMTP:
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
             if fld_name == "patient_mtp_id":
                 model = model.filter(patient_mtp_id=fld_value)
             if fld_name == "regd_no":
@@ -921,6 +933,8 @@ class ModelFilterPATIENTHISTOLAP:
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
             if fld_name == "patient_histolap_id":
                 model = model.filter(patient_histolap_id=fld_value)
             if fld_name == "regd_no":
@@ -951,6 +965,8 @@ class ModelFilterPATIENTBILLING:
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
             if fld_name == "patient_billing_id":
                 model = model.filter(patient_billing_id=fld_value)
             if fld_name == "regd_no":
@@ -985,6 +1001,8 @@ class ModelFilterPATIENTVOUCHER:
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
             if fld_name == "patient_voucher_id":
                 model = model.filter(patient_voucher_id=fld_value)
             if fld_name == "regd_no":
@@ -1035,6 +1053,8 @@ class ModelFilterPATIENTINDOOR:
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
             if fld_name == "patient_indoor_id":
                 model = model.filter(patient_indoor_id=fld_value)
             if fld_name == "regd_no":
@@ -1132,6 +1152,8 @@ class ModelFilterPATIENTDELIVERY:
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
+            if fld_name == "patient_opd_id":
+                model = model.filter(patient_opd_id=fld_value)
             if fld_name == "patient_delivery_id":
                 model = model.filter(patient_delivery_id=fld_value)
             if fld_name == "regd_no":
