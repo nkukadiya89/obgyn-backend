@@ -37,8 +37,8 @@ class USGFormChildSerializers(serializers.ModelSerializer):
 
     usgform_child_id = serializers.IntegerField(read_only=True)
     child_dob = serializers.DateField(read_only=True)
-    child_year = serializers.IntegerField(read_only=True)
-    child_month = serializers.IntegerField(read_only=True)
+    child_year = serializers.IntegerField(required=False)
+    child_month = serializers.IntegerField(required=False)
 
     class Meta:
         model = USGFormChildModel
