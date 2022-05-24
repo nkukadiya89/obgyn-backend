@@ -116,7 +116,15 @@ def active_patient(request, id=None):
         .values("Month", "Delivery")
     )
 
-
+    monthly_opd_report = (
+        PatientOpdModel.objects.filter(
+             deleted=0,created_at__date__year=datetime.now().year
+        )
+        .annotate(Month=ExtractMonth("created_at"))
+        .values("Month")
+        .annotate(Delivery=Count("patient_opd_id"))
+        .values("Month", "Delivery")
+    )
 
     if len(list(delivery_report))>0:
         delivery_report = list(delivery_report)
@@ -129,6 +137,7 @@ def active_patient(request, id=None):
     data["today_opd_count"] = today_opd_count
     data["month_opd_count"] = month_opd_count
     data["monthly_delivery"] = list(delivery_report)
+    data["monthly_opd_graph"]= list(monthly_opd_report)
     data["ob_count"] = ob_count
     data["gyn_count"] = gyn_count
 
