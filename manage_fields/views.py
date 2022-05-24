@@ -283,6 +283,7 @@ def patch_mfm(request, id):
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
+from utility.auto_code import generate_slug
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
@@ -317,4 +318,5 @@ def get_mfm(request, id=None):
         data["success"] = True
         data["msg"] = "OK"
         data["data"] = serilizer.data
+        generate_slug()
         return Response(data=data, status=status.HTTP_200_OK)
