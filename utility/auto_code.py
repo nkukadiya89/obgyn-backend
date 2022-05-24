@@ -1,4 +1,4 @@
-from attr import field
+
 from manage_fields.models import FieldMasterModel
 
 
