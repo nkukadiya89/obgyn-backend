@@ -20,6 +20,7 @@ class ManageFieldsSerializers(serializers.ModelSerializer):
 
         if "field_master" in ret:
             ret["field_master_name"] = FieldMasterSerializers(instance.field_master).data["field_master_name"]
+            ret["slug"] = FieldMasterSerializers(instance.field_master).data["slug"]
 
         if "language" in ret:
             ret['language_name'] = LanguageSerializers(instance.language).data["language"]
