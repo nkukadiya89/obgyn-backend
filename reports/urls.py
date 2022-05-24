@@ -3,6 +3,9 @@ from reports import views
 
 
 urlpatterns = [
+
+    #PRINTABLE REPORT
+
     path('usg-report/<int:id>/<int:language_id>/', views.usg_report, name="usg_report"),
     path('consultation-report/<int:id>/<int:language_id>/', views.consultation_report, name="consultation_report"),
     path('birth-report/<int:id>/<int:language_id>/', views.birth_report, name="birth_report"),
@@ -13,6 +16,11 @@ urlpatterns = [
 
     path('view-report/<int:id>/<int:language_id>/', views.view_report, name="view_report"),
 
-    path('update-phone',views.match_regd_no, name="match_phone")
+    path('update-phone',views.match_regd_no, name="match_phone"),
+    ####################################
+    
+    #DASHBOARD REPORTS
+    path('active-patient/',views.active_patient,name="active_patient"),
+    path('active-patient/<int:id>',views.active_patient,name="active_patient"),
 
 ]
