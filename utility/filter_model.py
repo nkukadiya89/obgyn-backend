@@ -1,3 +1,4 @@
+from operator import mod
 import re
 
 from django.db.models import Q
@@ -397,13 +398,16 @@ class ModelFilterFIELDMASTER:
                 model = model.filter(field_master_name__icontains=fld_value)
             if fld_name == 'field_master_id':
                 model = model.filter(field_master_id=fld_value)
+            if fld_name == 'slug':
+                model = model.filter(slug=fld_value)
         return model
 
     def search(self, model, query_string):
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(field_master_name__icontains=search)
+                Q(field_master_name__icontains=search) |
+                Q(slug__icontains=search)
             )
         return model
 

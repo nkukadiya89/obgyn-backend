@@ -16,7 +16,7 @@ class PatientDischargeModel(models.Model):
     admission_date = models.DateField(default=now)
     admission_time = models.CharField(max_length=15, default="")
     complain_of = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="complain_of")
-    diagnosis = models.ForeignKey(DiagnosisModel, on_delete=models.DO_NOTHING)
+    diagnosis = models.ForeignKey(DiagnosisModel, on_delete=models.DO_NOTHING, null=True)
     name_of_operation = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="name_of_operation")
     ot_date = models.DateField(default=now)
     ot_time = models.CharField(max_length=15, default="")
