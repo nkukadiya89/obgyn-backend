@@ -7,10 +7,11 @@ from manage_fields.models import ManageFieldsModel, FieldMasterModel
 
 class FieldMasterSerializers(serializers.ModelSerializer):
     field_master_id = serializers.IntegerField(read_only=True)
+    slug = serializers.SlugField(read_only=True)
 
     class Meta:
         model = FieldMasterModel
-        fields = ['field_master_id', 'field_master_name', 'created_by', 'deleted']
+        fields = ['field_master_id', 'field_master_name', 'slug', 'created_by', 'deleted']
 
 
 class ManageFieldsSerializers(serializers.ModelSerializer):

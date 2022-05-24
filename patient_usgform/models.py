@@ -17,7 +17,7 @@ class PatientUSGFormModel(models.Model):
 
     ut_weeks = models.IntegerField(default=0)
     lmp_date = models.DateField(null=True)
-    diagnosis = models.ForeignKey(DiagnosisModel, on_delete=models.DO_NOTHING)
+    diagnosis = models.ForeignKey(DiagnosisModel, on_delete=models.DO_NOTHING, null=True)
     indication = models.ManyToManyField(ManageFieldsModel, blank=True)
     usg_image_no = models.CharField(max_length=25, null=True)
     result_of_sonography = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="result_of_sonography")

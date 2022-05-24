@@ -25,7 +25,7 @@ class PatientBillingModel(models.Model):
     ot_time = models.CharField(max_length=10, null=True)
     discharge_date = models.DateField(null=True)
     discharge_time = models.CharField(max_length=10, null=True)
-    diagnosis = models.ForeignKey(DiagnosisModel, on_delete=models.DO_NOTHING)
+    diagnosis = models.ForeignKey(DiagnosisModel, on_delete=models.DO_NOTHING, null=True)
     procedure_name = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="billing_procedure_name", null=True)
     no_of_visit = models.IntegerField(default=0)
     rs_per_visit = models.FloatField(default=0.0)
