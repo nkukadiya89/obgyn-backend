@@ -14,31 +14,11 @@ from .serializers import SubscriptionSerializers
 from utility.search_filter import filtering_query
 
 
+
 class SubscriptionAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-    # ================= Update all Fields of a record =========================
-    def put(self, request, id):
-        data = {}
-        try:
-            subscription = SubscriptionModel.objects.filter(pk=id).first()
-        except SubscriptionModel.DoesNotExist:
-            data["success"] = False
-            data["msg"] = "Record Does not exist"
-            data["data"] = []
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-        if request.method == "PUT":
-            serializer = SubscriptionSerializers(subscription, request.data)
-            if serializer.is_valid():
-                serializer.save()
-                data["success"] = True
-                data["msg"] = "Data updated successfully"
-                data["data"] = serializer.data
-                return Response(data=data, status=status.HTTP_200_OK)
-
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # ================= Delete Record =========================
     def delete(self, request):
@@ -85,38 +65,6 @@ class SubscriptionAPI(APIView):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
-@authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
-def patch(request, id):
-    data = {}
-
-    try:
-
-        if id:
-            subscription = SubscriptionModel.objects.get(subscription_id=id)
-        else:
-            subscription = SubscriptionModel.objects.filter(deleted=0)
-    except SubscriptionModel.DoesNotExist:
-        data["success"] = False
-        data["msg"] = "Record Does not exist"
-        data["data"] = []
-        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-    if request.method == "POST":
-        serializer = SubscriptionSerializers(subscription, request.data, partial=True)
-
-        if serializer.is_valid():
-            serializer.save()
-            data["success"] = True
-            data["msg"] = "Data updated successfully"
-            data["data"] = serializer.data
-            return Response(data=data, status=status.HTTP_200_OK)
-
-        data["success"] = False
-        data["msg"] = serializer.errors
-        data["data"] = []
-        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])

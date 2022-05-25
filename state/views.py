@@ -1,7 +1,12 @@
 import json
+from sre_parse import State
 
 from rest_framework import status
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -12,6 +17,7 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from .models import StateModel
 from .serializers import StateSerializers
 from utility.search_filter import filtering_query
+
 
 
 class StateAPI(APIView):
@@ -43,7 +49,7 @@ class StateAPI(APIView):
     # ================= Delete Record =========================
     def delete(self, request):
         data = {}
-        del_id = json.loads(request.body.decode('utf-8'))
+        del_id = json.loads(request.body.decode("utf-8"))
         if "id" not in del_id:
             data["success"] = False
             data["msg"] = "Record ID not provided"
@@ -85,7 +91,8 @@ class StateAPI(APIView):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def patch(request, id):
@@ -117,7 +124,8 @@ def patch(request, id):
         data["data"] = []
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET'])
+
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticatedOrReadOnly])
 # ================= Retrieve Single or Multiple records=========================

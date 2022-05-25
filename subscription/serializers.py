@@ -21,6 +21,7 @@ class SubscriptionSerializers(serializers.ModelSerializer):
 
         if duplicate_subscription != None:
             raise serializers.ValidationError("subscription already exist.")
+        data["sell_price"] = int(data["actual_price"]) * int(data["discount"]) /100 
 
         return data
 
@@ -28,7 +29,7 @@ class SubscriptionSerializers(serializers.ModelSerializer):
     
     actual_price = serializers.IntegerField()
     discount = serializers.IntegerField()
-    sell_price = serializers.IntegerField()
+    sell_price = serializers.IntegerField(read_only=True)
     duration = serializers.IntegerField()
     description  = serializers.CharField(max_length = 200)
     class Meta:

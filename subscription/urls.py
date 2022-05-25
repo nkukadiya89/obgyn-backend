@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import SubscriptionAPI, get,patch
+from .views import SubscriptionAPI, get
 
 urlpatterns = [
     path('<int:id>/', SubscriptionAPI.as_view()),
@@ -8,5 +8,5 @@ urlpatterns = [
     path('get/<int:id>', get),
     path('create/', SubscriptionAPI.as_view()),
     path('delete/', SubscriptionAPI.as_view()),
-    path('update/<int:id>/', patch),
+ 
 ]
