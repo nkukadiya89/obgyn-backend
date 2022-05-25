@@ -20,7 +20,7 @@ urlpatterns = [
     ####################################
     
     #DASHBOARD REPORTS
-    path('active-patient/',views.active_patient,name="active_patient"),
-    path('active-patient/<int:id>',views.active_patient,name="active_patient"),
+    path('dashboard-api-r1/',views.active_patient,name="dashboard-api-r1"),
+    path('dashboard-api-r1/<int:id>',views.active_patient,name="dashboard-api-r1"),
 
 ]
