@@ -20,6 +20,7 @@ from utility.search_filter import filtering_query
 from .models import PatientModel
 from .serializers import PatientSerializers
 from utility.decorator import validate_permission, validate_permission_id
+from utility.aws_file_upload import upload_barcode_image
 
 
 class PatientAPI(APIView):
@@ -121,6 +122,9 @@ def create(request):
                         patient.upload_file(file)
                         patient.save()
 
+            patient.regd_no_barcode,patient.mob_no_barcode = upload_barcode_image(patient.registered_no,patient.phone,patient.patient_id)
+            patient.save()
+
             data["success"] = True
             data["msg"] = "Data updated successfully"
             data["data"] = serializer.data
@@ -162,6 +166,9 @@ def patch(request, id):
                     file = request.data["media"]
                     patient.upload_file(file)
                     patient.save()
+
+            patient.regd_no_barcode,patient.mob_no_barcode = upload_barcode_image(patient.registered_no,patient.phone,patient.patient_id)
+            patient.save()
 
             data["success"] = True
             data["msg"] = "Data updated successfully"
