@@ -76,7 +76,7 @@ def upload_file_to_bucket(
 
 
 def upload_barcode_image(regd_no, mobile_no, patient_id):
-   
+    
     EAN = barcode.get_barcode_class('code128')
     my_code = EAN(regd_no, writer=ImageWriter())
     directory = "static/barcode/" + str(patient_id)
