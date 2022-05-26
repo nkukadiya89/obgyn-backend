@@ -91,19 +91,18 @@ def upload_barcode_image(regd_no, mobile_no, patient_id):
     isfile(filename)
     remove(filename)
 
-    print(mobile_no)
-    my_code =  EAN(mobile_no, writer=ImageWriter())
-    directory = "static/barcode/" + str(patient_id)
-    if not os.path.exists(directory):
-        os.makedirs(directory)
+    # my_code =  EAN(mobile_no, writer=ImageWriter())
+    # directory = "static/barcode/" + str(patient_id)
+    # if not os.path.exists(directory):
+    #     os.makedirs(directory)
 
-    filename = my_code.save(directory + "/" + mobile_no)
-    mobile_no_barcode_url, presigned_url = upload_file_to_bucket(
-        filename, ".png", "barcode/"+str(patient_id) + "/", patient_id, "mobile_no"
-    )
+    # filename = my_code.save(directory + "/" + mobile_no)
+    # mobile_no_barcode_url, presigned_url = upload_file_to_bucket(
+    #     filename, ".png", "barcode/"+str(patient_id) + "/", patient_id, "mobile_no"
+    # )
 
-    isfile(filename)
-    remove(filename)
-
+    # isfile(filename)
+    # remove(filename)
+    mobile_no_barcode_url=""
 
     return regd_no_barcode_url,mobile_no_barcode_url
