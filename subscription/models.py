@@ -1,10 +1,8 @@
 from django.db import models
-
-# Create your models here.
 from django.db import models
 from django.utils.timezone import now
 
-# Create your models here.
+
 class SubscriptionModel(models.Model):
     subscription_id = models.AutoField(primary_key=True)
     subscription_name = models.CharField(max_length=50)

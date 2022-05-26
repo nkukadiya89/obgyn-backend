@@ -21,6 +21,7 @@ class SubscriptionSerializers(serializers.ModelSerializer):
 
         if duplicate_subscription != None:
             raise serializers.ValidationError("subscription already exist.")
+            
         data["sell_price"] = int(data["actual_price"]) * int(data["discount"]) /100 
 
         return data

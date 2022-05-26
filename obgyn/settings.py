@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     'financial_year',
     'obgyn_config',
     'subscription',
+    'subscription_purchase',
 ]
 
 MIDDLEWARE = [

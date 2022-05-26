@@ -44,5 +44,6 @@ urlpatterns = [
     path('report/', include('reports.urls')),
     path('subscription/', include('subscription.urls')),
     path('template-header/', include('template_header.urls')),
+    path('subscription_purchase/', include('subscription_purchase.urls')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
