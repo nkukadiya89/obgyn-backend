@@ -108,7 +108,7 @@ def create(request):
                     patient.upload_file(file)
                     patient.save()
             patient.regd_no_barcode,patient.mob_no_barcode = upload_barcode_image(patient.registered_no,patient.phone,patient.patient_id)
-
+            patient.save()
         else:
             data["success"] = False
             data["msg"] = patient_serializer.errors
@@ -170,8 +170,10 @@ def patch(request, id):
                         file = request.data["media"]
                         patient.upload_file(file)
                         patient.save()
-                patient.regd_no_barcode,patient.mob_no_barcode = upload_barcode_image(patient.registered_no,patient.phone,patient.patient_id)
 
+                        
+                patient.regd_no_barcode,patient.mob_no_barcode = upload_barcode_image(patient.registered_no,patient.phone,patient.patient_id)
+                patient.save()
             else:
                 data["success"] = False
                 data["msg"] = patient_serializer.errors
