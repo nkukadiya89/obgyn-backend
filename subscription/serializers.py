@@ -28,11 +28,6 @@ class SubscriptionSerializers(serializers.ModelSerializer):
 
     subscription_id = serializers.IntegerField(read_only=True)
     
-    actual_price = serializers.IntegerField()
-    discount = serializers.IntegerField()
-    sell_price = serializers.IntegerField(read_only=True)
-    duration = serializers.IntegerField()
-    description  = serializers.CharField(max_length = 200)
     class Meta:
         model = SubscriptionModel
         fields = ['subscription_id', 'subscription_name', 'actual_price', 'discount', 'sell_price', 'duration', 'description','created_by', 'deleted']
