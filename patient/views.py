@@ -92,7 +92,6 @@ def create(request):
     if request.method == "POST":
         patient = PatientModel()
         serializer = PatientSerializers(patient, data=json.loads(request.data["data"]))
-
         if serializer.is_valid():
             # patient_opd = PatientOpdModel.objects.filter(patient_id=patient.patient_id).first()
             # patient_opd.patient_type = patient.patient_type

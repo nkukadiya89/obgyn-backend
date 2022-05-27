@@ -90,7 +90,7 @@ class PatientSerializers(serializers.ModelSerializer):
     last_name = serializers.CharField(required=True)
     phone = serializers.CharField(required=True)
     married = serializers.BooleanField(required=True)
-    date_of_opd = serializers.CharField(required=True)
+    date_of_opd = serializers.DateField(required=True)
     registered_no = serializers.CharField(read_only=True)
     profile_image = serializers.CharField(read_only=True)
     regd_no = serializers.CharField(read_only=True)
