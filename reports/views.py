@@ -8,7 +8,8 @@ from django.views.decorators.csrf import csrf_exempt
 from .rpt.usg_report_rpt import usg_rpt
 from .rpt.consultation_rpt import consultation_rpt
 from .rpt.birth_rpt import birth_rpt
-from .rpt.delivery_rpt import delivery_report
+from .rpt.delivery_rpt import delivery_rpt
+from .rpt.billing_rpt import billing_rpt
 from .rpt.discharge_rpt import discharge_rpt
 from .rpt.mtp_list_rpt import mtp_list_rpt
 from .rpt.referal_slip_rpt import referal_slip_rpt
@@ -18,60 +19,96 @@ from datetime import datetime
 from django.db.models.functions import TruncMonth,TruncYear,ExtractMonth
 from django.db.models import Count
 
+from patient.models import PatientModel
+from django.db.models import Q
+from user.models import User
 
-@csrf_exempt
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def usg_report(request, id, language_id=None):
     return usg_rpt(request, id, language_id)
 
 
-@csrf_exempt
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def consultation_report(request, id, language_id=None):
     return consultation_rpt(request, id, language_id)
 
 
-@csrf_exempt
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def discharge_report(request, id, language_id=None):
     return discharge_rpt(request, id, language_id)
 
 
-@csrf_exempt
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def birth_report(request, id, language_id=None):
     return birth_rpt(request, id, language_id)
 
 
-@csrf_exempt
-def delivery_report(request,start_date, end_date, language_id=None):
-    return delivery_report(request, start_date, end_date, language_id)
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def delivery_report(request, language_id=None):
+    data = request.query_params
+    start_date = data.get("start_date", None)
+    end_date = data.get("end_date", None)
+    return delivery_rpt(request, start_date, end_date, language_id)
 
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def billing_report(request,language_id=None):
+    data = request.query_params
+    start_date = data.get("start_date", None)
+    end_date = data.get("end_date", None)
 
-@csrf_exempt
+    return billing_rpt(request, start_date, end_date, language_id)
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def mtp_list_report(request, language_id=None):
     return mtp_list_rpt(request, language_id)
 
 
-@csrf_exempt
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def referal_slip_report(request, id, language_id=None):
     return referal_slip_rpt(request, id, language_id)
 
 
-@csrf_exempt
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def download_pdf_report(request, report_name, id, language_id=None):
     url = "/report/" + report_name + "/" + str(id) + "/" + str(language_id)
     return download_report(request, url, "usg_report.pdf", "A4", "Potrait")
 
 
-@csrf_exempt
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def view_report(request, id, language_id=None):
     template_name = "reports/en/report-3.html"
     return render(request, template_name)
 
 
-from patient.models import PatientModel
-from django.db.models import Q
-from user.models import User
 
-
-@csrf_exempt
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def match_regd_no(request):
     user_list = User.objects.filter(
         Q(phone__icontains="F") | Q(phone__exact=0) | Q(phone__exact="")
@@ -89,7 +126,9 @@ def match_regd_no(request):
     return HttpResponse("data")
 
 
-@csrf_exempt
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def active_patient(request, id=None):
 
     patient = PatientModel.objects.filter(deleted=0)

@@ -40,7 +40,7 @@ class PatientDeliveryModel(models.Model):
     live_male_female = models.IntegerField(default=0, null=True)
     no_of_delivery = models.IntegerField(default=0, null=True)
     weight = models.FloatField(default=0.0, null=True)
-    father_eduction = models.CharField(max_length=100, default="")
+    father_education = models.CharField(max_length=100, default="")
     mother_education = models.CharField(max_length=100, default="")
     father_occupation = models.CharField(max_length=250, default="")
     mother_occupation = models.CharField(max_length=250, default="")

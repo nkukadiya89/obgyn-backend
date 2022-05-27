@@ -7,46 +7,54 @@ from user.models import User
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
-def delivery_report(request, start_date, end_date, language_id):
-    # patient = PatientModel.objects.filter(pk=id).first()
-    patient_delivery = PatientDeliveryModel.objects.filter(pk=id).first()
-    patient = patient_delivery.patient
+def delivery_rpt(request, start_date=None, end_date=None, language_id=1):
     
-    if language_id:
-        template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id).first()
-    else:
-        template_header = TemplateHeaderModel.objects.filter(pk=1).first()
-    context = {}
+    patient_delivery_list = PatientDeliveryModel.objects.filter(created_by=1)
+    if start_date and not end_date:
+        patient_delivery_list = patient_delivery_list.filter(created_at__date=start_date)
+    elif start_date and end_date:
+        patient_delivery_list = patient_delivery_list.filter(created_at__date__gte=start_date, created_at__date__lte=end_date)
 
-    context["regd_no"] = patient_delivery.regd_no
-    context["birth_date"] = patient_delivery.birth_date
-    context["birth_time"] = patient_delivery.birth_time
-    context["gender"] = patient_delivery.child_gender
-    doctor_id = patient_delivery.created_by
-    hospital_name = User.objects.filter(pk=doctor_id).first().hospital.hospital_name
+    context_list=[]
 
-    context["birth_place"] = hospital_name
+    for patient_delivery in patient_delivery_list:
+        patient = patient_delivery.patient
+        
+        if language_id:
+            template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id).first()
+        else:
+            template_header = TemplateHeaderModel.objects.filter(pk=1).first()
+        context = {}
 
-    context["mother_name"] = "".join(
-        [patient.first_name, " ", patient.middle_name, " ", patient.last_name])
-    context["father_name"] = patient_delivery.husband_name
-    context["address"] = "".join([" ", patient.city.city_name, " ",
-                                  patient.district.district_name, " ",
-                                  patient.taluka.taluka_name, " ", patient.state.state_name])
-    context["mobile"] = patient_delivery.patient.phone
-    context["nationality"] = "Indian"
-    context["religion"] = patient_delivery.religion
-    context["age"] = patient.age
-    context["child_count"] = int(patient_delivery.no_of_delivery) + 1
-    context["weight"] = patient_delivery.weight
-    context["child_count"] = int(patient_delivery.live_male_female)
-    context["mother_education"] = patient_delivery.mother_education
-    context["father_occupation"] = patient_delivery.father_occupation
+        context["regd_no"] = patient_delivery.regd_no
+        context["birth_date"] = patient_delivery.birth_date
+        context["birth_time"] = patient_delivery.birth_time
+        context["gender"] = patient_delivery.child_gender
+        hospital_name = User.objects.filter(pk=request.user.id).first()#.hospital.hospital_name
 
-    context["child_status"] = patient_delivery.baby_status
-    context["child_count"] = patient_delivery.live_male_female
-    context["episitomy_by"] = patient_delivery.weight
+        context["birth_place"] = hospital_name.hospital.hospital_name
+
+        context["mother_name"] = "".join(
+            [patient.first_name, " ", patient.middle_name, " ", patient.last_name])
+        context["father_name"] = patient_delivery.husband_name
+        context["address"] = "".join([" ", patient.city.city_name, " ",
+                                    patient.district.district_name, " ",
+                                    patient.taluka.taluka_name, " ", patient.state.state_name])
+        context["mobile"] = patient_delivery.patient.phone
+        context["nationality"] = "Indian"
+        context["religion"] = patient_delivery.religion
+        context["age"] = patient.age
+        context["child_count"] = int(patient_delivery.no_of_delivery) + 1
+        context["weight"] = patient_delivery.weight
+        context["child_count"] = int(patient_delivery.live_male_female)
+        context["mother_education"] = patient_delivery.mother_education
+        context["father_education"] = patient_delivery.father_education
+        context["mother_occupation"] = patient_delivery.mother_occupation
+        context["father_occupation"] = patient_delivery.father_occupation
+
+        context["child_status"] = patient_delivery.baby_status
+        context_list.append(context)
 
     template_name = "reports/en/delivery_report.html"
     return render(request, template_name,
-                  {"context": context, "template_header": template_header.header_text.replace("'", "\"")})
+                  {"context_list": context_list, "template_header": template_header.header_text.replace("'", "\"")})
