@@ -23,7 +23,7 @@ class Subscription_purchaseAPI(APIView):
     def put(self, request, id):
         data = {}
         try:
-            city = Subscription_purchaseModel.objects.filter(pk=id).first()
+            subscription_purchase = Subscription_purchaseModel.objects.filter(pk=id).first()
         except Subscription_purchaseModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record Does not exist"
@@ -31,7 +31,7 @@ class Subscription_purchaseAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "PUT":
-            serializer = Subscription_PurchaseSerializers(city, request.data)
+            serializer = Subscription_PurchaseSerializers(subscription_purchase, request.data)
             if serializer.is_valid():
                 serializer.save()
                 data["success"] = True
