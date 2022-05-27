@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .rpt.usg_report_rpt import usg_rpt
 from .rpt.consultation_rpt import consultation_rpt
 from .rpt.birth_rpt import birth_rpt
+from .rpt.delivery_rpt import delivery_report
 from .rpt.discharge_rpt import discharge_rpt
 from .rpt.mtp_list_rpt import mtp_list_rpt
 from .rpt.referal_slip_rpt import referal_slip_rpt
@@ -36,6 +37,11 @@ def discharge_report(request, id, language_id=None):
 @csrf_exempt
 def birth_report(request, id, language_id=None):
     return birth_rpt(request, id, language_id)
+
+
+@csrf_exempt
+def delivery_report(request,start_date, end_date, language_id=None):
+    return delivery_report(request, start_date, end_date, language_id)
 
 
 @csrf_exempt
