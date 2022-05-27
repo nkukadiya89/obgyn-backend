@@ -7,23 +7,27 @@ from user.models import User
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
-def delivery_rpt(request, start_date=None, end_date=None, language_id=1):
+def delivery_rpt(request, start_date=None, end_date=None,id_list=None, language_id=1):
     
     patient_delivery_list = PatientDeliveryModel.objects.filter(created_by=1)
+    
+    if len(id_list)>0:
+        id_list = id_list.split(",")
+        patient_delivery_list = patient_delivery_list.filter(patient_id__in=id_list)
     if start_date and not end_date:
         patient_delivery_list = patient_delivery_list.filter(created_at__date=start_date)
     elif start_date and end_date:
         patient_delivery_list = patient_delivery_list.filter(created_at__date__gte=start_date, created_at__date__lte=end_date)
 
     context_list=[]
+    if language_id:
+        template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id).first()
+    else:
+        template_header = TemplateHeaderModel.objects.filter(pk=1).first()
 
     for patient_delivery in patient_delivery_list:
         patient = patient_delivery.patient
         
-        if language_id:
-            template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id).first()
-        else:
-            template_header = TemplateHeaderModel.objects.filter(pk=1).first()
         context = {}
 
         context["regd_no"] = patient_delivery.regd_no

@@ -63,7 +63,8 @@ def delivery_report(request, language_id=None):
     data = request.query_params
     start_date = data.get("start_date", None)
     end_date = data.get("end_date", None)
-    return delivery_rpt(request, start_date, end_date, language_id)
+    ids = data.get("ids",None)
+    return delivery_rpt(request, start_date, end_date, ids, language_id)
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])

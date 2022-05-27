@@ -17,13 +17,13 @@ def billing_rpt(request, start_date=None, end_date=None, language_id=1):
 
     context_list=[]
 
+    if language_id:
+        template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id).first()
+    else:
+        template_header = TemplateHeaderModel.objects.filter(pk=1).first()
     for patient_billing in patient_billing_list:
         patient = patient_billing.patient
         
-        if language_id:
-            template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id).first()
-        else:
-            template_header = TemplateHeaderModel.objects.filter(pk=1).first()
         context = {}
 
         context["invoice_no"] = patient_billing.invoice_no
