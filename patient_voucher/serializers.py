@@ -56,9 +56,9 @@ class VoucherItemSerializers(serializers.ModelSerializer):
             del ret["voucher_item_id"]
 
         if "surgical_item" in ret:
-            medicine = MedicineModel.objects.filter(pk=ret["surgical_item"]).first()
-            if medicine:
-                ret["drug_name"] = medicine.medicine
+            surgical_item = SurgicalItemModel.objects.filter(pk=ret["surgical_item"]).first()
+            if surgical_item:
+                ret["drug_name"] = surgical_item.drug_name
         return ret
 
     def validate(self, data):

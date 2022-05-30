@@ -14,6 +14,7 @@ from .models import DiagnosisModel
 from .serializers import DiagnosisSerializers
 from utility.search_filter import filtering_query
 from utility.decorator import validate_permission_id,validate_permission
+from .utils_views import delete_child_record
 
 
 
@@ -65,6 +66,7 @@ def delete(request):
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == "DELETE":
+        delete_child_record(diagnosis)
         result = diagnosis.delete()
         data["success"] = True
         data["msg"] = "Data deleted successfully."

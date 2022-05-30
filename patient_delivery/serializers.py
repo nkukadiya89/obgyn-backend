@@ -42,7 +42,7 @@ class PatientDeliverySerializers(serializers.ModelSerializer):
         if len(patient_delivery) > 1:
             raise serializers.ValidationError("Child already registered.")
 
-        if len(str(data["str"])) > 6:
+        if len(str(data["pin"])) > 6:
             raise serializers.ValidationError("Check value of PIN")
 
         if 0 >= int(data["current_age"]) > 99:

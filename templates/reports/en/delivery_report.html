@@ -4,8 +4,7 @@
 
 <head>
     <title>Obgyn register success</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style>
         /* Base CSS styles DO NOT CHANGE OR REMOVE */
         body {
@@ -27,7 +26,7 @@
 
         #obygyn {
             margin: 0 12pt;
-            width:100%;
+            width: 100%;
             padding: 10px 20px;
             margin: 1em auto;
             clear: both;
@@ -241,106 +240,174 @@
             padding: 5px 10px;
         }
 
+        #reporttable3 {
+            border-collapse: collapse;
+        }
+
+        #reporttable3 th,
+        #reporttable3 td {
+            border: 1px solid #343434;
+            padding: 5px 10px;
+            word-break: break-all;
+            font-weight: normal;
+        }
+
+        #reporttable3 th {
+            font-weight: bold;
+        }
+
+        .lefttable td {
+            padding: 2px 10px;
+        }
+
+        .rxtbl {
+            border-collapse: collapse;
+        }
+
+        .rxtbl td {
+            padding: 3px 10px;
+        }
     </style>
 </head>
 
 <body>
-<div id="obygyn">
+    <div id="obygyn">
 
-    <div class="obgyn-title">-: USG REPORT :-</div>
-    {{ template_header | safe }}
-    <div class="obgyn-title">-: USG REPORT :-</div>
+        {{ template_header | safe }}
+        <div class="obgyn-title">-: Delivery Report :-</div>
 
-    <table width="100%" id="reporttable" style="font-size: 14px;font-weight: bold;color: #343434;">
-        <tr>
-            <td>
-                Receipt Date:
-            </td>
-            <td>
-                {{context.receipt_date}}
-            </td>
-            <td style="width: 80px;">
-                Regd. No:
-            </td>
-            <td>
-                <div><img src={{context.regd_no}} width='200' height="60"/></div>
-            </td>
-            <td style="width: 100px;">
-                Hb:
-            </td>
-            <td style="width: 100px;">
-                {{context.hb}}
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Name:
-            </td>
-            <td>
-                {{context.name}}
-            </td>
-            <td>
-                Mobile No:
-            </td>
-            <td>
-                {{context.mobile_no}}
-            </td>
-            <td>
-                Blood Group:
-            </td>
-            <td>
-                {{context.blood_group}}
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Address:
-            </td>
-            <td colspan="5" style="text-align: center;">
-                {{context.address}}
-            </td>
+        <table width="100%" id="reporttable3" style="font-size: 14px;font-weight: bold;color: #343434;">
 
-        </tr>
-        <tr>
-            <td colspan="6">
-                A single intrauterine foctus/s with present cardiac activity<br/>
-                with Ceplalic presentation.<br/>
-                with avg. 19 weeks of gestational age.<br/>
-                Placenta - posterior<br/>
-                Liquar - adequate<br/>
-                No anomaly detected<br/>
-                Remark -<br/>
-                LMP acc. to USG-18-08-2021<br/>
-                EDD acc. to USG-25-05-2022
-            </td>
+            <tr>
+                <th>
+                    Regd No.
+                </th>
+                <th>
+                    Birth Date & Birth Time
+                </th>
+                <th>
+                    Gender
+                </th>
+                <th>
+                    Birth Place
+                </th>
+                <th>
+                    Monther Name
+                </th>
+                <th>
+                    Father Name
+                </th>
+                <th>
+                    Address
+                </th>
+                <th>
+                    Mobile No.
+                </th>
+                <th>
+                    Nationality
+                </th>
+                <th>
+                    Religion
+                </th>
+                <th>
+                    Mother's Age
+                </th>
+                <th>
+                    No. of baby
+                </th>
+                <th>
+                    Baby Wt.
+                </th>
+                <th>
+                    Living Child
+                </th>
+                <th>
+                    Mother Education
+                </th>
+                <th>
+                    Father Education
+                </th>
+                <th>
+                    Mother Occupation
+                </th>
+                <th>
+                    Father Occupation
+                </th>
+                <th>
+                    Baby (Live/Dead)
+                </th>
+                <th>
+                    Sign.
+                </th>
+            </tr>
+            {% for context in context_list %}
+            <tr>
+                <td>
+                    {{context.regd_no}}
+                </td>
+                <td>
+                    {{context.birth_date}}
+                    {{context.birth_time}}
+                </td>
+                <td>
+                    {{context.gender}}
+                </td>
+                <td>
+                    {{context.birth_place}}
+                </td>
+                <td>
+                    {{context.mother_name}}
+                </td>
+                <td>
+                    {{context.father_name}}
+                </td>
+                <td>
+                    {{context.address}}
+                </td>
+                <td>
+                    {{context.mobile}}
+                </td>
+                <td>
+                    {{context.nationality}}
+                </td>
+                <td>
+                    {{context.religion}}
+                </td>
+                <td>
+                    {{context.age}}
+                </td>
+                <td>
+                    {{context.child_count}}
+                </td>
+                <td>
+                    {{context.weight}}
+                </td>
+                <td>
+                    {{context.child_count}}
+                </td>
+                <td>
+                    {{context.mother_education}}
+                </td>
+                <td>
+                    {{context.father_education}}
+                </td>
+                <td>
+                    {{context.mother_occupation}}
+                </td>
+                <td>
+                    {{context.father_occupation}}
+                </td>
+                <td>
+                    {{context.child_status}}
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
 
-        </tr>
-        <tr>
-            <td colspan="6">
-                &nbsp;
-            </td>
-
-        </tr>
-        <tr>
-            <td colspan="6" style="padding: 0;">
-                <table width="100%">
-                    <tr>
-                        <td style="border: 0;">
-                            Date: {{context.report_date}}<br/>
-                            Place:-Santrampur.
-                        </td>
-                        <td style="border: 0;">
-                            x<br/>
-                            Dr.Bharat K.Patel,
-                        </td>
-                    </tr>
-                </table>
-            </td>
-
-        </tr>
-    </table>
-</div>
+    </div>
 </body>
 
 </html>
-
