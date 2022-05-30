@@ -1240,7 +1240,7 @@ class ModelFilterSUBSCRIPTIONPURCHASE:
             if fld_name == "hospital":
                 model = model.filter(hospital=fld_value)
             if fld_name == "subscription":
-                model = model.filter(subscription=fld_value)
+                model = model.filter(subscription__subscription__icontains=fld_value)
             if fld_name == "price":
                 model = model.filter(price=fld_value)
             if fld_name == "duration":
@@ -1277,7 +1277,7 @@ class ModelFilterSUBSCRIPTIONPURCHASE:
                 )
         return model
 
-class ModelFilterSUBSCRIPTIONPURCHASE:
+class ModelFilterOBGYNCONFIG:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
@@ -1285,7 +1285,7 @@ class ModelFilterSUBSCRIPTIONPURCHASE:
             if fld_name == "obgyn_config_id":
                 model = model.filter(obgyn_config_id=fld_value)
             if fld_name == "user":
-                model = model.filter(user=fld_value)
+                model = model.filter(user__user__icontains=fld_value)
             if fld_name == "rs_per_visit":
                 model = model.filter(rs_per_visit=fld_value)
             if fld_name == "rs_per_usg":
@@ -1299,13 +1299,13 @@ class ModelFilterSUBSCRIPTIONPURCHASE:
             if fld_name == "field_master_name":
                 model = model.filter(field_master_name__icontains=fld_value)
             if fld_name == "city":
-                model = model.filter(city__icontains=fld_value)
+                model = model.filter(city__city_name__icontains=fld_value)
             if fld_name == "taluka":
-                model = model.filter(taluka__icontains=fld_value)
+                model = model.filter(taluka__taluka_name__icontains=fld_value)
             if fld_name == "district":
-                model = model.filter(district__icontains=fld_value)
+                model = model.filter(district__district_name__icontains=fld_value)
             if fld_name == "state":
-                model = model.filter(state__icontains=fld_value)
+                model = model.filter(state__state_name__icontains=fld_value)
             if fld_name == "monthly_usg":
                 model = model.filter(monthly_usg=fld_value)
             if fld_name == "yearly_usg":
@@ -1324,6 +1324,9 @@ class ModelFilterSUBSCRIPTIONPURCHASE:
                 )
             else:
                 model = model.filter(
-                    Q(hospital__icontains=search)
+                    Q(city__city_name__icontains=search)|
+                    Q(taluka__taluka_name__icontains=search)|
+                    Q(district__district_name__icontains=search)|
+                    Q(state__state_name__icontains=search)
                 )
         return model
