@@ -96,8 +96,12 @@ def create(request):
 
             if "surgical_item" in request.data:
                 insert_surgical_item(request, serializer.data["patient_voucher_id"])
-            serializer = PatientVoucherSerializers(patient_voucher)
 
+            patient_billing = PatientVoucherModel.objects.filter(
+                deleted=0, regd_no=serializer.data["regd_no"]
+            ).order_by("-created_at")
+            serializer = PatientVoucherSerializers(patient_billing, many=True)
+            
             data["success"] = True
             data["msg"] = "Data updated successfully"
             data["data"] = serializer.data
@@ -140,7 +144,11 @@ def patch(request, id):
             serializer.save()
             if "surgical_item" in request.data:
                 insert_surgical_item(request, serializer.data["patient_voucher_id"])
-            serializer = PatientVoucherSerializers(patient_voucher)
+
+            patient_billing = PatientVoucherModel.objects.filter(
+                deleted=0, regd_no=serializer.data["regd_no"]
+            ).order_by("-created_at")
+            serializer = PatientVoucherSerializers(patient_billing, many=True)
 
             data["success"] = True
             data["msg"] = "Data updated successfully"

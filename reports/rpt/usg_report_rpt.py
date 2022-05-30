@@ -21,7 +21,7 @@ def usg_rpt(request, id, language_id=None):
     template_name = "reports/en/usg_report.html"
     context = {}
     context["receipt_date"] = str(patient_opd.opd_date)
-    context["regd_no"] = patient_opd.patient.registered_no
+    context["regd_no"] = patient_opd.patient.regd_no_barcode
     context["hb"] = ""
     context["name"] = "".join(
         [patient_opd.patient.first_name, " ", patient_opd.patient.middle_name, " ", patient_opd.patient.last_name])

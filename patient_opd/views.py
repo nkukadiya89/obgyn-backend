@@ -22,6 +22,7 @@ from .models import PatientOpdModel
 from .serializers import PatientOpdSerializers
 from user.user_views import generate_regd_no
 from utility.decorator import validate_permission, validate_permission_id
+from utility.aws_file_upload import upload_barcode_image
 
 
 class PatientOpdAPI(APIView):
@@ -106,7 +107,8 @@ def create(request):
                     file = request.data["media"]
                     patient.upload_file(file)
                     patient.save()
-
+            patient.regd_no_barcode , mob_url= upload_barcode_image(patient.registered_no,patient.phone,patient.patient_id)
+            patient.save()
         else:
             data["success"] = False
             data["msg"] = patient_serializer.errors
@@ -169,6 +171,9 @@ def patch(request, id):
                         patient.upload_file(file)
                         patient.save()
 
+
+                patient.regd_no_barcode, mob_url = upload_barcode_image(patient.registered_no,patient.phone,patient.patient_id)
+                patient.save()
             else:
                 data["success"] = False
                 data["msg"] = patient_serializer.errors

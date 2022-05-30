@@ -1,12 +1,17 @@
 from django.db import models
 from django.utils.timezone import now
+from django.db.models.signals import pre_save
+
 
 from language.models import LanguageModel
+from utility.slug_generator import unique_slug_generator
+
 
 
 class FieldMasterModel(models.Model):
     field_master_id = models.AutoField(primary_key=True)
     field_master_name = models.CharField(max_length=50, default="")
+    slug = models.SlugField(null=True, max_length=150)
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
@@ -17,6 +22,15 @@ class FieldMasterModel(models.Model):
 
     class Meta:
         db_table = "field_master"
+
+
+def pre_save_receiver(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = unique_slug_generator(instance, "field_master")
+
+
+pre_save.connect(pre_save_receiver, sender=FieldMasterModel)
+
 
 
 # Create your models here.

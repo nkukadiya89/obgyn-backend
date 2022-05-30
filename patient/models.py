@@ -30,6 +30,10 @@ class PatientModel(User):
     grand_father_name = models.CharField(max_length=100, default="")
     grand_title = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="grand_title",
                                     null=True)
+
+    regd_no_barcode = models.CharField(max_length=250, null=True)
+    mob_no_barcode = models.CharField(max_length=250, null=True)
+
     age = models.IntegerField(default=0)
     religion = models.CharField(max_length=25, default="" ,null=True)
     first_edd = models.DateField(null=True)

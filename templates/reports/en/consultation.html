@@ -5,6 +5,7 @@
 <head>
     <title>Obgyn register success</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://s3.ap-south-1.amazonaws.com/dev.myobguide.com/static/be/js/jquery.min.js"></script>
     <style>
         /* Base CSS styles DO NOT CHANGE OR REMOVE */
         body {
@@ -253,49 +254,6 @@
         }
     </style>
 </head>
-<script type="text/javascript">
-
-      function generateBarcode(value,target){
-        var value = value;
-        var btype = "code128";
-        var renderer = "css"
-
-
-        var settings = {
-          output:renderer,
-          color: '#000000',
-          barWidth: '1',
-          barHeight: '30',
-          moduleSize: '5',
-          posX: '10',
-          posY: '20',
-          addQuietZone: '1'
-        };
-
-
-	  $(target).html("").show().barcode(value, btype, settings);
-      }
-
-      function showConfig1D(){
-        $('.config .barcode1D').show();
-        $('.config .barcode2D').hide();
-      }
-
-      function showConfig2D(){
-        $('.config .barcode1D').hide();
-        $('.config .barcode2D').show();
-      }
-
-      $(function(){
-        regd_no = $("#regdno_value").val();
-        generateBarcode(regd_no,"#regdno_target");
-
-        mob_no = $("#mob_no").val();
-        alert(mob_no);
-        generateBarcode(mob_no,"#mobno_target");
-      });
-</script>
-
 
 <body>
     <div id="obygyn">
@@ -315,18 +273,16 @@
                     Regd. No:
                 </td>
                 <td>
-                    <div id="regdno_target" class="barcodeTarget"></div>
-                    <input type="hidden" id="regdno_value" value="{{context.regd_no}}"/>
+                    <div><img src={{context.regd_no}} width='200' height="60"/></div>
                 </td>
                 <td style="width: 100px;">
                     Mobile No:
                 </td>
                 <td style="width: 100px;">
-                    <div id="mobno_target" class="barcodeTarget"></div>
-                    <input type="hidden" id="mob_no" value="{{context.mobile_no}}"/>
+                    {{context.mobile_no}}
                 </td>
                 <td style="width: 100px;" rowspan="3">
-
+                        
                 </td>
             </tr>
             <tr>

@@ -138,6 +138,7 @@ def patch_mf(request, id):
 # ================= Retrieve Single or Multiple records=========================
 def get_mf(request, id=None):
     query_string = request.query_params
+    user = request.user
     data = {}
     try:
         if id:
@@ -145,7 +146,7 @@ def get_mf(request, id=None):
         else:
             manage_fields = ManageFieldsModel.objects.filter(
                 Q(deleted=0, created_by=1)
-                | Q(created_by=request.data.get("created_by"))
+                | Q(created_by=user.id)
             )
 
         data["total_record"] = len(manage_fields)
