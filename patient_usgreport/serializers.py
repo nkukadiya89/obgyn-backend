@@ -26,6 +26,15 @@ class PatientUSGReportSerializers(serializers.ModelSerializer):
         return data
 
     patient_usgreport_id = serializers.IntegerField(read_only=True)
+    report_date = serializers.DateField(format="%d-%m-%Y")
+    ga_edd = serializers.DateField(format="%d-%m-%Y")
+    crl_edd = serializers.DateField(format="%d-%m-%Y")
+    fl_edd = serializers.DateField(format="%d-%m-%Y")
+    bpd_edd = serializers.DateField(format="%d-%m-%Y")
+    hc_edd = serializers.DateField(format="%d-%m-%Y")
+    ac_edd = serializers.DateField(format="%d-%m-%Y")
+    avg_edd = serializers.DateField(format="%d-%m-%Y")
+    
 
     class Meta:
         model = PatientUSGReportModel
