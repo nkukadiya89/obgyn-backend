@@ -1268,12 +1268,12 @@ class ModelFilterSUBSCRIPTIONPURCHASE:
             if search.isnumeric():
                 model = model.filter(
                     Q(subscription_purchase_id=search)
-                    | Q(subscription=search)
+                    | Q(subscription__subscription__icontains=search)
                     | Q(invoice_no=search)
                 )
             else:
                 model = model.filter(
-                    Q(hospital__icontains=search)
+                    Q(hospital__hospital__icontains=search)
                 )
         return model
 
@@ -1318,9 +1318,7 @@ class ModelFilterOBGYNCONFIG:
         if search:
             if search.isnumeric():
                 model = model.filter(
-                    Q(subscription_purchase_id=search)
-                    | Q(subscription=search)
-                    | Q(invoice_no=search)
+                    Q(obgyn_config_id=search)
                 )
             else:
                 model = model.filter(
