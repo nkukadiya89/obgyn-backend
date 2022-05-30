@@ -20,7 +20,7 @@ from user.models import User
 from financial_year.models import FinancialYearModel
 from django.utils.timezone import now
 from patient_usgform.models import PatientUSGFormModel
-from obgyn_config.models import ObgynConfigModel, FieldMasterModel
+from obgyn_config.models import ObgynConfigModel
 from datetime import date
 import calendar 
 from django.utils.timezone import now
@@ -136,7 +136,7 @@ def update_global_charges(request):
     
     obgyn_config.save()
 
-class Obgyn_ConfigAPI(APIView):
+class ObgynConfigAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
     permission_classes = [IsAuthenticated]
 
@@ -166,7 +166,7 @@ class Obgyn_ConfigAPI(APIView):
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @validate_permission("obgyn_config","add")
-def create_obgyn_config(request):
+def create(request):
     data = {}
     if request.method == "POST":
         obgyn_config = ObgynConfigModel()
@@ -188,7 +188,7 @@ def create_obgyn_config(request):
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @validate_permission_id("obgyn_config","change")
-def patch_obgyn_config(request, id):
+def patch(request, id):
     data = {}
     try:
         if id:
@@ -221,7 +221,7 @@ def patch_obgyn_config(request, id):
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
 @validate_permission_id("obgyn_config","view")
-def get_obgyn_config(request, id=None):
+def get(request, id=None):
     query_string = request.query_params
 
     data = {}
@@ -234,7 +234,7 @@ def get_obgyn_config(request, id=None):
         data["total_record"] = len(obgyn_config)
 
         obgyn_config, data = filtering_query(
-            obgyn_config, query_string, "obgyn_config_id", "OBGYN_CONFIG")
+            obgyn_config, query_string, "obgyn_config_id", "OBGYNCONFIG")
 
     except ObgynConfigModel.DoesNotExist:
         data["success"] = False

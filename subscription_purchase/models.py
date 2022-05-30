@@ -7,7 +7,7 @@ from subscription.models import SubscriptionModel
 
 class Subscription_purchaseModel(models.Model):
 
-    subscription_Purchase_id = models.AutoField(primary_key=True)
+    subscription_purchase_id = models.AutoField(primary_key=True)
 
     subscription_date = models.DateTimeField(auto_now_add=True)
     hospital = models.ForeignKey(User, on_delete=models.SET_NULL,null=True)
@@ -28,7 +28,7 @@ class Subscription_purchaseModel(models.Model):
 
 
     def __str__(self):
-        return f"({self.subscription_Purchase_id})"
+        return f"({self.subscription_purchase_id})"
 
     class Meta:
         db_table = "subscription_purchase"

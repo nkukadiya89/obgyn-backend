@@ -1,9 +1,7 @@
 from django.db.models import Q
 from rest_framework import serializers
 from .models import Subscription_purchaseModel
-from user.serializers import UserSerializers
-from user.models import User
-from subscription.serializers import SubscriptionSerializers
+
 
 
     

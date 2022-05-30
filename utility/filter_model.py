@@ -4,7 +4,7 @@ from django.db.models import Q
 
 
 def camel_to_snake(variable_name):
-    variable_name = re.sub(r'(?<!^)(?=[A-Z])', '_', variable_name).lower()
+    variable_name = re.sub(r"(?<!^)(?=[A-Z])", "_", variable_name).lower()
     return variable_name
 
 
@@ -59,26 +59,26 @@ class ModelFilterUSER:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(first_name__icontains=search) |
-                Q(last_name__icontains=search) |
-                Q(middle_name__icontains=search) |
-                Q(user_type__icontains=search) |
-                Q(hospital_name__icontains=search) |
-                Q(area__icontains=search) |
-                Q(phone__icontains=search) |
-                Q(state__state_name__icontains=search) |
-                Q(city__city_name__icontains=search) |
-                Q(email__icontains=search) |
-                Q(landline__icontains=search) |
-                Q(fax_number__icontains=search) |
-                Q(degree__icontains=search) |
-                Q(speciality__icontains=search) |
-                Q(aadhar_card__icontains=search) |
-                Q(registration_no__icontains=search) |
-                Q(default_language__language__icontains=search) |
-                Q(designation__icontains=search) |
-                Q(username__icontains=search) |
-                Q(hospital_id__hospital_name__icontains=search)
+                Q(first_name__icontains=search)
+                | Q(last_name__icontains=search)
+                | Q(middle_name__icontains=search)
+                | Q(user_type__icontains=search)
+                | Q(hospital_name__icontains=search)
+                | Q(area__icontains=search)
+                | Q(phone__icontains=search)
+                | Q(state__state_name__icontains=search)
+                | Q(city__city_name__icontains=search)
+                | Q(email__icontains=search)
+                | Q(landline__icontains=search)
+                | Q(fax_number__icontains=search)
+                | Q(degree__icontains=search)
+                | Q(speciality__icontains=search)
+                | Q(aadhar_card__icontains=search)
+                | Q(registration_no__icontains=search)
+                | Q(default_language__language__icontains=search)
+                | Q(designation__icontains=search)
+                | Q(username__icontains=search)
+                | Q(hospital_id__hospital_name__icontains=search)
             )
         return model
 
@@ -100,10 +100,10 @@ class ModelFilterCITY:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(city_name__icontains=search) |
-                Q(taluka__taluka_name__icontains=search) |
-                Q(taluka__district__district_name__icontains=search) |
-                Q(taluka__district__state__state_name__icontains=search)
+                Q(city_name__icontains=search)
+                | Q(taluka__taluka_name__icontains=search)
+                | Q(taluka__district__district_name__icontains=search)
+                | Q(taluka__district__state__state_name__icontains=search)
             )
         return model
 
@@ -125,8 +125,8 @@ class ModelFilterDISTRICT:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(district_name__icontains=search) |
-                Q(state__state_name__icontains=search)
+                Q(district_name__icontains=search)
+                | Q(state__state_name__icontains=search)
             )
         return model
 
@@ -148,9 +148,9 @@ class ModelFilterTALUKA:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(taluka_name__icontains=search) |
-                Q(district__district_name__icontains=search) |
-                Q(district__state__state_name__icontains=search)
+                Q(taluka_name__icontains=search)
+                | Q(district__district_name__icontains=search)
+                | Q(district__state__state_name__icontains=search)
             )
         return model
 
@@ -167,9 +167,7 @@ class ModelFilterSTATE:
     def search(self, model, query_string):
         search = query_string["search"]
         if search:
-            model = model.filter(
-                Q(state_name__icontains=search)
-            )
+            model = model.filter(Q(state_name__icontains=search))
         return model
 
 
@@ -185,9 +183,7 @@ class ModelFilterLANGUAGE:
     def search(self, model, query_string):
         search = query_string["search"]
         if search:
-            model = model.filter(
-                Q(language__icontains=search)
-            )
+            model = model.filter(Q(language__icontains=search))
         return model
 
 
@@ -202,7 +198,7 @@ class ModelFilterDIAGNOSIS:
                 model = model.filter(ut_weeks=fld_value)
             if fld_name == "ut_days":
                 model = model.filter(ut_days=fld_value)
-            if fld_name == 'diagnosis_type':
+            if fld_name == "diagnosis_type":
                 model = model.filter(diagnosis_type__icontains=fld_value)
         return model
 
@@ -210,16 +206,13 @@ class ModelFilterDIAGNOSIS:
         search = query_string["search"]
         if search:
             if search.isnumeric():
-                model = model.filter(
-                    Q(ut_weeks=search) |
-                    Q(ut_days=search)
-                )
+                model = model.filter(Q(ut_weeks=search) | Q(ut_days=search))
             else:
                 model = model.filter(
-                    Q(diagnosis_name__icontains=search) |
-                    Q(diagnosis_name__icontains=search) |
-                    Q(medicine__medicine__icontains=search) |
-                    Q(diagnosis_type__icontains=search)
+                    Q(diagnosis_name__icontains=search)
+                    | Q(diagnosis_name__icontains=search)
+                    | Q(medicine__medicine__icontains=search)
+                    | Q(diagnosis_type__icontains=search)
                 )
         return model
 
@@ -234,8 +227,7 @@ class ModelFilterMEDICINE:
             if fld_name == "contain":
                 model = model.filter(contain__icontains=fld_value)
             if fld_name == "medicine_type":
-                model = model.filter(
-                    medicine_type__medicine_type__icontains=fld_value)
+                model = model.filter(medicine_type__medicine_type__icontains=fld_value)
             if fld_name == "per_day":
                 model = model.filter(per_day=fld_value)
             if fld_name == "for_day":
@@ -257,21 +249,21 @@ class ModelFilterMEDICINE:
         if search:
             if search.isnumeric():
                 model = model.filter(
-                    Q(diagnosismodel__diagnosis_id=search) |
-                    Q(diagnosismodel__ut_weeks=search) |
-                    Q(diagnosismodel__ut_days=search)
+                    Q(diagnosismodel__diagnosis_id=search)
+                    | Q(diagnosismodel__ut_weeks=search)
+                    | Q(diagnosismodel__ut_days=search)
                 )
             else:
                 model = model.filter(
-                    Q(medicine__icontains=search) |
-                    Q(contain__icontains=search) |
-                    Q(company__icontains=search) |
-                    Q(morning_timing__timing__icontains=search) |
-                    Q(noon_timing__timing__icontains=search) |
-                    Q(evening_timing__timing__icontains=search) |
-                    Q(bed_timing__timing__icontains=search) |
-                    Q(medicine_type__medicine_type__icontains=search) |
-                    Q(diagnosismodel__diagnosis_name__icontains=search)
+                    Q(medicine__icontains=search)
+                    | Q(contain__icontains=search)
+                    | Q(company__icontains=search)
+                    | Q(morning_timing__timing__icontains=search)
+                    | Q(noon_timing__timing__icontains=search)
+                    | Q(evening_timing__timing__icontains=search)
+                    | Q(bed_timing__timing__icontains=search)
+                    | Q(medicine_type__medicine_type__icontains=search)
+                    | Q(diagnosismodel__diagnosis_name__icontains=search)
                 )
         return model
 
@@ -284,18 +276,37 @@ class ModelFilterMEDICINEOR:
             fld_name, fld_val = ffields.split("=")
             filter_fields_dict[fld_name] = fld_val
 
-        if "diagnosis_id" in filter_fields_dict and "ut_days" in filter_fields_dict and "ut_weeks" in filter_fields_dict:
+        if (
+            "diagnosis_id" in filter_fields_dict
+            and "ut_days" in filter_fields_dict
+            and "ut_weeks" in filter_fields_dict
+        ):
             model = model.filter(
-                Q(diagnosismodel__diagnosis_id=filter_fields_dict["diagnosis_id"]) | Q(diagnosismodel__deleted=0,
-                                                                                       diagnosismodel__ut_days=filter_fields_dict[
-                                                                                           "ut_days"],
-                                                                                       diagnosismodel__ut_weeks=filter_fields_dict["ut_weeks"]))
-        elif "diagnosis_id" not in filter_fields_dict and "ut_days" in filter_fields_dict and "ut_weeks" in filter_fields_dict:
-            model = model.filter(diagnosismodel__deleted=0, diagnosismodel__ut_days=filter_fields_dict["ut_days"],
-                                 diagnosismodel__ut_weeks=filter_fields_dict["ut_weeks"])
-        elif "diagnosis_id" in filter_fields_dict and "ut_days" not in filter_fields_dict and "ut_weeks" not in filter_fields_dict:
+                Q(diagnosismodel__diagnosis_id=filter_fields_dict["diagnosis_id"])
+                | Q(
+                    diagnosismodel__deleted=0,
+                    diagnosismodel__ut_days=filter_fields_dict["ut_days"],
+                    diagnosismodel__ut_weeks=filter_fields_dict["ut_weeks"],
+                )
+            )
+        elif (
+            "diagnosis_id" not in filter_fields_dict
+            and "ut_days" in filter_fields_dict
+            and "ut_weeks" in filter_fields_dict
+        ):
             model = model.filter(
-                diagnosismodel__diagnosis_id=filter_fields_dict["diagnosis_id"])
+                diagnosismodel__deleted=0,
+                diagnosismodel__ut_days=filter_fields_dict["ut_days"],
+                diagnosismodel__ut_weeks=filter_fields_dict["ut_weeks"],
+            )
+        elif (
+            "diagnosis_id" in filter_fields_dict
+            and "ut_days" not in filter_fields_dict
+            and "ut_weeks" not in filter_fields_dict
+        ):
+            model = model.filter(
+                diagnosismodel__diagnosis_id=filter_fields_dict["diagnosis_id"]
+            )
 
         model = model.distinct()
         return model
@@ -305,21 +316,21 @@ class ModelFilterMEDICINEOR:
         if search:
             if search.isnumeric():
                 model = model.filter(
-                    Q(diagnosismodel__diagnosis_id=search) |
-                    Q(diagnosismodel__ut_weeks=search) |
-                    Q(diagnosismodel__ut_days=search)
+                    Q(diagnosismodel__diagnosis_id=search)
+                    | Q(diagnosismodel__ut_weeks=search)
+                    | Q(diagnosismodel__ut_days=search)
                 )
             else:
                 model = model.filter(
-                    Q(medicine__icontains=search) |
-                    Q(contain__icontains=search) |
-                    Q(company__icontains=search) |
-                    Q(morning_timing__timing__icontains=search) |
-                    Q(noon_timing__timing__icontains=search) |
-                    Q(evening_timing__timing__icontains=search) |
-                    Q(bed_timing__timing__icontains=search) |
-                    Q(medicine_type__medicine_type__icontains=search) |
-                    Q(diagnosismodel__diagnosis_name__icontains=search)
+                    Q(medicine__icontains=search)
+                    | Q(contain__icontains=search)
+                    | Q(company__icontains=search)
+                    | Q(morning_timing__timing__icontains=search)
+                    | Q(noon_timing__timing__icontains=search)
+                    | Q(evening_timing__timing__icontains=search)
+                    | Q(bed_timing__timing__icontains=search)
+                    | Q(medicine_type__medicine_type__icontains=search)
+                    | Q(diagnosismodel__diagnosis_name__icontains=search)
                 )
         return model
 
@@ -336,9 +347,7 @@ class ModelFilterMEDICINETYPE:
     def search(self, model, query_string):
         search = query_string["search"]
         if search:
-            model = model.filter(
-                Q(medicine_type__icontains=search)
-            )
+            model = model.filter(Q(medicine_type__icontains=search))
         return model
 
 
@@ -362,8 +371,7 @@ class ModelFilterSURGICALITEM:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(drug_name__icontains=search) |
-                Q(batch_number__icontains=search)
+                Q(drug_name__icontains=search) | Q(batch_number__icontains=search)
             )
         return model
 
@@ -382,8 +390,8 @@ class ModelFilterSURGICALITEMGROUP:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(drug_group_name__icontains=search) |
-                Q(surgical_item__drug_name__icontains=search)
+                Q(drug_group_name__icontains=search)
+                | Q(surgical_item__drug_name__icontains=search)
             )
         return model
 
@@ -395,16 +403,14 @@ class ModelFilterFIELDMASTER:
             fld_value = fields.split("=")[1]
             if fld_name == "field_master_name":
                 model = model.filter(field_master_name__icontains=fld_value)
-            if fld_name == 'field_master_id':
+            if fld_name == "field_master_id":
                 model = model.filter(field_master_id=fld_value)
         return model
 
     def search(self, model, query_string):
         search = query_string["search"]
         if search:
-            model = model.filter(
-                Q(field_master_name__icontains=search)
-            )
+            model = model.filter(Q(field_master_name__icontains=search))
         return model
 
 
@@ -420,12 +426,15 @@ class ModelFilterMANAGEFIELDS:
             if fld_name == "field_master":
                 model = model.filter(field_master_id=fld_value)
             if fld_name == "field_master_lst":
-                fld_value =fld_value.replace("_",",").replace("[","").replace("]","")
+                fld_value = (
+                    fld_value.replace("_", ",").replace("[", "").replace("]", "")
+                )
                 model = model.filter(field_master_id__in=fld_value.split(","))
-            if fld_name == 'field_master_name':
+            if fld_name == "field_master_name":
                 model = model.filter(
-                    field_master__field_master_name__icontains=fld_value)
-            if fld_name == 'language':
+                    field_master__field_master_name__icontains=fld_value
+                )
+            if fld_name == "language":
                 model = model.filter(language_id=fld_value)
         return model
 
@@ -433,9 +442,9 @@ class ModelFilterMANAGEFIELDS:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(field_master__field_master_name__icontains=search) |
-                Q(field_value__icontains=search) |
-                Q(language__language__icontains=search)
+                Q(field_master__field_master_name__icontains=search)
+                | Q(field_value__icontains=search)
+                | Q(language__language__icontains=search)
             )
         return model
 
@@ -457,9 +466,9 @@ class ModelFilterADVICE:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(advice__icontains=search) |
-                Q(advice_for__icontains=search) |
-                Q(detail__icontains=search)
+                Q(advice__icontains=search)
+                | Q(advice_for__icontains=search)
+                | Q(detail__icontains=search)
             )
         return model
 
@@ -479,8 +488,7 @@ class ModelFilterADVICEGROUP:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(advice_group__icontains=search) |
-                Q(advice__advice__icontains=search)
+                Q(advice_group__icontains=search) | Q(advice__advice__icontains=search)
             )
         return model
 
@@ -490,7 +498,7 @@ class ModelFilterTIMING:
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
-            if fld_name == 'timing':
+            if fld_name == "timing":
                 model = model.filter(timing__icontains=fld_value)
             if fld_name == "language_name":
                 model = model.filter(language__language__icontains=fld_value)
@@ -504,9 +512,9 @@ class ModelFilterTIMING:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(timing__icontains=search) |
-                Q(language__code__icontains=search) |
-                Q(language__language__icontains=search)
+                Q(timing__icontains=search)
+                | Q(language__code__icontains=search)
+                | Q(language__language__icontains=search)
             )
         return model
 
@@ -546,17 +554,17 @@ class ModelFilterCONSULTATION:
                 model = model.filter(ftlscs_female_live=fld_value)
             if fld_name == "ftlscs_female_dead":
                 model = model.filter(ftlscs_female_dead=fld_value)
-            if fld_name == 'lmp_date':
+            if fld_name == "lmp_date":
                 model = model.filter(lmp_date=fld_value)
-            if fld_name == 'opd_date':
+            if fld_name == "opd_date":
                 model = model.filter(opd_date=fld_value)
-            if fld_name == 'edd_date':
+            if fld_name == "edd_date":
                 model = model.filter(edd_date=fld_value)
-            if fld_name == 'possible_lmp':
+            if fld_name == "possible_lmp":
                 model = model.filter(possible_lmp=fld_value)
-            if fld_name == 'possible_edd':
+            if fld_name == "possible_edd":
                 model = model.filter(possible_edd=fld_value)
-            if fld_name == 'fu_date':
+            if fld_name == "fu_date":
                 model = model.filter(fu_date=fld_value)
         return model
 
@@ -564,17 +572,17 @@ class ModelFilterCONSULTATION:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(regd_no=search) |
-                Q(patient__phone=search) |
-                Q(patient__first_name__icontains=search) |
-                Q(patient__middle_name__icontains=search) |
-                Q(patient__last_name__icontains=search) |
-                Q(patient__grand_father_name__icontains=search) |
-                Q(patient__registration_no__icontains=search) |
-                Q(patient_type__icontains=search) |
-                Q(patient_detail__icontains=search) |
-                Q(parity__icontains=search) |
-                Q(prev_del_type__icontains=search)
+                Q(regd_no=search)
+                | Q(patient__phone=search)
+                | Q(patient__first_name__icontains=search)
+                | Q(patient__middle_name__icontains=search)
+                | Q(patient__last_name__icontains=search)
+                | Q(patient__grand_father_name__icontains=search)
+                | Q(patient__registration_no__icontains=search)
+                | Q(patient_type__icontains=search)
+                | Q(patient_detail__icontains=search)
+                | Q(parity__icontains=search)
+                | Q(prev_del_type__icontains=search)
             )
         return model
 
@@ -592,8 +600,7 @@ class ModelFilterPATIENTPRESCRIPTION:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(regd_no__iexact=search) |
-                Q(diagnosis__diagnosis_name=search)
+                Q(regd_no__iexact=search) | Q(diagnosis__diagnosis_name=search)
             )
         return model
 
@@ -621,15 +628,15 @@ class ModelFilterPATIENT:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(first_name__icontains=search) |
-                Q(middle_name__icontains=search) |
-                Q(last_name__icontains=search) |
-                Q(phone=search) |
-                Q(registered_no=search) |
-                Q(grand_father_name__icontains=search) |
-                Q(husband_father_name__icontains=search) |
-                Q(taluka__taluka_name__icontains=search) |
-                Q(district__district_name__icontains=search)
+                Q(first_name__icontains=search)
+                | Q(middle_name__icontains=search)
+                | Q(last_name__icontains=search)
+                | Q(phone=search)
+                | Q(registered_no=search)
+                | Q(grand_father_name__icontains=search)
+                | Q(husband_father_name__icontains=search)
+                | Q(taluka__taluka_name__icontains=search)
+                | Q(district__district_name__icontains=search)
             )
         return model
 
@@ -656,15 +663,15 @@ class ModelFilterPATIENTOPD:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(patient__first_name=search) |
-                Q(patient__middle_name=search) |
-                Q(patient__last_name=search) |
-                Q(patient__registered_no=search) |
-                Q(patient__phone__icontains=search) |
-                Q(patient__husband_father_name__icontains=search) |
-                Q(patient__grand_father_name__icontains=search) |
-                Q(patient__city__city_name__icontains=search) |
-                Q(regd_no__iexact=search)
+                Q(patient__first_name=search)
+                | Q(patient__middle_name=search)
+                | Q(patient__last_name=search)
+                | Q(patient__registered_no=search)
+                | Q(patient__phone__icontains=search)
+                | Q(patient__husband_father_name__icontains=search)
+                | Q(patient__grand_father_name__icontains=search)
+                | Q(patient__city__city_name__icontains=search)
+                | Q(regd_no__iexact=search)
             )
         return model
 
@@ -692,11 +699,11 @@ class ModelFilterPATIENTREFERAL:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(patient__first_name=search) |
-                Q(patient__middle_name=search) |
-                Q(patient__last_name=search) |
-                Q(patient__phone=search) |
-                Q(indication=search)
+                Q(patient__first_name=search)
+                | Q(patient__middle_name=search)
+                | Q(patient__last_name=search)
+                | Q(patient__phone=search)
+                | Q(indication=search)
             )
         return model
 
@@ -711,8 +718,7 @@ class ModelFilterPATIENTUSGFORM:
             if fld_name == "patient_usgform_id":
                 model = model.filter(patient_usgform_id=fld_value)
             if fld_name == "diagnosis":
-                model = model.filter(
-                    diagnosis__diagnosis_name__icontains=fld_value)
+                model = model.filter(diagnosis__diagnosis_name__icontains=fld_value)
             if fld_name == "patient_opd_id":
                 model = model.filter(patient_opd_id=fld_value)
             if fld_name == "regd_no":
@@ -723,11 +729,11 @@ class ModelFilterPATIENTUSGFORM:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(patient__first_name=search) |
-                Q(patient__middle_name=search) |
-                Q(patient__last_name=search) |
-                Q(patient__phone=search) |
-                Q(diagnosis__dianosis_name=search)
+                Q(patient__first_name=search)
+                | Q(patient__middle_name=search)
+                | Q(patient__last_name=search)
+                | Q(patient__phone=search)
+                | Q(diagnosis__dianosis_name=search)
             )
         return model
 
@@ -752,9 +758,7 @@ class ModelFilterUSGFORMCHILD:
     def search(self, model, query_string):
         search = query_string["search"]
         if search:
-            model = model.filter(
-                Q(child_gender=search)
-            )
+            model = model.filter(Q(child_gender=search))
         return model
 
 
@@ -805,14 +809,14 @@ class ModelFilterPATIENTDISCHARGE:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(complain_of__icontains=search) |
-                Q(diagnosis__diagnosis_name__icontains=search) |
-                Q(name_of_operation__icontains=search) |
-                Q(treatment_given__icontains=search) |
-                Q(advice__advice__icontains=search) |
-                Q(any_history__icontains=search) |
-                Q(assisted__icontains=search) |
-                Q(remark__icontains=search)
+                Q(complain_of__icontains=search)
+                | Q(diagnosis__diagnosis_name__icontains=search)
+                | Q(name_of_operation__icontains=search)
+                | Q(treatment_given__icontains=search)
+                | Q(advice__advice__icontains=search)
+                | Q(any_history__icontains=search)
+                | Q(assisted__icontains=search)
+                | Q(remark__icontains=search)
             )
         return model
 
@@ -840,15 +844,15 @@ class ModelFilterPATIENTUSGREPORT:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(anomalies__icontains=search) |
-                Q(regd_no__icontains=search) |
-                Q(cardiac_activity__icontains=search) |
-                Q(presentation__icontains=search) |
-                Q(possible_lmp__icontains=search) |
-                Q(placental_location__icontains=search) |
-                Q(amount_of_liquor__icontains=search) |
-                Q(remark__icontains=search) |
-                Q(usg_report__icontains=search)
+                Q(anomalies__icontains=search)
+                | Q(regd_no__icontains=search)
+                | Q(cardiac_activity__icontains=search)
+                | Q(presentation__icontains=search)
+                | Q(possible_lmp__icontains=search)
+                | Q(placental_location__icontains=search)
+                | Q(amount_of_liquor__icontains=search)
+                | Q(remark__icontains=search)
+                | Q(usg_report__icontains=search)
             )
         return model
 
@@ -880,9 +884,9 @@ class ModelFilterPATIENTOVULATIONPROFILE:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(regd_no__icontains=search) |
-                Q(ut_blood_flow__icontains=search) |
-                Q(ovarian_blood_flow__icontains=search)
+                Q(regd_no__icontains=search)
+                | Q(ut_blood_flow__icontains=search)
+                | Q(ovarian_blood_flow__icontains=search)
             )
         return model
 
@@ -919,11 +923,11 @@ class ModelFilterPATIENTMTP:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(regd_no__icontains=search) |
-                Q(second_rmp__icontains=search) |
-                Q(contraception__icontains=search) |
-                Q(mtp_complication__icontains=search) |
-                Q(remark__icontains=search)
+                Q(regd_no__icontains=search)
+                | Q(second_rmp__icontains=search)
+                | Q(contraception__icontains=search)
+                | Q(mtp_complication__icontains=search)
+                | Q(remark__icontains=search)
             )
         return model
 
@@ -954,8 +958,7 @@ class ModelFilterPATIENTHISTOLAP:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(regd_no__icontains=search) |
-                Q(procedure_name__icontains=search)
+                Q(regd_no__icontains=search) | Q(procedure_name__icontains=search)
             )
         return model
 
@@ -990,8 +993,7 @@ class ModelFilterPATIENTBILLING:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(regd_no__icontains=search) |
-                Q(invoice_no__icontains=search)
+                Q(regd_no__icontains=search) | Q(invoice_no__icontains=search)
             )
         return model
 
@@ -1020,8 +1022,7 @@ class ModelFilterPATIENTVOUCHER:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(regd_no__icontains=search) |
-                Q(voucher_no__icontains=search)
+                Q(regd_no__icontains=search) | Q(voucher_no__icontains=search)
             )
         return model
 
@@ -1042,8 +1043,8 @@ class ModelFilterVOUCHERITEM:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(regd_no__icontains=search) |
-                Q(surgical_item__drug_name_icontains=search)
+                Q(regd_no__icontains=search)
+                | Q(surgical_item__drug_name_icontains=search)
             )
         return model
 
@@ -1080,12 +1081,12 @@ class ModelFilterPATIENTINDOOR:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(regd_no__icontains=search) |
-                Q(indoor_case_number__icontains=search) |
-                Q(complain__icontains=search) |
-                Q(contraception__icontains=search) |
-                Q(operation__icontains=search) |
-                Q(diagnosis__diagnosis_name__icontains=search)
+                Q(regd_no__icontains=search)
+                | Q(indoor_case_number__icontains=search)
+                | Q(complain__icontains=search)
+                | Q(contraception__icontains=search)
+                | Q(operation__icontains=search)
+                | Q(diagnosis__diagnosis_name__icontains=search)
             )
         return model
 
@@ -1118,12 +1119,12 @@ class ModelFilterINDOORADVICE:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(regd_no__icontains=search) |
-                Q(second_rmp_icontains=search) |
-                Q(reason_for_mtp__icontains=search) |
-                Q(contraception__icontains=search) |
-                Q(mtp_complication__icontains=search) |
-                Q(remark__icontains=search)
+                Q(regd_no__icontains=search)
+                | Q(second_rmp_icontains=search)
+                | Q(reason_for_mtp__icontains=search)
+                | Q(contraception__icontains=search)
+                | Q(mtp_complication__icontains=search)
+                | Q(remark__icontains=search)
             )
         return model
 
@@ -1141,8 +1142,8 @@ class ModelFilterTEMPLATEHEADER:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(template_header__icontains=search) |
-                Q(language__language__icontains=search)
+                Q(template_header__icontains=search)
+                | Q(language__language__icontains=search)
             )
         return model
 
@@ -1180,16 +1181,149 @@ class ModelFilterPATIENTDELIVERY:
         if search:
             if search.isnumeric():
                 model = model.filter(
-                    Q(patient_delivery_id=search) |
-                    Q(regd_no=search) |
-                    Q(baby_no=search)
+                    Q(patient_delivery_id=search)
+                    | Q(regd_no=search)
+                    | Q(baby_no=search)
                 )
             else:
                 model = model.filter(
-                    Q(district__icontains=search) |
-                    Q(taluka__icontains=search) |
-                    Q(village__icontains=search) |
-                    Q(child_name__icontains=search) |
-                    Q(patient__first_name__icontains=search)
+                    Q(district__icontains=search)
+                    | Q(taluka__icontains=search)
+                    | Q(village__icontains=search)
+                    | Q(child_name__icontains=search)
+                    | Q(patient__first_name__icontains=search)
+                )
+        return model
+
+
+class ModelFilterSUBSCRIPTION:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "subscription_id":
+                model = model.filter(subscription_id=fld_value)
+            if fld_name == "subscription_name":
+                model = model.filter(subscription_name__icontains=fld_value)
+            if fld_name == "actual_price":
+                model = model.filter(actual_price__icontains=fld_value)
+            if fld_name == "duration":
+                model = model.filter(duration=fld_value)
+            if fld_name == "description":
+                model = model.filter(description=fld_value)
+
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            if search.isnumeric():
+                model = model.filter(
+                    Q(subscription_id=search)
+                )
+            else:
+                model = model.filter(
+                    Q(subscription_name__icontains=search)
+                )
+        return model
+
+
+class ModelFilterSUBSCRIPTIONPURCHASE:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "subscription_purchase_id":
+                model = model.filter(subscription_purchase_id=fld_value)
+            if fld_name == "subscription_date":
+                model = model.filter(subscription_date=fld_value)
+            if fld_name == "hospital":
+                model = model.filter(hospital=fld_value)
+            if fld_name == "subscription":
+                model = model.filter(subscription=fld_value)
+            if fld_name == "price":
+                model = model.filter(price=fld_value)
+            if fld_name == "duration":
+                model = model.filter(duration__icontains=fld_value)
+            if fld_name == "start_date":
+                model = model.filter(start_date__icontains=fld_value)
+            if fld_name == "over_date":
+                model = model.filter(over_date__icontains=fld_value)
+            if fld_name == "description":
+                model = model.filter(discription=fld_value)
+            if fld_name == "inactive":
+                model = model.filter(inactive=fld_value)
+            if fld_name == "tax_perc":
+                model = model.filter(tax_perc=fld_value)
+            if fld_name == "invoice_no":
+                model = model.filter(invoice_no=fld_value)
+            if fld_name == "inv_year":
+                model = model.filter(inv_year=fld_value)
+
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            if search.isnumeric():
+                model = model.filter(
+                    Q(subscription_purchase_id=search)
+                    | Q(subscription=search)
+                    | Q(invoice_no=search)
+                )
+            else:
+                model = model.filter(
+                    Q(hospital__icontains=search)
+                )
+        return model
+
+class ModelFilterSUBSCRIPTIONPURCHASE:
+    def filter_fields(self, model, filter_fields):
+        for fields in filter_fields:
+            fld_name = fields.split("=")[0]
+            fld_value = fields.split("=")[1]
+            if fld_name == "obgyn_config_id":
+                model = model.filter(obgyn_config_id=fld_value)
+            if fld_name == "user":
+                model = model.filter(user=fld_value)
+            if fld_name == "rs_per_visit":
+                model = model.filter(rs_per_visit=fld_value)
+            if fld_name == "rs_per_usg":
+                model = model.filter(rs_per_usg=fld_value)
+            if fld_name == "rs_per_room":
+                model = model.filter(rs_per_room=fld_value)
+            if fld_name == "operative_charge":
+                model = model.filter(operative_charge=fld_value)
+            if fld_name == "rs_per_day_nursing":
+                model = model.filter(rs_per_day_nursing=fld_value)
+            if fld_name == "field_master_name":
+                model = model.filter(field_master_name__icontains=fld_value)
+            if fld_name == "city":
+                model = model.filter(city__icontains=fld_value)
+            if fld_name == "taluka":
+                model = model.filter(taluka__icontains=fld_value)
+            if fld_name == "district":
+                model = model.filter(district__icontains=fld_value)
+            if fld_name == "state":
+                model = model.filter(state__icontains=fld_value)
+            if fld_name == "monthly_usg":
+                model = model.filter(monthly_usg=fld_value)
+            if fld_name == "yearly_usg":
+                model = model.filter(yearly_usg=fld_value)
+
+        return model
+
+    def search(self, model, query_string):
+        search = query_string["search"]
+        if search:
+            if search.isnumeric():
+                model = model.filter(
+                    Q(subscription_purchase_id=search)
+                    | Q(subscription=search)
+                    | Q(invoice_no=search)
+                )
+            else:
+                model = model.filter(
+                    Q(hospital__icontains=search)
                 )
         return model

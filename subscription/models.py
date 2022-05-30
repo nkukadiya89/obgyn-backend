@@ -7,10 +7,10 @@ class SubscriptionModel(models.Model):
     subscription_id = models.AutoField(primary_key=True)
     subscription_name = models.CharField(max_length=50)
 
-    actual_price = models.IntegerField()
-    discount = models.IntegerField()
-    sell_price = models.IntegerField()
-    duration = models.IntegerField()
+    actual_price = models.IntegerField(default=0)
+    discount = models.IntegerField(default=0)
+    sell_price = models.IntegerField(default=0)
+    duration = models.IntegerField(default=0)
     description = models.CharField(max_length=100)
 
     created_by = models.IntegerField(default=1, unique=False)
