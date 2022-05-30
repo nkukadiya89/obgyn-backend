@@ -42,6 +42,8 @@ urlpatterns = [
     path('patient/', include('patient.urls')),
     path('opd/', include('patient_opd.urls')),
     path('report/', include('reports.urls')),
+    path('subscription/', include('subscription.urls')),
     path('template-header/', include('template_header.urls')),
+    path('obgyn_config/', include('obgyn_config.urls')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
