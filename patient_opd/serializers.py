@@ -84,6 +84,7 @@ class PatientOpdSerializers(serializers.ModelSerializer):
         return data
 
     patient_opd_id = serializers.IntegerField(read_only=True)
+    opd_date = serializers.DateField(format="%d-%m-%Y")
 
     class Meta:
         model = PatientOpdModel

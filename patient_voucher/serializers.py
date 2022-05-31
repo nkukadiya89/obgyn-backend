@@ -69,6 +69,7 @@ class VoucherItemSerializers(serializers.ModelSerializer):
 
     voucher_item_id = serializers.IntegerField(read_only=True)
     total_amount = serializers.FloatField(read_only=True)
+    bill_date = serializers.DateField(format="%d-%m-%Y")
 
     class Meta:
         model = VoucherItemModel

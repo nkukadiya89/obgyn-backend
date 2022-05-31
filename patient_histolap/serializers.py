@@ -33,6 +33,9 @@ class PatientHistolapSerializers(serializers.ModelSerializer):
         return data
 
     patient_histolap_id = serializers.IntegerField(read_only=True)
+    admission_date = serializers.DateField(format="%d-%m-%Y")
+    procedure_date = serializers.DateField(format="%d-%m-%Y")
+    discharge_date = serializers.DateField(format="%d-%m-%Y")
 
     class Meta:
         model = PatientHistolapModel
