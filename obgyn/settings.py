@@ -178,8 +178,6 @@ SIMPLE_JWT = {
 }
 
 
-# REST_FRAMEWORK = {
-#     'DATE_INPUT_FORMATS': ["%d-%m-%Y"],
-#     "DATE_FORMATS":["%d-%m-%y"],
-    
-# }
+REST_FRAMEWORK = {
+    'DATE_INPUT_FORMATS': ["%d-%m-%Y"],    
+}

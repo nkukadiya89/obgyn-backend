@@ -1,4 +1,5 @@
 from re import T
+from jmespath import search
 from rest_framework import serializers
 from diagnosis.serializers import DiagnosisSerializers
 
@@ -83,6 +84,11 @@ class ConsultationSerializers(serializers.ModelSerializer):
     consultation_id = serializers.IntegerField(read_only=True)
     patient_type = serializers.CharField(required=True)
     patient_detail = serializers.CharField(required=True)
+    lmp_date = serializers.DateField(format="%d-%m-%Y")
+    edd_date = serializers.DateField(format="%d-%m-%Y")
+    possible_lmp = serializers.DateField(format="%d-%m-%Y")
+    possible_edd = serializers.DateField(format="%d-%m-%Y")
+    fu_date = serializers.DateField(format="%d-%m-%Y")
 
     class Meta:
         model = ConsultationModel
