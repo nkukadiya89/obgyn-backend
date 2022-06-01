@@ -8,12 +8,11 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from django.db.models import Q
-from diagnosis.models import DiagnosisMedicineModel
 
 from utility.search_filter import filtering_query
 from .models import MedicineModel, TimingModel, MedicineTypeModel
 from .serializers import MedicineSerializers, MedicineTypeSerializers, TimingSerializers, DynamicFieldModelSerializer
-from .utils_view import link_diagnosis
+from .utils_view import link_diagnosis, delete_child_table
 from utility.decorator import validate_permission, validate_permission_id
 
 
@@ -66,8 +65,8 @@ def delete_medicine(request):
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == "DELETE":
+        delete_child_table(del_id["id"])
         result = medicine.delete()
-        DiagnosisMedicineModel.objects.filter(medicinemodel__medicine_id__in=del_id["id"]).delete()
         data["success"] = True
         data["msg"] = "Data deleted successfully."
         data["deleted"] = result
