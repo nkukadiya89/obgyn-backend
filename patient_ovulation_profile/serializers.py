@@ -34,7 +34,7 @@ class PatientOvulationProfileSerializers(serializers.ModelSerializer):
         return data
 
     patient_ovulation_profile_id = serializers.IntegerField(read_only=True)
-    op_date = serializers.DateField(format="%d-%m-%Y")
+    op_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
     
 
     class Meta:

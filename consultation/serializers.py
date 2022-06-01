@@ -1,4 +1,5 @@
 from re import T
+from tkinter.tix import Tree
 from jmespath import search
 from rest_framework import serializers
 from diagnosis.serializers import DiagnosisSerializers
@@ -83,12 +84,12 @@ class ConsultationSerializers(serializers.ModelSerializer):
 
     consultation_id = serializers.IntegerField(read_only=True)
     patient_type = serializers.CharField(required=True)
-    patient_detail = serializers.CharField(required=True)
-    lmp_date = serializers.DateField(format="%d-%m-%Y")
-    edd_date = serializers.DateField(format="%d-%m-%Y")
-    possible_lmp = serializers.DateField(format="%d-%m-%Y")
-    possible_edd = serializers.DateField(format="%d-%m-%Y")
-    fu_date = serializers.DateField(format="%d-%m-%Y")
+    patient_detail = serializers.CharField(required=True,)
+    lmp_date = serializers.DateField(format="%d-%m-%Y", allow_null=False)
+    edd_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
+    possible_lmp = serializers.DateField(format="%d-%m-%Y", allow_null=True)
+    possible_edd = serializers.DateField(format="%d-%m-%Y", allow_null=True)
+    fu_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
 
     class Meta:
         model = ConsultationModel
