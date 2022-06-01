@@ -17,7 +17,7 @@ class PatientOpdSerializers(serializers.ModelSerializer):
             if len(patient) == 0:
                 raise serializers.ValidationError("Patient does not exist")
 
-            ret["opd_date"] = instance.opd_date
+            ret["opd_date"] = instance.opd_date.strftime(format="%d-%m-%Y")
             ret["patient_id"] = patient[0].patient_id
             ret["first_name"] = patient[0].first_name
             ret["middle_name"] = patient[0].middle_name
@@ -25,7 +25,7 @@ class PatientOpdSerializers(serializers.ModelSerializer):
             ret["phone"] = patient[0].phone if "F_" not in patient[0].phone else ""
             ret["regd_no"] = patient[0].registered_no
             ret["married"] = patient[0].married
-            ret["date_of_opd"] = patient[0].date_of_opd
+            ret["date_of_opd"] = patient[0].date_of_opd.strftime(format="%d-%m-%Y")
             ret["husband_father_name"] = patient[0].husband_father_name
             ret["grand_father_name"] = patient[0].grand_father_name
 
