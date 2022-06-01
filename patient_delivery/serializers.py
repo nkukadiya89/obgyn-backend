@@ -60,7 +60,7 @@ class PatientDeliverySerializers(serializers.ModelSerializer):
         return data
 
     patient_delivery_id = serializers.IntegerField(read_only=True)
-    birth_date = serializers.DateField(format="%d-%m-%Y")
+    birth_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
 
     class Meta:
         model = PatientDeliveryModel

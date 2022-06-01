@@ -107,10 +107,10 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
         return data
 
     patient_usgform_id = serializers.IntegerField(read_only=True)
-    lmp_date = serializers.DateField(format="%d-%m-%Y")
-    consent_obtained_date = serializers.DateField(format="%d-%m-%Y")
-    procedure_date = serializers.DateField(format="%d-%m-%Y")
-    sonography_date = serializers.DateField(format="%d-%m-%Y")
+    lmp_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
+    consent_obtained_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
+    procedure_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
+    sonography_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
     
 
     class Meta:
