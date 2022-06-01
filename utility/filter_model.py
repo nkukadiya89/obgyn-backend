@@ -1291,7 +1291,7 @@ class ModelFilterOBGYNCONFIG:
             if fld_name == "obgyn_config_id":
                 model = model.filter(obgyn_config_id=fld_value)
             if fld_name == "user":
-                model = model.filter(user__user__icontains=fld_value)
+                model = model.filter(user_id=fld_value)
             if fld_name == "rs_per_visit":
                 model = model.filter(rs_per_visit=fld_value)
             if fld_name == "rs_per_usg":
