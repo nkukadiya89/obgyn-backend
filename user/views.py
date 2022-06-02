@@ -15,6 +15,7 @@ from .models import User
 from .serializers import UserSerializers, DynamicFieldModelSerializer
 from django.utils.timezone import now
 from obgyn_config.views import update_global_charges
+from .utils_views import create_profile
 
 
 # Create your views here.
@@ -35,6 +36,7 @@ def register_view(request):
             user.set_password(request.data["password"])
             user.uid = str(now()).replace("-", "").replace(":", "").replace(" ", "").replace(".", "").split("+")[0][:16]
             user.save()
+            create_profile(user)
             data["success"] = True
             data["msg"] = "OK"
             data['response'] = "Successfully register a new user."
