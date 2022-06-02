@@ -18,7 +18,7 @@ class ObgynConfigModel(models.Model):
     rs_per_room = models.FloatField(default=0, null=True)
     operative_charge = models.FloatField(default=0, null=True)
     rs_per_day_nursing = models.FloatField(default=0, null=True)
-    manage_field  = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True)
+    prefix  = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="config_prefix")
     city = models.ForeignKey(CityModel, on_delete=models.CASCADE, null=True)
     taluka = models.ForeignKey(TalukaModel, on_delete=models.CASCADE, null=True)
     district = models.ForeignKey(DistrictModel, on_delete=models.CASCADE, null=True)

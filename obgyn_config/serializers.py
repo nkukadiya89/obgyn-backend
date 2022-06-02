@@ -22,8 +22,8 @@ class Obgyn_Configserializers(serializers.ModelSerializer):
             ret["district_name"] = DistrictSerializers(instance.district).data["district_name"]
         if "state" in ret:
             ret["state_name"] = StateSerializers(instance.state).data["state_name"]
-        if "manage_field" in ret:
-            ret["manage_field_name"] = ManageFieldsSerializers(instance.manage_field).data["field_value"]
+        if "prefix" in ret:
+            ret["prefix_name"] = ManageFieldsSerializers(instance.prefix).data["field_value"]
 
         return ret
 
