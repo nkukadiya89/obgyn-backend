@@ -19,7 +19,7 @@ class PatientDeliveryModel(models.Model):
     patient = models.ForeignKey(PatientModel, on_delete=models.DO_NOTHING)
     regd_no = models.CharField(max_length=100, default="")
 
-    baby_no = models.IntegerField(default=0, null=True)
+    baby_no = models.CharField(max_length=35, null=True)
     sr_no = models.CharField(max_length=50, default="")
     birth_date = models.DateField(null=True)
     birth_time = models.CharField(max_length=10, null=True)
