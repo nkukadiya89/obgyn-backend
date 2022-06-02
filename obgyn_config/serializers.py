@@ -5,7 +5,7 @@ from city.serializers import CitySerializers
 from taluka.serializers import TalukaSerializers
 from district.serializers import DistrictSerializers
 from state.serializers import StateSerializers
-from manage_fields.serializers import FieldMasterSerializers
+from manage_fields.serializers import ManageFieldsSerializers
 
 
 
@@ -22,8 +22,8 @@ class Obgyn_Configserializers(serializers.ModelSerializer):
             ret["district_name"] = DistrictSerializers(instance.district).data["district_name"]
         if "state" in ret:
             ret["state_name"] = StateSerializers(instance.state).data["state_name"]
-        if "field_master_name" in ret:
-            ret["field_master_name_name"] = FieldMasterSerializers(instance.field_master_name).data["field_master_name"]
+        if "manage_field" in ret:
+            ret["manage_field_name"] = ManageFieldsSerializers(instance.manage_field).data["field_value"]
 
         return ret
 

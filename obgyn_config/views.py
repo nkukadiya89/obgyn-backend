@@ -90,7 +90,7 @@ def get_obgyn_config(user):
     
     month = date.today().month
     year = date.today().year
-    _, num_days = calendar.monthrange(2016, 3)
+    _, num_days = calendar.monthrange(year, month)
     first_date = date(year, month, 1)
     last_date = date(year, month, num_days)
 
