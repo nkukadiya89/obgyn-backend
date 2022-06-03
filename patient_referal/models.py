@@ -9,7 +9,7 @@ from patient_opd.models import PatientOpdModel
 # Create your models here.
 class PatientReferalModel(models.Model):
     patient_referal_id = models.AutoField(primary_key=True)
-    patient_opd = models.OneToOneField(PatientOpdModel, on_delete=models.DO_NOTHING, null=True)
+    patient_opd = models.ForeignKey(PatientOpdModel, on_delete=models.DO_NOTHING, null=True)
     patient = models.ForeignKey(PatientModel, on_delete=models.DO_NOTHING)
     regd_no = models.CharField(max_length=100, default="")
     indication = models.ManyToManyField(ManageFieldsModel,blank=True)

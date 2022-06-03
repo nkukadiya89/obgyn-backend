@@ -100,7 +100,8 @@ def create(request):
             patient_opd.status = "usgform"
             patient_opd.save()
 
-            
+            patient_usgform = PatientUSGFormModel.objects.filter(regd_no=data["regd_no"]).order_by('-created_by')
+            serializer = PatientUSGFormSerializers(patient_usgform, many=True)
             
             data["success"] = True
             data["msg"] = "Data updated successfully"
@@ -145,6 +146,10 @@ def patch(request, id):
             if "usg_child" in request.data:
                 insert_child_usgform(request,serializer.data["patient_usgform_id"])
             serializer = PatientUSGFormSerializers(patient_usgform)
+
+
+            patient_usgform = PatientUSGFormModel.objects.filter(regd_no=data["regd_no"]).order_by('-created_by')
+            serializer = PatientUSGFormSerializers(patient_usgform, many=True)
 
             data["success"] = True
             data["msg"] = "Data updated successfully"

@@ -10,7 +10,7 @@ from manage_fields.models import ManageFieldsModel
 class PatientUSGReportModel(models.Model):
     patient_usgreport_id = models.AutoField(primary_key=True)
     patient = models.ForeignKey(PatientModel, on_delete=models.DO_NOTHING)
-    patient_opd = models.OneToOneField(PatientOpdModel, on_delete=models.DO_NOTHING)
+    patient_opd = models.ForeignKey(PatientOpdModel, on_delete=models.DO_NOTHING)
     regd_no = models.CharField(max_length=100, default="")
 
     report_date = models.DateField(default=now,null=True)
