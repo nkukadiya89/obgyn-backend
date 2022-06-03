@@ -8,7 +8,7 @@ from manage_fields.models import ManageFieldsModel
 # Create your models here.
 class PatientHistolapModel(models.Model):
     patient_histolap_id = models.AutoField(primary_key=True)
-    patient_opd = models.OneToOneField(PatientOpdModel, on_delete=models.DO_NOTHING, null=True)
+    patient_opd = models.ForeignKey(PatientOpdModel, on_delete=models.DO_NOTHING, null=True)
     patient = models.ForeignKey(PatientModel, on_delete=models.DO_NOTHING)
     regd_no = models.CharField(max_length=100, default="")
 

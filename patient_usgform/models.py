@@ -12,7 +12,7 @@ from user.models import User
 class PatientUSGFormModel(models.Model):
     patient_usgform_id = models.AutoField(primary_key=True)
     patient = models.ForeignKey(PatientModel, on_delete=models.DO_NOTHING)
-    patient_opd = models.OneToOneField(PatientOpdModel, on_delete=models.DO_NOTHING)
+    patient_opd = models.ForeignKey(PatientOpdModel, on_delete=models.DO_NOTHING)
     regd_no = models.CharField(max_length=100, default="")
 
     ut_weeks = models.IntegerField(default=0)

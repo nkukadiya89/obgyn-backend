@@ -10,7 +10,7 @@ from manage_fields.models import ManageFieldsModel
 class PatientDischargeModel(models.Model):
     patient_discharge_id = models.AutoField(primary_key=True)
     patient = models.ForeignKey(PatientModel, on_delete=models.DO_NOTHING)
-    patient_opd = models.OneToOneField(PatientOpdModel, on_delete=models.DO_NOTHING)
+    patient_opd = models.ForeignKey(PatientOpdModel, on_delete=models.DO_NOTHING)
     regd_no = models.CharField(max_length=100, default="")
 
     admission_date = models.DateField(default=now)
