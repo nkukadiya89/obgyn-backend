@@ -219,7 +219,7 @@ class VoucherItemAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
+@api_view(['DELETE'])
 @authentication_classes([JWTAuthentication])
 @validate_permission_id("voucher_item","change")
 def delete_item(request):
