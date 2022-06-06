@@ -736,6 +736,7 @@ class ModelFilterPATIENTUSGFORM:
         if search:
             model = model.filter(
                 Q(patient__first_name=search)
+                | Q(regd_no=search)
                 | Q(patient__middle_name=search)
                 | Q(patient__last_name=search)
                 | Q(patient__phone=search)
