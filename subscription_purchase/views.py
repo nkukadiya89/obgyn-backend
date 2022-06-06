@@ -59,7 +59,7 @@ def delete(request):
 
     try:
         subscription_purchase = Subscription_purchaseModel.objects.filter(
-            subscription_Purchase_id__in=del_id["id"])
+            subscription_purchase_id__in=del_id["id"])
     except Subscription_purchaseModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record does not exist"
