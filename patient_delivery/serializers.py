@@ -3,6 +3,10 @@ from rest_framework import serializers
 from patient.models import PatientModel
 from patient.serializers import PatientSerializers
 from .models import PatientDeliveryModel
+from city.serializers import CitySerializers
+from taluka.serializers import TalukaSerializers
+from district.serializers import DistrictSerializers
+from state.serializers import StateSerializers
 
 
 class PatientDeliverySerializers(serializers.ModelSerializer):
@@ -20,7 +24,25 @@ class PatientDeliverySerializers(serializers.ModelSerializer):
             ret["patient_id"] = patient.data["patient_id"]
             del ret["patient_opd"]
 
-        
+        if "city" in ret:
+            ret["city_name"] = CitySerializers(instance.city).data[
+                "city_name"
+            ]
+        if "taluka" in ret:
+            ret["taluka_name"] = TalukaSerializers(instance.taluka).data[
+                "taluka_name"
+            ]
+            
+        if "district" in ret:
+            ret["district_name"] = DistrictSerializers(instance.district).data[
+                "district_name"
+            ]
+        if "state" in ret:
+            ret["state_name"] = StateSerializers(instance.state).data[
+                "state_name"
+            ]
+
+
         return ret
 
     def validate(self, data):

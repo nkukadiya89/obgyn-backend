@@ -17,6 +17,7 @@ from .views import (
     create_timing,
     delete_medicine,
     create_medicine_type,
+    get_unique_medicine,
 )
 
 urlpatterns = [
@@ -28,6 +29,10 @@ urlpatterns = [
     path("create/", create_medicine),
     path("delete/", delete_medicine),
     path("update-medicine/<int:id>/", patch_medicine),
+
+    path("unique_medicine/",get_unique_medicine,name="unique_medicine"),
+
+
     
     path("type/<int:id>/", MedicineTypeAPI.as_view()),
     path("type/get/", get_medicine_type),

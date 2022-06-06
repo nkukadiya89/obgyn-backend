@@ -11,17 +11,23 @@ class TimingSerializers(serializers.ModelSerializer):
         ret = super(TimingSerializers, self).to_representation(instance)
 
         if "language" in ret:
-            ret['language_name'] = LanguageSerializers(instance.language).data["language"]
+            ret["language_name"] = LanguageSerializers(instance.language).data[
+                "language"
+            ]
         return ret
 
     def validate(self, data):
-        timing = data.get('timing')
+        timing = data.get("timing")
         language = data.get("language")
 
-        duplicate_timing = TimingModel.objects.filter(deleted=0, timing__iexact=timing, language_id=language)
+        duplicate_timing = TimingModel.objects.filter(
+            deleted=0, timing__iexact=timing, language_id=language
+        )
 
         if self.partial:
-            duplicate_timing = duplicate_timing.filter(~Q(pk=self.instance.timing_id)).first()
+            duplicate_timing = duplicate_timing.filter(
+                ~Q(pk=self.instance.timing_id)
+            ).first()
         else:
             duplicate_timing = duplicate_timing.first()
 
@@ -34,16 +40,27 @@ class TimingSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = TimingModel
-        fields = ['timing_id', 'language', 'timing', 'created_at', 'created_by', 'deleted']
+        fields = [
+            "timing_id",
+            "language",
+            "timing",
+            "created_at",
+            "created_by",
+            "deleted",
+        ]
 
 
 class MedicineTypeSerializers(serializers.ModelSerializer):
     def validate(self, data):
-        medicine_type = data.get('medicine_type')
-        duplicate_type = MedicineTypeModel.objects.filter(deleted=0, medicine_type__iexact=medicine_type)
+        medicine_type = data.get("medicine_type")
+        duplicate_type = MedicineTypeModel.objects.filter(
+            deleted=0, medicine_type__iexact=medicine_type
+        )
 
         if self.partial:
-            duplicate_type = duplicate_type.filter(~Q(pk=self.instance.medicine_type_id)).first()
+            duplicate_type = duplicate_type.filter(
+                ~Q(pk=self.instance.medicine_type_id)
+            ).first()
         else:
             duplicate_type = duplicate_type.first()
 
@@ -57,27 +74,43 @@ class MedicineTypeSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = MedicineTypeModel
-        fields = ['medicine_type_id', 'medicine_type', 'created_by', 'deleted', 'created_at']
+        fields = [
+            "medicine_type_id",
+            "medicine_type",
+            "created_by",
+            "deleted",
+            "created_at",
+        ]
 
 
 class MedicineSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(MedicineSerializers, self).to_representation(instance)
-        
+
         if "medicine_type" in ret:
-            ret['medicine_type_name'] = MedicineTypeSerializers(instance.medicine_type).data["medicine_type"]
+            ret["medicine_type_name"] = MedicineTypeSerializers(
+                instance.medicine_type
+            ).data["medicine_type"]
 
         if "morning_timing" in ret:
-            ret['morning_timing_name'] = TimingSerializers(instance.morning_timing).data["timing"]
+            ret["morning_timing_name"] = TimingSerializers(
+                instance.morning_timing
+            ).data["timing"]
 
         if "noon_timing" in ret:
-            ret['noon_timing_name'] = TimingSerializers(instance.noon_timing).data["timing"]
+            ret["noon_timing_name"] = TimingSerializers(instance.noon_timing).data[
+                "timing"
+            ]
 
         if "evening_timing" in ret:
-            ret['evening_timing_name'] = TimingSerializers(instance.evening_timing).data["timing"]
+            ret["evening_timing_name"] = TimingSerializers(
+                instance.evening_timing
+            ).data["timing"]
 
         if "bed_timing" in ret:
-            ret['bed_timing_name'] = TimingSerializers(instance.bed_timing).data["timing"]
+            ret["bed_timing_name"] = TimingSerializers(instance.bed_timing).data[
+                "timing"
+            ]
 
         return ret
 
@@ -89,28 +122,42 @@ class MedicineSerializers(serializers.ModelSerializer):
         data["for_day"] = for_day
         data["total_tablet"] = per_day * for_day
 
-        if "medicine" in data and "morning_timing" in data and "noon_timing" in data and "evening_timing" in data and "bed_timing" in data:
+        if (
+            "medicine" in data
+            and "morning_timing" in data
+            and "noon_timing" in data
+            and "evening_timing" in data
+            and "bed_timing" in data
+        ):
             medicine = data.get("medicine")
 
             if not self.partial:
-                data["barcode"] = \
-                    medicine[:4] + \
-                    str(now()).replace("-", "").replace(":", "").replace(" ", "").replace(".", "").split("+")[0][2:14]
+                data["barcode"] = (
+                    medicine[:4]
+                    + str(now())
+                    .replace("-", "")
+                    .replace(":", "")
+                    .replace(" ", "")
+                    .replace(".", "")
+                    .split("+")[0][2:14]
+                )
 
-            morning_timing = data.get("morning_timing")
-            noon_timing = data.get("noon_timing")
-            evening_timing = data.get("evening_timing")
-            bed_timing = data.get("bed_timing")
+            company = data.get("company")
+            medicine_type = data.get("medicine_type")
+            contain = data.get("contain")
 
-            duplicate_medicin = MedicineModel.objects.filter(deleted=0, medicine__iexact=medicine,
-                                                                               morning_timing_id=morning_timing,
-                                                                               noon_timing_id=noon_timing,
-                                                                               evening_timing_id=evening_timing,
-                                                                               bed_timing_id=bed_timing,
-                                                                               for_day=for_day, per_day=per_day)
+            duplicate_medicin = MedicineModel.objects.filter(
+                deleted=0,
+                medicine__iexact=medicine,
+                medicine_type=medicine_type,
+                contain__iexact=contain,
+                company__iexact=company,
+            )
 
             if self.partial:
-                duplicate_medicin = duplicate_medicin.filter(~Q(pk=self.instance.medicine_id)).first()
+                duplicate_medicin = duplicate_medicin.filter(
+                    ~Q(pk=self.instance.medicine_id)
+                ).first()
             else:
                 duplicate_medicin = duplicate_medicin.first()
 
@@ -124,18 +171,32 @@ class MedicineSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = MedicineModel
-        fields = ['medicine_id', 'barcode', 'medicine_type', 'medicine', 'contain', 'per_day', 'for_day',
-                  'total_tablet', 'company', 'morning_timing', 'noon_timing', 'evening_timing', 'bed_timing',
-                  'created_by', 'deleted']
+        fields = [
+            "medicine_id",
+            "barcode",
+            "medicine_type",
+            "medicine",
+            "contain",
+            "per_day",
+            "for_day",
+            "total_tablet",
+            "company",
+            "morning_timing",
+            "noon_timing",
+            "evening_timing",
+            "bed_timing",
+            "created_by",
+            "deleted",
+        ]
 
 
 class DynamicFieldModelSerializer(serializers.ModelSerializer):
-
     def __init__(self, *args, **kwargs):
-        fields = kwargs.pop('fields', None)
+        fields = kwargs.pop("fields", None)
 
+        print(fields)
         super(DynamicFieldModelSerializer, self).__init__(*args, **kwargs)
-
+    
         fields = set(fields.split(","))
 
         if fields is not None:
@@ -148,16 +209,40 @@ class DynamicFieldModelSerializer(serializers.ModelSerializer):
     def to_representation(self, instance, *args, **kwargs):
         ret = super(DynamicFieldModelSerializer, self).to_representation(instance)
 
-        if "medicine_type" in ret: ret['state_name'] = MedicineTypeSerializers(instance.medicine_type).data[
-            "medicine_type"]
-        if "morning_timing" in ret: ret['morning_timing'] = TimingSerializers(instance.morning_timing).data["timing"]
-        if "noon_timing" in ret: ret['noon_timing'] = TimingSerializers(instance.noon_timing).data["timing"]
-        if "evening_timing" in ret: ret['evening_timing'] = TimingSerializers(instance.evening_timing).data["timing"]
-        if "bed_timing" in ret: ret['bed_timing'] = TimingSerializers(instance.bed_timing).data["timing"]
+        if "medicine_type" in ret:
+            ret["state_name"] = MedicineTypeSerializers(instance.medicine_type).data[
+                "medicine_type"
+            ]
+        if "morning_timing" in ret:
+            ret["morning_timing"] = TimingSerializers(instance.morning_timing).data[
+                "timing"
+            ]
+        if "noon_timing" in ret:
+            ret["noon_timing"] = TimingSerializers(instance.noon_timing).data["timing"]
+        if "evening_timing" in ret:
+            ret["evening_timing"] = TimingSerializers(instance.evening_timing).data[
+                "timing"
+            ]
+        if "bed_timing" in ret:
+            ret["bed_timing"] = TimingSerializers(instance.bed_timing).data["timing"]
         return ret
 
     class Meta:
         model = MedicineModel
-        fields = ['medicine_id', 'barcode', 'medicine_type', 'medicine', 'contain', 'per_day', 'for_day',
-                  'total_tablet', 'company', 'morning_timing', 'noon_timing', 'evening_timing', 'bed_timing',
-                  'created_by', 'deleted']
+        fields = [
+            "medicine_id",
+            "barcode",
+            "medicine_type",
+            "medicine",
+            "contain",
+            "per_day",
+            "for_day",
+            "total_tablet",
+            "company",
+            "morning_timing",
+            "noon_timing",
+            "evening_timing",
+            "bed_timing",
+            "created_by",
+            "deleted",
+        ]

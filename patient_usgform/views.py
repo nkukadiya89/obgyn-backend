@@ -100,7 +100,7 @@ def create(request):
             patient_opd.status = "usgform"
             patient_opd.save()
 
-            patient_usgform = PatientUSGFormModel.objects.filter(regd_no=data["regd_no"]).order_by('-created_by')
+            patient_usgform = PatientUSGFormModel.objects.filter(regd_no=request.data["regd_no"]).order_by('-created_by')
             serializer = PatientUSGFormSerializers(patient_usgform, many=True)
             
             data["success"] = True
