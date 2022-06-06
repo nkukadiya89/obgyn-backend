@@ -739,7 +739,7 @@ class ModelFilterPATIENTUSGFORM:
                 | Q(patient__middle_name=search)
                 | Q(patient__last_name=search)
                 | Q(patient__phone=search)
-                | Q(diagnosis__dianosis_name=search)
+                | Q(diagnosis__diagnosis_name=search)
             )
         return model
 
