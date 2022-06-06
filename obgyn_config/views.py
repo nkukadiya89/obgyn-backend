@@ -90,7 +90,7 @@ def get_obgyn_config(user):
     
     month = date.today().month
     year = date.today().year
-    _, num_days = calendar.monthrange(2016, 3)
+    _, num_days = calendar.monthrange(year, month)
     first_date = date(year, month, 1)
     last_date = date(year, month, num_days)
 
@@ -229,7 +229,7 @@ def get(request, id=None):
         if id:
             obgyn_config = ObgynConfigModel.objects.filter(pk=id, deleted=0)
         else:
-            obgyn_config = ObgynConfigModel.objects.filter(Q(created_by=1,deleted=0) | Q(created_by=request.data.get('created_by')))
+            obgyn_config = ObgynConfigModel.objects.filter(deleted=0)
 
         data["total_record"] = len(obgyn_config)
 

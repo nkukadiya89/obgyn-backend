@@ -39,9 +39,9 @@ class PatientDischargeSerializers(serializers.ModelSerializer):
         return data
 
     patient_discharge_id = serializers.IntegerField(read_only=True)
-    admission_date = serializers.DateField(format="%d-%m-%Y")
-    ot_date = serializers.DateField(format="%d-%m-%Y")
-    discharge_date = serializers.DateField(format="%d-%m-%Y")
+    admission_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
+    ot_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
+    discharge_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
     
 
     class Meta:

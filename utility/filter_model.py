@@ -1291,7 +1291,7 @@ class ModelFilterOBGYNCONFIG:
             if fld_name == "obgyn_config_id":
                 model = model.filter(obgyn_config_id=fld_value)
             if fld_name == "user":
-                model = model.filter(user__user__icontains=fld_value)
+                model = model.filter(user_id=fld_value)
             if fld_name == "rs_per_visit":
                 model = model.filter(rs_per_visit=fld_value)
             if fld_name == "rs_per_usg":
@@ -1316,6 +1316,8 @@ class ModelFilterOBGYNCONFIG:
                 model = model.filter(monthly_usg=fld_value)
             if fld_name == "yearly_usg":
                 model = model.filter(yearly_usg=fld_value)
+            if fld_name == "created_by":
+                model = model.filter(created_by=fld_value)
 
         return model
 

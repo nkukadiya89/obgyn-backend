@@ -40,6 +40,10 @@ class PatientIndoorSerializers(serializers.ModelSerializer):
         return data
 
     patient_indoor_id = serializers.IntegerField(read_only=True)
+    indoor_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
+    adm_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
+    oper_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
+    disch_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
     
 
     class Meta:
@@ -50,10 +54,6 @@ class PatientIndoorSerializers(serializers.ModelSerializer):
 class IndoorAdviceSerializers(serializers.ModelSerializer):
 
     indoor_advice_id = serializers.IntegerField(read_only=True)
-    indoor_date = serializers.DateField(format="%d-%m-%Y")
-    adm_date = serializers.DateField(format="%d-%m-%Y")
-    oper_date = serializers.DateField(format="%d-%m-%Y")
-    disch_date = serializers.DateField(format="%d-%m-%Y")
 
     class Meta:
         model = IndoorAdviceModel
