@@ -1,7 +1,12 @@
 import json
 
 from rest_framework import status
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+)
+from django.db.models.functions import Lower
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -11,7 +16,12 @@ from django.db.models import Q
 
 from utility.search_filter import filtering_query
 from .models import MedicineModel, TimingModel, MedicineTypeModel
-from .serializers import MedicineSerializers, MedicineTypeSerializers, TimingSerializers, DynamicFieldModelSerializer
+from .serializers import (
+    MedicineSerializers,
+    MedicineTypeSerializers,
+    TimingSerializers,
+    DynamicFieldModelSerializer,
+)
 from .utils_view import link_diagnosis, delete_child_table
 from utility.decorator import validate_permission, validate_permission_id
 
@@ -42,13 +52,14 @@ class MedicineAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 # ================= Delete Record =========================
-@api_view(['DELETE'])
+@api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("medicine","change")
+@validate_permission("medicine", "change")
 def delete_medicine(request):
     data = {}
-    del_id = json.loads(request.body.decode('utf-8'))
+    del_id = json.loads(request.body.decode("utf-8"))
     if "id" not in del_id:
         data["success"] = False
         data["msg"] = "Record ID not provided"
@@ -56,8 +67,7 @@ def delete_medicine(request):
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     try:
-        medicine = MedicineModel.objects.filter(
-            medicine_id__in=del_id["id"])
+        medicine = MedicineModel.objects.filter(medicine_id__in=del_id["id"])
     except MedicineModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record does not exist"
@@ -72,10 +82,11 @@ def delete_medicine(request):
         data["deleted"] = result
         return Response(data=data, status=status.HTTP_200_OK)
 
+
 # ================= Create New Record=========================
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("medicine","add")
+@validate_permission("medicine", "add")
 def create_medicine(request):
     data = {}
     if request.method == "POST":
@@ -89,10 +100,16 @@ def create_medicine(request):
 
             if "diagnosis_name" in request.data and "diagnosis_type" in request.data:
                 if not link_diagnosis(request, serializer.data["medicine_id"]):
-                    data["msg"] = "Medicine Created successfully but not linked with Diagnosis"
-            if "diagnosis_name" in request.data and "diagnosis_type" not in request.data:
-                data["msg"] = "Medicine Created successfully but not linked with Diagnosis"
-            
+                    data[
+                        "msg"
+                    ] = "Medicine Created successfully but not linked with Diagnosis"
+            if (
+                "diagnosis_name" in request.data
+                and "diagnosis_type" not in request.data
+            ):
+                data[
+                    "msg"
+                ] = "Medicine Created successfully but not linked with Diagnosis"
 
             data["success"] = True
 
@@ -131,13 +148,14 @@ class MedicineTypeAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 # ================= Delete Record =========================
-@api_view(['DELETE'])
+@api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("medicine_type","delete")
+@validate_permission("medicine_type", "delete")
 def delete_medicine_type(request):
     data = {}
-    del_id = json.loads(request.body.decode('utf-8'))
+    del_id = json.loads(request.body.decode("utf-8"))
     if "id" not in del_id:
         data["success"] = False
         data["msg"] = "Record ID not provided"
@@ -145,7 +163,8 @@ def delete_medicine_type(request):
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
     try:
         medicine_type = MedicineTypeModel.objects.filter(
-            medicine_type_id__in=del_id["id"])
+            medicine_type_id__in=del_id["id"]
+        )
     except MedicineTypeModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record does not exist"
@@ -160,16 +179,16 @@ def delete_medicine_type(request):
         data["deleted"] = result
         return Response(data=data, status=status.HTTP_200_OK)
 
+
 # ================= Create New Record=========================
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("medicine_type","add")
+@validate_permission("medicine_type", "add")
 def create_medicine_type(request):
     data = {}
     if request.method == "POST":
         medicine_type = MedicineTypeModel()
-        serializer = MedicineTypeSerializers(
-            medicine_type, data=request.data)
+        serializer = MedicineTypeSerializers(medicine_type, data=request.data)
 
         if serializer.is_valid():
             serializer.save()
@@ -210,13 +229,14 @@ class TimingAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 # ================= Delete Record =========================
-@api_view(['DELETE'])
+@api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("timing","change")
+@validate_permission("timing", "change")
 def delete_timing(request):
     data = {}
-    del_id = json.loads(request.body.decode('utf-8'))
+    del_id = json.loads(request.body.decode("utf-8"))
     if "id" not in del_id:
         data["success"] = False
         data["msg"] = "Record ID not provided"
@@ -238,10 +258,11 @@ def delete_timing(request):
         data["deleted"] = result
         return Response(data=data, status=status.HTTP_200_OK)
 
+
 # ================= Create New Record=========================
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("timing","add")
+@validate_permission("timing", "add")
 def create_timing(request):
     data = {}
     if request.method == "POST":
@@ -262,9 +283,9 @@ def create_timing(request):
 
 
 # ================= Retrieve Single or Multiple records=========================
-@api_view(['GET'])
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("timing","view")
+@validate_permission_id("timing", "view")
 def get_timing(request, id=None):
     data = {}
     query_string = request.query_params
@@ -274,11 +295,12 @@ def get_timing(request, id=None):
             timing = TimingModel.objects.filter(pk=id, deleted=0)
         else:
             timing = TimingModel.objects.filter(
-                Q(deleted=0, created_by=1) | Q(created_by=request.data.get('created_by')))
+                Q(deleted=0, created_by=1)
+                | Q(created_by=request.data.get("created_by"))
+            )
 
         data["total_record"] = len(timing)
-        timing, data = filtering_query(
-            timing, query_string, "timing_id", "TIMING")
+        timing, data = filtering_query(timing, query_string, "timing_id", "TIMING")
 
     except TimingModel.DoesNotExist:
         data["success"] = False
@@ -294,9 +316,9 @@ def get_timing(request, id=None):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("timing","change")
+@validate_permission_id("timing", "change")
 def patch_timing(request, id):
     data = {}
 
@@ -327,9 +349,9 @@ def patch_timing(request, id):
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("medicine_type","update")
+@validate_permission_id("medicine_type", "update")
 def patch_medicine_type(request, id):
     data = {}
 
@@ -345,8 +367,7 @@ def patch_medicine_type(request, id):
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == "POST":
-        serializer = MedicineTypeSerializers(
-            medicine_type, request.data, partial=True)
+        serializer = MedicineTypeSerializers(medicine_type, request.data, partial=True)
 
         if serializer.is_valid():
             serializer.save()
@@ -361,9 +382,9 @@ def patch_medicine_type(request, id):
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("medicine","change")
+@validate_permission_id("medicine", "change")
 def patch_medicine(request, id):
     data = {}
     try:
@@ -397,9 +418,9 @@ def patch_medicine(request, id):
 
 
 # ================= Retrieve Single or Multiple records=========================
-@api_view(['GET'])
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("medicine","view")
+@validate_permission_id("medicine", "view")
 def get_medicine(request, id=None):
     query_string = request.query_params
 
@@ -408,12 +429,16 @@ def get_medicine(request, id=None):
         if id:
             medicine = MedicineModel.objects.filter(pk=id, deleted=0)
         else:
-            medicine = MedicineModel.objects.filter(Q(created_by=1,deleted=0) | Q(created_by=request.data.get('created_by')))
+            medicine = MedicineModel.objects.filter(
+                Q(created_by=1, deleted=0)
+                | Q(created_by=request.data.get("created_by"))
+            )
 
         data["total_record"] = len(medicine)
 
         medicine, data = filtering_query(
-            medicine, query_string, "medicine_id", "MEDICINE")
+            medicine, query_string, "medicine_id", "MEDICINE"
+        )
 
     except MedicineModel.DoesNotExist:
         data["success"] = False
@@ -426,19 +451,21 @@ def get_medicine(request, id=None):
         if "fields" in query_string:
             if query_string["fields"]:
                 serializer = DynamicFieldModelSerializer(
-                    medicine, many=True, fields=query_string["fields"])
+                    medicine, many=True, fields=query_string["fields"]
+                )
 
         data["success"] = True
         data["msg"] = "OK"
         data["data"] = serializer.data
         return Response(data=data, status=status.HTTP_200_OK)
 
+
 # ================= Retrieve Single or Multiple records=========================
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("medicine","view")
+@validate_permission_id("medicine", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get_or_medicine(request, id=None):
     query_string = request.query_params
@@ -448,12 +475,16 @@ def get_or_medicine(request, id=None):
         if id:
             medicine = MedicineModel.objects.filter(pk=id, deleted=0)
         else:
-            medicine = MedicineModel.objects.filter(Q(deleted=0, created_by=1)  | Q(created_by=request.data.get('created_by'))) 
+            medicine = MedicineModel.objects.filter(
+                Q(deleted=0, created_by=1)
+                | Q(created_by=request.data.get("created_by"))
+            )
 
         data["total_record"] = len(medicine)
 
         medicine, data = filtering_query(
-            medicine, query_string, "medicine_id", "MEDICINEOR")
+            medicine, query_string, "medicine_id", "MEDICINEOR"
+        )
 
     except MedicineModel.DoesNotExist:
         data["success"] = False
@@ -466,7 +497,8 @@ def get_or_medicine(request, id=None):
         if "fields" in query_string:
             if query_string["fields"]:
                 serializer = DynamicFieldModelSerializer(
-                    medicine, many=True, fields=query_string["fields"])
+                    medicine, many=True, fields=query_string["fields"]
+                )
 
         data["success"] = True
         data["msg"] = "OK"
@@ -475,9 +507,9 @@ def get_or_medicine(request, id=None):
 
 
 # ================= Retrieve Single or Multiple records=========================
-@api_view(['GET'])
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("medicine_type","view")
+@validate_permission_id("medicine_type", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get_medicine_type(request, id=None):
     query_string = request.query_params
@@ -487,11 +519,15 @@ def get_medicine_type(request, id=None):
         if id:
             medicine_type = MedicineTypeModel.objects.filter(pk=id, deleted=0)
         else:
-            medicine_type = MedicineTypeModel.objects.filter(Q(deleted=0, created_by=1)  | Q(created_by=request.data.get('created_by')))
+            medicine_type = MedicineTypeModel.objects.filter(
+                Q(deleted=0, created_by=1)
+                | Q(created_by=request.data.get("created_by"))
+            )
 
         data["total_record"] = len(medicine_type)
         medicine_type, data = filtering_query(
-            medicine_type, query_string, "medicine_type_id", "MEDICINETYPE")
+            medicine_type, query_string, "medicine_type_id", "MEDICINETYPE"
+        )
 
     except MedicineTypeModel.DoesNotExist:
         data["success"] = False
@@ -501,6 +537,43 @@ def get_medicine_type(request, id=None):
 
     if request.method == "GET":
         serializer = MedicineTypeSerializers(medicine_type, many=True)
+
+        data["success"] = True
+        data["msg"] = "OK"
+        data["data"] = serializer.data
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+# ================= Retrieve Single or Multiple records=========================
+@api_view(["GET"])
+@authentication_classes([JWTAuthentication])
+@validate_permission_id("medicine_type", "view")
+# ================= Retrieve Single or Multiple records=========================
+def get_unique_medicine(request, id=None):
+    query_string = request.query_params
+    distinc_key =  query_string["fields"].split(",")[1]
+
+    data = {}
+    try:
+        if id:
+            medicine = MedicineModel.objects.filter(pk=id, deleted=0).order_by(Lower(distinc_key))
+        else:
+            medicine = MedicineModel.objects.filter(
+                Q(deleted=0, created_by=1)
+                | Q(created_by=request.data.get("created_by"))
+            )
+
+        data["total_record"] = len(medicine)
+
+        medicine = medicine.distinct(distinc_key)
+    except MedicineModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record Does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "GET":
+        serializer = DynamicFieldModelSerializer(medicine, many=True, fields=query_string["fields"])
 
         data["success"] = True
         data["msg"] = "OK"

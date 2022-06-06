@@ -1,7 +1,13 @@
+from operator import mod
+from pyexpat import model
 from django.db import models
 from django.utils.timezone import now
 
 from patient.models import PatientModel
+from city.models import CityModel
+from taluka.models import TalukaModel
+from district.models import DistrictModel
+from state.models import StateModel
 
 
 # Create your models here.
@@ -24,15 +30,18 @@ class PatientDeliveryModel(models.Model):
     birth_date = models.DateField(null=True)
     birth_time = models.CharField(max_length=10, null=True)
     husband_name = models.CharField(max_length=50, null=True)
+    mother_name = models.CharField(max_length=150, null=True)
+    husband_father_name = models.CharField(max_length=150, null=True)
     child_name = models.CharField(max_length=100, default="")
     child_gender = models.CharField(max_length=10, choices=gender_choice, default="MALE")
     delivery_type = models.CharField(max_length=10, choices=delivery_type_choice, default="NORMAL")
     religion = models.CharField(max_length=25, default="")
     episio_by = models.CharField(max_length=100, default="")
     dayan = models.CharField(max_length=100, default="")
-    village = models.CharField(max_length=100, default="")
-    taluka = models.CharField(max_length=100, default="")
-    district = models.CharField(max_length=100, default="")
+    city = models.ForeignKey(CityModel,on_delete=models.DO_NOTHING, null=True)
+    taluka = models.ForeignKey(TalukaModel,on_delete=models.DO_NOTHING, null=True)
+    district = models.ForeignKey(DistrictModel,on_delete=models.DO_NOTHING, null=True)
+    state = models.ForeignKey(StateModel,on_delete=models.DO_NOTHING, null=True)
     pin = models.IntegerField(null=True)
     marriage_age = models.IntegerField(default=0, null=True)
     current_age = models.IntegerField(default=0, null=True)
