@@ -148,7 +148,7 @@ def patch(request, id):
             serializer = PatientUSGFormSerializers(patient_usgform)
 
 
-            patient_usgform = PatientUSGFormModel.objects.filter(regd_no=data["regd_no"]).order_by('-created_by')
+            patient_usgform = PatientUSGFormModel.objects.filter(regd_no=request.data["regd_no"]).order_by('-created_by')
             serializer = PatientUSGFormSerializers(patient_usgform, many=True)
 
             data["success"] = True
