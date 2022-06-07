@@ -14,7 +14,7 @@ from utility.search_filter import filtering_query
 from .models import PatientUSGFormModel, USGFormChildModel
 from .serializers import PatientUSGFormSerializers, USGFormChildSerializers
 from .util_views import insert_child_usgform
-from obgyn_config.views import update_obgyn_config
+from obgyn_config.views import update_obgyn_config, get_obgyn_config
 from utility.decorator import validate_permission,validate_permission_id
 
 
@@ -80,6 +80,8 @@ def create(request):
     data = {}
     if request.method == "POST":
         patient_usgform = PatientUSGFormModel()
+        request.data["serial_no_month"], request.data["serial_no_year"] = get_obgyn_config(request.user ,PatientUSGFormModel)
+        
         if "patient_opd_id" not in request.data:
             data["success"] = False
             data["msg"] = "OPD is required"
@@ -330,3 +332,17 @@ def child_get(request, id=None):
         data["msg"] = "OK"
         data["data"] = serilizer.data
         return Response(data=data, status=status.HTTP_200_OK)
+
+
+
+@api_view(["GET"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("patient_usgform","view")
+def get_usg_sequence(request):
+    data = {}
+
+    data["serial_no_month"], data["serial_no_year"] = get_obgyn_config(request.user, PatientUSGFormModel)
+
+    return Response(data=data,status=status.HTTP_200_OK)
+
+

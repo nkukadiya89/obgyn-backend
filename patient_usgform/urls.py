@@ -11,6 +11,7 @@ from .views import (
     create_child,
     delete,
     delete_child,
+    get_usg_sequence,
 )
 
 urlpatterns = [
@@ -20,6 +21,7 @@ urlpatterns = [
     path("create/", create),
     path("delete/", delete),
     path("update/<int:id>/", patch),
+    path("get_seq/",get_usg_sequence),
     
     path("child/<int:id>/", USGFormChildAPI.as_view()),
     path("child/get/", child_get),
