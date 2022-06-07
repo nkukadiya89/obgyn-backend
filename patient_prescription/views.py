@@ -102,7 +102,7 @@ def patch(request, id):
 
     try:
         if id:
-            patient_prescription = PatientPrescriptionModel.objects.get(pk=id)
+            patient_prescription = PatientPrescriptionModel.objects.get(pk=id, deleted=0)
         else:
             patient_prescription = PatientPrescriptionModel.objects.filter(deleted=0)
     except PatientPrescriptionModel.DoesNotExist:

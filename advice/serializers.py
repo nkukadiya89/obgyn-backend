@@ -41,7 +41,7 @@ class AdviceGroupSerializers(serializers.ModelSerializer):
         advice_name_list = {}
         if "advice" in ret:
             for advice1 in ret["advice"]:
-                advice = AdviceModel.objects.get(pk=advice1)
+                advice = AdviceModel.objects.get(pk=advice1,deleted=0)
                 advice_name_list[advice.advice_id] = advice.advice
 
             ret['advice_name'] = advice_name_list

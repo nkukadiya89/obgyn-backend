@@ -104,7 +104,7 @@ def patch(request, id):
     data = {}
     try:
         if id:
-            advice = AdviceModel.objects.get(pk=id)
+            advice = AdviceModel.objects.get(pk=id,deleted=0)
         else:
             advice = AdviceModel.objects.filter(deleted=0)
     except AdviceModel.DoesNotExist:
@@ -239,7 +239,7 @@ def patch_group(request, id):
     data = {}
     try:
         if id:
-            advice_group = AdviceGroupModel.objects.get(pk=id)
+            advice_group = AdviceGroupModel.objects.get(pk=id,deleted=0)
         else:
             advice_group = AdviceGroupModel.objects.filter(deleted=0)
     except AdviceGroupModel.DoesNotExist:

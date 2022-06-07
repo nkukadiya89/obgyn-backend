@@ -115,7 +115,7 @@ def patch(request, id):
     data = {}
     try:
         if id:
-            patient_delivery = PatientDeliveryModel.objects.get(pk=id)
+            patient_delivery = PatientDeliveryModel.objects.get(pk=id,deleted=0)
         else:
             patient_delivery = PatientDeliveryModel.objects.filter(deleted=0)
 
