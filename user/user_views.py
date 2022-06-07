@@ -5,6 +5,7 @@ from django.utils.timezone import now
 from language.models import LanguageModel
 from obgyn_config.models import ObgynConfigModel
 from obgyn_config.views import get_obgyn_config
+from patient_usgform.models import PatientUSGFormModel
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -28,7 +29,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             rs_per_visit=rs_per_usg=rs_per_room=operative_charge=rs_per_day_nursing=0
             monthly_usg=yearly_usg=1
         else:
-            monthly_usg, yearly_usg = get_obgyn_config(self.user)
+            monthly_usg, yearly_usg = get_obgyn_config(self.user,PatientUSGFormModel)
             rs_per_visit=obgyn_config.rs_per_visit
             rs_per_usg=obgyn_config.rs_per_usg
             rs_per_room=obgyn_config.rs_per_room
