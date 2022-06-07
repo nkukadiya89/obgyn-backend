@@ -108,7 +108,7 @@ def patch(request, id):
 
     try:
         if id:
-            language = LanguageModel.objects.get(pk=id)
+            language = LanguageModel.objects.get(pk=id,deleted=0)
         else:
             language = LanguageModel.objects.filter(deleted=0)
     except LanguageModel.DoesNotExist:

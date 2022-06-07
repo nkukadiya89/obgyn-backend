@@ -120,7 +120,7 @@ def patch(request, id):
     data = {}
     try:
         if id:
-            patient_voucher = PatientVoucherModel.objects.get(pk=id)
+            patient_voucher = PatientVoucherModel.objects.get(pk=id, deleted=0)
         else:
             patient_voucher = PatientVoucherModel.objects.filter(deleted=0)
         if "patient_opd_id" not in request.data:
@@ -277,7 +277,7 @@ def voucher_item_patch(request, id):
     data = {}
     try:
         if id:
-            voucher_item = VoucherItemModel.objects.get(pk=id)
+            voucher_item = VoucherItemModel.objects.get(pk=id, deleted=0)
         else:
             voucher_item = VoucherItemModel.objects.filter(deleted=0)
     except VoucherItemModel.DoesNotExist:

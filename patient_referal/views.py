@@ -114,7 +114,7 @@ def patch(request, id):
 
     try:
         if id:
-            patient_referal = PatientReferalModel.objects.get(pk=id)
+            patient_referal = PatientReferalModel.objects.get(pk=id, deleted=0)
         else:
             patient_referal = PatientReferalModel.objects.filter(deleted=0)
 

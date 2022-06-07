@@ -103,7 +103,7 @@ def patch(request, id):
     data = {}
     try:
         if id:
-            subscription_purchase = Subscription_purchaseModel.objects.get(pk=id)
+            subscription_purchase = Subscription_purchaseModel.objects.get(pk=id, deleted=0)
         else:
             subscription_purchase = Subscription_purchaseModel.objects.filter(deleted=0)
     except Subscription_purchaseModel.DoesNotExist:

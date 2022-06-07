@@ -103,7 +103,7 @@ def patch(request, id):
 
     try:
         if id:
-            template_header = TemplateHeaderModel.objects.get(pk=id)
+            template_header = TemplateHeaderModel.objects.get(pk=id, deleted=0)
         else:
             template_header = TemplateHeaderModel.objects.filter(deleted=0)
     except TemplateHeaderModel.DoesNotExist:

@@ -324,7 +324,7 @@ def patch_timing(request, id):
 
     try:
         if id:
-            timing = TimingModel.objects.get(pk=id)
+            timing = TimingModel.objects.get(pk=id,deleted=0)
         else:
             timing = TimingModel.objects.filter(deleted=0)
     except TimingModel.DoesNotExist:
@@ -357,7 +357,7 @@ def patch_medicine_type(request, id):
 
     try:
         if id:
-            medicine_type = MedicineTypeModel.objects.get(pk=id)
+            medicine_type = MedicineTypeModel.objects.get(pk=id,deleted=0)
         else:
             medicine_type = MedicineTypeModel.objects.filter(deleted=0)
     except MedicineTypeModel.DoesNotExist:
@@ -389,7 +389,7 @@ def patch_medicine(request, id):
     data = {}
     try:
         if id:
-            medicine = MedicineModel.objects.get(pk=id)
+            medicine = MedicineModel.objects.get(pk=id,deleted=0)
         else:
             medicine = MedicineModel.objects.filter(deleted=0)
     except MedicineModel.DoesNotExist:

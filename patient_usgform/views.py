@@ -123,7 +123,7 @@ def patch(request, id):
     data = {}
     try:
         if id:
-            patient_usgform = PatientUSGFormModel.objects.get(pk=id)
+            patient_usgform = PatientUSGFormModel.objects.get(pk=id,deleted=0)
         else:
             patient_usgform = PatientUSGFormModel.objects.filter(deleted=0)
         if "patient_opd_id" not in request.data:
@@ -150,7 +150,7 @@ def patch(request, id):
             serializer = PatientUSGFormSerializers(patient_usgform)
 
 
-            patient_usgform = PatientUSGFormModel.objects.filter(regd_no=request.data["regd_no"]).order_by('-created_by')
+            patient_usgform = PatientUSGFormModel.objects.filter(deleted=0,regd_no=request.data["regd_no"]).order_by('-created_by')
             serializer = PatientUSGFormSerializers(patient_usgform, many=True)
 
             data["success"] = True
@@ -279,7 +279,7 @@ def child_patch(request, id):
     data = {}
     try:
         if id:
-            usgform_child = USGFormChildModel.objects.get(pk=id)
+            usgform_child = USGFormChildModel.objects.get(pk=id, deleted=0)
         else:
             usgform_child = USGFormChildModel.objects.filter(deleted=0)
     except USGFormChildModel.DoesNotExist:

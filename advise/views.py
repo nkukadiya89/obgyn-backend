@@ -103,7 +103,7 @@ def patch(request, id):
     data = {}
     try:
         if id:
-            advise = AdviseModel.objects.get(pk=id)
+            advise = AdviseModel.objects.get(pk=id,deleted=0)
         else:
             advise = AdviseModel.objects.filter(deleted=0)
     except AdviseModel.DoesNotExist:

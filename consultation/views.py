@@ -123,7 +123,7 @@ def patch(request, id):
     data = {}
     try:
         if id:
-            consultation = ConsultationModel.objects.get(pk=id)
+            consultation = ConsultationModel.objects.get(pk=id,deleted=0)
         else:
             consultation = ConsultationModel.objects.filter(deleted=0)
         if "patient_opd_id" not in request.data:

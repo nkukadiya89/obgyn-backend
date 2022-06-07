@@ -12,7 +12,7 @@ class DiagnosisSerializers(serializers.ModelSerializer):
 
         medicine_name_list = {}
         for medicine1 in ret["medicine"]:
-            medicine_name = MedicineModel.objects.get(pk=medicine1)
+            medicine_name = MedicineModel.objects.get(pk=medicine1,deleted=0)
             medicine_name_list[medicine_name.medicine_id] = medicine_name.medicine
 
             ret['medicine_name'] = medicine_name_list

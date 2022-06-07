@@ -103,7 +103,7 @@ def patch(request, id):
     data = {}
     try:
         if id:
-            taluka = TalukaModel.objects.get(pk=id)
+            taluka = TalukaModel.objects.get(pk=id, deleted=0)
         else:
             taluka = TalukaModel.objects.filter(deleted=0)
     except TalukaModel.DoesNotExist:

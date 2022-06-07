@@ -191,7 +191,7 @@ def patch(request, id):
     data = {}
     try:
         if id:
-            obgyn_config = ObgynConfigModel.objects.get(pk=id)
+            obgyn_config = ObgynConfigModel.objects.get(pk=id,deleted=0)
         else:
             obgyn_config = ObgynConfigModel.objects.filter(deleted=0)
     except ObgynConfigModel.DoesNotExist:
