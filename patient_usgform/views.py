@@ -59,7 +59,7 @@ def delete(request):
 
     try:
         patient_usgform = PatientUSGFormModel.objects.filter(patient_usgform_id__in=del_id["id"])
-    except PatientUSGFormModel:
+    except PatientUSGFormModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record does not exist"
         data["data"] = []
@@ -219,7 +219,7 @@ class USGFormChildAPI(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(['DELETE'])
 @authentication_classes([JWTAuthentication])
 @validate_permission("usgform_child","change")
 def delete_child(request):
