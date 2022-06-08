@@ -5,6 +5,7 @@ from .models import Subscription_purchaseModel
 import datetime
 from .utils_views import generate_invoice_no
 from subscription.serializers import SubscriptionSerializers
+from user.serializers import UserSerializers
 
 
     
@@ -14,6 +15,11 @@ class Subscription_PurchaseSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(Subscription_PurchaseSerializers,
                     self).to_representation(instance)
+
+        if instance.hospital.user_type=="HOSPITAL":
+            ret["hospital_name"] = UserSerializers(instance.hospital).data["hospital_name"]
+        else:
+            ret["hospital_name"] = ""
 
         ret["subscription_name"] = SubscriptionSerializers(instance.subscription).data["subscription_name"]
         return ret
