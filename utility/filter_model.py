@@ -669,9 +669,9 @@ class ModelFilterPATIENTOPD:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(patient__first_name__icontain=search)
-                | Q(patient__middle_name__icontain=search)
-                | Q(patient__last_name__icontain=search)
+                Q(patient__first_name__icontains=search)
+                | Q(patient__middle_name__icontains=search)
+                | Q(patient__last_name__icontains=search)
                 | Q(patient__registered_no=search)
                 | Q(patient__phone__icontains=search)
                 | Q(patient__husband_father_name__icontains=search)
