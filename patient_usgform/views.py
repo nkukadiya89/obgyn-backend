@@ -236,7 +236,7 @@ def delete_child(request):
 
     try:
         usgform_child = USGFormChildModel.objects.filter(usgform_child_id__in=del_id["id"])
-    except USGFormChildModel:
+    except USGFormChildModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record does not exist"
         data["data"] = []
