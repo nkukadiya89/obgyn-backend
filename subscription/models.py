@@ -5,7 +5,7 @@ from django.utils.timezone import now
 
 class SubscriptionModel(models.Model):
     subscription_id = models.AutoField(primary_key=True)
-    subscription_name = models.CharField(max_length=50)
+    subscription_name = models.CharField(max_length=100)
 
     actual_price = models.IntegerField(default=0)
     discount = models.IntegerField(default=0)

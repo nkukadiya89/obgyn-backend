@@ -17,6 +17,7 @@ from .models import Subscription_purchaseModel
 from .serializers import Subscription_PurchaseSerializers
 from utility.search_filter import filtering_query
 from utility.decorator import validate_permission, validate_permission_id
+from .utils_views import generate_invoice_no
 
 class Subscription_purchaseAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
@@ -43,6 +44,7 @@ class Subscription_purchaseAPI(APIView):
                 return Response(data=data, status=status.HTTP_200_OK)
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # ================= Delete Record =========================
 @api_view(['DELETE'])
@@ -84,9 +86,16 @@ def create(request):
         serializer = Subscription_PurchaseSerializers(subscription_purchase, data=request.data)
 
         if serializer.is_valid():
-            serializer.save()
+            subscription_purchase = serializer.save()
+            # invoice_no, inv_year = generate_invoice_no(serializer.data["subscription_purchase_id"])
+
+            # subscription_purchase.invoice_no=invoice_no
+            # subscription_purchase.inv_year = inv_year
+            # subscription_purchase.save()
+
             data["success"] = True
             data["msg"] = "Data updated successfully"
+            print(serializer.data)
             data["data"] = serializer.data
             return Response(data=data, status=status.HTTP_201_CREATED)
 

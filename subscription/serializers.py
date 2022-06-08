@@ -1,16 +1,16 @@
+from re import T
+from django.core.validators import RegexValidator
 from django.db.models import Q
 from rest_framework import serializers
 
 from .models import SubscriptionModel
 
+onlyalpha = RegexValidator(r'^[a-zA-Z]*$', 'Only alphabets are allowed.')
 
 class SubscriptionSerializers(serializers.ModelSerializer):
     def validate(self, data):
         subscription_name = data.get("subscription_name")
-
-        if not subscription_name.isalpha():
-            raise serializers.ValidationError("Invalid subscription Name")
-
+    
         duplicate_subscription = SubscriptionModel.objects.filter(
             deleted=0, subscription_name__iexact=subscription_name
         )
@@ -28,11 +28,13 @@ class SubscriptionSerializers(serializers.ModelSerializer):
         i = int(data["actual_price"]) * int(data["discount"]) / 100
         data["sell_price"] = int(data["actual_price"]) - i
 
-        print(data)
         return data
 
     subscription_id = serializers.IntegerField(read_only=True)
-    sell_price = serializers.IntegerField(read_only=True)
+    subscription_name = serializers.CharField(required=True, validators=[onlyalpha]) 
+    actual_price = serializers.IntegerField(required=True) 
+    discount = serializers.IntegerField(required=True) 
+    duration = serializers.IntegerField(required=True) 
 
     class Meta:
         model = SubscriptionModel
