@@ -84,7 +84,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'obgyn.update_created_by.my_function',
+    # 'obgyn.middlewares.my_middleware',
 ]
 
 ROOT_URLCONF = 'obgyn.urls'

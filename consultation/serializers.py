@@ -2,6 +2,7 @@ from re import T
 from tkinter.tix import Tree
 from jmespath import search
 from rest_framework import serializers
+import datetime
 from diagnosis.serializers import DiagnosisSerializers
 
 from manage_fields.serializers import ManageFieldsSerializers
@@ -28,7 +29,7 @@ class ConsultationSerializers(serializers.ModelSerializer):
 
         ret["first_edd"] = PatientModel.objects.filter(
             registered_no=instance.regd_no
-        ).values("first_edd")[0]["first_edd"]
+        ).values("first_edd")[0]["first_edd"].strftime("%d-%m-%Y")
 
         for fld_nm in ["co", "ho", "eb_pp", "ps", "pv", "fu"]:
             fld_name = fld_nm + "_name"
@@ -90,6 +91,7 @@ class ConsultationSerializers(serializers.ModelSerializer):
     possible_lmp = serializers.DateField(format="%d-%m-%Y", allow_null=True)
     possible_edd = serializers.DateField(format="%d-%m-%Y", allow_null=True)
     fu_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
+    first_edd = serializers.DateField(format="%d-%m-%Y", allow_null=True)
 
     class Meta:
         model = ConsultationModel
