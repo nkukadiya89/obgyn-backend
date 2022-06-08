@@ -10,8 +10,8 @@ class Subscription_purchaseModel(models.Model):
     subscription_purchase_id = models.AutoField(primary_key=True)
 
     subscription_date = models.DateField(default=now)
-    hospital = models.ForeignKey(User, on_delete=models.SET_NULL,null=True)
-    subscription = models.ForeignKey(SubscriptionModel, on_delete=models.SET_NULL, null=True)
+    hospital = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    subscription = models.ForeignKey(SubscriptionModel, on_delete=models.CASCADE, null=True)
     price = models.FloatField(default=0)
     duration = models.IntegerField(default=0)
     start_date = models.DateField(default=now)
