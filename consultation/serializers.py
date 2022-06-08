@@ -26,10 +26,13 @@ class ConsultationSerializers(serializers.ModelSerializer):
             ret["diagnosis_name"] = DiagnosisSerializers(instance.diagnosis).data[
                 "diagnosis_name"
             ]
-
-        ret["first_edd"] = PatientModel.objects.filter(
+        
+        first_edd =  PatientModel.objects.filter(
             registered_no=instance.regd_no
-        ).values("first_edd")[0]["first_edd"].strftime("%d-%m-%Y")
+        ).values("first_edd")[0]["first_edd"]
+
+        if first_edd:
+            ret["first_edd"] =first_edd.strftime("%d-%m-%Y")
 
         for fld_nm in ["co", "ho", "eb_pp", "ps", "pv", "fu"]:
             fld_name = fld_nm + "_name"
