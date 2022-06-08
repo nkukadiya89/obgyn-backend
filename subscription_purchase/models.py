@@ -15,9 +15,12 @@ class Subscription_purchaseModel(models.Model):
     subscription = models.ForeignKey(SubscriptionModel, on_delete=models.SET_NULL, null=True)
     price = models.FloatField(default=0)
     duration = models.IntegerField(default=0)
+
     start_date = models.DateField()
     over_date = models.DateField()
-    description = models.CharField(max_length=200, default="")
+
+    description = models.CharField(max_length=250, default="")
+
     inactive = models.BooleanField(default=False)
     discount = models.IntegerField(default=0)
     payment_id = models.IntegerField(default=0)
@@ -27,7 +30,7 @@ class Subscription_purchaseModel(models.Model):
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
-    created_at = models.DateTimeField(default=now)
+    created_at = models.DateField(default=now)
 
 
     def __str__(self):
