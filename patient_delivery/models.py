@@ -46,7 +46,7 @@ class PatientDeliveryModel(models.Model):
     marriage_age = models.IntegerField(default=0, null=True)
     current_age = models.IntegerField(default=0, null=True)
     weeks = models.IntegerField(default=0, null=True)
-    live_male_female = models.IntegerField(default=0, null=True)
+    live_male_female = models.CharField(max_length=15, null=True)
     no_of_delivery = models.IntegerField(default=0, null=True)
     weight = models.FloatField(default=0.0, null=True)
     father_education = models.CharField(max_length=100, default="")
