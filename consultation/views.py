@@ -101,8 +101,7 @@ def create(request):
 
             
             patient = PatientModel.objects.filter(registered_no=request.data["regd_no"]).first()
-            print(patient.first_edd)
-            if patient.first_edd == None:
+            if patient.first_edd == None and request.data["first_edd"]:
                 patient.first_edd = datetime.datetime.strptime(request.data["first_edd"],"%d-%m-%Y").strftime("%Y-%m-%d")
                 patient.save()
 
