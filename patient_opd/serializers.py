@@ -68,6 +68,13 @@ class PatientOpdSerializers(serializers.ModelSerializer):
                 ret["state"] = ""
                 ret["state_name"] = ""
 
+            first_edd =  PatientModel.objects.filter(
+                registered_no=instance.regd_no
+            ).values("first_edd")[0]["first_edd"]
+
+            if first_edd:
+                ret["first_edd"] =first_edd.strftime("%d-%m-%Y")
+                
             ret["user_code"] = patient[0].user_code
 
         return ret
