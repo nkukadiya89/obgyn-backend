@@ -95,7 +95,6 @@ def create(request):
 
             data["success"] = True
             data["msg"] = "Data updated successfully"
-            print(serializer.data)
             data["data"] = serializer.data
             return Response(data=data, status=status.HTTP_201_CREATED)
 
