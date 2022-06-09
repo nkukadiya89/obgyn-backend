@@ -80,7 +80,7 @@ def create(request):
     data = {}
     if request.method == "POST":
         patient_usgform = PatientUSGFormModel()
-        request.data["serial_no_month"], request.data["serial_no_year"] = get_obgyn_config(request.user ,PatientUSGFormModel)
+        request.data["serial_no_month"], request.data["serial_no_year"], sr_no = get_obgyn_config(request.user ,PatientUSGFormModel)
         
         if "patient_opd_id" not in request.data:
             data["success"] = False
@@ -341,7 +341,7 @@ def child_get(request, id=None):
 def get_usg_sequence(request):
     data = {}
 
-    data["serial_no_month"], data["serial_no_year"] = get_obgyn_config(request.user, PatientUSGFormModel)
+    data["serial_no_month"], data["serial_no_year"], sr_no = get_obgyn_config(request.user, PatientUSGFormModel)
 
     return Response(data=data,status=status.HTTP_200_OK)
 

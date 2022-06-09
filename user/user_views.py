@@ -29,7 +29,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             rs_per_visit=rs_per_usg=rs_per_room=operative_charge=rs_per_day_nursing=0
             monthly_usg=yearly_usg=1
         else:
-            monthly_usg, yearly_usg = get_obgyn_config(self.user,PatientUSGFormModel)
+            monthly_usg, yearly_usg, sr_no = get_obgyn_config(self.user,PatientUSGFormModel)
             rs_per_visit=obgyn_config.rs_per_visit
             rs_per_usg=obgyn_config.rs_per_usg
             rs_per_room=obgyn_config.rs_per_room
