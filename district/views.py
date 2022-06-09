@@ -106,7 +106,7 @@ def patch(request, id):
     data = {}
     try:
         if id:
-            district = DistrictModel.objects.get(pk=id)
+            district = DistrictModel.objects.get(pk=id,deleted=0)
         else:
             district = DistrictModel.objects.filter(deleted=0)
     except DistrictModel.DoesNotExist:

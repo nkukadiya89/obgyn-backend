@@ -124,7 +124,7 @@ def patch(request, id):
     data = {}
     try:
         if id:
-            patient_discharge = PatientDischargeModel.objects.get(pk=id)
+            patient_discharge = PatientDischargeModel.objects.get(pk=id,deleted=0)
         else:
             patient_discharge = PatientDischargeModel.objects.filter(deleted=0)
         if "patient_opd_id" not in request.data:

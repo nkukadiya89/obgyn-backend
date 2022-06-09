@@ -14,7 +14,7 @@ from utility.search_filter import filtering_query
 from .models import PatientUSGFormModel, USGFormChildModel
 from .serializers import PatientUSGFormSerializers, USGFormChildSerializers
 from .util_views import insert_child_usgform
-from obgyn_config.views import update_obgyn_config
+from obgyn_config.views import update_obgyn_config, get_obgyn_config
 from utility.decorator import validate_permission,validate_permission_id
 
 
@@ -44,7 +44,7 @@ class PatientUSGFormAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
+@api_view(['DELETE'])
 @authentication_classes([JWTAuthentication])
 @validate_permission("patient_usgform","change")
 def delete(request):
@@ -59,7 +59,7 @@ def delete(request):
 
     try:
         patient_usgform = PatientUSGFormModel.objects.filter(patient_usgform_id__in=del_id["id"])
-    except PatientUSGFormModel:
+    except PatientUSGFormModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record does not exist"
         data["data"] = []
@@ -80,6 +80,8 @@ def create(request):
     data = {}
     if request.method == "POST":
         patient_usgform = PatientUSGFormModel()
+        request.data["serial_no_month"], request.data["serial_no_year"] = get_obgyn_config(request.user ,PatientUSGFormModel)
+        
         if "patient_opd_id" not in request.data:
             data["success"] = False
             data["msg"] = "OPD is required"
@@ -100,7 +102,8 @@ def create(request):
             patient_opd.status = "usgform"
             patient_opd.save()
 
-            
+            patient_usgform = PatientUSGFormModel.objects.filter(regd_no=request.data["regd_no"],deleted=0).order_by('-created_at')
+            serializer = PatientUSGFormSerializers(patient_usgform, many=True)
             
             data["success"] = True
             data["msg"] = "Data updated successfully"
@@ -120,7 +123,7 @@ def patch(request, id):
     data = {}
     try:
         if id:
-            patient_usgform = PatientUSGFormModel.objects.get(pk=id)
+            patient_usgform = PatientUSGFormModel.objects.get(pk=id,deleted=0)
         else:
             patient_usgform = PatientUSGFormModel.objects.filter(deleted=0)
         if "patient_opd_id" not in request.data:
@@ -145,6 +148,10 @@ def patch(request, id):
             if "usg_child" in request.data:
                 insert_child_usgform(request,serializer.data["patient_usgform_id"])
             serializer = PatientUSGFormSerializers(patient_usgform)
+
+
+            patient_usgform = PatientUSGFormModel.objects.filter(deleted=0,regd_no=request.data["regd_no"]).order_by('-created_at')
+            serializer = PatientUSGFormSerializers(patient_usgform, many=True)
 
             data["success"] = True
             data["msg"] = "Data updated successfully"
@@ -214,7 +221,7 @@ class USGFormChildAPI(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(['DELETE'])
 @authentication_classes([JWTAuthentication])
 @validate_permission("usgform_child","change")
 def delete_child(request):
@@ -229,7 +236,7 @@ def delete_child(request):
 
     try:
         usgform_child = USGFormChildModel.objects.filter(usgform_child_id__in=del_id["id"])
-    except USGFormChildModel:
+    except USGFormChildModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record does not exist"
         data["data"] = []
@@ -272,7 +279,7 @@ def child_patch(request, id):
     data = {}
     try:
         if id:
-            usgform_child = USGFormChildModel.objects.get(pk=id)
+            usgform_child = USGFormChildModel.objects.get(pk=id, deleted=0)
         else:
             usgform_child = USGFormChildModel.objects.filter(deleted=0)
     except USGFormChildModel.DoesNotExist:
@@ -325,3 +332,17 @@ def child_get(request, id=None):
         data["msg"] = "OK"
         data["data"] = serilizer.data
         return Response(data=data, status=status.HTTP_200_OK)
+
+
+
+@api_view(["GET"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("patient_usgform","view")
+def get_usg_sequence(request):
+    data = {}
+
+    data["serial_no_month"], data["serial_no_year"] = get_obgyn_config(request.user, PatientUSGFormModel)
+
+    return Response(data=data,status=status.HTTP_200_OK)
+
+

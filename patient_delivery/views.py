@@ -18,6 +18,7 @@ from utility.search_filter import filtering_query
 from .models import PatientDeliveryModel
 from .serializers import PatientDeliverySerializers, change_payload
 from utility.decorator import validate_permission, validate_permission_id
+from obgyn_config.views import get_obgyn_config
 
 
 class PatientDeliveryAPI(APIView):
@@ -89,6 +90,8 @@ def create(request):
     data = {}
     if request.method == "POST":
         patient_delivery = PatientDeliveryModel()
+        request.data["serial_no_month"], request.data["serial_no_year"] = get_obgyn_config(request.user ,PatientDeliveryModel)
+
         serializer = PatientDeliverySerializers(patient_delivery, data=request.data)
 
         if serializer.is_valid():
@@ -112,7 +115,7 @@ def patch(request, id):
     data = {}
     try:
         if id:
-            patient_delivery = PatientDeliveryModel.objects.get(pk=id)
+            patient_delivery = PatientDeliveryModel.objects.get(pk=id,deleted=0)
         else:
             patient_delivery = PatientDeliveryModel.objects.filter(deleted=0)
 
@@ -171,3 +174,16 @@ def get(request, id=None):
         data["msg"] = "OK"
         data["data"] = serilizer.data
         return Response(data=data, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("patient_delivery","view")
+def get_sequence(request):
+    data = {}
+
+    data["serial_no_month"], data["serial_no_year"] = get_obgyn_config(request.user, PatientDeliveryModel)
+
+    return Response(data=data,status=status.HTTP_200_OK)
+
+

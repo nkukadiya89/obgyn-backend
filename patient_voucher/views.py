@@ -120,7 +120,7 @@ def patch(request, id):
     data = {}
     try:
         if id:
-            patient_voucher = PatientVoucherModel.objects.get(pk=id)
+            patient_voucher = PatientVoucherModel.objects.get(pk=id, deleted=0)
         else:
             patient_voucher = PatientVoucherModel.objects.filter(deleted=0)
         if "patient_opd_id" not in request.data:
@@ -219,7 +219,7 @@ class VoucherItemAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
+@api_view(['DELETE'])
 @authentication_classes([JWTAuthentication])
 @validate_permission_id("voucher_item","change")
 def delete_item(request):
@@ -277,7 +277,7 @@ def voucher_item_patch(request, id):
     data = {}
     try:
         if id:
-            voucher_item = VoucherItemModel.objects.get(pk=id)
+            voucher_item = VoucherItemModel.objects.get(pk=id, deleted=0)
         else:
             voucher_item = VoucherItemModel.objects.filter(deleted=0)
     except VoucherItemModel.DoesNotExist:

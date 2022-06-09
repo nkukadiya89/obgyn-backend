@@ -17,6 +17,7 @@ from .models import Subscription_purchaseModel
 from .serializers import Subscription_PurchaseSerializers
 from utility.search_filter import filtering_query
 from utility.decorator import validate_permission, validate_permission_id
+from .utils_views import generate_invoice_no
 
 class Subscription_purchaseAPI(APIView):
     authentication_classes = (JWTTokenUserAuthentication,)
@@ -44,6 +45,7 @@ class Subscription_purchaseAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 # ================= Delete Record =========================
 @api_view(['DELETE'])
 @authentication_classes([JWTAuthentication])
@@ -59,7 +61,7 @@ def delete(request):
 
     try:
         subscription_purchase = Subscription_purchaseModel.objects.filter(
-            subscription_Purchase_id__in=del_id["id"])
+            subscription_purchase_id__in=del_id["id"])
     except Subscription_purchaseModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record does not exist"
@@ -84,7 +86,13 @@ def create(request):
         serializer = Subscription_PurchaseSerializers(subscription_purchase, data=request.data)
 
         if serializer.is_valid():
-            serializer.save()
+            subscription_purchase = serializer.save()
+            # invoice_no, inv_year = generate_invoice_no(serializer.data["subscription_purchase_id"])
+
+            # subscription_purchase.invoice_no=invoice_no
+            # subscription_purchase.inv_year = inv_year
+            # subscription_purchase.save()
+
             data["success"] = True
             data["msg"] = "Data updated successfully"
             data["data"] = serializer.data
@@ -103,7 +111,7 @@ def patch(request, id):
     data = {}
     try:
         if id:
-            subscription_purchase = Subscription_purchaseModel.objects.get(pk=id)
+            subscription_purchase = Subscription_purchaseModel.objects.get(pk=id, deleted=0)
         else:
             subscription_purchase = Subscription_purchaseModel.objects.filter(deleted=0)
     except Subscription_purchaseModel.DoesNotExist:

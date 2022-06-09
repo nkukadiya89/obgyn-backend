@@ -126,7 +126,7 @@ def patch(request, id):
     data = {}
     try:
         if id:
-            patient_indoor = PatientIndoorModel.objects.get(pk=id)
+            patient_indoor = PatientIndoorModel.objects.get(pk=id, deleted=0)
         else:
             patient_indoor = PatientIndoorModel.objects.filter(deleted=0)
 
@@ -287,7 +287,7 @@ def indoor_advice_patch(request, id):
     data = {}
     try:
         if id:
-            indoor_advice = IndoorAdviceModel.objects.get(pk=id)
+            indoor_advice = IndoorAdviceModel.objects.get(pk=id, deleted=0)
         else:
             indoor_advice = IndoorAdviceModel.objects.filter(deleted=0)
     except IndoorAdviceModel.DoesNotExist:

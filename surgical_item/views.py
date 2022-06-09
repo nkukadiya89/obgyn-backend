@@ -195,7 +195,7 @@ def patch_surgical_group(request, id):
 
     try:
         if id:
-            surgical_item_group = SurgicalItemGroupModel.objects.get(pk=id)
+            surgical_item_group = SurgicalItemGroupModel.objects.get(pk=id, deleted=0)
         else:
             surgical_item_group = SurgicalItemGroupModel.objects.filter(deleted=0)
     except SurgicalItemGroupModel.DoesNotExist:
@@ -228,7 +228,7 @@ def patch(request, id):
 
     try:
         if id:
-            surgical_item = SurgicalItemModel.objects.get(pk=id)
+            surgical_item = SurgicalItemModel.objects.get(pk=id, deleted=0)
         else:
             surgical_item = SurgicalItemModel.objects.filter(deleted=0)
     except SurgicalItemModel.DoesNotExist:

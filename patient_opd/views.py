@@ -140,7 +140,7 @@ def patch(request, id):
     data = {}
     try:
         if id:
-            patient_opd = PatientOpdModel.objects.get(pk=id)
+            patient_opd = PatientOpdModel.objects.get(pk=id, deleted=0)
             patient = patient_opd.patient
     except PatientOpdModel.DoesNotExist:
         data["success"] = False

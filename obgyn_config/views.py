@@ -76,8 +76,8 @@ def update_obgyn_config(request):
         
         obgyn_config.save()
 
-
-def get_obgyn_config(user):
+from patient_delivery.models import PatientDeliveryModel
+def get_obgyn_config(user,model_class=PatientUSGFormModel):
     month_seq = 0
     year_seq = 0
 
@@ -94,12 +94,11 @@ def get_obgyn_config(user):
     first_date = date(year, month, 1)
     last_date = date(year, month, num_days)
 
-    usg_form_y = PatientUSGFormModel.objects.filter(deleted=0,created_at__date__gte=start_date,
+
+    usg_form_y = model_class.objects.filter(deleted=0,created_at__date__gte=start_date,
             created_at__date__lte=end_date, created_by=user.id)
     
-    print(len(usg_form_y))
-
-    usg_form_m =PatientUSGFormModel.objects.filter(deleted=0,created_at__date__gte=first_date,
+    usg_form_m =model_class.objects.filter(deleted=0,created_at__date__gte=first_date,
         created_at__date__lte=last_date, created_by=user.id)
 
     if usg_form_y == None:
@@ -192,7 +191,7 @@ def patch(request, id):
     data = {}
     try:
         if id:
-            obgyn_config = ObgynConfigModel.objects.get(pk=id)
+            obgyn_config = ObgynConfigModel.objects.get(pk=id,deleted=0)
         else:
             obgyn_config = ObgynConfigModel.objects.filter(deleted=0)
     except ObgynConfigModel.DoesNotExist:

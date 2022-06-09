@@ -74,7 +74,7 @@ def update_user(request, id):
     if request.method == "POST":
         try:
             if id:
-                user = User.objects.get(pk=id)
+                user = User.objects.get(pk=id, deleted=0)
             else:
                 user = User.objects.filter(deleted=0)
         except User.DoesNotExist:

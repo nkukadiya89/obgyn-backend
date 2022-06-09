@@ -122,7 +122,7 @@ def patch(request, id):
     data = {}
     try:
         if id:
-            patient_histolap = PatientHistolapModel.objects.get(pk=id)
+            patient_histolap = PatientHistolapModel.objects.get(pk=id,deleted=0)
         else:
             patient_histolap = PatientHistolapModel.objects.filter(deleted=0)
         if "patient_opd_id" not in request.data:

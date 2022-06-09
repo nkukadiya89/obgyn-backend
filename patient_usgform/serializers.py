@@ -7,7 +7,6 @@ from .models import PatientUSGFormModel, USGFormChildModel
 from user.serializers import UserSerializers
 from datetime import datetime, date
 from dateutil.relativedelta import *
-from obgyn_config.views import get_obgyn_config
 
 
 class USGFormChildSerializers(serializers.ModelSerializer):

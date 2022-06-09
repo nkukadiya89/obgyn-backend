@@ -43,7 +43,7 @@ class PatientReferalAPI(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # ================= Delete Record =========================
-@api_view(['POST'])
+@api_view(['DELETE'])
 @authentication_classes([JWTAuthentication])
 @validate_permission("patient_referal","change")
 def delete(request):
@@ -114,7 +114,7 @@ def patch(request, id):
 
     try:
         if id:
-            patient_referal = PatientReferalModel.objects.get(pk=id)
+            patient_referal = PatientReferalModel.objects.get(pk=id, deleted=0)
         else:
             patient_referal = PatientReferalModel.objects.filter(deleted=0)
 

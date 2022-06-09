@@ -103,7 +103,7 @@ def patch(request, id):
 
     try:
         if id:
-            diagnosis = DiagnosisModel.objects.get(pk=id)
+            diagnosis = DiagnosisModel.objects.get(pk=id,deleted=0)
         else:
             diagnosis = DiagnosisModel.objects.filter(deleted=0)
     except DiagnosisModel.DoesNotExist:

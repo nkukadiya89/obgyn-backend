@@ -1,5 +1,5 @@
 import json
-
+import datetime
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -99,10 +99,16 @@ def create(request):
             patient_opd.status = "consultation"
             patient_opd.save()
 
-            PatientModel.objects.filter(registered_no=request.data["regd_no"]).update(first_edd=request.data["first_edd"])
+            
+            patient = PatientModel.objects.filter(registered_no=request.data["regd_no"]).first()
+            if patient.first_edd == None and request.data["first_edd"]:
+                patient.first_edd = datetime.datetime.strptime(request.data["first_edd"],"%d-%m-%Y").strftime("%Y-%m-%d")
+                patient.save()
+
 
             if "medicine" in request.data:
                 add_medicine_for_consultaion(request, serializer.data["consultation_id"])
+
             serializer = ConsultationSerializers(consultation)
 
             data["success"] = True
@@ -123,7 +129,7 @@ def patch(request, id):
     data = {}
     try:
         if id:
-            consultation = ConsultationModel.objects.get(pk=id)
+            consultation = ConsultationModel.objects.get(pk=id,deleted=0)
         else:
             consultation = ConsultationModel.objects.filter(deleted=0)
         if "patient_opd_id" not in request.data:

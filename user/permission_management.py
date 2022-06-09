@@ -36,7 +36,7 @@ def list_group(request,id=None):
     data={}
     try:
         if id:
-            group=Group.objects.get(pk=id)
+            group=Group.objects.get(pk=id, deleted=0)
         else:
             group = Group.objects.all()
         

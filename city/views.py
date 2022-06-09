@@ -103,7 +103,7 @@ def patch(request, id):
     data = {}
     try:
         if id:
-            city = CityModel.objects.get(pk=id)
+            city = CityModel.objects.get(pk=id,deleted=0)
         else:
             city = CityModel.objects.filter(deleted=0)
     except CityModel.DoesNotExist:
