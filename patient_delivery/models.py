@@ -8,6 +8,7 @@ from city.models import CityModel
 from taluka.models import TalukaModel
 from district.models import DistrictModel
 from state.models import StateModel
+from manage_fields.models import ManageFieldsModel
 
 
 # Create your models here.
@@ -36,8 +37,8 @@ class PatientDeliveryModel(models.Model):
     child_gender = models.CharField(max_length=10, choices=gender_choice, default="MALE")
     delivery_type = models.CharField(max_length=10, choices=delivery_type_choice, default="NORMAL")
     religion = models.CharField(max_length=25, default="")
-    episio_by = models.CharField(max_length=100, default="")
-    dayan = models.CharField(max_length=100, default="")
+    episio_by = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="delivery_dpisio_by", null=True)
+    dayan = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="delivery_dayan", null=True)
     city = models.ForeignKey(CityModel,on_delete=models.DO_NOTHING, null=True)
     taluka = models.ForeignKey(TalukaModel,on_delete=models.DO_NOTHING, null=True)
     district = models.ForeignKey(DistrictModel,on_delete=models.DO_NOTHING, null=True)
@@ -49,8 +50,8 @@ class PatientDeliveryModel(models.Model):
     live_male_female = models.CharField(max_length=15, null=True)
     no_of_delivery = models.IntegerField(default=0, null=True)
     weight = models.FloatField(default=0.0, null=True)
-    father_education = models.CharField(max_length=100, default="")
-    mother_education = models.CharField(max_length=100, default="")
+    father_education = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="delivery_f_education", null=True)
+    mother_education = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="delivery_m_education", null=True)
     father_occupation = models.CharField(max_length=250, default="")
     mother_occupation = models.CharField(max_length=250, default="")
     baby_status = models.CharField(max_length=15, default="")

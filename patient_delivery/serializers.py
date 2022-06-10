@@ -7,6 +7,7 @@ from city.serializers import CitySerializers
 from taluka.serializers import TalukaSerializers
 from district.serializers import DistrictSerializers
 from state.serializers import StateSerializers
+from manage_fields.serializers import ManageFieldsSerializers
 
 
 class PatientDeliverySerializers(serializers.ModelSerializer):
@@ -41,6 +42,14 @@ class PatientDeliverySerializers(serializers.ModelSerializer):
             ret["state_name"] = StateSerializers(instance.state).data[
                 "state_name"
             ]
+
+        for fld_nm in ["episio_by", "dayan", "father_education", "mother_education"]:
+            fld_name = fld_nm + "_name"
+            search_instance = "instance" + "." + fld_nm
+            if fld_nm in ret:
+                ret[fld_name] = ManageFieldsSerializers(eval(search_instance)).data[
+                    "field_value"
+                ]
 
 
         return ret
