@@ -43,7 +43,7 @@ class PatientDeliverySerializers(serializers.ModelSerializer):
                 "state_name"
             ]
 
-        for fld_nm in ["episio_by", "dayan", "father_education", "mother_education"]:
+        for fld_nm in ["episio_by", "dayan", "father_education", "mother_education","father_occupation", "mother_occupation"]:
             fld_name = fld_nm + "_name"
             search_instance = "instance" + "." + fld_nm
             if fld_nm in ret:
