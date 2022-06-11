@@ -90,7 +90,7 @@ def create(request):
     data = {}
     if request.method == "POST":
         patient_delivery = PatientDeliveryModel()
-        request.data["serial_no_month"], request.data["serial_no_year"] = get_obgyn_config(request.user ,PatientDeliveryModel)
+        request.data["serial_no_month"], request.data["serial_no_year"], request.data["sr_no"] = get_obgyn_config(request.user ,PatientDeliveryModel)
 
         serializer = PatientDeliverySerializers(patient_delivery, data=request.data)
 
@@ -182,7 +182,7 @@ def get(request, id=None):
 def get_sequence(request):
     data = {}
 
-    data["serial_no_month"], data["serial_no_year"] = get_obgyn_config(request.user, PatientDeliveryModel)
+    data["serial_no_month"], data["serial_no_year"], data["sr_no"] = get_obgyn_config(request.user, PatientDeliveryModel)
 
     return Response(data=data,status=status.HTTP_200_OK)
 
