@@ -95,8 +95,10 @@ class ModelFilterCITY:
                 model = model.filter(taluka_id=fld_value)
             if fld_name == "city_id":
                 model = model.filter(city_id=fld_value)
-            if fld_name == "language":
+            if fld_name == "language_id":
                 model = model.filter(language_id=fld_value)
+            if fld_name == "language_name":
+                model = model.filter(language__language=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -123,8 +125,10 @@ class ModelFilterDISTRICT:
                 model = model.filter(state_id=fld_value)
             if fld_name == "district_id":
                 model = model.filter(district_id=fld_value)
-            if fld_name == "language":
+            if fld_name == "language_id":
                 model = model.filter(language_id=fld_value)
+            if fld_name == "language_name":
+                model = model.filter(language__language=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -149,8 +153,10 @@ class ModelFilterTALUKA:
                 model = model.filter(district_id=fld_value)
             if fld_name == "taluka_id":
                 model = model.filter(taluka_id=fld_value)
-            if fld_name == "language":
+            if fld_name == "language_id":
                 model = model.filter(language_id=fld_value)
+            if fld_name == "language_name":
+                model = model.filter(language__language=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -172,8 +178,10 @@ class ModelFilterSTATE:
             fld_value = fields.split("=")[1]
             if fld_name == "state_name":
                 model = model.filter(state_name__icontains=fld_value)
-            if fld_name == "language":
+            if fld_name == "language_id":
                 model = model.filter(language_id=fld_value)
+            if fld_name == "language_name":
+                model = model.filter(language__language=fld_value)
         return model
 
     def search(self, model, query_string):
