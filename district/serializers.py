@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 from .models import DistrictModel
 from state.serializers import StateSerializers
+from language.serializers import LanguageSerializers
 
 
 class DistrictSerializers(serializers.ModelSerializer):
@@ -11,6 +12,9 @@ class DistrictSerializers(serializers.ModelSerializer):
 
         if "state" in ret:
             ret["state_name"] = StateSerializers(instance.state).data["state_name"]
+
+        if "language" in ret:
+            ret["language_name"] = LanguageSerializers(instance.language).data["language"]
 
         return ret
 
