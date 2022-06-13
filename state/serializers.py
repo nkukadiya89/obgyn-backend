@@ -2,9 +2,17 @@ from django.db.models import Q
 from rest_framework import serializers
 
 from .models import StateModel
+from language.serializers import LanguageSerializers
 
 
 class StateSerializers(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        ret = super(StateSerializers, self).to_representation(instance)
+
+        if "language" in ret:
+            ret["language_name"] = LanguageSerializers(instance.language).data["language"]
+
+        return ret
     def validate(self, data):
         state_name = data.get('state_name')
 
