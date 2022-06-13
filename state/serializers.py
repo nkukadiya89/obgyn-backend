@@ -8,9 +8,6 @@ class StateSerializers(serializers.ModelSerializer):
     def validate(self, data):
         state_name = data.get('state_name')
 
-        if not state_name.isalpha():
-            raise serializers.ValidationError("Invalid State Name")
-
         duplicate_state = StateModel.objects.filter(deleted=0, state_name__iexact=state_name)
 
         if self.partial:
