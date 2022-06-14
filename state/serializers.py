@@ -9,10 +9,13 @@ class StateSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(StateSerializers, self).to_representation(instance)
 
+        print(ret)
         if "language" in ret:
             ret["language_name"] = LanguageSerializers(instance.language).data["language"]
 
         return ret
+
+
     def validate(self, data):
         state_name = data.get('state_name')
 
@@ -32,4 +35,4 @@ class StateSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = StateModel
-        fields = ['state_id', 'state_name', 'created_by', 'deleted']
+        fields = ['state_id', 'state_name', 'language', 'created_by', 'deleted']

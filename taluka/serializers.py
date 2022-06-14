@@ -41,4 +41,4 @@ class TalukaSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = TalukaModel
-        fields = ['taluka_id', 'taluka_name', 'district', 'created_by', 'deleted']
+        fields = ['taluka_id', 'taluka_name', 'district', 'language', 'created_by', 'deleted']

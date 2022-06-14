@@ -38,4 +38,4 @@ class DistrictSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = DistrictModel
-        fields = ['district_id', 'district_name', 'state', 'created_by', 'deleted']
+        fields = ['district_id', 'district_name', 'state', 'language', 'created_by', 'deleted']
