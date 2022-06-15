@@ -443,7 +443,6 @@ class ModelFilterFIELDMASTER:
 
 class ModelFilterMANAGEFIELDS:
     def filter_fields(self, model, filter_fields):
-        print(filter_fields)
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]

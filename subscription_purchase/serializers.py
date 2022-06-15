@@ -25,7 +25,6 @@ class Subscription_PurchaseSerializers(serializers.ModelSerializer):
         return ret
 
     def validate(self,data):
-        print(data)
         start_date = over_date = ""
 
         if "start_date" in data:

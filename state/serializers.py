@@ -9,7 +9,6 @@ class StateSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(StateSerializers, self).to_representation(instance)
 
-        print(ret)
         if "language" in ret:
             ret["language_name"] = LanguageSerializers(instance.language).data["language"]
 
