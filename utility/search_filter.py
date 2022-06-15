@@ -1,6 +1,5 @@
 from decouple import config
 from django.core.paginator import Paginator
-from django.db.models.functions import Lower
 
 from utility.filter_model import *
 
@@ -57,7 +56,7 @@ def user_filtering_query(model, query_string, model_id, classnm):
     if orderby:
         if sortby:
             orderby = sortby + orderby
-        model = model.order_by(Lower(orderby))
+        model = model.order_by(orderby)
 
     data["total_record"] = len(model)
     data["current_page"] = 1
@@ -106,7 +105,7 @@ def filtering_query(model, query_string, model_id, classnm):
     if orderby:
         if sortby:
             orderby = sortby + orderby
-        model = model.order_by(Lower(orderby))
+        model = model.order_by(orderby)
 
     if len(model) > 0:
         model = model.distinct()
