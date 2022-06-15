@@ -15,7 +15,7 @@ class PatientUSGFormModel(models.Model):
     patient_opd = models.ForeignKey(PatientOpdModel, on_delete=models.DO_NOTHING)
     regd_no = models.CharField(max_length=100, default="")
 
-    ut_weeks = models.IntegerField(default=0)
+    ut_weeks = models.IntegerField(default=0, null=True)
     lmp_date = models.DateField(null=True)
     diagnosis = models.ForeignKey(DiagnosisModel, on_delete=models.DO_NOTHING, null=True)
     indication = models.ManyToManyField(ManageFieldsModel, blank=True)
