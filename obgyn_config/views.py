@@ -94,7 +94,7 @@ def get_obgyn_config(user,model_class=PatientUSGFormModel):
     first_date = date(year, month, 1)
     last_date = date(year, month, num_days)
 
-    usg_form = model_class.objects.filter(deleted=0, created_by=user.id)
+    usg_form = PatientDeliveryModel.objects.filter(deleted=0, created_by=user.id)
 
     usg_form_y = usg_form.filter(created_at__date__gte=start_date,
             created_at__date__lte=end_date)
@@ -102,7 +102,7 @@ def get_obgyn_config(user,model_class=PatientUSGFormModel):
     usg_form_m =usg_form.filter(created_at__date__gte=first_date,
         created_at__date__lte=last_date)
     
-    sr_no = usg_form.count()
+    sr_no = usg_form.count() + 1
 
     if usg_form_y == None:
         month_seq = 1
@@ -113,7 +113,7 @@ def get_obgyn_config(user,model_class=PatientUSGFormModel):
             month_seq = 1
         else:
             month_seq = len(usg_form_m) + 1
-
+    print(month_seq,"===", year_seq,"===", sr_no)
     return month_seq, year_seq, sr_no
 
 def update_global_charges(request):

@@ -59,7 +59,6 @@ def delete(request):
 @authentication_classes([JWTAuthentication])
 @validate_permission("subscription","add")
 def create(request):
-    print(request.data)
     data = {}
     if request.method == "POST":
         subscription = SubscriptionModel()

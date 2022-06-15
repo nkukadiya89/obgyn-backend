@@ -119,7 +119,6 @@ def match_regd_no(request):
         patient_list = PatientModel.objects.filter(id=user.id)
 
         for patient in patient_list:
-            print(patient.registered_no, "====", patient.phone)
 
             patient.phone = "F_" + str(patient.registered_no)
             patient.save()
