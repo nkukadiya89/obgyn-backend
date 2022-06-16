@@ -94,7 +94,7 @@ def get_obgyn_config(user,model_class=PatientUSGFormModel):
     first_date = date(year, month, 1)
     last_date = date(year, month, num_days)
 
-    usg_form = PatientDeliveryModel.objects.filter(deleted=0, created_by=user.id)
+    usg_form = model_class.objects.filter(deleted=0, created_by=user.id)
 
     usg_form_y = usg_form.filter(created_at__date__gte=start_date,
             created_at__date__lte=end_date)
