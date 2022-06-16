@@ -10,9 +10,9 @@ from django.http import JsonResponse
 def discharge_rpt(request, id, language_id=None):
     patient_opd = PatientOpdModel.objects.filter(pk=id,deleted=0).select_related('patientdischargemodel').first()
     if language_id:
-        template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id,deleted=0).first()
+        template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id, language_id=language_id,deleted=0).first()
     else:
-        template_header = TemplateHeaderModel.objects.filter(pk=1,deleted=0).first()
+        template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id,deleted=0).first()
 
     if not template_header:
         context = {}

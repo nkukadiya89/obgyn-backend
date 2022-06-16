@@ -19,9 +19,9 @@ def billing_rpt(request, start_date=None, end_date=None, language_id=1):
     context_list=[]
 
     if language_id:
-        template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id,deleted=0).first()
+        template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id, language_id=language_id,deleted=0).first()
     else:
-        template_header = TemplateHeaderModel.objects.filter(pk=1,deleted=0).first()
+        template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id,deleted=0).first()
 
     if not template_header:
         context = {}
