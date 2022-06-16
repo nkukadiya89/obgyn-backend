@@ -551,7 +551,10 @@ def get_medicine_type(request, id=None):
 # ================= Retrieve Single or Multiple records=========================
 def get_unique_medicine(request, id=None):
     query_string = request.query_params
-    distinc_key =  query_string["fields"].split(",")[1]
+    if "," in query_string["fields"]:
+        distinc_key =  query_string["fields"].split(",")[1]
+    else:
+        distinc_key = query_string["fields"]
 
     data = {}
     try:
