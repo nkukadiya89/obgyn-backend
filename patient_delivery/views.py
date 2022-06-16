@@ -134,11 +134,13 @@ def patch(request, id):
             patient_delivery, request.data, partial=True
         )
 
-        patient_delivery = PatientDeliveryModel.objects.filter(deleted=0, regd_no=request.data["regd_no"])
-        serializer = PatientDeliverySerializers(patient_delivery, many=True)
 
         if serializer.is_valid():
             serializer.save()
+
+            patient_delivery = PatientDeliveryModel.objects.filter(deleted=0, regd_no=request.data["regd_no"])
+            serializer = PatientDeliverySerializers(patient_delivery, many=True)
+
             data["success"] = True
             data["msg"] = "Data updated successfully"
             data["data"] = serializer.data
