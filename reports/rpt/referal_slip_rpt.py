@@ -2,6 +2,7 @@ from django.shortcuts import render
 from template_header.models import TemplateHeaderModel
 
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 
 @csrf_exempt
 def referal_slip_rpt(request, id, language_id=None):
@@ -11,7 +12,10 @@ def referal_slip_rpt(request, id, language_id=None):
         template_header = TemplateHeaderModel.objects.filter(pk=1,deleted=0).first()
 
     if not template_header:
-        raise "Template not found"
+        context = {}
+        context["msg"] = False
+        context["error"] = "Template not found."
+        return JsonResponse(context)
 
     context = {}
 
