@@ -6,9 +6,9 @@ from django.views.decorators.csrf import csrf_exempt
 @csrf_exempt
 def referal_slip_rpt(request, id, language_id=None):
     if language_id:
-        template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id).first()
+        template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id, deleted=0).first()
     else:
-        template_header = TemplateHeaderModel.objects.filter(pk=1).first()
+        template_header = TemplateHeaderModel.objects.filter(pk=1,deleted=0).first()
 
     context = {}
 

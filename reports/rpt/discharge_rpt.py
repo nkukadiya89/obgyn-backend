@@ -7,11 +7,11 @@ from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def discharge_rpt(request, id, language_id=None):
-    patient_opd = PatientOpdModel.objects.filter(pk=id).select_related('patientdischargemodel').first()
+    patient_opd = PatientOpdModel.objects.filter(pk=id,deleted=0).select_related('patientdischargemodel').first()
     if language_id:
-        template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id).first()
+        template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id,deleted=0).first()
     else:
-        template_header = TemplateHeaderModel.objects.filter(pk=1).first()
+        template_header = TemplateHeaderModel.objects.filter(pk=1,deleted=0).first()
     context = {}
     context["name"] = "".join(
         [patient_opd.patient.first_name, " ", patient_opd.patient.middle_name, " ", patient_opd.patient.last_name])

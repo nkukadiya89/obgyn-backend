@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 @csrf_exempt
 def delivery_rpt(request, start_date=None, end_date=None,id_list=None, language_id=1):
     
-    patient_delivery_list = PatientDeliveryModel.objects.filter(created_by=1)
+    patient_delivery_list = PatientDeliveryModel.objects.filter(created_by=request.user.id, deleted=0)
     
     if len(id_list)>0:
         id_list = id_list.split(",")
@@ -21,9 +21,9 @@ def delivery_rpt(request, start_date=None, end_date=None,id_list=None, language_
 
     context_list=[]
     if language_id:
-        template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id).first()
+        template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id,deleted=0).first()
     else:
-        template_header = TemplateHeaderModel.objects.filter(pk=1).first()
+        template_header = TemplateHeaderModel.objects.filter(pk=1,deleted=0).first()
 
     for patient_delivery in patient_delivery_list:
         patient = patient_delivery.patient
