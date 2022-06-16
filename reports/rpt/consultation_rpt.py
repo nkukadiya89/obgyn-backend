@@ -7,6 +7,7 @@ from consultation.models import ConsultationModel
 from language.models import LanguageModel
 from django.views.decorators.csrf import csrf_exempt
 from utility.aws_file_upload import upload_barcode_image
+from django.http import JsonResponse
 
 
 
@@ -38,7 +39,10 @@ def consultation_rpt(request, id, language_id=None):
         template_header = TemplateHeaderModel.objects.filter(pk=1,deleted=0).first()
 
     if not template_header:
-        raise "Template not found"
+        context = {}
+        context["msg"] = False
+        context["error"] = "Template not found."
+        return JsonResponse(context)
 
 
         

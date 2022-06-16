@@ -3,6 +3,7 @@ from template_header.models import TemplateHeaderModel
 from patient.models import PatientModel
 from patient_billing.models import PatientBillingModel
 from user.models import User
+from django.http import JsonResponse
 
 from django.views.decorators.csrf import csrf_exempt
 
@@ -23,7 +24,10 @@ def billing_rpt(request, start_date=None, end_date=None, language_id=1):
         template_header = TemplateHeaderModel.objects.filter(pk=1,deleted=0).first()
 
     if not template_header:
-        raise "Template not found"
+        context = {}
+        context["msg"] = False
+        context["error"] = "Template not found."
+        return JsonResponse(context)
 
 
     for patient_billing in patient_billing_list:

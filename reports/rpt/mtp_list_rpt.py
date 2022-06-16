@@ -4,6 +4,7 @@ from patient_mtp.models import PatientMtpModel
 from patient_opd.models import PatientOpdModel
 
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 
 @csrf_exempt
 def mtp_list_rpt(request, language_id=None):
@@ -16,7 +17,10 @@ def mtp_list_rpt(request, language_id=None):
         template_header = TemplateHeaderModel.objects.filter(pk=1,deleted=0).first()
 
     if not template_header:
-        raise "Template not found"
+        context = {}
+        context["msg"] = False
+        context["error"] = "Template not found."
+        return JsonResponse(context)
 
     context_list=[]
     for patient_mtp in patient_mtp_list:
