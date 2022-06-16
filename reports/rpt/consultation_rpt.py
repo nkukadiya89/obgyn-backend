@@ -13,7 +13,7 @@ from utility.aws_file_upload import upload_barcode_image
 @csrf_exempt
 def consultation_rpt(request, id, language_id=None):
     
-    consultation = ConsultationModel.objects.filter(pk=id).first()
+    consultation = ConsultationModel.objects.filter(pk=id,deleted=0).first()
     if consultation == None:
         return HttpResponse("Consultation Record Does not exist", status=status.HTTP_400_BAD_REQUEST)
 
@@ -33,9 +33,9 @@ def consultation_rpt(request, id, language_id=None):
     patient_opd = patient_opd.first()
 
     if language_id:
-        template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id).first()
+        template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id,deleted=0).first()
     else:
-        template_header = TemplateHeaderModel.objects.filter(pk=1).first()
+        template_header = TemplateHeaderModel.objects.filter(pk=1,deleted=0).first()
 
     
 

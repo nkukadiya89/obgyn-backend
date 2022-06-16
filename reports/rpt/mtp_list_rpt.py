@@ -7,13 +7,13 @@ from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def mtp_list_rpt(request, language_id=None):
-    patient_mtp_list = PatientMtpModel.objects.all()
+    patient_mtp_list = PatientMtpModel.objects.filter(deleted=0)
 
 
     if language_id:
-        template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id).first()
+        template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id,deleted=0).first()
     else:
-        template_header = TemplateHeaderModel.objects.filter(pk=1).first()
+        template_header = TemplateHeaderModel.objects.filter(pk=1,deleted=0).first()
 
     context_list=[]
     for patient_mtp in patient_mtp_list:
