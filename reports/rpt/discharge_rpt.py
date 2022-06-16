@@ -12,6 +12,10 @@ def discharge_rpt(request, id, language_id=None):
         template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id,deleted=0).first()
     else:
         template_header = TemplateHeaderModel.objects.filter(pk=1,deleted=0).first()
+
+    if not template_header:
+        raise "Template not found"
+
     context = {}
     context["name"] = "".join(
         [patient_opd.patient.first_name, " ", patient_opd.patient.middle_name, " ", patient_opd.patient.last_name])

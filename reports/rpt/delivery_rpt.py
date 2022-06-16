@@ -25,6 +25,9 @@ def delivery_rpt(request, start_date=None, end_date=None,id_list=None, language_
     else:
         template_header = TemplateHeaderModel.objects.filter(pk=1,deleted=0).first()
 
+    if not template_header:
+        raise "Template not found"
+        
     for patient_delivery in patient_delivery_list:
         patient = patient_delivery.patient
         

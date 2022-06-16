@@ -15,6 +15,9 @@ def mtp_list_rpt(request, language_id=None):
     else:
         template_header = TemplateHeaderModel.objects.filter(pk=1,deleted=0).first()
 
+    if not template_header:
+        raise "Template not found"
+
     context_list=[]
     for patient_mtp in patient_mtp_list:
         patient_opd_id=patient_mtp.patient_opd_id

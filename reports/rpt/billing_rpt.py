@@ -21,6 +21,11 @@ def billing_rpt(request, start_date=None, end_date=None, language_id=1):
         template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id,deleted=0).first()
     else:
         template_header = TemplateHeaderModel.objects.filter(pk=1,deleted=0).first()
+
+    if not template_header:
+        raise "Template not found"
+
+
     for patient_billing in patient_billing_list:
         patient = patient_billing.patient
         

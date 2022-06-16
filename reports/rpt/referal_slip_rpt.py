@@ -10,6 +10,9 @@ def referal_slip_rpt(request, id, language_id=None):
     else:
         template_header = TemplateHeaderModel.objects.filter(pk=1,deleted=0).first()
 
+    if not template_header:
+        raise "Template not found"
+
     context = {}
 
     template_name = "reports/en/referal_slip.html"
