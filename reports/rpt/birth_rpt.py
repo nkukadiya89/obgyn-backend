@@ -11,7 +11,7 @@ def birth_rpt(request, id, language_id=None):
     # patient = PatientModel.objects.filter(pk=id).first()
     patient_delivery = PatientDeliveryModel.objects.filter(pk=id, deleted=0).first()
 
-    if not template_header:
+    if not patient_delivery:
         context = {}
         context["msg"] = False
         context["error"] = "Patient not found."
