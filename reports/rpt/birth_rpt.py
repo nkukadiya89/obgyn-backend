@@ -15,6 +15,10 @@ def birth_rpt(request, id, language_id=None):
         template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id,deleted=0).first()
     else:
         template_header = TemplateHeaderModel.objects.filter(pk=1,deleted=0).first()
+
+    if not template_header:
+        raise "Template not found"
+
     context = {}
 
     context["mother_name"] = "".join(

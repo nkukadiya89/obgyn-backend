@@ -14,6 +14,9 @@ def usg_rpt(request, id, language_id=None):
     else:
         template_header = TemplateHeaderModel.objects.filter(pk=1,deleted=0).first()
 
+    if not template_header:
+        raise "Template not found"
+
     patient_opd = patient_opd.first()
     if patient_opd == None:
         return HttpResponse("Record Does not exist", status=status.HTTP_400_BAD_REQUEST)
