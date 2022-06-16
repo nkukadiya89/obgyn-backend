@@ -97,7 +97,7 @@ def create(request):
         if serializer.is_valid():
             serializer.save()
 
-            patient_delivery = PatientDeliveryModel.objects.filter(deleted=0, regd_no=request.data["regd_no"])
+            patient_delivery = PatientDeliveryModel.objects.filter(deleted=0, regd_no=request.data["regd_no"]).order_by('-created_at')
             serializer = PatientDeliverySerializers(patient_delivery, many=True)
 
             data["success"] = True
@@ -138,7 +138,7 @@ def patch(request, id):
         if serializer.is_valid():
             serializer.save()
 
-            patient_delivery = PatientDeliveryModel.objects.filter(deleted=0, regd_no=request.data["regd_no"])
+            patient_delivery = PatientDeliveryModel.objects.filter(deleted=0, regd_no=request.data["regd_no"]).order_by('-created_at')
             serializer = PatientDeliverySerializers(patient_delivery, many=True)
 
             data["success"] = True
