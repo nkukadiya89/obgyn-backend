@@ -27,7 +27,7 @@ class PatientDeliveryModel(models.Model):
     regd_no = models.CharField(max_length=100, default="")
 
     baby_no = models.CharField(max_length=35, null=True)
-    sr_no = models.CharField(max_length=50, default="")
+    sr_no = models.IntegerField(null=True)
     birth_date = models.DateField(null=True)
     birth_time = models.CharField(max_length=10, null=True)
     husband_name = models.CharField(max_length=50, null=True)
