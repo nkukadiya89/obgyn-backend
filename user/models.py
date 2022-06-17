@@ -1,5 +1,6 @@
 from operator import mod
 from re import T
+from turtle import ondrag
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager  ## A new class is imported. ##
 from django.db import models
@@ -120,3 +121,50 @@ def user_post_save(sender, instance, *args, **kwargs):
 
 
 post_save.connect(user_post_save, sender=User)
+
+
+
+class AuthGroupModel(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length= 150)
+
+    class Meta:
+        db_table = "auth_group"
+        managed = False
+
+class ContentTypeModel(models.Model):
+    id = models.AutoField(primary_key=True)
+    app_label = models.CharField(max_length=100)
+    model = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = "django_content_type"
+        managed = False
+
+class AuthPermissionModel(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    content_type = models.ForeignKey(ContentTypeModel, on_delete=models.DO_NOTHING)
+
+    class Meta:
+        db_table = "auth_permission"
+        managed = False
+
+
+class AuthGroupPermissionsModel(models.Model):
+    id = models.AutoField(primary_key=True)
+    group = models.ForeignKey(AuthGroupModel, on_delete=models.DO_NOTHING)
+    permission = models.ForeignKey(AuthPermissionModel, on_delete=models.DO_NOTHING)
+
+    class Meta:
+        db_table = "auth_group_permissions"
+        managed = False
+
+class UserGroupsModel(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    group = models.ForeignKey(AuthGroupModel, on_delete=models.DO_NOTHING)
+
+    class Meta:
+        db_table = "user_groups"
+        managed = False
