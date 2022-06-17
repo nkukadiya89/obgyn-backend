@@ -1,7 +1,11 @@
 import json
 import datetime
 from rest_framework import status
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -16,8 +20,6 @@ from .models import ConsultationModel
 from .serializers import ConsultationSerializers
 from .utils_view import add_medicine_for_consultaion
 from utility.decorator import validate_permission, validate_permission_id
-
-
 
 
 class ConsultationAPI(APIView):
@@ -48,12 +50,13 @@ class ConsultationAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['DELETE'])
+
+@api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("consultation","change")
+@validate_permission("consultation", "change")
 def delete(request):
     data = {}
-    del_id = json.loads(request.body.decode('utf-8'))
+    del_id = json.loads(request.body.decode("utf-8"))
 
     if "id" not in del_id:
         data["success"] = False
@@ -62,7 +65,9 @@ def delete(request):
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     try:
-        consultation = ConsultationModel.objects.filter(consultation_id__in=del_id["id"])
+        consultation = ConsultationModel.objects.filter(
+            consultation_id__in=del_id["id"]
+        )
     except ConsultationModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record does not exist"
@@ -76,10 +81,11 @@ def delete(request):
         data["deleted"] = result
         return Response(data=data, status=status.HTTP_200_OK)
 
+
 # ================= Create New Record=========================
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("consultation","add")
+@validate_permission("consultation", "add")
 def create(request):
     data = {}
     if request.method == "POST":
@@ -95,19 +101,25 @@ def create(request):
 
         if serializer.is_valid():
             serializer.save()
-            patient_opd = PatientOpdModel.objects.filter(pk=request.data["patient_opd_id"]).first()
+            patient_opd = PatientOpdModel.objects.filter(
+                pk=request.data["patient_opd_id"]
+            ).first()
             patient_opd.status = "consultation"
             patient_opd.save()
 
-            
-            patient = PatientModel.objects.filter(registered_no=request.data["regd_no"]).first()
+            patient = PatientModel.objects.filter(
+                registered_no=request.data["regd_no"]
+            ).first()
             if patient.first_edd == None and request.data["first_edd"]:
-                patient.first_edd = datetime.datetime.strptime(request.data["first_edd"],"%d-%m-%Y").strftime("%Y-%m-%d")
+                patient.first_edd = datetime.datetime.strptime(
+                    request.data["first_edd"], "%d-%m-%Y"
+                ).strftime("%Y-%m-%d")
                 patient.save()
 
-
             if "medicine" in request.data:
-                add_medicine_for_consultaion(request, serializer.data["consultation_id"])
+                add_medicine_for_consultaion(
+                    request, serializer.data["consultation_id"]
+                )
 
             serializer = ConsultationSerializers(consultation)
 
@@ -122,14 +134,14 @@ def create(request):
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("consultation","change")
+@validate_permission_id("consultation", "change")
 def patch(request, id):
     data = {}
     try:
         if id:
-            consultation = ConsultationModel.objects.get(pk=id,deleted=0)
+            consultation = ConsultationModel.objects.get(pk=id, deleted=0)
         else:
             consultation = ConsultationModel.objects.filter(deleted=0)
         if "patient_opd_id" not in request.data:
@@ -151,10 +163,16 @@ def patch(request, id):
 
         if serializer.is_valid():
             serializer.save()
-            PatientModel.objects.filter(registered_no=request.data["regd_no"]).update(first_edd=request.data["first_edd"])
+            PatientModel.objects.filter(registered_no=request.data["regd_no"]).update(
+                first_edd=datetime.datetime.strptime(
+                    request.data["first_edd"], "%d-%m-%Y"
+                ).strftime("%Y-%m-%d")
+            )
 
             if "medicine" in request.data:
-                add_medicine_for_consultaion(request, serializer.data["consultation_id"])
+                add_medicine_for_consultaion(
+                    request, serializer.data["consultation_id"]
+                )
             serializer = ConsultationSerializers(consultation)
 
             data["success"] = True
@@ -168,9 +186,9 @@ def patch(request, id):
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("consultation","view")
+@validate_permission_id("consultation", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
@@ -182,7 +200,9 @@ def get(request, id=None):
             consultation = ConsultationModel.objects.filter(deleted=0)
 
         data["total_record"] = len(consultation)
-        consultation, data = filtering_query(consultation, query_string, "consultation_id", "CONSULTATION")
+        consultation, data = filtering_query(
+            consultation, query_string, "consultation_id", "CONSULTATION"
+        )
 
     except ConsultationModel.DoesNotExist:
         data["success"] = False

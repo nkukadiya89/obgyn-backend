@@ -296,7 +296,7 @@ def get_timing(request, id=None):
         else:
             timing = TimingModel.objects.filter(
                 Q(deleted=0, created_by=1)
-                | Q(created_by=request.data.get("created_by"))
+                | Q(created_by=request.user.id)
             )
 
         data["total_record"] = len(timing)
@@ -430,8 +430,8 @@ def get_medicine(request, id=None):
             medicine = MedicineModel.objects.filter(pk=id, deleted=0)
         else:
             medicine = MedicineModel.objects.filter(
-                Q(created_by=1, deleted=0)
-                | Q(created_by=request.data.get("created_by"))
+                Q(deleted=0, created_by=1)
+                | Q(created_by=request.user.id)
             )
 
         data["total_record"] = len(medicine)
@@ -513,7 +513,7 @@ def get_or_medicine(request, id=None):
 # ================= Retrieve Single or Multiple records=========================
 def get_medicine_type(request, id=None):
     query_string = request.query_params
-
+    print(request.user.id)
     data = {}
     try:
         if id:
@@ -521,7 +521,7 @@ def get_medicine_type(request, id=None):
         else:
             medicine_type = MedicineTypeModel.objects.filter(
                 Q(deleted=0, created_by=1)
-                | Q(created_by=request.data.get("created_by"))
+                | Q(created_by=request.user.id)
             )
 
         data["total_record"] = len(medicine_type)
@@ -563,7 +563,7 @@ def get_unique_medicine(request, id=None):
         else:
             medicine = MedicineModel.objects.filter(
                 Q(deleted=0, created_by=1)
-                | Q(created_by=request.data.get("created_by"))
+                | Q(created_by=request.user.id)
             )
         data["total_record"] = len(medicine)
 
