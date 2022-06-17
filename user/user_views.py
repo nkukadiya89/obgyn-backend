@@ -24,7 +24,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             app_model = permission.content_type.model.split("model")[0]
             if app_model in permission_list:
                 permission_name = permission_list[app_model]
-                permission_list[app_model] = ",".join([permission_name,permission.name.split(" ")[1]])
+                if permission.name.split(" ")[1] not in permission_list[app_model]:
+                    permission_list[app_model] = ",".join([permission_name,permission.name.split(" ")[1]])
             else:
                 permission_list[app_model] = permission.name.split(" ")[1]
         
