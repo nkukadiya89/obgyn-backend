@@ -1267,7 +1267,7 @@ class ModelFilterSUBSCRIPTIONPURCHASE:
             if fld_name == "hospital":
                 model = model.filter(hospital=fld_value)
             if fld_name == "subscription":
-                model = model.filter(subscription__subscription__icontains=fld_value)
+                model = model.filter(subscription__subscription_name__icontains=fld_value)
             if fld_name == "price":
                 model = model.filter(price=fld_value)
             if fld_name == "duration":
@@ -1295,12 +1295,12 @@ class ModelFilterSUBSCRIPTIONPURCHASE:
             if search.isnumeric():
                 model = model.filter(
                     Q(subscription_purchase_id=search)
+                    | Q(invoice_no=search)
                 )
             else:
                 model = model.filter(
-                    Q(hospital__hospital__icontains=search)
-                    | Q(subscription__subscription__icontains=search)
-                    | Q(invoice_no=search)
+                    Q(hospital__hospital_name__icontains=search)
+                    | Q(subscription__subscription_name__icontains=search)
                 )
         return model
 
