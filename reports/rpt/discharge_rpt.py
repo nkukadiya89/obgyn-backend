@@ -9,7 +9,7 @@ from django.http import JsonResponse
 
 @csrf_exempt
 def discharge_rpt(request, id, language_id=None):
-    patient_opd = PatientOpdModel.objects.filter(pk=id,deleted=0).prefetch_related('patientdischargemodel').first()
+    patient_opd = PatientOpdModel.objects.filter(pk=id,deleted=0).first()
     if language_id:
         template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id, language_id=language_id,deleted=0).first()
     else:
