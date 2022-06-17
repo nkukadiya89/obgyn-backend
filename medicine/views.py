@@ -565,10 +565,9 @@ def get_unique_medicine(request, id=None):
                 Q(deleted=0, created_by=1)
                 | Q(created_by=request.data.get("created_by"))
             )
-
         data["total_record"] = len(medicine)
 
-        medicine = medicine.distinct(distinc_key)
+        medicine = medicine.distinct(distinc_key).values_list(distinc_key)
     except MedicineModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record Does not exist"
@@ -576,9 +575,11 @@ def get_unique_medicine(request, id=None):
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == "GET":
-        serializer = DynamicFieldModelSerializer(medicine, many=True, fields=query_string["fields"])
+        # serializer = DynamicFieldModelSerializer(medicine, many=True, fields=query_string["fields"])
+
+        medicine = [item for m in medicine for item in m]
 
         data["success"] = True
         data["msg"] = "OK"
-        data["data"] = serializer.data
+        data["data"] = medicine
         return Response(data=data, status=status.HTTP_200_OK)
