@@ -25,7 +25,6 @@ class AdviceModel(models.Model):
 
     class Meta:
         db_table = "advice"
-        app_label = "adivce"
 
 
 class AdviceGroupModel(models.Model):
