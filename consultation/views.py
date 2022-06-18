@@ -163,11 +163,13 @@ def patch(request, id):
 
         if serializer.is_valid():
             serializer.save()
-            PatientModel.objects.filter(registered_no=request.data["regd_no"]).update(
-                first_edd=datetime.datetime.strptime(
-                    request.data["first_edd"], "%d-%m-%Y"
-                ).strftime("%Y-%m-%d")
-            )
+
+            if request.data["first_edd"]:
+                PatientModel.objects.filter(registered_no=request.data["regd_no"]).update(
+                    first_edd=datetime.datetime.strptime(
+                        request.data["first_edd"], "%d-%m-%Y"
+                    ).strftime("%Y-%m-%d")
+                )
 
             if "medicine" in request.data:
                 add_medicine_for_consultaion(
