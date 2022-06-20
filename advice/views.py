@@ -146,7 +146,7 @@ def get(request, id=None):
         else:
             advice = AdviceModel.objects.filter(
                 Q(deleted=0, created_by=1)
-                | Q(created_by=request.user.id)
+                | Q(created_by=request.user.id, deleted=0)
             )
 
         data["total_record"] = len(advice)
@@ -285,7 +285,7 @@ def get_group(request, id=None):
             advice_group = AdviceGroupModel.objects.filter(pk=id, deleted=0)
         else:
             advice_group = AdviceGroupModel.objects.filter(
-                Q(deleted=0, created_by=1) | Q(created_by=request.user.id)
+                Q(deleted=0, created_by=1) | Q(created_by=request.user.id, deleted=0)
             )
 
         data["total_record"] = len(advice_group)
