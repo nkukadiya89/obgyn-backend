@@ -50,7 +50,7 @@ class PatientIndoorAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_indoor","change")
+@validate_permission("patient_indoor", "change")
 def delete(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -78,10 +78,11 @@ def delete(request):
         data["deleted"] = result
         return Response(data=data, status=status.HTTP_200_OK)
 
+
 # ================= Create New Record=========================
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_indoor","add")
+@validate_permission("patient_indoor", "add")
 def create(request):
     data = {}
     if request.method == "POST":
@@ -99,14 +100,18 @@ def create(request):
             serializer.save()
 
             if "advice_lst" in request.data:
-                    indoor_advice_insert(request,serializer.data["patient_indoor_id"])
-            serializer = PatientIndoorSerializers(patient_indoor)
+                indoor_advice_insert(request, serializer.data["patient_indoor_id"])
 
             patient_opd = PatientOpdModel.objects.filter(
                 pk=request.data["patient_opd_id"]
             ).first()
             patient_opd.status = "indoor"
             patient_opd.save()
+
+            patient_indoor = PatientIndoorModel.objects.filter(
+                regd_no=request.data["regd_no"]
+            ).order_by("-created_at")
+            serializer = PatientIndoorSerializers(patient_indoor, many=True)
 
             data["success"] = True
             data["msg"] = "Data updated successfully"
@@ -121,7 +126,7 @@ def create(request):
 
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("patient_indoor","change")
+@validate_permission_id("patient_indoor", "change")
 def patch(request, id):
     data = {}
     try:
@@ -153,9 +158,14 @@ def patch(request, id):
             serializer.save()
             if "advice_lst" in request.data:
                 if request.data.get("advice_lst"):
-                    indoor_advice_insert(request,serializer.data["patient_indoor_id"])
-            
-            serializer = PatientIndoorSerializers(patient_indoor)
+                    indoor_advice_insert(request, serializer.data["patient_indoor_id"])
+
+
+            patient_indoor = PatientIndoorModel.objects.filter(
+                regd_no=request.data["regd_no"]
+            ).order_by("-created_at")
+            serializer = PatientIndoorSerializers(patient_indoor, many=True)
+
             data["success"] = True
             data["msg"] = "Data updated successfully"
             data["data"] = serializer.data
@@ -169,7 +179,7 @@ def patch(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("patient_indoor","view")
+@validate_permission_id("patient_indoor", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
@@ -229,7 +239,7 @@ class IndoorAdviceAPI(APIView):
 
 @api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("indoor_advice","change")
+@validate_permission("indoor_advice", "change")
 def delete_advice(request):
     data = {}
     del_id = json.loads(request.body.decode("utf-8"))
@@ -257,10 +267,11 @@ def delete_advice(request):
         data["deleted"] = result
         return Response(data=data, status=status.HTTP_200_OK)
 
+
 # ================= Create New Record=========================
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("indoor_advice","add")
+@validate_permission("indoor_advice", "add")
 def create_advice(request):
     data = {}
     if request.method == "POST":
@@ -282,7 +293,7 @@ def create_advice(request):
 
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("indoor_advice","change")
+@validate_permission_id("indoor_advice", "change")
 def indoor_advice_patch(request, id):
     data = {}
     try:
@@ -314,7 +325,7 @@ def indoor_advice_patch(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("indoor_advice","view")
+@validate_permission_id("indoor_advice", "view")
 # ================= Retrieve Single or Multiple records=========================
 def indoor_advice_get(request, id=None):
     query_string = request.query_params
