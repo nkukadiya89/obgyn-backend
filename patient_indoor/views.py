@@ -156,9 +156,9 @@ def patch(request, id):
 
         if serializer.is_valid():
             serializer.save()
+            
             if "advice_lst" in request.data:
-                if request.data.get("advice_lst"):
-                    indoor_advice_insert(request, serializer.data["patient_indoor_id"])
+                indoor_advice_insert(request, serializer.data["patient_indoor_id"])
 
 
             patient_indoor = PatientIndoorModel.objects.filter(
