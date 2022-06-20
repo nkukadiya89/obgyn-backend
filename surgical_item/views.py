@@ -328,8 +328,7 @@ def get_group(request, id=None):
             )
         else:
             surgical_item_group = SurgicalItemGroupModel.objects.filter(
-                Q(deleted=0, created_by=1)
-                | Q(created_by=request.user.id,deleted=0)
+                Q(deleted=0, created_by=1) | Q(created_by=request.user.id, deleted=0)
             )
 
             data["total_record"] = len(surgical_item_group)
