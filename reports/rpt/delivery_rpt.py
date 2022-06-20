@@ -14,9 +14,10 @@ def delivery_rpt(request, start_date=None, end_date=None,id_list=None, language_
     
     patient_delivery_list = PatientDeliveryModel.objects.filter(created_by=request.user.id, deleted=0)
     
-    if len(id_list)>0:
-        id_list = id_list.split(",")
-        patient_delivery_list = patient_delivery_list.filter(patient_delivery_id__in=id_list)
+    if id_list:
+        if len(id_list)>0:
+            id_list = id_list.split(",")
+            patient_delivery_list = patient_delivery_list.filter(patient_delivery_id__in=id_list)
     if start_date and not end_date:
         patient_delivery_list = patient_delivery_list.filter(created_at__date=start_date)
     elif start_date and end_date:
