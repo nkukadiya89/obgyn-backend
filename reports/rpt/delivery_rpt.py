@@ -46,7 +46,10 @@ def delivery_rpt(request, start_date=None, end_date=None,id_list=None, language_
         context["gender"] = patient_delivery.child_gender
         hospital_name = User.objects.filter(pk=request.user.id).first()#.hospital.hospital_name
 
-        context["birth_place"] = hospital_name.hospital.hospital_name
+        if hospital_name.hospital:
+            context["birth_place"] = hospital_name.hospital.hospital_name
+        else:
+            context["birth_place"] = ""
 
         context["mother_name"] = "".join(
             [patient.first_name, " ", patient.middle_name, " ", patient.last_name])
