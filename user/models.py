@@ -7,7 +7,7 @@ from django.db import models
 from django.db.models.query import Q
 from django.db.models.signals import post_save
 from django.utils.timezone import now
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from city.models import CityModel
 from district.models import DistrictModel
