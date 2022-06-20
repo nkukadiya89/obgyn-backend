@@ -146,7 +146,7 @@ def get_mf(request, id=None):
         else:
             manage_fields = ManageFieldsModel.objects.filter(
                 Q(deleted=0, created_by=1)
-                | Q(created_by=user.id)
+                | Q(created_by=request.user.id, deleted=0)
             )
 
         data["total_record"] = len(manage_fields)
@@ -299,7 +299,7 @@ def get_mfm(request, id=None):
         else:
             field_master = FieldMasterModel.objects.filter(
                 Q(deleted=0, created_by=1)
-                | Q(created_by=request.data.get("created_by"))
+                | Q(created_by=request.user.id, deleted=0)
             )
 
         data["total_record"] = len(field_master)
