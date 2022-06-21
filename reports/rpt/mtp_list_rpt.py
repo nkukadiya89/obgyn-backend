@@ -19,7 +19,7 @@ def mtp_list_rpt(request, language_id=None):
     if not template_header:
         context = {}
         context["msg"] = False
-        context["error"] = "Template not found."
+        context["error"] = "Please create report header."
         return JsonResponse(context)
 
     context_list=[]

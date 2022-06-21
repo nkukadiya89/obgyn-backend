@@ -32,7 +32,7 @@ def delivery_rpt(request, start_date=None, end_date=None,id_list=None, language_
     if not template_header:
         context = {}
         context["msg"] = False
-        context["error"] = "Template not found."
+        context["error"] = "Please create report header."
         return JsonResponse(context)
         
     for patient_delivery in patient_delivery_list:
