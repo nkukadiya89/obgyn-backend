@@ -43,6 +43,7 @@ class SurgicalItemGroupSerializers(serializers.ModelSerializer):
         item_list = SurgicalItemModel.objects.filter(
             surgicalitemgroupmodel__si_group_id=instance.si_group_id)
         
+        
         ret["surgical_item"] = SurgicalItemSerializers(item_list,many=True).data
         # ret['surgical_item_name'] = surgical_item_name_list
         # ret.pop("surgical_item")

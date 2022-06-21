@@ -19,7 +19,7 @@ def usg_rpt(request, id, language_id=None):
     if not template_header:
         context = {}
         context["msg"] = False
-        context["error"] = "Template not found."
+        context["error"] = "Please create report header."
         return JsonResponse(context)
 
     patient_opd = patient_opd.first()
