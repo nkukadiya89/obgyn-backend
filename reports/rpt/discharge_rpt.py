@@ -24,6 +24,7 @@ def discharge_rpt(request, id, language_id=None):
 
 
     context = {}
+    context["regd_no"] = patient_opd.patient.regd_no_barcode
     context["name"] = "".join(
         [patient_opd.patient.first_name, " ", patient_opd.patient.middle_name, " ", patient_opd.patient.last_name])
     context["address"] = "".join([" ", patient_opd.patient.city.city_name, " ",
