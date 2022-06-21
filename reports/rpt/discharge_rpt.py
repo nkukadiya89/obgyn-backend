@@ -21,6 +21,11 @@ def discharge_rpt(request, id, language_id=None):
         context["error"] = "Template not found."
         return JsonResponse(context)
 
+    if not patient_opd:
+        context = {}
+        context["msg"] = False
+        context["error"] = "OPD not found."
+        return JsonResponse(context)
 
 
     context = {}
