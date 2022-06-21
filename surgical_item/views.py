@@ -337,7 +337,7 @@ def get_group(request, id=None):
             )
 
     except SurgicalItemGroupModel.DoesNotExist:
-        data["success"] = False
+        data["success"] = False 
         data["msg"] = "Record Does not exist"
         data["data"] = []
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
