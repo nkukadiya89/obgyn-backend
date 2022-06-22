@@ -66,7 +66,6 @@ def delete(request):
 @validate_permission("patient_opd", "add")
 def create(request):
     data = {}
-    request.data["created_by"] = request.user.id
     gen_regist_no = generate_regd_no()
 
     if request.method == "POST":
@@ -140,7 +139,6 @@ def create(request):
 @validate_permission_id("patient_opd", "change")
 def patch(request, id):
     data = {}
-    request.data["created_by"] = request.user.id
     try:
         if id:
             patient_opd = PatientOpdModel.objects.get(pk=id, deleted=0)
