@@ -71,7 +71,7 @@ def create(request):
     if request.method == "POST":
         patient_opd_data = json.loads(request.data["data"])["patient_opd"]
         patient_data = json.loads(request.data["data"])["patient"]
-        patient_data["created_by"] = patient_opd_data["created_by"] = request.user.id
+        # patient_data["created_by"] = patient_opd_data["created_by"] = request.user.id
         if "phone" in patient_data:
             if len(str(patient_data["phone"])) < 5:
                 patient_data["phone"] = "F_" + gen_regist_no
@@ -153,7 +153,6 @@ def patch(request, id):
         patient_opd_data = json.loads(request.data["data"])["patient_opd"]
         patient_data = json.loads(request.data["data"])["patient"]
 
-        patient_opd_data["created_by"] = patient_data["created_by"] = request.user.id
 
         if patient_data["phone"] == "0" or patient_data["phone"] == "":
             patient_data["phone"] = "F_" + patient_opd_data["regd_no"]
