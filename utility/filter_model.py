@@ -682,6 +682,8 @@ class ModelFilterPATIENTOPD:
                 model = model.filter(patient__first_name__icontains=fld_value)
             if fld_name == "last_name":
                 model = model.filter(patient__last_name__icontains=fld_value)
+            if fld_name == "created_by":
+                model = model.filter(created_by=fld_value)
 
         return model
 

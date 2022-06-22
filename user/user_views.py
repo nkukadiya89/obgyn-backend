@@ -18,7 +18,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super(CustomTokenObtainPairSerializer, self).validate(attrs)
         group_permission = Permission.objects.all()
         group_permission = AuthPermissionModel.objects.filter(authgrouppermissionsmodel__group__usergroupsmodel__user_id=self.user.id)
-        print(len(group_permission))
         permission_list = {}
         for permission in group_permission:
             app_model = permission.content_type.model.split("model")[0]

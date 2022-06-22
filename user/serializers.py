@@ -15,7 +15,7 @@ class DynamicFieldModelSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         fields = kwargs.pop('fields', None)
-
+        
         super(DynamicFieldModelSerializer, self).__init__(*args, **kwargs)
 
         fields = set(fields.split(","))
@@ -34,14 +34,17 @@ class DynamicFieldModelSerializer(serializers.ModelSerializer):
             if "first_name" in ret: ret.pop('first_name')
             if "last_name" in ret: ret.pop('last_name')
             if "middle_name" in ret: ret.pop('middle_name')
+        
+        obgyn_config = ObgynConfigModel.objects.filter(user_id=instance.id).first()
+
         if instance.user_type == "DOCTOR":
-            ret["rs_per_visit"]=instance.obgyn_config.rs_per_visit
-            ret["rs_per_usg"]=instance.obgyn_config.rs_per_usg
-            ret["rs_per_room"]=instance.obgyn_config.rs_per_room
-            ret["operative_charge"]=instance.obgyn_config.operative_charge
-            ret["rs_per_day_nursing"]=instance.obgyn_config.rs_per_day_nursing
-            ret["monthly_usg"] = instance.obgn_config.monthly_usg
-            ret["yearly_usg"] = instance.obgyn_config.yearly_usg
+            ret["rs_per_visit"]=obgyn_config.rs_per_visit
+            ret["rs_per_usg"]=obgyn_config.rs_per_usg
+            ret["rs_per_room"]=obgyn_config.rs_per_room
+            ret["operative_charge"]=obgyn_config.operative_charge
+            ret["rs_per_day_nursing"]=obgyn_config.rs_per_day_nursing
+            ret["monthly_usg"] = obgyn_config.monthly_usg
+            ret["yearly_usg"] = obgyn_config.yearly_usg
 
         if "state" in ret: ret['state_name'] = StateSerializers(instance.state).data["state_name"]
         if "city" in ret: ret['city_name'] = CitySerializers(instance.city).data["city_name"]
