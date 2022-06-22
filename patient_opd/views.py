@@ -207,14 +207,13 @@ def get(request, id=None):
     else:
         doctor_list = User.objects.filter(id=request.user.id).values_list("id")
 
-    print(list(doctor_list))
     data = {}
     try:
         if id:
             patient_opd = PatientOpdModel.objects.filter(pk=id, deleted=0,created_by__in=doctor_list)
         else:
-            patient_opd = PatientOpdModel.objects.filter(Q(deleted=0, created_by__in=doctor_list)
-                | Q(created_by=request.user.id, deleted=0))
+            patient_opd = PatientOpdModel.objects.filter(deleted=0, created_by__in=doctor_list)
+                
 
         data["total_record"] = len(patient_opd)
         patient_opd, data = filtering_query(
