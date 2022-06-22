@@ -1100,7 +1100,7 @@ class ModelFilterPATIENTINDOOR:
             if fld_name == "diagnosis":
                 model = model.filter(diagnosis_id=fld_value)
             if fld_name == "operation":
-                model = model.filter(operation__icontains=fld_value)
+                model = model.filter(operation__field_value__icontains=fld_value)
             if fld_name == "patient_opd_id":
                 model = model.filter(patient_opd_id=fld_value)
 
@@ -1113,8 +1113,7 @@ class ModelFilterPATIENTINDOOR:
                 Q(regd_no__icontains=search)
                 | Q(indoor_case_number__icontains=search)
                 | Q(complain__icontains=search)
-                | Q(contraception__icontains=search)
-                | Q(operation__icontains=search)
+                | Q(operation__field_value__icontains=search)
                 | Q(diagnosis__diagnosis_name__icontains=search)
             )
         return model
