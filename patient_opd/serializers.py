@@ -5,6 +5,7 @@ from rest_framework import serializers
 from manage_fields.serializers import ManageFieldsSerializers
 from patient.models import PatientModel
 from .models import PatientOpdModel
+from user.models import User
 
 
 class PatientOpdSerializers(serializers.ModelSerializer):
@@ -87,6 +88,9 @@ class PatientOpdSerializers(serializers.ModelSerializer):
             data["patient_id"] = patient[0].patient_id
         else:
             raise serializers.ValidationError("Patient is missing")
+        
+        if data["consulted_by"].user_type != "DOCTOR":
+            raise serializers.ValidationError("Selected doctor is not of type DOCTOR")
 
         return data
 

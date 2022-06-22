@@ -69,6 +69,7 @@ def create(request):
     gen_regist_no = generate_regd_no()
 
     if request.method == "POST":
+        
         patient_opd_data = json.loads(request.data["data"])["patient_opd"]
         patient_data = json.loads(request.data["data"])["patient"]
         # patient_data["created_by"] = patient_opd_data["created_by"] = request.user.id
