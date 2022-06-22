@@ -58,7 +58,7 @@ def delete(request):
 
     try:
         patient_ovulation_profile = PatientOvulationProfileModel.objects.filter(patient_ovulation_profile_id__in=del_id["id"])
-    except PatientOvulationProfileModel:
+    except PatientOvulationProfileModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record does not exist"
         data["data"] = []
@@ -77,6 +77,7 @@ def delete(request):
 @validate_permission("patient_ovulation_profile","add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         patient_ovulation_profile = PatientOvulationProfileModel()
         if "patient_opd_id" not in request.data:
@@ -114,6 +115,7 @@ def create(request):
 @validate_permission_id("patient_ovulation_profile","change")
 def patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             patient_ovulation_profile = PatientOvulationProfileModel.objects.get(pk=id, deleted=0)

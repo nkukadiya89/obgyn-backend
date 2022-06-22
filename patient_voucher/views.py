@@ -58,7 +58,7 @@ def delete(request):
 
     try:
         patient_voucher = PatientVoucherModel.objects.filter(patient_voucher_id__in=del_id["id"])
-    except PatientVoucherModel:
+    except PatientVoucherModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record does not exist"
         data["data"] = []
@@ -77,6 +77,7 @@ def delete(request):
 @validate_permission("patient_voucher","add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         patient_voucher = PatientVoucherModel()
         if "patient_opd_id" not in request.data:
@@ -118,6 +119,7 @@ def create(request):
 @validate_permission_id("patient_voucher","change")
 def patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             patient_voucher = PatientVoucherModel.objects.get(pk=id, deleted=0)

@@ -76,6 +76,7 @@ def delete(request):
 @validate_permission("patient_prescription","add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         patient_prescription = PatientPrescriptionModel()
         serializer = PatientPrescriptionSerializers(patient_prescription, data=request.data)
@@ -99,7 +100,7 @@ def create(request):
 @validate_permission_id("patient_prescription","change")
 def patch(request, id):
     data = {}
-
+    request.data["created_by"] = request.user.id
     try:
         if id:
             patient_prescription = PatientPrescriptionModel.objects.get(pk=id, deleted=0)

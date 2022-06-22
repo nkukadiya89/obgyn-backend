@@ -60,6 +60,7 @@ def delete(request):
 @validate_permission("subscription","add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         subscription = SubscriptionModel()
         serializer = SubscriptionSerializers(subscription, data=request.data)

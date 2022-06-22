@@ -88,6 +88,7 @@ def delete(request):
 @validate_permission("consultation", "add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         consultation = ConsultationModel()
         if "patient_opd_id" not in request.data:
@@ -139,6 +140,7 @@ def create(request):
 @validate_permission_id("consultation", "change")
 def patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             consultation = ConsultationModel.objects.get(pk=id, deleted=0)

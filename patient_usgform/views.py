@@ -78,6 +78,7 @@ def delete(request):
 @validate_permission("patient_usgform","add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         patient_usgform = PatientUSGFormModel()
         request.data["serial_no_month"], request.data["serial_no_year"], sr_no = get_obgyn_config(request.user ,PatientUSGFormModel)
@@ -121,6 +122,7 @@ def create(request):
 @validate_permission_id("patient_usgform","change")
 def patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             patient_usgform = PatientUSGFormModel.objects.get(pk=id,deleted=0)
@@ -255,6 +257,7 @@ def delete_child(request):
 @validate_permission("usgform_child","add")
 def create_child(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         usgform_child = USGFormChildModel()
         serializer = USGFormChildSerializers(usgform_child, data=request.data)
@@ -277,6 +280,7 @@ def create_child(request):
 @validate_permission_id("usgform_child","change")
 def child_patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             usgform_child = USGFormChildModel.objects.get(pk=id, deleted=0)

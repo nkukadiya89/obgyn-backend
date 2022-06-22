@@ -64,7 +64,7 @@ def delete(request):
         patient_histolap = PatientHistolapModel.objects.filter(
             patient_histolap_id__in=del_id["id"]
         )
-    except PatientHistolapModel:
+    except PatientHistolapModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record does not exist"
         data["data"] = []
@@ -85,6 +85,7 @@ def delete(request):
 @validate_permission("patient_histolap", "add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         patient_histolap = PatientHistolapModel()
         if "patient_opd_id" not in request.data:
@@ -120,6 +121,7 @@ def create(request):
 @validate_permission_id("patient_histolap", "change")
 def patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             patient_histolap = PatientHistolapModel.objects.get(pk=id,deleted=0)

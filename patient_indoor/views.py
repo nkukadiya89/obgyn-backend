@@ -65,7 +65,7 @@ def delete(request):
         patient_indoor = PatientIndoorModel.objects.filter(
             patient_indoor_id__in=del_id["id"]
         )
-    except PatientIndoorModel:
+    except PatientIndoorModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record does not exist"
         data["data"] = []
@@ -85,6 +85,7 @@ def delete(request):
 @validate_permission("patient_indoor", "add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         patient_indoor = PatientIndoorModel()
         if "patient_opd_id" not in request.data:
@@ -129,6 +130,7 @@ def create(request):
 @validate_permission_id("patient_indoor", "change")
 def patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             patient_indoor = PatientIndoorModel.objects.get(pk=id, deleted=0)
@@ -274,6 +276,7 @@ def delete_advice(request):
 @validate_permission("indoor_advice", "add")
 def create_advice(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         indoor_advice = IndoorAdviceModel()
         serializer = IndoorAdviceSerializers(indoor_advice, data=request.data)
@@ -296,6 +299,7 @@ def create_advice(request):
 @validate_permission_id("indoor_advice", "change")
 def indoor_advice_patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             indoor_advice = IndoorAdviceModel.objects.get(pk=id, deleted=0)

@@ -66,11 +66,13 @@ def delete(request):
 @validate_permission("patient_opd", "add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     gen_regist_no = generate_regd_no()
 
     if request.method == "POST":
         patient_opd_data = json.loads(request.data["data"])["patient_opd"]
         patient_data = json.loads(request.data["data"])["patient"]
+        patient_data["created_by"] = patient_opd_data["created_by"] = request.user.id
         if "phone" in patient_data:
             if len(str(patient_data["phone"])) < 5:
                 patient_data["phone"] = "F_" + gen_regist_no
@@ -138,6 +140,7 @@ def create(request):
 @validate_permission_id("patient_opd", "change")
 def patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             patient_opd = PatientOpdModel.objects.get(pk=id, deleted=0)
@@ -151,6 +154,8 @@ def patch(request, id):
     if request.method == "POST":
         patient_opd_data = json.loads(request.data["data"])["patient_opd"]
         patient_data = json.loads(request.data["data"])["patient"]
+
+        patient_opd_data["created_by"] = patient_data["created_by"] = request.user.id
 
         if patient_data["phone"] == "0" or patient_data["phone"] == "":
             patient_data["phone"] = "F_" + patient_opd_data["regd_no"]
@@ -199,9 +204,9 @@ def get(request, id=None):
     data = {}
     try:
         if id:
-            patient_opd = PatientOpdModel.objects.filter(pk=id, deleted=0)
+            patient_opd = PatientOpdModel.objects.filter(pk=id, deleted=0, created_by=request.user.id)
         else:
-            patient_opd = PatientOpdModel.objects.filter(deleted=0)
+            patient_opd = PatientOpdModel.objects.filter(deleted=0,created_by = request.user.id)
 
         data["total_record"] = len(patient_opd)
         patient_opd, data = filtering_query(

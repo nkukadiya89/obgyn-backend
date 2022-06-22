@@ -17,6 +17,7 @@ from .serializers import GroupSerializers
 @permission_classes([AllowAny])
 def create_new_group(request):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         Group.objects.create(name=request.data.get('name'))
         data["success"] = True
