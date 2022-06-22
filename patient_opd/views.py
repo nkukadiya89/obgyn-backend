@@ -7,6 +7,7 @@ from rest_framework.decorators import (
     authentication_classes,
     permission_classes,
 )
+from django.db.models import Q
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -72,7 +73,8 @@ def create(request):
         
         patient_opd_data = json.loads(request.data["data"])["patient_opd"]
         patient_data = json.loads(request.data["data"])["patient"]
-        # patient_data["created_by"] = patient_opd_data["created_by"] = request.user.id
+        patient_opd_data["created_by"] = patient_data["created_by"] = request.user.id
+
         if "phone" in patient_data:
             if len(str(patient_data["phone"])) < 5:
                 patient_data["phone"] = "F_" + gen_regist_no
@@ -199,12 +201,20 @@ def patch(request, id):
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
+
+    if request.user.user_type == "HOSPITAL":
+        doctor_list = User.objects.filter(hospital_id=request.user.id).values_list("id",flat=True)
+    else:
+        doctor_list = User.objects.filter(id=request.user.id).values_list("id")
+
+    print(list(doctor_list))
     data = {}
     try:
         if id:
-            patient_opd = PatientOpdModel.objects.filter(pk=id, deleted=0, created_by=request.user.id)
+            patient_opd = PatientOpdModel.objects.filter(pk=id, deleted=0,created_by__in=doctor_list)
         else:
-            patient_opd = PatientOpdModel.objects.filter(deleted=0,created_by = request.user.id)
+            patient_opd = PatientOpdModel.objects.filter(Q(deleted=0, created_by__in=doctor_list)
+                | Q(created_by=request.user.id, deleted=0))
 
         data["total_record"] = len(patient_opd)
         patient_opd, data = filtering_query(
