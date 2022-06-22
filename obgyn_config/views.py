@@ -132,7 +132,7 @@ def update_global_charges(request):
     if obgyn_config == None:
         obgyn_config = ObgynConfigModel.objects.create(user_id=user.id,deleted=0)
 
-    
+    request.data["created_by"] = request.user.id
 
     if "rs_per_visit" in request.data:
         obgyn_config.rs_per_visit = request.data.get("rs_per_visit",0)
@@ -179,6 +179,7 @@ class ObgynConfigAPI(APIView):
 @validate_permission("obgyn_config","add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         obgyn_config = ObgynConfigModel()
         serializer = Obgyn_Configserializers(obgyn_config, data=request.data)
@@ -201,6 +202,7 @@ def create(request):
 @validate_permission_id("obgyn_config","change")
 def patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             obgyn_config = ObgynConfigModel.objects.get(pk=id,deleted=0)

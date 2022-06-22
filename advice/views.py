@@ -81,6 +81,7 @@ class AdviceAPI(APIView):
     # ================= Create New Record=========================
     def post(self, request):
         data = {}
+        request.data["created_by"] = request.user.id
         if request.method == "POST":
             advice = AdviceModel()
             serializer = AdviceSerializers(advice, data=request.data)
@@ -106,6 +107,7 @@ class AdviceAPI(APIView):
 @permission_classes([IsAuthenticated])
 def patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             advice = AdviceModel.objects.get(pk=id, deleted=0)
@@ -224,6 +226,7 @@ class AdviceGroupAPI(APIView):
     # ================= Create New Record=========================
     def post(self, request):
         data = {}
+        request.data["created_by"] = request.user.id
         if request.method == "POST":
             advice_group = AdviceGroupModel()
             serializer = AdviceGroupSerializers(advice_group, data=request.data)
@@ -246,6 +249,7 @@ class AdviceGroupAPI(APIView):
 @permission_classes([IsAuthenticated])
 def patch_group(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             advice_group = AdviceGroupModel.objects.get(pk=id, deleted=0)

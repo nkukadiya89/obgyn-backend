@@ -74,6 +74,7 @@ class StateAPI(APIView):
     # ================= Create New Record=========================
     def post(self, request):
         data = {}
+        request.data["created_by"] = request.user.id
         if request.method == "POST":
             state = StateModel()
             serializer = StateSerializers(state, data=request.data)
@@ -97,7 +98,7 @@ class StateAPI(APIView):
 @permission_classes([IsAuthenticated])
 def patch(request, id):
     data = {}
-
+    request.data["created_by"] = request.user.id
     try:
         if id:
             state = StateModel.objects.get(state_id=id)

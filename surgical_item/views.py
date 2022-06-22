@@ -93,6 +93,7 @@ def delete(request):
 @validate_permission("surgical_item", "add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         surgical_item = SurgicalItemModel()
         serializer = SurgicalItemSerializers(surgical_item, data=request.data)
@@ -191,6 +192,7 @@ def delete_group(request):
 @validate_permission("surgical_item_group", "add")
 def create_group(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         surgical_item_group = SurgicalItemGroupModel()
         serializer = SurgicalItemGroupSerializers(
@@ -215,7 +217,7 @@ def create_group(request):
 @validate_permission_id("surgical_item_group", "change")
 def patch_surgical_group(request, id):
     data = {}
-
+    request.data["created_by"] = request.user.id
     try:
         if id:
             surgical_item_group = SurgicalItemGroupModel.objects.get(pk=id, deleted=0)
@@ -250,7 +252,7 @@ def patch_surgical_group(request, id):
 @validate_permission_id("surgical_item_group", "change")
 def patch(request, id):
     data = {}
-
+    request.data["created_by"] = request.user.id
     try:
         if id:
             surgical_item = SurgicalItemModel.objects.get(pk=id, deleted=0)

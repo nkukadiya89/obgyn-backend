@@ -88,6 +88,7 @@ def delete(request):
 @validate_permission("patient_delivery", "add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         patient_delivery = PatientDeliveryModel()
         request.data["serial_no_month"], request.data["serial_no_year"], request.data["sr_no"] = get_obgyn_config(request.user ,PatientDeliveryModel)
@@ -116,6 +117,7 @@ def create(request):
 @validate_permission_id("patient_delivery","change")
 def patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             patient_delivery = PatientDeliveryModel.objects.get(pk=id,deleted=0)

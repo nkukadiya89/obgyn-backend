@@ -62,7 +62,7 @@ def delete(request):
 
     try:
         patient_mtp = PatientMtpModel.objects.filter(patient_mtp_id__in=del_id["id"])
-    except PatientMtpModel:
+    except PatientMtpModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record does not exist"
         data["data"] = []
@@ -83,6 +83,7 @@ def delete(request):
 @validate_permission("patient_mtp", "add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         patient_mtp = PatientMtpModel()
         if "patient_opd_id" not in request.data:
@@ -118,6 +119,7 @@ def create(request):
 @validate_permission_id("patient_mtp","change")
 def patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             patient_mtp = PatientMtpModel.objects.get(pk=id, deleted=0)

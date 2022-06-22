@@ -78,6 +78,7 @@ def delete(request):
 @validate_permission("template_header","add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         template_header = TemplateHeaderModel()
         serializer = TemplateHeaderSerializers(template_header, data=request.data)
@@ -100,7 +101,7 @@ def create(request):
 @validate_permission_id("template_header","change")
 def patch(request, id):
     data = {}
-
+    request.data["created_by"] = request.user.id
     try:
         if id:
             template_header = TemplateHeaderModel.objects.get(pk=id, deleted=0)

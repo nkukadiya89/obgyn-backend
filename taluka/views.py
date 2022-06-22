@@ -60,7 +60,7 @@ def delete(request):
 
     try:
         taluka = TalukaModel.objects.filter(taluka_id__in=del_id["id"])
-    except TalukaModel:
+    except TalukaModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record does not exist"
         data["data"] = []
@@ -79,6 +79,7 @@ def delete(request):
 @validate_permission("taluka","add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         taluka = TalukaModel()
         serializer = TalukaSerializers(taluka, data=request.data)
@@ -101,6 +102,7 @@ def create(request):
 @validate_permission_id("taluka","change")
 def patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             taluka = TalukaModel.objects.get(pk=id, deleted=0)

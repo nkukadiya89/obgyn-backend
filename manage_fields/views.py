@@ -82,6 +82,7 @@ def delete_mf(request):
 # @validate_permission("manage_fields","add")
 def create_mf(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         manage_fields = ManageFieldsModel()
         serializer = ManageFieldsSerializers(manage_fields, data=request.data)
@@ -104,7 +105,7 @@ def create_mf(request):
 # @validate_permission_id("manage_fields","change")
 def patch_mf(request, id):
     data = {}
-
+    request.data["created_by"] = request.user.id
     try:
         if id:
             manage_fields = ManageFieldsModel.objects.get(pk=id, deleted=0)
@@ -232,6 +233,7 @@ def delete_mfm(request):
 # @validate_permission("field_master","add")
 def create_mfm(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         field_master = FieldMasterModel()
         serializer = FieldMasterSerializers(field_master, data=request.data)
@@ -256,7 +258,7 @@ def create_mfm(request):
 # @validate_permission_id("field_master","change")
 def patch_mfm(request, id):
     data = {}
-
+    request.data["created_by"] = request.user.id
     try:
         if id:
             field_master = FieldMasterModel.objects.get(pk=id, deleted=0)

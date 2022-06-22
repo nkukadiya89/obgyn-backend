@@ -82,6 +82,7 @@ def delete(request,id=None):
 @validate_permission("distirct", "add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         district = DistrictModel()
         serializer = DistrictSerializers(district, data=request.data)
@@ -104,6 +105,7 @@ def create(request):
 @validate_permission_id("disrtict","change")
 def patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             district = DistrictModel.objects.get(pk=id,deleted=0)

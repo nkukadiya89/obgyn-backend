@@ -85,6 +85,7 @@ def delete(request):
 @validate_permission("patient_billing", "add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         patient_billing = PatientBillingModel()
         if "patient_opd_id" not in request.data:
@@ -127,6 +128,7 @@ def create(request):
 @validate_permission_id("patient_billing", "change")
 def patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             patient_billing = PatientBillingModel.objects.get(pk=id,deleted=0)
