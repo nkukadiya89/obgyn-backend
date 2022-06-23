@@ -71,7 +71,7 @@ def create(request):
     gen_regist_no = generate_regd_no()
 
     if request.method == "POST":
-        
+
         patient_opd_data = json.loads(request.data["data"])["patient_opd"]
         patient_data = json.loads(request.data["data"])["patient"]
         patient_opd_data["created_by"] = patient_data["created_by"] = request.user.id
@@ -112,7 +112,9 @@ def create(request):
                     file = request.data["media"]
                     patient.upload_file(file)
                     patient.save()
-            patient.regd_no_barcode , mob_url= upload_barcode_image(patient.registered_no,patient.phone,patient.patient_id)
+            patient.regd_no_barcode, mob_url = upload_barcode_image(
+                patient.registered_no, patient.phone, patient.patient_id
+            )
             patient.save()
         else:
             data["success"] = False
@@ -157,17 +159,15 @@ def patch(request, id):
         patient_opd_data = json.loads(request.data["data"])["patient_opd"]
         patient_data = json.loads(request.data["data"])["patient"]
 
-
         if patient_data["phone"] == "0" or patient_data["phone"] == "":
             patient_data["phone"] = "F_" + patient_opd_data["regd_no"]
-
 
         serializer = PatientOpdSerializers(patient_opd, patient_opd_data, partial=True)
         patient_serializer = PatientSerializers(patient, patient_data, partial=True)
 
         if serializer.is_valid():
             serializer.save()
-            
+
             if patient_serializer.is_valid():
                 patient_serializer.save()
 
@@ -177,8 +177,9 @@ def patch(request, id):
                         patient.upload_file(file)
                         patient.save()
 
-
-                patient.regd_no_barcode, mob_url = upload_barcode_image(patient.registered_no,patient.phone,patient.patient_id)
+                patient.regd_no_barcode, mob_url = upload_barcode_image(
+                    patient.registered_no, patient.phone, patient.patient_id
+                )
                 patient.save()
             else:
                 data["success"] = False
@@ -204,23 +205,33 @@ def get(request, id=None):
     query_string = request.query_params
 
     if request.user.user_type == "HOSPITAL":
-        doctor_list = User.objects.filter(hospital_id=request.user.id,user_type="STAFF").values_list("id",flat=True)
+        doctor_list = User.objects.filter(
+            hospital_id=request.user.id, user_type="STAFF"
+        ).values_list("id", flat=True)
     elif request.user.user_type == "DOCTOR":
         hospital_id = request.user.hospital_id
-        doctor_list = User.objects.filter(hospital_id=hospital_id, user_type="STAFF").values_list("id",flat=True)
+        doctor_list = User.objects.filter(
+            hospital_id=hospital_id, user_type="STAFF"
+        ).values_list("id", flat=True)
         doctor_list = list(doctor_list)
         doctor_list.append(request.user.id)
     else:
         hospital_id = request.user.hospital_id
-        doctor_list = User.objects.filter(hospital_id=hospital_id, user_type="STAFF").values_list("id",flat=True)
+        doctor_list = User.objects.filter(
+            Q(hospital_id=hospital_id, user_type="DOCTOR")
+            | Q(hospital_id=hospital_id, user_type="STAFF")
+        ).values_list("id", flat=True)
 
     data = {}
     try:
         if id:
-            patient_opd = PatientOpdModel.objects.filter(pk=id, deleted=0,created_by__in=doctor_list)
+            patient_opd = PatientOpdModel.objects.filter(
+                pk=id, deleted=0, created_by__in=doctor_list
+            )
         else:
-            patient_opd = PatientOpdModel.objects.filter(deleted=0, created_by__in=doctor_list)
-                
+            patient_opd = PatientOpdModel.objects.filter(
+                deleted=0, created_by__in=doctor_list
+            )
 
         data["total_record"] = len(patient_opd)
         patient_opd, data = filtering_query(
