@@ -1,4 +1,5 @@
 import json
+from pydoc import doc
 
 
 from rest_framework import status
@@ -207,6 +208,7 @@ def get(request, id=None):
     elif request.user.user_type == "DOCTOR":
         hospital_id = request.user.hospital_id
         doctor_list = User.objects.filter(hospital_id=hospital_id, user_type="STAFF").values_list("id",flat=True)
+        doctor_list = list(doctor_list)
         doctor_list.append(request.user.id)
     else:
         hospital_id = request.user.hospital_id
