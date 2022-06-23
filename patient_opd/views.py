@@ -204,7 +204,7 @@ def get(request, id=None):
 
     if request.user.user_type == "HOSPITAL":
         doctor_list = User.objects.filter(hospital_id=request.user.id,user_type="STAFF").values_list("id",flat=True)
-    if request.user.user_type == "DOCTOR":
+    elif request.user.user_type == "DOCTOR":
         hospital_id = request.user.hospital_id
         doctor_list = User.objects.filter(hospital_id=hospital_id, user_type="STAFF").values_list("id",flat=True)
     else:
