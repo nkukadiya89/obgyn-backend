@@ -27,7 +27,6 @@ def discharge_rpt(request, id, language_id=None):
         context["error"] = "OPD not found."
         return JsonResponse(context)
 
-
     context = {}
     context["regd_no"] = patient_opd.patient.regd_no_barcode
     context["name"] = "".join(
@@ -37,6 +36,12 @@ def discharge_rpt(request, id, language_id=None):
                                   patient_opd.patient.taluka.taluka_name, " ", patient_opd.patient.state.state_name])
 
     patient_discharge = PatientDischargeModel.objects.filter(patient_opd=patient_opd).first()
+    if patient_discharge == None:
+        context = {}
+        context["msg"] = False
+        context["error"] = "Patient Discharge Does not exist."
+        return JsonResponse(context)
+
 
     if patient_discharge:
         context["admission_date"] = str(patient_discharge.admission_date) + " " + str(

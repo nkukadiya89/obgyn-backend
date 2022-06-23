@@ -24,14 +24,24 @@ def usg_rpt(request, id, language_id=None):
 
     patient_opd = patient_opd.first()
     if patient_opd == None:
-        return HttpResponse("Record Does not exist", status=status.HTTP_400_BAD_REQUEST)
+        context = {}
+        context["msg"] = False
+        context["error"] = "OPD Does not exist."
+        return JsonResponse(context)
+
+    consultation = ConsultationModel.objects.filter(patient_opd=patient_opd).first()
+    if consultation == None:
+        context = {}
+        context["msg"] = False
+        context["error"] = "OPD Does not exist."
+        return JsonResponse(context)
 
     template_name = "reports/en/usg_report.html"
     context = {}
     context["receipt_date"] = str(patient_opd.opd_date)
     context["regd_no"] = patient_opd.patient.regd_no_barcode
 
-    consultation = ConsultationModel.objects.filter(patient_opd=patient_opd).first()
+
     if consultation:
         context["hb"] = consultation.hb
         context["blood_group"] = consultation.blood_group
