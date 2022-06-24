@@ -161,7 +161,6 @@ def patch(request, id):
         
         del patient_opd_data["created_by"]
 
-        print(patient_opd_data)
         if patient_data["phone"] == "0" or patient_data["phone"] == "":
             patient_data["phone"] = "F_" + patient_opd_data["regd_no"]
         

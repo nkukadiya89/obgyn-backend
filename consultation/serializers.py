@@ -89,7 +89,7 @@ class ConsultationSerializers(serializers.ModelSerializer):
     consultation_id = serializers.IntegerField(read_only=True)
     patient_type = serializers.CharField(required=True)
     patient_detail = serializers.CharField(required=True,)
-    lmp_date = serializers.DateField(format="%d-%m-%Y", allow_null=False)
+    lmp_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
     edd_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
     possible_lmp = serializers.DateField(format="%d-%m-%Y", allow_null=True)
     possible_edd = serializers.DateField(format="%d-%m-%Y", allow_null=True)

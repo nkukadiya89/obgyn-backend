@@ -23,6 +23,8 @@ class PatientMtpModel(models.Model):
     termination_date = models.DateField(null=True)
     discharge_date = models.DateField(null=True)
     discharge_time = models.CharField(max_length=10, null=True)
+    ut_weeks = models.IntegerField(default=0, null=True)
+    religion = models.CharField(max_length=25, null=True)
     remark = models.TextField(null=True)
 
     created_by = models.IntegerField(default=1, unique=False)
