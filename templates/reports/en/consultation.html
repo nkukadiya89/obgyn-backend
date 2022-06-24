@@ -267,7 +267,7 @@
                     Receipt Date:
                 </td>
                 <td>
-                    {{context.receipt_date}}
+                    {{context.receipt_date |date:'d-m-Y'}}
                 </td>
                 <td style="width: 80px;">
                     Regd. No:
@@ -347,11 +347,11 @@
                         </tr>
                         <tr>
                             <td colspan="2">M/H:-{{ context.mh }}</td>
-                            <td colspan="2">LMP:-{{ context.lmp }}</td>
+                            <td colspan="2">LMP:-{{ context.lmp |date:'d-m-Y' }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2">EDD:-{{ context.edd }}</td>
-                            <td colspan="2">*EDD:-{{ context.edds }}</td>
+                            <td colspan="2">EDD:-{{ context.edd|date:'d-m-Y' }}</td>
+                            <td colspan="2">*EDD:-{{ context.edds|date:'d-m-Y' }}</td>
                         </tr>
                         <tr>
                             <td colspan="2">O/H ML:-{{ context.ohml }}</td>
@@ -422,21 +422,13 @@
                         <tr>
                             <td colspan="3">Rx,</td>
                         </tr>
+                        {% for prescription in prescription.context_sub %}
                         <tr>
-                            <td style="text-align: right; width: 100px;">Inj.</td>
-                            <td style="text-align: center;">dext 5% piant IV</td>
-                            <td style="text-align: right;">(01)</td>
+                            <td style="text-align: right; width: 100px;">{{prescription.type}}</td>
+                            <td style="text-align: center;">{{prescription.medicine}}</td>
+                            <td style="text-align: right;">{{prescription.total}}</td>
                         </tr>
-                        <tr>
-                            <td style="height: 300px;">&nbsp;</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" style="border-bottom: 1px solid #343434;">OPD TIME: 9:00AM to 2:00PM &
-                                5:00PM to 7:00PM</td>
-                            <td style="border-bottom: 1px solid #343434;">Reg.G-9572</td>
-                        </tr>
+                        {% endfor %}
                     </table>
                 </td>
             </tr>
