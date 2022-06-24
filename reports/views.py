@@ -207,6 +207,8 @@ def active_patient(request, id=None):
 def daily_opd_income(request,language_id):
     data = request.query_params
     rpt_date = data.get("rpt_date", None)
+    rpt_date = datetime.strptime(rpt_date,"%d-%m-%Y").strftime("%Y-%m-%d")
+    
     return daily_opd_income_rpt(request, rpt_date, language_id)
 
 
