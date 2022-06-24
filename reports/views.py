@@ -13,6 +13,9 @@ from .rpt.billing_rpt import billing_rpt
 from .rpt.discharge_rpt import discharge_rpt
 from .rpt.mtp_list_rpt import mtp_list_rpt
 from .rpt.referal_slip_rpt import referal_slip_rpt
+from .rpt.daily_opd_income import daily_opd_income_rpt
+from .rpt.hospital_bill_rpt import hospital_bill_rpt
+from .rpt.indoor_case_paper_rpt import indoor_case_paper_rpt
 from patient_delivery.models import PatientDeliveryModel
 from django.db.models import Count
 from datetime import datetime
@@ -196,3 +199,25 @@ def active_patient(request, id=None):
     data["gyn_count"] = gyn_count
 
     return HttpResponse(json.dumps(data))
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def daily_opd_income(request,language_id):
+    data = request.query_params
+    rpt_date = data.get("rpt_date", None)
+    return daily_opd_income_rpt(request, rpt_date, language_id)
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def hospital_bill(request,language_id,bill_no):
+    return hospital_bill_rpt(request,bill_no,language_id)
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def indoor_case_paper(request,language_id,indoor_no):
+    return indoor_case_paper_rpt(request,indoor_no,language_id)    

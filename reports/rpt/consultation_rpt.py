@@ -7,6 +7,7 @@ from consultation.models import ConsultationModel
 from language.models import LanguageModel
 from django.views.decorators.csrf import csrf_exempt
 from utility.aws_file_upload import upload_barcode_image
+from patient_prescription.models import PatientPrescriptionModel
 from django.http import JsonResponse
 
 
@@ -64,9 +65,9 @@ def consultation_rpt(request, id, language_id=None):
 
     context["hb"] = consultation.hb
 
-    context["ho"] = consultation.ho
+    context["ho"] = consultation.ho.field_value
     context["blood_group"] = consultation.blood_group
-    context["co"] = consultation.co
+    context["co"] = consultation.co.field_value
     context["age"] = patient_opd.patient.age
     context["mh"] = "--NA--"
     context["lmp"] = consultation.lmp_date
@@ -90,9 +91,20 @@ def consultation_rpt(request, id, language_id=None):
     context["pio"] = "--NA--"
     context["rscvs"] = consultation.rs + "/" + consultation.cvs
     context["pa"] = consultation.pa_value
-    context["ps"] = consultation.ps
-    context["pv"] = consultation.pv
+    context["ps"] = consultation.ps.field_value
+    context["pv"] = consultation.pv.field_value
 
+    prescription_list = PatientPrescriptionModel.objects.filter(consultation=consultation)
+
+    context_sub = []
+    for prescription in prescription_list:
+        prescribe = {}
+        prescribe["type"] = prescription.medicine_type.medicine_type
+        prescribe["medicine"] = prescription.medicine.medicine
+        prescribe["total"] = prescription.medicine.total_tablet
+        context_sub.append(prescribe)
+
+    context["prescription"] = context_sub
     template_name = "reports/en/consultation.html"
     return render(request, template_name,
                   {"context": context, "template_header": template_header.header_text.replace("'", "\"")})
