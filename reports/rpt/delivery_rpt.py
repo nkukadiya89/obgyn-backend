@@ -65,17 +65,28 @@ def delivery_rpt(request, start_date=None, end_date=None,id_list=None, language_
         else:
             context["birth_place"] = ""
 
-        try:
-            context["mother_name"] = "".join(
-                [patient.first_name, " ", patient.middle_name, " ", patient.last_name])
-            context["father_name"] = patient_delivery.husband_name
-            context["address"] = "".join([" ", patient.city.city_name, " ",
-                                        patient.district.district_name, " ",
-                                        patient.taluka.taluka_name, " ", patient.state.state_name])
-        except:
-            context["mother_name"] = ""
-            context["father_name"] =""
-            context["address"] = ""
+        context["mother_name"] = "".join(
+            [
+                patient.first_name if patient.first_name else " ",
+                " ",
+                patient.middle_name if patient.middle_name else " ",
+                " ",
+                patient.last_name if patient.last_name else " ",
+            ]
+        )
+        context["father_name"] = patient_delivery.husband_name if patient_delivery.husband_name else " "
+        context["address"] = "".join(
+            [
+                " ",
+                patient.city.city_name if patient.city.city_name else " ",
+                " ",
+                patient.district.district_name if patient.district.district_name else " ",
+                " ",
+                patient.taluka.taluka_name if patient.taluka.taluka_name else " ",
+                " ",
+                patient.state.state_name if patient.state.state_name else " ",
+            ]
+        )
 
         context["mobile"] = patient_delivery.patient.phone
         context["nationality"] = "Indian"
