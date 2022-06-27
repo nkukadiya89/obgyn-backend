@@ -274,7 +274,7 @@
     <div id="obygyn">
 
         {{ template_header | safe }}
-        <div class="obgyn-title">-: MEDICINE PRESCRIPTIONS :-</div>
+        <div class="obgyn-title">-: MEDICINE BILL DETAILS :-</div>
 
         <table width="100%" id="reporttable3" style="font-size: 14px;font-weight: bold;color: #343434;">
             <tr>
@@ -294,19 +294,34 @@
         <br>
         <table width="100%" id="reporttable3" style="font-size: 14px;font-weight: bold;color: #343434;">
             <tr>
-                <td colspan="2" align="left"><b>Rx</b></td>
+                <td colspan="7" align="left"><b>Rx</b></td>
             </tr>
             <tr>
-                <td><b>Medicine</b></td><td><b>Unit</b></td>
+                <td><b>Medicine</b></td>
+                <td><b>Unit</b></td>
+                <td><b>Rate</b></td>
+                <td><b>Mfg Date</b></td>
+                <td><b>Exp Date</b></td>
+                <td><b>Amount</b></td>
+                <td><b>Total Amount</b></td>
             </tr>
             {% for medicine in context.medicine %}
                 <tr>
                     <td>{{medicine.medicine}}</td>
                     <td>{{medicine.unit}}</td>
+                    <td>{{medicine.rate}}</td>
+                    <td>{{medicine.mfg_date}}</td>
+                    <td>{{medicine.exp_date}}</td>
+                    <td align="right">{{medicine.total}}</td>
+                    <td rowspan="{{context.medicine_count}}"></td>
                 </tr>
             {% endfor %}
             <tr>
-                <td align="center" colspan="2"><br><br>Sign:<br><br></td>
+                <td colspan="5">Total</td>
+                <td align="right">{{context.final_total}}</td>
+            </tr>
+            <tr>
+                <td align="center" colspan="7"><br><br>Sign:<br><br>Seal:<br><br></td>
             </tr>
         </table>
     </div>
