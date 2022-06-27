@@ -83,7 +83,7 @@ def delivery_rpt(request, start_date=None, end_date=None,id_list=None, language_
         context["age"] = patient.age
         context["child_count"] = int(patient_delivery.no_of_delivery) + 1
         context["weight"] = patient_delivery.weight
-        context["child_count"] = int(patient_delivery.live_male_female)
+        context["child_count"] = patient_delivery.live_male_female
         context["mother_education"] = patient_delivery.mother_education
         context["father_education"] = patient_delivery.father_education
         context["mother_occupation"] = patient_delivery.mother_occupation
