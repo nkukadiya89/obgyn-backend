@@ -39,14 +39,26 @@ def hospital_bill_rpt(request,bill_no, language_id=None):
         context["receipt_date"] = patient_billing.created_at
         context["invoice_no"] = patient_billing.invoice_no
         context["name"] = "".join(
-            [patient_opd.patient.first_name, " ", patient_opd.patient.middle_name, " ", patient_opd.patient.last_name])
-
-        try:
-            context["address"] = "".join([" ", patient_opd.patient.city.city_name, " ",
-                                        patient_opd.patient.district.district_name, " ",
-                                        patient_opd.patient.taluka.taluka_name, " ", patient_opd.patient.state.state_name])
-        except:
-            context["address"] = ""
+            [
+                patient_opd.patient.first_name  if patient_opd.patient.first_name else " ",
+                " ",
+                patient_opd.patient.middle_name if patient_opd.patient.middle_name else " ",
+                " ",
+                patient_opd.patient.last_name if patient_opd.patient.last_name else " ",
+            ]
+        )
+        context["address"] = "".join(
+            [
+                " ",
+                patient_opd.patient.city.city_name if patient_opd.patient.city.city_name else " ",
+                " ",
+                patient_opd.patient.district.district_name if patient_opd.patient.district.district_name else " ",
+                " ",
+                patient_opd.patient.taluka.taluka_name if patient_opd.patient.taluka.taluka_name else " ",
+                " ",
+                patient_opd.patient.state.state_name if patient_opd.patient.state.state_name else " ",
+            ]
+        )
         
         context["mobile"] = patient_opd.patient.phone
         consultation = ConsultationModel.objects.filter(patient_opd=patient_opd).first()

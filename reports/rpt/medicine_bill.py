@@ -54,20 +54,28 @@ def medicine_bill_rpt(request,bill_id, language_id=None):
             context["hb"] = ""
             context["blood_group"] = ""
 
-        try:
-            context["name"] = "".join(
-                [patient_opd.patient.first_name, " ", patient_opd.patient.middle_name, " ", patient_opd.patient.last_name])
-
-            context["address"] = "".join([" ", patient_opd.patient.city.city_name, " ",
-                                        patient_opd.patient.district.district_name, " ",
-                                        patient_opd.patient.taluka.taluka_name, " ", patient_opd.patient.state.state_name])
-            context["mobile"] = patient_opd.patient.phone
-
-        except:
-            context["name"] = ""
-            context["address"] = ""
-            context["mobile"] = ""
-        
+        context["name"] = "".join(
+            [
+                patient_opd.patient.first_name  if patient_opd.patient.first_name else " ",
+                " ",
+                patient_opd.patient.middle_name if patient_opd.patient.middle_name else " ",
+                " ",
+                patient_opd.patient.last_name if patient_opd.patient.last_name else " ",
+            ]
+        )
+        context["address"] = "".join(
+            [
+                " ",
+                patient_opd.patient.city.city_name if patient_opd.patient.city.city_name else " ",
+                " ",
+                patient_opd.patient.district.district_name if patient_opd.patient.district.district_name else " ",
+                " ",
+                patient_opd.patient.taluka.taluka_name if patient_opd.patient.taluka.taluka_name else " ",
+                " ",
+                patient_opd.patient.state.state_name if patient_opd.patient.state.state_name else " ",
+            ]
+        )
+                
         context["mobile"] = patient_opd.patient.phone
 
         medicine =[]
