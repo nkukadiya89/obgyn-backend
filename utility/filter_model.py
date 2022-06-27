@@ -866,7 +866,7 @@ class ModelFilterPATIENTUSGREPORT:
             if fld_name == "report_date":
                 model = model.filter(report_date=fld_value)
             if fld_name == "anomalies":
-                model = model.filter(anomalies_icontains=fld_value)
+                model = model.filter(anomalies__field_value_icontains=fld_value)
             if fld_name == "patient_opd_id":
                 model = model.filter(patient_opd_id=fld_value)
         return model
@@ -875,12 +875,12 @@ class ModelFilterPATIENTUSGREPORT:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(anomalies__icontains=search)
+                Q(anomalies__field_value__icontains=search)
                 | Q(regd_no__icontains=search)
                 | Q(cardiac_activity__icontains=search)
                 | Q(presentation__icontains=search)
                 | Q(possible_lmp__icontains=search)
-                | Q(placental_location__icontains=search)
+                | Q(placental_location__field_value__icontains=search)
                 | Q(amount_of_liquor__icontains=search)
                 | Q(remark__icontains=search)
                 | Q(usg_report__icontains=search)
