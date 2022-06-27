@@ -99,7 +99,7 @@ def consultation_rpt(request, id, language_id=None):
     context_sub = []
     for prescription in prescription_list:
         prescribe = {}
-        prescribe["type"] = prescription.medicine_type.medicine_type
+        prescribe["type"] = prescription.medicine.medicine_type.medicine_type
         prescribe["medicine"] = prescription.medicine.medicine
         prescribe["total"] = prescription.medicine.total_tablet
         context_sub.append(prescribe)
