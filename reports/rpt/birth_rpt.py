@@ -14,10 +14,16 @@ def birth_rpt(request, id, language_id=None):
     if not patient_delivery:
         context = {}
         context["msg"] = False
-        context["error"] = "Patient not found."
+        context["error"] = "Patient Delivery not found."
         return JsonResponse(context)
 
     patient = patient_delivery.patient
+
+    if not patient:
+        context = {}
+        context["msg"] = False
+        context["error"] = "Patient not found."
+        return JsonResponse(context)
     
     if language_id:
         template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id, language_id=language_id,deleted=0).first()
@@ -31,13 +37,16 @@ def birth_rpt(request, id, language_id=None):
         return JsonResponse(context)
 
     context = {}
-
+    
     context["mother_name"] = "".join(
         [patient.first_name, " ", patient.middle_name, " ", patient.last_name])
     context["father_name"] = patient_delivery.husband_name
-    context["address"] = "".join([" ", patient.city.city_name, " ",
-                                  patient.district.district_name, " ",
-                                  patient.taluka.taluka_name, " ", patient.state.state_name])
+    try:
+        context["address"] = "".join([" ", patient.city.city_name, " ",
+                                    patient.district.district_name, " ",
+                                    patient.taluka.taluka_name, " ", patient.state.state_name])
+    except:
+        context["address"] = ""
     context["age"] = patient.age
     context["date"] = patient_delivery.birth_date
     context["time"] = patient_delivery.birth_time

@@ -9,6 +9,11 @@ from django.http import JsonResponse
 @csrf_exempt
 def mtp_list_rpt(request, language_id=None):
     patient_mtp_list = PatientMtpModel.objects.filter(deleted=0)
+    if len(patient_mtp_list) <= 0:
+        context = {}
+        context["msg"] = False
+        context["error"] = "No Record Found."
+        return JsonResponse(context)
 
 
     if language_id:
@@ -35,14 +40,22 @@ def mtp_list_rpt(request, language_id=None):
             except:
                 context["date_of_admission"] = ""
 
-            context["name"] = "".join(
-                [patient_opd.patient.first_name, " ", patient_opd.patient.middle_name, " ", patient_opd.patient.last_name])
-            context["husband_name"] = patient_opd.patient.husband_father_name
-            context["age"] = patient_opd.patient.age
-            context["religion"] = patient_opd.patient.religion
-            context["address"] = "".join([" ", patient_opd.patient.city.city_name, " ",
-                                        patient_opd.patient.district.district_name, " ",
-                                        patient_opd.patient.taluka.taluka_name, " ", patient_opd.patient.state.state_name])
+            try:
+                context["name"] = "".join(
+                    [patient_opd.patient.first_name, " ", patient_opd.patient.middle_name, " ", patient_opd.patient.last_name])
+                context["husband_name"] = patient_opd.patient.husband_father_name
+                context["age"] = patient_opd.patient.age
+                context["religion"] = patient_opd.patient.religion
+                context["address"] = "".join([" ", patient_opd.patient.city.city_name, " ",
+                                            patient_opd.patient.district.district_name, " ",
+                                            patient_opd.patient.taluka.taluka_name, " ", patient_opd.patient.state.state_name])
+            except:
+                context["name"] = ""
+                context["husband_name"] = ""
+                context["age"] =""
+                context["religion"] = ""
+                context["address"] = ""
+                
             context["duration"] = "pending"
             context["reason"] = patient_mtp.reason_for_mtp
             context["termination_date"] = patient_mtp.termination_date
