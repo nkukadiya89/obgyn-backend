@@ -94,6 +94,11 @@ def create(request):
             patient_opd.status = "usgreport"
             patient_opd.save()
 
+            patient_usgreport = PatientUSGReportModel.objects.filter(
+                regd_no=request.data["regd_no"], deleted=0
+            ).order_by("-created_at")
+            serializer = PatientUSGReportSerializers(patient_usgreport, many=True)
+
             data["success"] = True
             data["msg"] = "Data updated successfully"
             data["data"] = serializer.data
@@ -135,6 +140,11 @@ def patch(request, id):
 
         if serializer.is_valid():
             serializer.save()
+            patient_usgreport = PatientUSGReportModel.objects.filter(
+                regd_no=request.data["regd_no"], deleted=0
+            ).order_by("-created_at")
+            serializer = PatientUSGReportSerializers(patient_usgreport, many=True)
+
             data["success"] = True
             data["msg"] = "Data updated successfully"
             data["data"] = serializer.data

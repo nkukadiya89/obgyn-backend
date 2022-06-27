@@ -60,6 +60,9 @@ class VoucherItemSerializers(serializers.ModelSerializer):
             surgical_item = SurgicalItemModel.objects.filter(pk=ret["surgical_item"]).first()
             if surgical_item:
                 ret["drug_name"] = surgical_item.drug_name
+                ret["batch_no"] = surgical_item.batch_number
+                ret["mfg_date"] = surgical_item.mfg_date
+                ret["exp_date"] = surgical_item.exp_date
         return ret
 
     def validate(self, data):
