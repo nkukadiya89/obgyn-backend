@@ -17,6 +17,7 @@ from .rpt.daily_opd_income import daily_opd_income_rpt
 from .rpt.hospital_bill_rpt import hospital_bill_rpt
 from .rpt.indoor_case_paper_rpt import indoor_case_paper_rpt
 from .rpt.medicine_prescription_rpt import medicine_prescription_rpt
+from .rpt.medicine_bill import medicine_bill_rpt
 from patient_delivery.models import PatientDeliveryModel
 from django.db.models import Count
 from datetime import datetime
@@ -232,3 +233,10 @@ def indoor_case_paper(request,language_id,indoor_no):
 @permission_classes([IsAuthenticated])
 def medicine_prescription(request,language_id,opd_id):
     return medicine_prescription_rpt(request,opd_id,language_id)
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def medicine_bill(request,language_id,bill_id):
+    return medicine_bill_rpt(request,bill_id,language_id)
