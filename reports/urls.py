@@ -18,7 +18,7 @@ urlpatterns = [
     path('daily-opd-income/<int:language_id>/',views.daily_opd_income, name="daily_opd_income"),
     path('hospital-bill/<int:language_id>/<str:bill_no>',views.hospital_bill, name="hospital_bill"),
     path('indoor-case-paper/<int:language_id>/<int:indoor_no>/',views.indoor_case_paper, name="indoor_case_paper"),
-    # path('medicine-prescription/<int:language_id>/<int:opd_id>/',views.medicine_prescription, name="medicine_prescription"),
+    path('medicine-prescription/<int:language_id>/<int:opd_id>/',views.medicine_prescription, name="medicine_prescription"),
 
     path('view-report/<int:id>/<int:language_id>/', views.view_report, name="view_report"),
 

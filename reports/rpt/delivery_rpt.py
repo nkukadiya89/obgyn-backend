@@ -13,6 +13,13 @@ from django.views.decorators.csrf import csrf_exempt
 def delivery_rpt(request, start_date=None, end_date=None,id_list=None, language_id=1):
     
     patient_delivery_list = PatientDeliveryModel.objects.filter(created_by=request.user.id, deleted=0)
+
+    if len(patient_delivery_list) <= 0:
+        context = {}
+        context["msg"] = False
+        context["error"] = "Record Not found."
+        return JsonResponse(context)
+        
     
     if id_list:
         if len(id_list)>0:
@@ -22,6 +29,13 @@ def delivery_rpt(request, start_date=None, end_date=None,id_list=None, language_
         patient_delivery_list = patient_delivery_list.filter(created_at__date=start_date)
     elif start_date and end_date:
         patient_delivery_list = patient_delivery_list.filter(created_at__date__gte=start_date, created_at__date__lte=end_date)
+
+
+    if len(patient_delivery_list) <= 0:
+        context = {}
+        context["msg"] = False
+        context["error"] = "Record Not found."
+        return JsonResponse(context)
 
     context_list=[]
     if language_id:
@@ -46,17 +60,23 @@ def delivery_rpt(request, start_date=None, end_date=None,id_list=None, language_
         context["gender"] = patient_delivery.child_gender
         hospital_name = User.objects.filter(pk=request.user.id).first()#.hospital.hospital_name
 
-        if hospital_name.hospital:
+        if hospital_name:
             context["birth_place"] = hospital_name.hospital.hospital_name
         else:
             context["birth_place"] = ""
 
-        context["mother_name"] = "".join(
-            [patient.first_name, " ", patient.middle_name, " ", patient.last_name])
-        context["father_name"] = patient_delivery.husband_name
-        context["address"] = "".join([" ", patient.city.city_name, " ",
-                                    patient.district.district_name, " ",
-                                    patient.taluka.taluka_name, " ", patient.state.state_name])
+        try:
+            context["mother_name"] = "".join(
+                [patient.first_name, " ", patient.middle_name, " ", patient.last_name])
+            context["father_name"] = patient_delivery.husband_name
+            context["address"] = "".join([" ", patient.city.city_name, " ",
+                                        patient.district.district_name, " ",
+                                        patient.taluka.taluka_name, " ", patient.state.state_name])
+        except:
+            context["mother_name"] = ""
+            context["father_name"] =""
+            context["address"] = ""
+
         context["mobile"] = patient_delivery.patient.phone
         context["nationality"] = "Indian"
         context["religion"] = patient_delivery.religion
