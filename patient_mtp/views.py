@@ -62,7 +62,7 @@ def delete(request):
 
     try:
         patient_mtp = PatientMtpModel.objects.filter(patient_mtp_id__in=del_id["id"])
-    except PatientMtpModel:
+    except PatientMtpModel.DoesNotExist:
         data["success"] = False
         data["msg"] = "Record does not exist"
         data["data"] = []
@@ -83,6 +83,7 @@ def delete(request):
 @validate_permission("patient_mtp", "add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         patient_mtp = PatientMtpModel()
         if "patient_opd_id" not in request.data:
@@ -102,6 +103,11 @@ def create(request):
             patient_opd.status = "mtp"
             patient_opd.save()
 
+            patient_mtp = PatientMtpModel.objects.filter(
+                regd_no=request.data["regd_no"], deleted=0
+            ).order_by("-created_at")
+            serializer = PatientMtpSerializers(patient_mtp, many=True)
+
             data["success"] = True
             data["msg"] = "Data updated successfully"
             data["data"] = serializer.data
@@ -115,9 +121,10 @@ def create(request):
 
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("patient_mtp","change")
+@validate_permission_id("patient_mtp", "change")
 def patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             patient_mtp = PatientMtpModel.objects.get(pk=id, deleted=0)
@@ -142,6 +149,12 @@ def patch(request, id):
 
         if serializer.is_valid():
             serializer.save()
+
+            patient_mtp = PatientMtpModel.objects.filter(
+                regd_no=request.data["regd_no"], deleted=0
+            ).order_by("-created_at")
+            serializer = PatientMtpSerializers(patient_mtp, many=True)
+
             data["success"] = True
             data["msg"] = "Data updated successfully"
             data["data"] = serializer.data
@@ -155,7 +168,7 @@ def patch(request, id):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("patient_mtp","view")
+@validate_permission_id("patient_mtp", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params

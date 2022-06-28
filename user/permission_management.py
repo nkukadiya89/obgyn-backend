@@ -17,6 +17,7 @@ from .serializers import GroupSerializers
 @permission_classes([AllowAny])
 def create_new_group(request):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         Group.objects.create(name=request.data.get('name'))
         data["success"] = True
@@ -130,6 +131,7 @@ def assign_permission_group(request):
     return Response(data=data, status=status.HTTP_200_OK)
 
 
+from user.models import AuthPermissionModel, ContentTypeModel
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
@@ -137,16 +139,17 @@ def assign_permission_group(request):
 def get_group_permission(request, user_id):
     data = {}
     user = User.objects.get(pk=user_id)
-    group_permission = Permission.objects.filter(group__user=user)
+    group_permission = AuthPermissionModel.objects.filter(authgrouppermissionsmodel__group__usergroupsmodel__user_id=user.id)
 
     permission_list = {}
+   
     for permission in group_permission:
         if permission.content_type.app_label in permission_list:
             permission_name = permission_list[permission.content_type.app_label]
             permission_list[permission.content_type.app_label] = ",".join([permission_name,permission.name.split(" ")[1]])
         else:
             permission_list[permission.content_type.app_label] = permission.name.split(" ")[1]
-
+   
 
     data["total_record"] = len(permission_list)
     data["success"] = True

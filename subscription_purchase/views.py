@@ -81,6 +81,7 @@ def delete(request):
 @validate_permission("subscription_purchase","add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         subscription_purchase = Subscription_purchaseModel()
         serializer = Subscription_PurchaseSerializers(subscription_purchase, data=request.data)
@@ -109,6 +110,7 @@ def create(request):
 @validate_permission_id("Subscription_Purchase","change")
 def patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             subscription_purchase = Subscription_purchaseModel.objects.get(pk=id, deleted=0)

@@ -13,6 +13,9 @@ from .rpt.billing_rpt import billing_rpt
 from .rpt.discharge_rpt import discharge_rpt
 from .rpt.mtp_list_rpt import mtp_list_rpt
 from .rpt.referal_slip_rpt import referal_slip_rpt
+from .rpt.daily_opd_income import daily_opd_income_rpt
+from .rpt.hospital_bill_rpt import hospital_bill_rpt
+from .rpt.indoor_case_paper_rpt import indoor_case_paper_rpt
 from patient_delivery.models import PatientDeliveryModel
 from django.db.models import Count
 from datetime import datetime
@@ -62,7 +65,11 @@ def birth_report(request, id, language_id=None):
 def delivery_report(request, language_id=None):
     data = request.query_params
     start_date = data.get("start_date", None)
+    if start_date:
+        start_date = datetime.strptime(start_date,"%d-%m-%Y").strftime("%Y-%m-%d")
     end_date = data.get("end_date", None)
+    if end_date:
+        end_date = datetime.strptime(end_date,"%d-%m-%Y").strftime("%Y-%m-%d")
     ids = data.get("ids",None)
     return delivery_rpt(request, start_date, end_date, ids, language_id)
 
@@ -73,6 +80,11 @@ def billing_report(request,language_id=None):
     data = request.query_params
     start_date = data.get("start_date", None)
     end_date = data.get("end_date", None)
+    if start_date:
+        start_date = datetime.strptime(start_date,"%d-%m-%Y").strftime("%Y-%m-%d")
+    end_date = data.get("end_date", None)
+    if end_date:
+        end_date = datetime.strptime(end_date,"%d-%m-%Y").strftime("%Y-%m-%d")
 
     return billing_rpt(request, start_date, end_date, language_id)
 
@@ -119,7 +131,6 @@ def match_regd_no(request):
         patient_list = PatientModel.objects.filter(id=user.id)
 
         for patient in patient_list:
-            print(patient.registered_no, "====", patient.phone)
 
             patient.phone = "F_" + str(patient.registered_no)
             patient.save()
@@ -188,3 +199,27 @@ def active_patient(request, id=None):
     data["gyn_count"] = gyn_count
 
     return HttpResponse(json.dumps(data))
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def daily_opd_income(request,language_id):
+    data = request.query_params
+    rpt_date = data.get("rpt_date", None)
+    rpt_date = datetime.strptime(rpt_date,"%d-%m-%Y").strftime("%Y-%m-%d")
+    
+    return daily_opd_income_rpt(request, rpt_date, language_id)
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def hospital_bill(request,language_id,bill_no):
+    return hospital_bill_rpt(request,bill_no,language_id)
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def indoor_case_paper(request,language_id,indoor_no):
+    return indoor_case_paper_rpt(request,indoor_no,language_id)    

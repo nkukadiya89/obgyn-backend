@@ -5,6 +5,7 @@ from district.serializers import DistrictSerializers
 from state.serializers import StateSerializers
 from taluka.serializers import TalukaSerializers
 from .models import CityModel
+from language.serializers import LanguageSerializers
 
 
 class CitySerializers(serializers.ModelSerializer):
@@ -18,12 +19,12 @@ class CitySerializers(serializers.ModelSerializer):
             ret["state_name"] = StateSerializers(instance.taluka.district.state).data["state_name"]
             ret["state_id"] = StateSerializers(instance.taluka.district.state).data["state_id"]
 
+        if "language" in ret:
+            ret["language_name"] = LanguageSerializers(instance.language).data["language"]
         return ret
 
     def validate(self, data):
         city_name = data.get('city_name')
-        if not city_name.isalpha():
-            raise serializers.ValidationError("Invalid City Name")
         
         taluka_id = data.get('taluka')
         duplicate_city = CityModel.objects.filter(deleted=0, city_name__iexact=city_name, taluka_id=taluka_id)
@@ -42,4 +43,4 @@ class CitySerializers(serializers.ModelSerializer):
 
     class Meta:
         model = CityModel
-        fields = ['city_id', 'city_name', 'taluka', 'created_by', 'deleted']
+        fields = ['city_id', 'city_name', 'taluka', 'language', 'created_by', 'deleted']

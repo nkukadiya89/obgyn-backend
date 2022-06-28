@@ -4,17 +4,32 @@ from patient.models import PatientModel
 from patient_delivery.models import PatientDeliveryModel
 
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 
 @csrf_exempt
 def birth_rpt(request, id, language_id=None):
     # patient = PatientModel.objects.filter(pk=id).first()
-    patient_delivery = PatientDeliveryModel.objects.filter(pk=id).first()
+    patient_delivery = PatientDeliveryModel.objects.filter(pk=id, deleted=0).first()
+
+    if not patient_delivery:
+        context = {}
+        context["msg"] = False
+        context["error"] = "Patient not found."
+        return JsonResponse(context)
+
     patient = patient_delivery.patient
     
     if language_id:
-        template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id).first()
+        template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id, language_id=language_id,deleted=0).first()
     else:
-        template_header = TemplateHeaderModel.objects.filter(pk=1).first()
+        template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id,deleted=0).first()
+
+    if not template_header:
+        context = {}
+        context["msg"] = False
+        context["error"] = "Please create report header."
+        return JsonResponse(context)
+
     context = {}
 
     context["mother_name"] = "".join(

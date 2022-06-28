@@ -194,7 +194,6 @@ class DynamicFieldModelSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         fields = kwargs.pop("fields", None)
 
-        print(fields)
         super(DynamicFieldModelSerializer, self).__init__(*args, **kwargs)
     
         fields = set(fields.split(","))

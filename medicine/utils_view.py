@@ -44,11 +44,8 @@ def link_diagnosis(request, medicine_id):
 
 
 def delete_child_table(medicine_list):
-    print(medicine_list)
     patient_prescription = PatientPrescriptionModel.objects.filter(medicine_id__in=medicine_list)
-    print(patient_prescription)
     if len(patient_prescription)>0:
-        print("done")
         patient_prescription.update(medicine=None)
         # patient_prescription.save()
 

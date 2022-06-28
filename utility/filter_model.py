@@ -95,6 +95,10 @@ class ModelFilterCITY:
                 model = model.filter(taluka_id=fld_value)
             if fld_name == "city_id":
                 model = model.filter(city_id=fld_value)
+            if fld_name == "language_id":
+                model = model.filter(language_id=fld_value)
+            if fld_name == "language_name":
+                model = model.filter(language__language=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -105,6 +109,7 @@ class ModelFilterCITY:
                 | Q(taluka__taluka_name__icontains=search)
                 | Q(taluka__district__district_name__icontains=search)
                 | Q(taluka__district__state__state_name__icontains=search)
+                | Q(language__language__icontains=search)
             )
         return model
 
@@ -120,6 +125,10 @@ class ModelFilterDISTRICT:
                 model = model.filter(state_id=fld_value)
             if fld_name == "district_id":
                 model = model.filter(district_id=fld_value)
+            if fld_name == "language_id":
+                model = model.filter(language_id=fld_value)
+            if fld_name == "language_name":
+                model = model.filter(language__language=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -128,6 +137,7 @@ class ModelFilterDISTRICT:
             model = model.filter(
                 Q(district_name__icontains=search)
                 | Q(state__state_name__icontains=search)
+                | Q(language__language__icontains=search)
             )
         return model
 
@@ -143,6 +153,10 @@ class ModelFilterTALUKA:
                 model = model.filter(district_id=fld_value)
             if fld_name == "taluka_id":
                 model = model.filter(taluka_id=fld_value)
+            if fld_name == "language_id":
+                model = model.filter(language_id=fld_value)
+            if fld_name == "language_name":
+                model = model.filter(language__language=fld_value)
         return model
 
     def search(self, model, query_string):
@@ -152,6 +166,7 @@ class ModelFilterTALUKA:
                 Q(taluka_name__icontains=search)
                 | Q(district__district_name__icontains=search)
                 | Q(district__state__state_name__icontains=search)
+                | Q(language__language__icontains=search)
             )
         return model
 
@@ -163,12 +178,18 @@ class ModelFilterSTATE:
             fld_value = fields.split("=")[1]
             if fld_name == "state_name":
                 model = model.filter(state_name__icontains=fld_value)
+            if fld_name == "language_id":
+                model = model.filter(language_id=fld_value)
+            if fld_name == "language_name":
+                model = model.filter(language__language=fld_value)
         return model
 
     def search(self, model, query_string):
         search = query_string["search"]
         if search:
-            model = model.filter(Q(state_name__icontains=search))
+            model = model.filter(Q(state_name__icontains=search)
+                | Q(language__language__icontains=search)
+            )
         return model
 
 
@@ -422,7 +443,6 @@ class ModelFilterFIELDMASTER:
 
 class ModelFilterMANAGEFIELDS:
     def filter_fields(self, model, filter_fields):
-        print(filter_fields)
         for fields in filter_fields:
             fld_name = fields.split("=")[0]
             fld_value = fields.split("=")[1]
@@ -662,6 +682,10 @@ class ModelFilterPATIENTOPD:
                 model = model.filter(patient__first_name__icontains=fld_value)
             if fld_name == "last_name":
                 model = model.filter(patient__last_name__icontains=fld_value)
+            if fld_name == "created_by":
+                model = model.filter(created_by=fld_value)
+            if fld_name == "consulted_by":
+                model = model.filter(consulted_by=fld_value)
 
         return model
 
@@ -842,7 +866,7 @@ class ModelFilterPATIENTUSGREPORT:
             if fld_name == "report_date":
                 model = model.filter(report_date=fld_value)
             if fld_name == "anomalies":
-                model = model.filter(anomalies_icontains=fld_value)
+                model = model.filter(anomalies__field_value_icontains=fld_value)
             if fld_name == "patient_opd_id":
                 model = model.filter(patient_opd_id=fld_value)
         return model
@@ -851,12 +875,12 @@ class ModelFilterPATIENTUSGREPORT:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(anomalies__icontains=search)
+                Q(anomalies__field_value__icontains=search)
                 | Q(regd_no__icontains=search)
                 | Q(cardiac_activity__icontains=search)
                 | Q(presentation__icontains=search)
                 | Q(possible_lmp__icontains=search)
-                | Q(placental_location__icontains=search)
+                | Q(placental_location__field_value__icontains=search)
                 | Q(amount_of_liquor__icontains=search)
                 | Q(remark__icontains=search)
                 | Q(usg_report__icontains=search)
@@ -1078,7 +1102,7 @@ class ModelFilterPATIENTINDOOR:
             if fld_name == "diagnosis":
                 model = model.filter(diagnosis_id=fld_value)
             if fld_name == "operation":
-                model = model.filter(operation__icontains=fld_value)
+                model = model.filter(operation__field_value__icontains=fld_value)
             if fld_name == "patient_opd_id":
                 model = model.filter(patient_opd_id=fld_value)
 
@@ -1091,8 +1115,7 @@ class ModelFilterPATIENTINDOOR:
                 Q(regd_no__icontains=search)
                 | Q(indoor_case_number__icontains=search)
                 | Q(complain__icontains=search)
-                | Q(contraception__icontains=search)
-                | Q(operation__icontains=search)
+                | Q(operation__field_value__icontains=search)
                 | Q(diagnosis__diagnosis_name__icontains=search)
             )
         return model
@@ -1247,7 +1270,7 @@ class ModelFilterSUBSCRIPTIONPURCHASE:
             if fld_name == "hospital":
                 model = model.filter(hospital=fld_value)
             if fld_name == "subscription":
-                model = model.filter(subscription__subscription__icontains=fld_value)
+                model = model.filter(subscription__subscription_name__icontains=fld_value)
             if fld_name == "price":
                 model = model.filter(price=fld_value)
             if fld_name == "duration":
@@ -1275,12 +1298,12 @@ class ModelFilterSUBSCRIPTIONPURCHASE:
             if search.isnumeric():
                 model = model.filter(
                     Q(subscription_purchase_id=search)
-                    | Q(subscription__subscription__icontains=search)
                     | Q(invoice_no=search)
                 )
             else:
                 model = model.filter(
-                    Q(hospital__hospital__icontains=search)
+                    Q(hospital__hospital_name__icontains=search)
+                    | Q(subscription__subscription_name__icontains=search)
                 )
         return model
 

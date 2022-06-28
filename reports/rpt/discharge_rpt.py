@@ -1,36 +1,65 @@
 from django.shortcuts import render
+from patient_discharge.models import PatientDischargeModel
 from template_header.models import TemplateHeaderModel
 from patient_opd.models import PatientOpdModel
 
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 
 
 @csrf_exempt
 def discharge_rpt(request, id, language_id=None):
-    patient_opd = PatientOpdModel.objects.filter(pk=id).select_related('patientdischargemodel').first()
+    patient_opd = PatientOpdModel.objects.filter(pk=id,deleted=0).first()
     if language_id:
-        template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id).first()
+        template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id, language_id=language_id,deleted=0).first()
     else:
-        template_header = TemplateHeaderModel.objects.filter(pk=1).first()
-    context = {}
-    context["name"] = "".join(
-        [patient_opd.patient.first_name, " ", patient_opd.patient.middle_name, " ", patient_opd.patient.last_name])
-    context["address"] = "".join([" ", patient_opd.patient.city.city_name, " ",
-                                  patient_opd.patient.district.district_name, " ",
-                                  patient_opd.patient.taluka.taluka_name, " ", patient_opd.patient.state.state_name])
+        template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id,deleted=0).first()
 
-    context["admission_date"] = str(patient_opd.patientdischargemodel.admission_date) + " " + str(
-        patient_opd.patientdischargemodel.admission_time)
-    context["discharge_date"] = str(patient_opd.patientdischargemodel.discharge_date) + " " + str(
-        patient_opd.patientdischargemodel.discharge_time)
-    context["complain_of"] = patient_opd.patientdischargemodel.complain_of
-    context["diagnosis"] = patient_opd.patientdischargemodel.diagnosis.diagnosis_name
-    context["ot_time_date"] = str(patient_opd.patientdischargemodel.ot_date) + " " + str(
-        patient_opd.patientdischargemodel.ot_time)
-    context["treatment_given"] = patient_opd.patientdischargemodel.treatment_given
-    context["advice"] = patient_opd.patientdischargemodel.advice.field_value
-    context["remark"] = patient_opd.patientdischargemodel.remark
-    context["name_of_procedure"] = patient_opd.patientdischargemodel.name_of_operation
+    if not template_header:
+        context = {}
+        context["msg"] = False
+        context["error"] = "Please create report header."
+        return JsonResponse(context)
+
+    if not patient_opd:
+        context = {}
+        context["msg"] = False
+        context["error"] = "OPD not found."
+        return JsonResponse(context)
+
+    context = {}
+    context["regd_no"] = patient_opd.patient.regd_no_barcode
+    try:
+        context["name"] = "".join(
+            [patient_opd.patient.first_name, " ", patient_opd.patient.middle_name, " ", patient_opd.patient.last_name])
+        context["address"] = "".join([" ", patient_opd.patient.city.city_name, " ",
+                                    patient_opd.patient.district.district_name, " ",
+                                    patient_opd.patient.taluka.taluka_name, " ", patient_opd.patient.state.state_name])
+    except:
+        context["name"] = ""
+        context["address"] = ""
+        
+    patient_discharge = PatientDischargeModel.objects.filter(patient_opd=patient_opd).first()
+    if patient_discharge == None:
+        context = {}
+        context["msg"] = False
+        context["error"] = "Patient Discharge Does not exist."
+        return JsonResponse(context)
+
+
+    if patient_discharge:
+        context["admission_date"] = str(patient_discharge.admission_date) + " " + str(
+            patient_discharge.admission_time)
+        context["discharge_date"] = str(patient_discharge.discharge_date) + " " + str(
+            patient_discharge.discharge_time)
+        context["complain_of"] = patient_discharge.complain_of
+        context["diagnosis"] = patient_discharge.diagnosis.diagnosis_name
+        context["ot_time_date"] = str(patient_discharge.ot_date) + " " + str(
+            patient_discharge.ot_time)
+        context["treatment_given"] = patient_discharge.treatment_given
+        context["advice"] = patient_discharge.advice.field_value
+        context["remark"] = patient_discharge.remark
+        context["name_of_procedure"] = patient_discharge.name_of_operation
     template_name = "reports/en/discharge_card.html"
     return render(request, template_name,
                   {"context": context, "template_header": template_header.header_text.replace("'", "\"")})

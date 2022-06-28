@@ -1,7 +1,11 @@
 import json
 
 from rest_framework import status
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -13,9 +17,8 @@ from django.db.models import Q
 from .models import DiagnosisModel
 from .serializers import DiagnosisSerializers
 from utility.search_filter import filtering_query
-from utility.decorator import validate_permission_id,validate_permission
+from utility.decorator import validate_permission_id, validate_permission
 from .utils_views import delete_child_record
-
 
 
 class DiagnosisAPI(APIView):
@@ -44,13 +47,14 @@ class DiagnosisAPI(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 # ================= Delete Record =========================
-@api_view(['DELETE'])
+@api_view(["DELETE"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("diagnosis","delete")
+@validate_permission("diagnosis", "delete")
 def delete(request):
     data = {}
-    del_id = json.loads(request.body.decode('utf-8'))
+    del_id = json.loads(request.body.decode("utf-8"))
     if "id" not in del_id:
         data["success"] = False
         data["msg"] = "Record ID not provided"
@@ -73,12 +77,14 @@ def delete(request):
         data["deleted"] = result
         return Response(data=data, status=status.HTTP_200_OK)
 
+
 # ================= Create New Record=========================
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("diagnosis","add")
+@validate_permission("diagnosis", "add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         diagnosis = DiagnosisModel()
         serializer = DiagnosisSerializers(diagnosis, data=request.data)
@@ -95,15 +101,15 @@ def create(request):
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("diagnosis","change")
+@validate_permission_id("diagnosis", "change")
 def patch(request, id):
     data = {}
-
+    request.data["created_by"] = request.user.id
     try:
         if id:
-            diagnosis = DiagnosisModel.objects.get(pk=id,deleted=0)
+            diagnosis = DiagnosisModel.objects.get(pk=id, deleted=0)
         else:
             diagnosis = DiagnosisModel.objects.filter(deleted=0)
     except DiagnosisModel.DoesNotExist:
@@ -128,9 +134,9 @@ def patch(request, id):
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("diagnosis","view")
+@validate_permission_id("diagnosis", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
@@ -140,9 +146,13 @@ def get(request, id=None):
         if id:
             diagnosis = DiagnosisModel.objects.filter(pk=id, deleted=0)
         else:
-            diagnosis = DiagnosisModel.objects.filter(Q(deleted=0, created_by=1)  | Q(created_by=request.data.get('created_by')))
+            diagnosis = DiagnosisModel.objects.filter(
+                Q(deleted=0, created_by=1) | Q(created_by=request.user.id)
+            )
         data["total_record"] = len(diagnosis)
-        diagnosis, data = filtering_query(diagnosis, query_string, "diagnosis_id", "DIAGNOSIS")
+        diagnosis, data = filtering_query(
+            diagnosis, query_string, "diagnosis_id", "DIAGNOSIS"
+        )
 
     except DiagnosisModel.DoesNotExist:
         data["success"] = False

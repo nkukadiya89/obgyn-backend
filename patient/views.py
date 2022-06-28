@@ -89,6 +89,7 @@ def delete(request):
 @validate_permission("patient", "add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         patient = PatientModel()
         serializer = PatientSerializers(patient, data=json.loads(request.data["data"]))
@@ -140,7 +141,7 @@ def create(request):
 @validate_permission_id("patient", "change")
 def patch(request, id):
     data = {}
-
+    request.data["created_by"] = request.user.id
     try:
         if id:
             patient = PatientModel.objects.get(patient_id=id)

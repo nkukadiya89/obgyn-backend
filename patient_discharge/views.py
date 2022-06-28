@@ -87,6 +87,7 @@ def delete(request):
 @validate_permission("patient_discharge", "add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         patient_discharge = PatientDischargeModel()
         if "patient_opd_id" not in request.data:
@@ -122,6 +123,7 @@ def create(request):
 @validate_permission_id("patient_discharge","change")
 def patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             patient_discharge = PatientDischargeModel.objects.get(pk=id,deleted=0)

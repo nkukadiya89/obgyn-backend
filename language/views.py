@@ -83,6 +83,7 @@ def delete(request):
 @validate_permission("language", "add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         language = LanguageModel()
         serializer = LanguageSerializers(language, data=request.data)
@@ -105,7 +106,7 @@ def create(request):
 @validate_permission_id("language","change")
 def patch(request, id):
     data = {}
-
+    request.data["created_by"] = request.user.id
     try:
         if id:
             language = LanguageModel.objects.get(pk=id,deleted=0)

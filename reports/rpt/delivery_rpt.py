@@ -1,19 +1,23 @@
+import json
+from django.http import HttpResponse
 from django.shortcuts import render
 from template_header.models import TemplateHeaderModel
 from patient.models import PatientModel
 from patient_delivery.models import PatientDeliveryModel
 from user.models import User
+from django.http import JsonResponse
 
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def delivery_rpt(request, start_date=None, end_date=None,id_list=None, language_id=1):
     
-    patient_delivery_list = PatientDeliveryModel.objects.filter(created_by=1)
+    patient_delivery_list = PatientDeliveryModel.objects.filter(created_by=request.user.id, deleted=0)
     
-    if len(id_list)>0:
-        id_list = id_list.split(",")
-        patient_delivery_list = patient_delivery_list.filter(patient_delivery_id__in=id_list)
+    if id_list:
+        if len(id_list)>0:
+            id_list = id_list.split(",")
+            patient_delivery_list = patient_delivery_list.filter(patient_delivery_id__in=id_list)
     if start_date and not end_date:
         patient_delivery_list = patient_delivery_list.filter(created_at__date=start_date)
     elif start_date and end_date:
@@ -21,10 +25,16 @@ def delivery_rpt(request, start_date=None, end_date=None,id_list=None, language_
 
     context_list=[]
     if language_id:
-        template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id).first()
+        template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id, language_id=language_id,deleted=0).first()
     else:
-        template_header = TemplateHeaderModel.objects.filter(pk=1).first()
+        template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id,deleted=0).first()
 
+    if not template_header:
+        context = {}
+        context["msg"] = False
+        context["error"] = "Please create report header."
+        return JsonResponse(context)
+        
     for patient_delivery in patient_delivery_list:
         patient = patient_delivery.patient
         
@@ -36,7 +46,10 @@ def delivery_rpt(request, start_date=None, end_date=None,id_list=None, language_
         context["gender"] = patient_delivery.child_gender
         hospital_name = User.objects.filter(pk=request.user.id).first()#.hospital.hospital_name
 
-        context["birth_place"] = hospital_name.hospital.hospital_name
+        if hospital_name.hospital:
+            context["birth_place"] = hospital_name.hospital.hospital_name
+        else:
+            context["birth_place"] = ""
 
         context["mother_name"] = "".join(
             [patient.first_name, " ", patient.middle_name, " ", patient.last_name])

@@ -89,6 +89,7 @@ def delete_medicine(request):
 @validate_permission("medicine", "add")
 def create_medicine(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         medicine = MedicineModel()
         serializer = MedicineSerializers(medicine, data=request.data)
@@ -186,6 +187,7 @@ def delete_medicine_type(request):
 @validate_permission("medicine_type", "add")
 def create_medicine_type(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         medicine_type = MedicineTypeModel()
         serializer = MedicineTypeSerializers(medicine_type, data=request.data)
@@ -265,6 +267,8 @@ def delete_timing(request):
 @validate_permission("timing", "add")
 def create_timing(request):
     data = {}
+    request.data["created_by"] = request.user.id
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         timing = TimingModel()
         serializer = TimingSerializers(timing, data=request.data)
@@ -296,7 +300,7 @@ def get_timing(request, id=None):
         else:
             timing = TimingModel.objects.filter(
                 Q(deleted=0, created_by=1)
-                | Q(created_by=request.data.get("created_by"))
+                | Q(created_by=request.user.id,deleted=0)
             )
 
         data["total_record"] = len(timing)
@@ -321,7 +325,7 @@ def get_timing(request, id=None):
 @validate_permission_id("timing", "change")
 def patch_timing(request, id):
     data = {}
-
+    request.data["created_by"] = request.user.id
     try:
         if id:
             timing = TimingModel.objects.get(pk=id,deleted=0)
@@ -354,7 +358,7 @@ def patch_timing(request, id):
 @validate_permission_id("medicine_type", "update")
 def patch_medicine_type(request, id):
     data = {}
-
+    request.data["created_by"] = request.user.id
     try:
         if id:
             medicine_type = MedicineTypeModel.objects.get(pk=id,deleted=0)
@@ -387,6 +391,7 @@ def patch_medicine_type(request, id):
 @validate_permission_id("medicine", "change")
 def patch_medicine(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             medicine = MedicineModel.objects.get(pk=id,deleted=0)
@@ -430,8 +435,8 @@ def get_medicine(request, id=None):
             medicine = MedicineModel.objects.filter(pk=id, deleted=0)
         else:
             medicine = MedicineModel.objects.filter(
-                Q(created_by=1, deleted=0)
-                | Q(created_by=request.data.get("created_by"))
+                Q(deleted=0, created_by=1)
+                | Q(created_by=request.user.id)
             )
 
         data["total_record"] = len(medicine)
@@ -513,7 +518,6 @@ def get_or_medicine(request, id=None):
 # ================= Retrieve Single or Multiple records=========================
 def get_medicine_type(request, id=None):
     query_string = request.query_params
-
     data = {}
     try:
         if id:
@@ -521,7 +525,7 @@ def get_medicine_type(request, id=None):
         else:
             medicine_type = MedicineTypeModel.objects.filter(
                 Q(deleted=0, created_by=1)
-                | Q(created_by=request.data.get("created_by"))
+                | Q(created_by=request.user.id)
             )
 
         data["total_record"] = len(medicine_type)
@@ -551,7 +555,10 @@ def get_medicine_type(request, id=None):
 # ================= Retrieve Single or Multiple records=========================
 def get_unique_medicine(request, id=None):
     query_string = request.query_params
-    distinc_key =  query_string["fields"].split(",")[1]
+    if "," in query_string["fields"]:
+        distinc_key =  query_string["fields"].split(",")[1]
+    else:
+        distinc_key = query_string["fields"]
 
     data = {}
     try:
@@ -560,11 +567,11 @@ def get_unique_medicine(request, id=None):
         else:
             medicine = MedicineModel.objects.filter(
                 Q(deleted=0, created_by=1)
-                | Q(created_by=request.data.get("created_by"))
+                | Q(created_by=request.user.id)
             )
-
         data["total_record"] = len(medicine)
 
+        # medicine = medicine.distinct(distinc_key).values_list(distinc_key)
         medicine = medicine.distinct(distinc_key)
     except MedicineModel.DoesNotExist:
         data["success"] = False
@@ -574,6 +581,8 @@ def get_unique_medicine(request, id=None):
 
     if request.method == "GET":
         serializer = DynamicFieldModelSerializer(medicine, many=True, fields=query_string["fields"])
+
+        # medicine = [item for m in medicine for item in m]
 
         data["success"] = True
         data["msg"] = "OK"

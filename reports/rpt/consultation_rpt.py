@@ -7,13 +7,15 @@ from consultation.models import ConsultationModel
 from language.models import LanguageModel
 from django.views.decorators.csrf import csrf_exempt
 from utility.aws_file_upload import upload_barcode_image
+from patient_prescription.models import PatientPrescriptionModel
+from django.http import JsonResponse
 
 
 
 @csrf_exempt
 def consultation_rpt(request, id, language_id=None):
     
-    consultation = ConsultationModel.objects.filter(pk=id).first()
+    consultation = ConsultationModel.objects.filter(pk=id,deleted=0).first()
     if consultation == None:
         return HttpResponse("Consultation Record Does not exist", status=status.HTTP_400_BAD_REQUEST)
 
@@ -29,15 +31,19 @@ def consultation_rpt(request, id, language_id=None):
     if len(patient_opd) == 0:
         return HttpResponse("OPD Record Does not exist", status=status.HTTP_400_BAD_REQUEST)
 
-    patient_opd = patient_opd.select_related('consultationmodel')
     patient_opd = patient_opd.first()
 
     if language_id:
-        template_header = TemplateHeaderModel.objects.filter(pk=1, language_id=language_id).first()
+        template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id, language_id=language_id,deleted=0).first()
     else:
-        template_header = TemplateHeaderModel.objects.filter(pk=1).first()
+        template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id,deleted=0).first()
 
-    
+    if not template_header:
+        context = {}
+        context["msg"] = False
+        context["error"] = "Please create report header."
+        return JsonResponse(context)
+
 
         
     context = {}
@@ -45,7 +51,7 @@ def consultation_rpt(request, id, language_id=None):
     context["regd_no"] = patient_opd.patient.regd_no_barcode
 
 
-
+    consultation = ConsultationModel.objects.filter(patient_opd=patient_opd).first()
     
 
     context["name"] = "".join(
@@ -57,37 +63,48 @@ def consultation_rpt(request, id, language_id=None):
 
     context["report_date"] = str(patient_opd.opd_date)
 
-    context["hb"] = patient_opd.consultationmodel.hb
+    context["hb"] = consultation.hb
 
-    context["ho"] = patient_opd.consultationmodel.ho
-    context["blood_group"] = patient_opd.consultationmodel.blood_group
-    context["co"] = patient_opd.consultationmodel.co
+    context["ho"] = consultation.ho.field_value
+    context["blood_group"] = consultation.blood_group
+    context["co"] = consultation.co.field_value
     context["age"] = patient_opd.patient.age
     context["mh"] = "--NA--"
-    context["lmp"] = patient_opd.consultationmodel.lmp_date
-    context["edd"] = patient_opd.consultationmodel.edd_date
-    context["edds"] = patient_opd.consultationmodel.possible_edd
+    context["lmp"] = consultation.lmp_date
+    context["edd"] = consultation.edd_date
+    context["edds"] = consultation.possible_edd
     context["ohml"] = "--NA--"
-    context["ftnd_male_live"] = patient_opd.consultationmodel.ftnd_male_live
-    context["ftnd_male_dead"] = patient_opd.consultationmodel.ftnd_male_dead
-    context["ftnd_female_live"] = patient_opd.consultationmodel.ftnd_female_live
-    context["ftnd_female_dead"] = patient_opd.consultationmodel.ftnd_female_dead
-    context["ftlscs_male_live"] = patient_opd.consultationmodel.ftlscs_male_live
-    context["ftlscs_male_dead"] = patient_opd.consultationmodel.ftlscs_male_dead
-    context["ftlscs_female_live"] = patient_opd.consultationmodel.ftlscs_female_live
-    context["ftlscs_female_dead"] = patient_opd.consultationmodel.ftlscs_female_dead
+    context["ftnd_male_live"] = consultation.ftnd_male_live
+    context["ftnd_male_dead"] = consultation.ftnd_male_dead
+    context["ftnd_female_live"] = consultation.ftnd_female_live
+    context["ftnd_female_dead"] = consultation.ftnd_female_dead
+    context["ftlscs_male_live"] = consultation.ftlscs_male_live
+    context["ftlscs_male_dead"] = consultation.ftlscs_male_dead
+    context["ftlscs_female_live"] = consultation.ftlscs_female_live
+    context["ftlscs_female_dead"] = consultation.ftlscs_female_dead
 
-    context["phfh"] = patient_opd.consultationmodel.fhs
+    context["phfh"] = consultation.fhs
     context["tprbp"] = "/".join(
-        [str(patient_opd.consultationmodel.temprature), str(patient_opd.consultationmodel.puls),
-         str(patient_opd.consultationmodel.resperistion),
-         str(patient_opd.consultationmodel.bp)])
+        [str(consultation.temprature), str(consultation.puls),
+         str(consultation.resperistion),
+         str(consultation.bp)])
     context["pio"] = "--NA--"
-    context["rscvs"] = patient_opd.consultationmodel.rs + "/" + patient_opd.consultationmodel.cvs
-    context["pa"] = patient_opd.consultationmodel.pa_value
-    context["ps"] = patient_opd.consultationmodel.ps
-    context["pv"] = patient_opd.consultationmodel.pv
+    context["rscvs"] = consultation.rs + "/" + consultation.cvs
+    context["pa"] = consultation.pa_value
+    context["ps"] = consultation.ps.field_value
+    context["pv"] = consultation.pv.field_value
 
+    prescription_list = PatientPrescriptionModel.objects.filter(consultation=consultation)
+
+    context_sub = []
+    for prescription in prescription_list:
+        prescribe = {}
+        prescribe["type"] = prescription.medicine_type.medicine_type
+        prescribe["medicine"] = prescription.medicine.medicine
+        prescribe["total"] = prescription.medicine.total_tablet
+        context_sub.append(prescribe)
+
+    context["prescription"] = context_sub
     template_name = "reports/en/consultation.html"
     return render(request, template_name,
                   {"context": context, "template_header": template_header.header_text.replace("'", "\"")})

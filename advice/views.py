@@ -1,7 +1,11 @@
 import json
 
 from rest_framework import status
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -14,7 +18,6 @@ from .models import AdviceModel, AdviceGroupModel, AdviceGroupAdviceModel
 from .serializers import AdviceSerializers, AdviceGroupSerializers
 from .utils_view import insert_advice_group, delete_child_records
 from django.db.models import Q
-
 
 
 class AdviceAPI(APIView):
@@ -47,7 +50,7 @@ class AdviceAPI(APIView):
 
     def delete(self, request):
         data = {}
-        del_id = json.loads(request.body.decode('utf-8'))
+        del_id = json.loads(request.body.decode("utf-8"))
 
         if "id" not in del_id:
             data["success"] = False
@@ -67,7 +70,9 @@ class AdviceAPI(APIView):
             delete_child_records(advice)
             result = advice.delete()
 
-            AdviceGroupAdviceModel.objects.filter(advicemodel_id__in=del_id["id"]).delete()
+            AdviceGroupAdviceModel.objects.filter(
+                advicemodel_id__in=del_id["id"]
+            ).delete()
             data["success"] = True
             data["msg"] = "Data deleted successfully."
             data["deleted"] = result
@@ -76,10 +81,10 @@ class AdviceAPI(APIView):
     # ================= Create New Record=========================
     def post(self, request):
         data = {}
+        request.data["created_by"] = request.user.id
         if request.method == "POST":
             advice = AdviceModel()
             serializer = AdviceSerializers(advice, data=request.data)
-
 
             if serializer.is_valid():
                 serializer.save()
@@ -97,14 +102,15 @@ class AdviceAPI(APIView):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
-            advice = AdviceModel.objects.get(pk=id,deleted=0)
+            advice = AdviceModel.objects.get(pk=id, deleted=0)
         else:
             advice = AdviceModel.objects.filter(deleted=0)
     except AdviceModel.DoesNotExist:
@@ -129,7 +135,7 @@ def patch(request, id):
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticatedOrReadOnly])
 # ================= Retrieve Single or Multiple records=========================
@@ -140,7 +146,10 @@ def get(request, id=None):
         if id:
             advice = AdviceModel.objects.filter(pk=id, deleted=0)
         else:
-            advice = AdviceModel.objects.filter(Q(deleted=0, created_by=1)  | Q(created_by=request.data.get('created_by')))
+            advice = AdviceModel.objects.filter(
+                Q(deleted=0, created_by=1)
+                | Q(created_by=request.user.id, deleted=0)
+            )
 
         data["total_record"] = len(advice)
         advice, data = filtering_query(advice, query_string, "advice_id", "ADVICE")
@@ -189,7 +198,7 @@ class AdviceGroupAPI(APIView):
 
     def delete(self, request):
         data = {}
-        del_id = json.loads(request.body.decode('utf-8'))
+        del_id = json.loads(request.body.decode("utf-8"))
 
         if "id" not in del_id:
             data["success"] = False
@@ -198,7 +207,9 @@ class AdviceGroupAPI(APIView):
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
-            advice_group = AdviceGroupModel.objects.filter(advice_group_id__in=del_id["id"])
+            advice_group = AdviceGroupModel.objects.filter(
+                advice_group_id__in=del_id["id"]
+            )
         except AdviceGroupModel.DoesNotExist:
             data["success"] = False
             data["msg"] = "Record does not exist"
@@ -215,6 +226,7 @@ class AdviceGroupAPI(APIView):
     # ================= Create New Record=========================
     def post(self, request):
         data = {}
+        request.data["created_by"] = request.user.id
         if request.method == "POST":
             advice_group = AdviceGroupModel()
             serializer = AdviceGroupSerializers(advice_group, data=request.data)
@@ -232,14 +244,15 @@ class AdviceGroupAPI(APIView):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def patch_group(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
-            advice_group = AdviceGroupModel.objects.get(pk=id,deleted=0)
+            advice_group = AdviceGroupModel.objects.get(pk=id, deleted=0)
         else:
             advice_group = AdviceGroupModel.objects.filter(deleted=0)
     except AdviceGroupModel.DoesNotExist:
@@ -264,7 +277,7 @@ def patch_group(request, id):
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticatedOrReadOnly])
 # ================= Retrieve Single or Multiple records=========================
@@ -275,10 +288,14 @@ def get_group(request, id=None):
         if id:
             advice_group = AdviceGroupModel.objects.filter(pk=id, deleted=0)
         else:
-            advice_group = AdviceGroupModel.objects.filter(Q(deleted=0, created_by=1)  | Q(created_by=request.data.get('created_by')))
+            advice_group = AdviceGroupModel.objects.filter(
+                Q(deleted=0, created_by=1) | Q(created_by=request.user.id, deleted=0)
+            )
 
         data["total_record"] = len(advice_group)
-        advice_group, data = filtering_query(advice_group, query_string, "advice_group_id", "ADVICEGROUP")
+        advice_group, data = filtering_query(
+            advice_group, query_string, "advice_group_id", "ADVICEGROUP"
+        )
 
     except AdviceGroupModel.DoesNotExist:
         data["success"] = False

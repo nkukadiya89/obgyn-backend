@@ -1,3 +1,4 @@
+from tokenize import group
 from django.contrib.auth.models import Permission
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -6,6 +7,7 @@ from language.models import LanguageModel
 from obgyn_config.models import ObgynConfigModel
 from obgyn_config.views import get_obgyn_config
 from patient_usgform.models import PatientUSGFormModel
+from user.models import AuthPermissionModel
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -14,15 +16,17 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         attrs['email'] = attrs.get('email').lower()
         data = {}
         token = super(CustomTokenObtainPairSerializer, self).validate(attrs)
-        group_permission = Permission.objects.filter(group__user=self.user)
+        group_permission = Permission.objects.all()
+        group_permission = AuthPermissionModel.objects.filter(authgrouppermissionsmodel__group__usergroupsmodel__user_id=self.user.id)
         permission_list = {}
         for permission in group_permission:
-            if permission.content_type.app_label in permission_list:
-                permission_name = permission_list[permission.content_type.app_label]
-                permission_list[permission.content_type.app_label] = ",".join(
-                    [permission_name, permission.name.split(" ")[1]])
+            app_model = permission.content_type.model.split("model")[0]
+            if app_model in permission_list:
+                permission_name = permission_list[app_model]
+                if permission.name.split(" ")[1] not in permission_list[app_model]:
+                    permission_list[app_model] = ",".join([permission_name,permission.name.split(" ")[1]])
             else:
-                permission_list[permission.content_type.app_label] = permission.name.split(" ")[1]
+                permission_list[app_model] = permission.name.split(" ")[1]
         
         obgyn_config = ObgynConfigModel.objects.filter(user_id=self.user.id).first()
         if obgyn_config == None:

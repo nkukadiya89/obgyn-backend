@@ -94,25 +94,34 @@ def get_obgyn_config(user,model_class=PatientUSGFormModel):
     first_date = date(year, month, 1)
     last_date = date(year, month, num_days)
 
-    usg_form = model_class.objects.filter(deleted=0, created_by=user.id)
+    usg_form = model_class.objects.filter(deleted=0, created_by=user.id).order_by("-created_at")
 
     usg_form_y = usg_form.filter(created_at__date__gte=start_date,
-            created_at__date__lte=end_date)
+            created_at__date__lte=end_date).order_by("-created_at")
     
     usg_form_m =usg_form.filter(created_at__date__gte=first_date,
-        created_at__date__lte=last_date)
+        created_at__date__lte=last_date).order_by("-created_at")
     
-    sr_no = usg_form.count()
+    if len(usg_form) > 0:
+        if hasattr(usg_form[0], "sr_no"):
+            sr_no = usg_form[0].sr_no + 1
+        else:
+            sr_no = 1
+    else:
+        sr_no = 1
 
-    if usg_form_y == None:
+
+    if len(usg_form_y) == 0:
         month_seq = 1
         year_seq = 1
     else:
-        year_seq = len(usg_form_y) + 1
-        if usg_form_m == None:
+        year_seq = usg_form_y[0].serial_no_year + 1
+
+        if len(usg_form_m) == 0:
             month_seq = 1
         else:
-            month_seq = len(usg_form_m) + 1
+            month_seq = usg_form_m[0].serial_no_month + 1
+        
 
     return month_seq, year_seq, sr_no
 
@@ -123,7 +132,7 @@ def update_global_charges(request):
     if obgyn_config == None:
         obgyn_config = ObgynConfigModel.objects.create(user_id=user.id,deleted=0)
 
-    
+    request.data["created_by"] = request.user.id
 
     if "rs_per_visit" in request.data:
         obgyn_config.rs_per_visit = request.data.get("rs_per_visit",0)
@@ -170,6 +179,7 @@ class ObgynConfigAPI(APIView):
 @validate_permission("obgyn_config","add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         obgyn_config = ObgynConfigModel()
         serializer = Obgyn_Configserializers(obgyn_config, data=request.data)
@@ -192,6 +202,7 @@ def create(request):
 @validate_permission_id("obgyn_config","change")
 def patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             obgyn_config = ObgynConfigModel.objects.get(pk=id,deleted=0)

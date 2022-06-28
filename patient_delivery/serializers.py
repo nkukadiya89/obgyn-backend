@@ -43,13 +43,26 @@ class PatientDeliverySerializers(serializers.ModelSerializer):
                 "state_name"
             ]
 
-        for fld_nm in ["episio_by", "dayan", "father_education", "mother_education","father_occupation", "mother_occupation"]:
-            fld_name = fld_nm + "_name"
-            search_instance = "instance" + "." + fld_nm
-            if fld_nm in ret:
-                ret[fld_name] = ManageFieldsSerializers(eval(search_instance)).data[
-                    "field_value"
-                ]
+        if "mother_occupation" in ret:
+            ret["mother_occupation_name"] = ManageFieldsSerializers(instance.mother_occupation).data["field_value"]
+        if "mother_education" in ret:
+            ret["mother_education_name"] = ManageFieldsSerializers(instance.mother_education).data["field_value"]
+
+
+        if "father_occupation" in ret:
+            ret["father_occupation_name"] = ManageFieldsSerializers(instance.father_occupation).data["field_value"]
+        if "father_education" in ret:
+            ret["father_education_name"] = ManageFieldsSerializers(instance.father_education).data["field_value"]
+
+
+
+        # for fld_nm in ["episio_by", "dayan", "father_education", "mother_education","father_occupation", "mother_occupation"]:
+        #     fld_name = fld_nm + "_name"
+        #     search_instance = "instance" + "." + fld_nm
+        #     if fld_nm in ret:
+        #         ret[fld_name] = ManageFieldsSerializers(eval(search_instance)).data[
+        #             "field_value"
+        #         ]
 
 
         return ret

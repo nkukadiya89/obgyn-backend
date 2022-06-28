@@ -76,6 +76,7 @@ def delete(request):
 @validate_permission("patient_usgreport","add")
 def create(request):
     data = {}
+    request.data["created_by"] = request.user.id
     if request.method == "POST":
         patient_usgreport = PatientUSGReportModel()
         if "patient_opd_id" not in request.data:
@@ -93,6 +94,11 @@ def create(request):
             patient_opd.status = "usgreport"
             patient_opd.save()
 
+            patient_usgreport = PatientUSGReportModel.objects.filter(
+                regd_no=request.data["regd_no"], deleted=0
+            ).order_by("-created_at")
+            serializer = PatientUSGReportSerializers(patient_usgreport, many=True)
+
             data["success"] = True
             data["msg"] = "Data updated successfully"
             data["data"] = serializer.data
@@ -109,6 +115,7 @@ def create(request):
 @validate_permission_id("patient_usgreport","change")
 def patch(request, id):
     data = {}
+    request.data["created_by"] = request.user.id
     try:
         if id:
             patient_usgreport = PatientUSGReportModel.objects.get(pk=id, deleted=0)
@@ -133,6 +140,11 @@ def patch(request, id):
 
         if serializer.is_valid():
             serializer.save()
+            patient_usgreport = PatientUSGReportModel.objects.filter(
+                regd_no=request.data["regd_no"], deleted=0
+            ).order_by("-created_at")
+            serializer = PatientUSGReportSerializers(patient_usgreport, many=True)
+
             data["success"] = True
             data["msg"] = "Data updated successfully"
             data["data"] = serializer.data
