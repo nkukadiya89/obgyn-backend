@@ -18,6 +18,11 @@ BUCKET = config('BUCKET_NAME')
 
 # Create your models here.
 class PatientModel(User):
+    gender_choice =(
+        ("MALE","MALE"),
+        ("FEMALE","FEMALE"),
+        ('TRANSGENDER','TRANSGENDER')
+    )
     patient_id = models.AutoField(primary_key=True)
     name_title = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="name_title", null=True)
     married = models.BooleanField(default=False)
@@ -37,6 +42,7 @@ class PatientModel(User):
     age = models.IntegerField(default=0)
     religion = models.CharField(max_length=25, default="" ,null=True)
     first_edd = models.DateField(null=True)
+    gender = models.CharField(max_length=15, choices=gender_choice, default="FEMALE")
 
     class Meta:
         db_table = 'patient'
