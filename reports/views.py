@@ -18,6 +18,8 @@ from .rpt.hospital_bill_rpt import hospital_bill_rpt
 from .rpt.indoor_case_paper_rpt import indoor_case_paper_rpt
 from .rpt.medicine_prescription_rpt import medicine_prescription_rpt
 from .rpt.medicine_bill import medicine_bill_rpt
+from .rpt.monthly_income_rpt import monthly_income_rpt
+from .rpt.ovulation_profile_rpt import ovulation_profile_rpt
 from patient_delivery.models import PatientDeliveryModel
 from django.db.models import Count
 from datetime import datetime
@@ -240,3 +242,26 @@ def medicine_prescription(request,language_id,opd_id):
 @permission_classes([IsAuthenticated])
 def medicine_bill(request,language_id,bill_id):
     return medicine_bill_rpt(request,bill_id,language_id)
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def monthly_income(request,language_id):
+    data = request.query_params
+    start_date = data.get("start_date", None)
+    end_date = data.get("end_date", None)
+    if start_date:
+        start_date = datetime.strptime(start_date,"%d-%m-%Y").strftime("%Y-%m-%d")
+    end_date = data.get("end_date", None)
+    if end_date:
+        end_date = datetime.strptime(end_date,"%d-%m-%Y").strftime("%Y-%m-%d")
+
+    return monthly_income_rpt(request,language_id,start_date,end_date)
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def ovulation_profile(request,language_id,ovulation_id):
+    return ovulation_profile_rpt(request,ovulation_id,language_id)
