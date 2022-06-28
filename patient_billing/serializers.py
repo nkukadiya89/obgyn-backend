@@ -54,6 +54,7 @@ class PatientBillingSerializers(serializers.ModelSerializer):
     admission_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
     ot_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
     discharge_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
+    invoice_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
 
     class Meta:
         model = PatientBillingModel
