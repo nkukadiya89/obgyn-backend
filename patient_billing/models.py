@@ -19,6 +19,7 @@ class PatientBillingModel(models.Model):
     regd_no = models.CharField(max_length=100, default="")
 
     invoice_no = models.CharField(max_length=25, null=True)
+    invoice_date = models.DateField(default=now)
     admission_date = models.DateField(null=True)
     admission_time = models.CharField(max_length=10, null=True)
     ot_date = models.DateField(null=True)
