@@ -83,6 +83,8 @@ class PatientSerializers(serializers.ModelSerializer):
         data["user_type"] = "PATIENT"
         passcode = "".join(random.choices(string.ascii_letters + string.digits, k=8))
         data["password"] = passcode
+        data["gender"] = data["gender"].upper()
+
         return data
 
     patient_id = serializers.IntegerField(read_only=True)
@@ -94,6 +96,7 @@ class PatientSerializers(serializers.ModelSerializer):
     registered_no = serializers.CharField(read_only=True)
     profile_image = serializers.CharField(read_only=True)
     regd_no = serializers.CharField(read_only=True)
+    gender = serializers.CharField(required=True)
 
     class Meta:
         model = PatientModel
@@ -122,6 +125,7 @@ class PatientSerializers(serializers.ModelSerializer):
             "profile_image",
             "landmark",
             "regd_no",
+            "gender",
         ]
         extra_kwargs = {
             "city": {"required": True},
