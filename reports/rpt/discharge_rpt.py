@@ -76,15 +76,15 @@ def discharge_rpt(request, id, language_id=None):
             + " "
             + str(patient_discharge.discharge_time)
         )
-        context["complain_of"] = patient_discharge.complain_of
+        context["complain_of"] = patient_discharge.complain_of.field_value if patient_discharge.complain_of.field_value else " "
         context["diagnosis"] = patient_discharge.diagnosis.diagnosis_name
         context["ot_time_date"] = (
             str(patient_discharge.ot_date) + " " + str(patient_discharge.ot_time)
         )
         context["treatment_given"] = patient_discharge.treatment_given
-        context["advice"] = patient_discharge.advice.field_value
+        context["advice"] = patient_discharge.advice.field_value if patient_discharge.advice.field_value else " "
         context["remark"] = patient_discharge.remark
-        context["name_of_procedure"] = patient_discharge.name_of_operation
+        context["name_of_operation"] = patient_discharge.name_of_operation.field_value if patient_discharge.name_of_operation.field_value else " "
     template_name = "reports/en/discharge_card.html"
     return render(
         request,
