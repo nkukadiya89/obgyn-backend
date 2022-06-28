@@ -55,7 +55,7 @@ def indoor_case_paper_rpt(request, case_no, language_id=None):
 
     context["husband_name"] = patient_opd.patient.husband_father_name
     context["age"] = patient_opd.patient.age
-    context["gender"] = "Female" #patient_opd.patient.gender
+    context["gender"] = patient_opd.patient.gender
     context["admission_date"] = patient_indoor.adm_date
     context["admission_time"] = patient_indoor.adm_time
     
