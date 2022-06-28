@@ -3,6 +3,7 @@ from django.shortcuts import render, HttpResponse
 from rest_framework import status
 from consultation.models import ConsultationModel
 from patient_opd.models import PatientOpdModel
+from patient_usgreport.models import PatientUSGReportModel
 from template_header.models import TemplateHeaderModel
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -36,9 +37,17 @@ def usg_rpt(request, id, language_id=None):
         context["error"] = "OPD Does not exist."
         return JsonResponse(context)
 
+    usg_report = PatientUSGReportModel.objects.filter(patient_opd=patient_opd,deleted=0).first()
+    if usg_report == None:
+        context = {}
+        context["msg"] = False
+        context["error"] = "Record Does not exist."
+        return JsonResponse(context)
+
     template_name = "reports/en/usg_report.html"
     context = {}
-    context["receipt_date"] = str(patient_opd.opd_date)
+    context["receipt_date"] = patient_opd.opd_date
+    print(context)
     context["regd_no"] = patient_opd.patient.regd_no_barcode
 
 
@@ -70,7 +79,7 @@ def usg_rpt(request, id, language_id=None):
             patient_opd.patient.state.state_name if patient_opd.patient.state.state_name else " ",
         ]
     )
-
+    context["remark"] = usg_report.remark
     context["mobile_no"] = patient_opd.patient.phone
         
     context["report_date"] = str(patient_opd.opd_date)

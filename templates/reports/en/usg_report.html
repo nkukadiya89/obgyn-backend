@@ -257,7 +257,7 @@
                 Receipt Date:
             </td>
             <td>
-                {{context.receipt_date}}
+                {{context.receipt_date|date:'d-m-Y'}}
             </td>
             <td style="width: 80px;">
                 Regd. No:
@@ -296,7 +296,7 @@
             <td>
                 Address:
             </td>
-            <td colspan="5" style="text-align: center;">
+            <td colspan="5" style="text-align: left;">
                 {{context.address}}
             </td>
 
@@ -309,7 +309,7 @@
                 Placenta - posterior<br/>
                 Liquar - adequate<br/>
                 No anomaly detected<br/>
-                Remark -<br/>
+                Remark - {{context.remark}}<br/>
                 LMP acc. to USG-18-08-2021<br/>
                 EDD acc. to USG-25-05-2022
             </td>
