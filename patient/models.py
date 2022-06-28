@@ -40,7 +40,9 @@ class PatientModel(User):
     mob_no_barcode = models.CharField(max_length=250, null=True)
 
     age = models.IntegerField(default=0)
-    religion = models.CharField(max_length=25, default="" ,null=True)
+    
+    religion = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="religion",
+                                      null=True)
     first_edd = models.DateField(null=True)
     gender = models.CharField(max_length=15, choices=gender_choice, default="FEMALE")
 
