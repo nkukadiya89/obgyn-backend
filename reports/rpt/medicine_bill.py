@@ -2,17 +2,15 @@ from ast import Delete
 from django.shortcuts import render
 from patient_voucher.models import PatientVoucherModel, VoucherItemModel
 from template_header.models import TemplateHeaderModel
-from patient_prescription.models import PatientPrescriptionModel
-from patient_opd.models import PatientOpdModel
 from consultation.models import ConsultationModel
 
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
 @csrf_exempt
-def medicine_bill_rpt(request,bill_id, language_id=None):
+def medicine_bill_rpt(request,voucher_id, language_id=None):
 
-    patient_voucher = PatientVoucherModel.objects.filter(pk=bill_id).first()
+    patient_voucher = PatientVoucherModel.objects.filter(pk=voucher_id).first()
 
     if patient_voucher == None:
         context = {}
