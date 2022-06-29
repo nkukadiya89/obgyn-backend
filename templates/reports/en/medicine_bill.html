@@ -278,7 +278,7 @@
 
         <table width="100%" id="reporttable3" style="font-size: 14px;font-weight: bold;color: #343434;">
             <tr>
-                <td>Receipt Date</td><td>{{context.receipt_date}}</td>
+                <td>Receipt Date</td><td>{{context.receipt_date|date:'d-m-Y'}}</td>
                 <td>Bill No</td><td>{{context.bill_no}}</td>
                 <td>Hb.</td><td>{{context.hb}}</td>
             </tr>
@@ -308,17 +308,18 @@
             {% for medicine in context.medicine %}
                 <tr>
                     <td>{{medicine.medicine}}</td>
-                    <td>{{medicine.unit}}</td>
-                    <td>{{medicine.rate}}</td>
+                    <td align="right">{{medicine.unit}}</td>
+                    <td align="right">{{medicine.rate}}</td>
                     <td>{{medicine.mfg_date}}</td>
                     <td>{{medicine.exp_date}}</td>
                     <td align="right">{{medicine.total}}</td>
-                    <td rowspan="{{context.medicine_count}}"></td>
+                    <td></td>
                 </tr>
             {% endfor %}
             <tr>
                 <td colspan="5">Total</td>
                 <td align="right">{{context.final_total}}</td>
+                <td></td>
             </tr>
             <tr>
                 <td align="center" colspan="7"><br><br>Sign:<br><br>Seal:<br><br></td>

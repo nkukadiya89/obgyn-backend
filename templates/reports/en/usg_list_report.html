@@ -249,17 +249,17 @@
 
     {{ template_header | safe }}
     <div class="obgyn-title">-: USG LIST :-</div>
-    <table width="100%" id="reporttable" style="font-size: 14px;font-weight: bold;color: #343434;">
+    <table width="100%" id="reporttable" style="font-size: 14px;color: #343434;">
         <tr>
-            <td>Sr. No. (M/Y)</td>
-            <td>Date</td>
-            <td>Woman's Name</td>
-            <td>Name of Husb/Father</td>
-            <td>Full Address</td>
-            <td>Mobile No</td>
-            <td>Age of Preg. Woman</td>
-            <td>Live M/F</td>
-            <td>PNDT Procedure</td>
+            <td><b>Sr. No. (M/Y)</b></td>
+            <td><b>Date</b></td>
+            <td><b>Woman's Name</b></td>
+            <td><b>Name of Husb/Father</b></td>
+            <td><b>Full Address</b></td>
+            <td><b>Mobile No</b></td>
+            <td><b>Age of Preg. Woman</b></td>
+            <td><b>Live M/F</b></td>
+            <td><b>PNDT Procedure</b></td>
         </tr>
         {% for usg in context.usg_detail %}
         <tr>

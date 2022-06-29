@@ -60,7 +60,7 @@ def hospital_bill_rpt(request,bill_no, language_id=None):
             ]
         )
         
-        context["mobile"] = patient_opd.patient.phone
+        context["mobile"] = patient_opd.patient.phone if "F" not in patient_opd.patient.phone else ""
         consultation = ConsultationModel.objects.filter(patient_opd=patient_opd).first()
 
         if consultation:
