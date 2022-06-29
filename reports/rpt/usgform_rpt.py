@@ -3,14 +3,19 @@ from django.shortcuts import render, HttpResponse
 from rest_framework import status
 from consultation.models import ConsultationModel
 from patient_opd.models import PatientOpdModel
-from patient_usgreport.models import PatientUSGReportModel
+from patient_usgform.models import PatientUSGFormModel
 from template_header.models import TemplateHeaderModel
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
 @csrf_exempt
-def usg_rpt(request, id, language_id=None):
-    patient_opd = PatientOpdModel.objects.filter(pk=id,deleted=0)
+def usg_form_report_rpt(request, usg_form_id, language_id=None):
+    usg_form = PatientUSGFormModel.objects.filter(pk=usg_form_id).first()
+    if not usg_form:
+        context = {}
+        context["msg"] = False
+        context["error"] = "Record Not found."
+        return JsonResponse(context)
 
     if language_id:
         template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id, language_id=language_id,deleted=0).first()
@@ -37,14 +42,8 @@ def usg_rpt(request, id, language_id=None):
         context["error"] = "OPD Does not exist."
         return JsonResponse(context)
 
-    usg_report = PatientUSGReportModel.objects.filter(patient_opd=patient_opd,deleted=0).first()
-    if usg_report == None:
-        context = {}
-        context["msg"] = False
-        context["error"] = "Record Does not exist."
-        return JsonResponse(context)
 
-    template_name = "reports/en/usg_report.html"
+    template_name = "reports/en/usgform_report.html"
     context = {}
     context["receipt_date"] = patient_opd.opd_date
     print(context)

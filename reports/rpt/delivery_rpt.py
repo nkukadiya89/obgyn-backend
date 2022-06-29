@@ -88,17 +88,17 @@ def delivery_rpt(request, start_date=None, end_date=None,id_list=None, language_
             ]
         )
 
-        context["mobile"] = patient_delivery.patient.phone
+        context["mobile"] = patient_delivery.patient.phone if "F" not in patient_delivery.patient.phone else " "
         context["nationality"] = "Indian"
         context["religion"] = patient_delivery.religion
         context["age"] = patient.age
         context["child_count"] = int(patient_delivery.no_of_delivery) + 1
         context["weight"] = patient_delivery.weight
         context["child_count"] = patient_delivery.live_male_female
-        context["mother_education"] = patient_delivery.mother_education
-        context["father_education"] = patient_delivery.father_education
-        context["mother_occupation"] = patient_delivery.mother_occupation
-        context["father_occupation"] = patient_delivery.father_occupation
+        context["mother_education"] = patient_delivery.mother_education.field_value
+        context["father_education"] = patient_delivery.father_education.field_value
+        context["mother_occupation"] = patient_delivery.mother_occupation.field_value
+        context["father_occupation"] = patient_delivery.father_occupation.field_value
 
         context["child_status"] = patient_delivery.baby_status
         context_list.append(context)

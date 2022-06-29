@@ -31,6 +31,8 @@ def indoor_case_paper_rpt(request, case_no, language_id=None):
     context = {}
 
     patient_opd = patient_indoor.patient_opd
+    context["regd_no"] = patient_opd.patient.regd_no_barcode
+
     context["name"] = "".join(
         [
             patient_opd.patient.first_name  if patient_opd.patient.first_name else " ",

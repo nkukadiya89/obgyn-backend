@@ -91,7 +91,7 @@ def usg_list_report_rpt(request, language_id=None, start_date=None, end_date=Non
                 else " ",
             ]
         )
-        context_sub["mobile"] = usg_report.patient_opd.patient.phone
+        context_sub["mobile"] = usg_report.patient_opd.patient.phone if "F" not in usg_report.patient_opd.patient.phone else " "
         context_sub["age"] = usg_report.patient_opd.patient.age
         context_sub["live_mf"] = (
             consultation.ftnd_male_live

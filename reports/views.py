@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 import json
 from django.shortcuts import render
+import language
 from patient_opd.models import PatientOpdModel
 
 from reports.report_sync import download_report
@@ -22,6 +23,7 @@ from .rpt.monthly_income_rpt import monthly_income_rpt
 from .rpt.ovulation_profile_rpt import ovulation_profile_rpt
 from .rpt.bill_receipt_rpt import bill_receipt_rpt
 from .rpt.usg_list_report_rpt import usg_list_report_rpt
+from .rpt.usg_form_report_rpt import usg_form_report_rpt
 from patient_delivery.models import PatientDeliveryModel
 from django.db.models import Count
 from datetime import datetime,date
@@ -290,3 +292,10 @@ def usg_list_report(request,language_id):
         end_date = datetime.strptime(end_date,"%d-%m-%Y").strftime("%Y-%m-%d")
 
     return usg_list_report_rpt(request,language_id,start_date,end_date)
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def usg_form_report(request,language_id,usgform_id):
+    return usg_form_report_rpt(request,usgform_id,language_id)

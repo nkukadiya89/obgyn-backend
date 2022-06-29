@@ -57,8 +57,8 @@ def medicine_prescription_rpt(request,voucher_id, language_id=None):
             return JsonResponse(context)
 
         context = {}
-        context["receipt_date"] = "pending"
-        context["bill_no"] = "pending"
+        context["receipt_date"] = patient_voucher.bill_date
+        context["bill_no"] = patient_voucher.voucher_no
         context["hb"] = consultation.hb
         context["blood_group"] = consultation.blood_group
         context["name"] = "".join(
@@ -83,7 +83,7 @@ def medicine_prescription_rpt(request,voucher_id, language_id=None):
             ]
         )
         
-        context["mobile"] = patient_opd.patient.phone
+        context["mobile"] = patient_opd.patient.phone if "F" not in patient_opd.patient.phone else " "
 
         medicine =[]
         for voucher_item in voucher_item_list:
@@ -93,6 +93,7 @@ def medicine_prescription_rpt(request,voucher_id, language_id=None):
             medicine.append(context_sub)
       
         context["medicine"] = medicine
+    
     template_name = "reports/en/medicine_prescription.html"
     return render(request, template_name,
                   {"context": context, "template_header": template_header.header_text.replace("'", "\"")})
