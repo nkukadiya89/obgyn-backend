@@ -24,7 +24,7 @@ from .rpt.bill_receipt_rpt import bill_receipt_rpt
 from .rpt.usg_list_report_rpt import usg_list_report_rpt
 from patient_delivery.models import PatientDeliveryModel
 from django.db.models import Count
-from datetime import datetime
+from datetime import datetime,date
 from django.db.models.functions import TruncMonth,TruncYear,ExtractMonth
 from django.db.models import Count
 
@@ -212,7 +212,7 @@ def active_patient(request, id=None):
 @permission_classes([IsAuthenticated])
 def daily_opd_income(request,language_id):
     data = request.query_params
-    rpt_date = data.get("rpt_date", None)
+    rpt_date = data.get("rpt_date",date.today().strftime("%d-%m-%Y") )
     rpt_date = datetime.strptime(rpt_date,"%d-%m-%Y").strftime("%Y-%m-%d")
     
     return daily_opd_income_rpt(request, rpt_date, language_id)
