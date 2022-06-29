@@ -235,15 +235,15 @@ def indoor_case_paper(request,language_id,indoor_no):
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
-def medicine_prescription(request,language_id,opd_id):
-    return medicine_prescription_rpt(request,opd_id,language_id)
+def medicine_prescription(request,language_id,voucher_id):
+    return medicine_prescription_rpt(request,voucher_id,language_id)
 
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
-def medicine_bill(request,language_id,bill_id):
-    return medicine_bill_rpt(request,bill_id,language_id)
+def medicine_bill(request,language_id,voucher_id):
+    return medicine_bill_rpt(request,voucher_id,language_id)
 
 
 @api_view(['GET'])

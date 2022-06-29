@@ -2,21 +2,21 @@ from ast import Delete
 from django.shortcuts import render
 from template_header.models import TemplateHeaderModel
 from patient_prescription.models import PatientPrescriptionModel
-from patient_opd.models import PatientOpdModel
+from patient_voucher.models import PatientVoucherModel, VoucherItemModel
 from consultation.models import ConsultationModel
 
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
 @csrf_exempt
-def medicine_prescription_rpt(request,opd_id, language_id=None):
+def medicine_prescription_rpt(request,voucher_id, language_id=None):
 
-    patient_opd =PatientOpdModel.objects.filter(pk=opd_id).first()
+    patient_voucher = PatientVoucherModel.objects.filter(pk=voucher_id).first()
 
-    if patient_opd == None:
+    if patient_voucher == None:
         context = {}
         context["msg"] = False
-        context["error"] = "Patient OPD does not exist.."
+        context["error"] = "Record does not exist.."
         return JsonResponse(context)
 
     if language_id:
@@ -30,20 +30,30 @@ def medicine_prescription_rpt(request,opd_id, language_id=None):
         context["error"] = "Please create report header."
         return JsonResponse(context)
 
-    if patient_opd:
-        consultation = ConsultationModel.objects.filter(patient_opd=patient_opd,deleted=0).first()
 
-        if not consultation:
+    patient_opd = patient_voucher.patient_opd
+
+    if patient_opd == None:
+        context = {}
+        context["msg"] = False
+        context["error"] = "OPD does not exist.."
+        return JsonResponse(context)
+
+    consultation = ConsultationModel.objects.filter(patient_opd=patient_opd,deleted=0).first()
+    if consultation == None:
+        context = {}
+        context["msg"] = False
+        context["error"] = "Consultation does not exist.."
+        return JsonResponse(context)
+
+    if patient_voucher:
+
+        voucher_item_list = VoucherItemModel.objects.filter(patient_voucher=patient_voucher,deleted=0)
+
+        if len(voucher_item_list)<=0:
             context = {}
             context["msg"] = False
-            context["error"] = "Record not Found2."
-            return JsonResponse(context)
-
-        patient_prescription_list = PatientPrescriptionModel.objects.filter(consultation=consultation,deleted=0)
-        if len(patient_prescription_list)<=0:
-            context = {}
-            context["msg"] = False
-            context["error"] = "Record not Found1."
+            context["error"] = "Record not Found."
             return JsonResponse(context)
 
         context = {}
@@ -76,14 +86,13 @@ def medicine_prescription_rpt(request,opd_id, language_id=None):
         context["mobile"] = patient_opd.patient.phone
 
         medicine =[]
-        for patient_prescription in patient_prescription_list:
+        for voucher_item in voucher_item_list:
             context_sub={}
-            context_sub["medicine"] = patient_prescription.medicine.medicine
-            context_sub["unit"] = patient_prescription.medicine.total_tablet
+            context_sub["medicine"] = voucher_item.surgical_item.drug_name
+            context_sub["unit"] = voucher_item.unit
             medicine.append(context_sub)
-        
+      
         context["medicine"] = medicine
-        print(context)
     template_name = "reports/en/medicine_prescription.html"
     return render(request, template_name,
                   {"context": context, "template_header": template_header.header_text.replace("'", "\"")})
