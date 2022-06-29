@@ -59,6 +59,7 @@ def discharge_rpt(request, id, language_id=None):
     patient_discharge = PatientDischargeModel.objects.filter(
         patient_opd=patient_opd
     ).first()
+    
     if patient_discharge == None:
         context = {}
         context["msg"] = False
@@ -67,19 +68,19 @@ def discharge_rpt(request, id, language_id=None):
 
     if patient_discharge:
         context["admission_date"] = (
-            str(patient_discharge.admission_date)
+            str(patient_discharge.admission_date.strftime("%d-%m-%Y"))
             + " "
             + str(patient_discharge.admission_time)
         )
         context["discharge_date"] = (
-            str(patient_discharge.discharge_date)
+            str(patient_discharge.discharge_date.strftime("%d-%m-%Y"))
             + " "
             + str(patient_discharge.discharge_time)
         )
         context["complain_of"] = patient_discharge.complain_of.field_value if patient_discharge.complain_of.field_value else " "
         context["diagnosis"] = patient_discharge.diagnosis.diagnosis_name
         context["ot_time_date"] = (
-            str(patient_discharge.ot_date) + " " + str(patient_discharge.ot_time)
+            str(patient_discharge.ot_date.strftime("%d-%m-%Y")) + " " + str(patient_discharge.ot_time)
         )
         context["treatment_given"] = patient_discharge.treatment_given
         context["advice"] = patient_discharge.advice.field_value if patient_discharge.advice.field_value else " "
