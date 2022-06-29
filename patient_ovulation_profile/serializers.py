@@ -28,7 +28,7 @@ class PatientOvulationProfileSerializers(serializers.ModelSerializer):
         if len(str(data["left_ovary_mm"])) >=6:
             raise serializers.ValidationError("check data for Left ovary value.")
         
-        if len(data["endometrium_mm"]) > 15:
+        if len(data["endometrium_mm"]) > 6:
             raise serializers.ValidationError("check data for Endometrium value.")
 
         return data
