@@ -23,6 +23,7 @@ class ObgynConfigModel(models.Model):
     taluka = models.ForeignKey(TalukaModel, on_delete=models.CASCADE, null=True)
     district = models.ForeignKey(DistrictModel, on_delete=models.CASCADE, null=True)
     state = models.ForeignKey(StateModel, on_delete=models.CASCADE, null=True)
+    address = models.CharField(max_length=500, null=True)
     monthly_usg = models.IntegerField(default=0,null=True)
     yearly_usg = models.IntegerField(default=0,null=True)
     created_by = models.IntegerField(default=1, unique=False)
