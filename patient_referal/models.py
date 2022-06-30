@@ -23,3 +23,12 @@ class PatientReferalModel(models.Model):
 
     class Meta:
         db_table = "patient_referal"
+
+
+class PatientReferalIndication(models.Model):
+    patientreferalmodel = models.ForeignKey(PatientReferalModel, on_delete=models.DO_NOTHING)
+    managefieldsmodel = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING)
+
+    class Meta:
+        db_table = "patient_referal_indication"
+        managed = False
