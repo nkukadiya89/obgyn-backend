@@ -13,6 +13,15 @@ class PatientMtpSerializers(serializers.ModelSerializer):
         if "patient_opd" in ret:
             ret["patient_opd_id"] = ret["patient_opd"]
             del ret["patient_opd"]
+
+        for fld_nm in ["religion"]:
+            fld_name = fld_nm + "_name"
+            search_instance = "instance" + "." + fld_nm
+            if fld_nm in ret:
+                ret[fld_name] = ManageFieldsSerializers(eval(search_instance)).data[
+                    "field_value"
+                ]
+
         return ret
 
     def validate(self, data):
