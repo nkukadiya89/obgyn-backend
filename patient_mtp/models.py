@@ -24,7 +24,7 @@ class PatientMtpModel(models.Model):
     discharge_date = models.DateField(null=True)
     discharge_time = models.CharField(max_length=10, null=True)
     ut_weeks = models.IntegerField(default=0, null=True)
-    religion = models.CharField(max_length=25, null=True)
+    religion = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="mtp_religion")
     remark = models.TextField(null=True)
 
     created_by = models.IntegerField(default=1, unique=False)
