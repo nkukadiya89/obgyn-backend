@@ -47,7 +47,6 @@ def usg_rpt(request, id, language_id=None):
     template_name = "reports/en/usg_report.html"
     context = {}
     context["receipt_date"] = patient_opd.opd_date
-    print(context)
     context["regd_no"] = patient_opd.patient.regd_no_barcode
 
 
@@ -82,6 +81,6 @@ def usg_rpt(request, id, language_id=None):
     context["remark"] = usg_report.remark
     context["mobile_no"] = patient_opd.patient.phone if "F" not in patient_opd.patient.phone else " "
     
-    context["report_date"] = str(patient_opd.opd_date)
+    context["report_date"] = patient_opd.opd_date
     return render(request, template_name,
                   {"context": context, "template_header": template_header.header_text.replace("'", "\"")})
