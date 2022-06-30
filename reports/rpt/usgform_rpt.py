@@ -17,16 +17,16 @@ def usg_form_report_rpt(request, usg_form_id, language_id=None):
         context["error"] = "Record Not found."
         return JsonResponse(context)
 
-    if language_id:
-        template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id, language_id=language_id,deleted=0).first()
-    else:
-        template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id,deleted=0).first()
+    # if language_id:
+    #     template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id, language_id=language_id,deleted=0).first()
+    # else:
+    #     template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id,deleted=0).first()
 
-    if not template_header:
-        context = {}
-        context["msg"] = False
-        context["error"] = "Please create report header."
-        return JsonResponse(context)
+    # if not template_header:
+    #     context = {}
+    #     context["msg"] = False
+    #     context["error"] = "Please create report header."
+    #     return JsonResponse(context)
 
     patient_opd = patient_opd.first()
     if patient_opd == None:
@@ -46,7 +46,6 @@ def usg_form_report_rpt(request, usg_form_id, language_id=None):
     template_name = "reports/en/usgform_report.html"
     context = {}
     context["receipt_date"] = patient_opd.opd_date
-    print(context)
     context["regd_no"] = patient_opd.patient.regd_no_barcode
 
 
@@ -83,4 +82,4 @@ def usg_form_report_rpt(request, usg_form_id, language_id=None):
     
     context["report_date"] = str(patient_opd.opd_date)
     return render(request, template_name,
-                  {"context": context, "template_header": template_header.header_text.replace("'", "\"")})
+                  {"context": context})

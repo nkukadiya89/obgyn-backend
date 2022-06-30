@@ -4,8 +4,7 @@
 
 <head>
     <title>Obgyn register success</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style>
         /* Base CSS styles DO NOT CHANGE OR REMOVE */
         body {
@@ -27,7 +26,7 @@
 
         #obygyn {
             margin: 0 12pt;
-            width:100%;
+            width: 768px;
             padding: 10px 20px;
             margin: 1em auto;
             clear: both;
@@ -241,22 +240,482 @@
             padding: 5px 10px;
         }
 
+        #reporttable3 {
+            border-collapse: collapse;
+        }
+
+        #reporttable3 th,
+        #reporttable3 td {
+            border: 1px solid #343434;
+            padding: 5px 10px;
+            word-break: break-all;
+            font-weight: normal;
+        }
+
+        #reporttable3 th {
+            font-weight: bold;
+        }
+
+        .lefttable td {
+            padding: 2px 10px;
+        }
+
+        .rxtbl {
+            border-collapse: collapse;
+        }
+
+        .rxtbl td {
+            padding: 3px 10px;
+        }
+
+        #pndttbl {
+            border-collapse: collapse;
+        }
+
+        #pndttbl td {
+            border: 1px solid #343434;
+
+        }
+
+        #pndinr td {
+            border: 0;
+            padding: 2px 10px;
+            font-size: 14px;
+            vertical-align: top;
+        }
+
+        .blankline {
+            border-bottom: 1px solid #343434;
+            min-width: 150px;
+            display: inline-block;
+        }
     </style>
 </head>
 
 <body>
-<div id="obygyn">
+    <div id="obygyn" style="width: 1024px;">
+        <table width="100%" id="pndttbl">
+            <tr>
+                <td>
+                    <table width="100%" id="pndinr">
+                        <tr>
+                            <td style="width: 20px;">
 
-    <table width="100%" id="reporttable3" style="font-size: 14px;font-weight: bold;color: #343434;">
-        <tr>
-            <td>FROM-F (PNDT ACT 1994)              No :79</td>
-        </tr>
-        <tr>
-            <td></td>
-        </tr>
-    </table>
-</div>
+                            </td>
+                            <td style="font-size: 30px; width: 50%;">
+                                FROM-F(PNDT ACT 1994)
+                            </td>
+                            <td>
+                                No:<strong>17</strong>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width="100%" id="pndinr">
+                        <tr>
+                            <td style="width: 20px;">
+
+                            </td>
+                            <td style=" width: 50%;" colspan="2">
+                                <strong>Section A:To be filled in all Diagnostic procedures/Tests:-</strong>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+                                1
+                            </td>
+                            <td style=" width: 50%;">
+                                Name and address of the ultrasound clinic:-
+                            </td>
+                            <td>
+                                <strong>{{context.hospital_name}}, {{ context.hospital_address}}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+                                2
+                            </td>
+                            <td style=" width: 50%;">
+                                Registration No:-
+                            </td>
+                            <td>
+                                <strong> -PNDT : 20/2001</strong>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width="100%" id="pndinr">
+
+                        <tr>
+                            <td style="width: 20px;">
+                                3
+                            </td>
+                            <td style=" width: 50%;">
+                                Patient name:-
+                            </td>
+                            <td>
+                                <strong>{{context.name}} Age: {{context.age}} years</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+
+                            </td>
+                            <td style=" width: 50%;">
+                                Total number of Living Children:-
+                            </td>
+                            <td>
+                                <strong> 0</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+                                4
+                            </td>
+                            <td style=" width: 50%;">
+                                (a)No. of Living sons with age of each:
+                            </td>
+                            <td>
+                                <strong> {{context.child_detail.male}}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+
+                            </td>
+                            <td style=" width: 50%;">
+                                (b)No. of Living Daughters with age of each:
+                            </td>
+                            <td>
+                                <strong> {{context.child_detail.female}}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+                                5
+                            </td>
+                            <td style=" width: 50%;">
+                                Husband's/Wife's/Father's/Mother's name:-
+                            </td>
+                            <td>
+                                <strong> {{context.husband_name}}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+                                6
+                            </td>
+                            <td style=" width: 50%;">
+                                Full address with Telephone No.,if any:-
+                            </td>
+                            <td>
+                                <strong> {{context.address}}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+
+                            </td>
+                            <td style=" width: 50%;">
+                                Phone No:-
+                            </td>
+                            <td>
+                                <strong> {{context.mobile_no}}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+                                7
+                            </td>
+                            <td style=" width: 50%;">
+                                (a)Referred by Dr.:- {{context.doctor_name}}
+                            </td>
+                            <td>
+                                <strong> -, Place: -</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+
+                            </td>
+                            <td style=" width: 50%;">
+                                Address:
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+
+                            </td>
+                            <td style=" width: 50%;">
+                                (b)Self Referred By Gynecologist:-
+                            </td>
+                            <td>
+                                <strong> Dr.Bharat K. Patel(M.B.,D.G.O.)</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+                                8
+                            </td>
+                            <td style=" width: 50%;">
+                                Last Menstrul Period/Weeks of Pregnancy:-
+                            </td>
+                            <td>
+                                <strong> -/ {{context.week_of_pregnancy}}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+
+                            </td>
+                            <td style=" width: 50%;" colspan="2">
+                                <strong>Section B:To be filled in for performing non invasive diagnostic
+                                    procedures/Tests only:-</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+                                9
+                            </td>
+                            <td style=" width: 50%;">
+                                Name Of Doctor performing procedure:-
+                            </td>
+                            <td>
+                                <strong> {{context.doctor_name}}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+                                10
+                            </td>
+                            <td style=" width: 50%;">
+                                Indications for diagnosis Procedure:-
+                            </td>
+                            <td>
+                                <strong> =>Estimation of gestational age(dating)</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+
+                            </td>
+                            <td style=" width: 50%;">
+                                --
+                            </td>
+                            <td>
+                                <strong> --</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+                                11
+                            </td>
+                            <td style=" width: 50%;">
+                                Procedure carried out(non invasive)
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+
+                            </td>
+                            <td style=" width: 50%;">
+                                (i)Ultra Sound -
+                            </td>
+                            <td>
+                                <strong> ✔ Yes</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+
+                            </td>
+                            <td style=" width: 50%;">
+                                (ii)Any Other(Specify)
+                            </td>
+                            <td>
+                                <strong> -- No</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+                                12
+                            </td>
+                            <td style=" width: 50%;">
+                                Date on which Diclaration of pregent woman
+                                was obtainned:-
+                            </td>
+                            <td>
+                                <strong> 10-02-2022</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+                                13
+                            </td>
+                            <td style=" width: 50%;">
+                                Date on which procedure was carried out:-
+                            </td>
+                            <td>
+                                <strong> {{context.procedure_date}}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+                                14
+                            </td>
+                            <td style=" width: 50%;">
+                                Result of ultrasonography:-
+                            </td>
+                            <td>
+                                <strong>single live foetus (7gest.weeks)</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+                                15
+                            </td>
+                            <td style=" width: 50%;">
+                                The result of prenatal diagnostic procedure was conveyed to
+                            </td>
+                            <td>
+                                <strong> {{context.result_conveyed_to}} on 10-02-2022</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+                                16
+                            </td>
+                            <td style=" width: 50%;">
+                                Any Indication for MTP as per the abmormality
+                                detected in the daignostic procedure:-
+                            </td>
+                            <td>
+                                <strong>No</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+
+                            </td>
+                            <td style=" width: 50%;">
+
+
+                            </td>
+                            <td style="text-align: right; padding-top: 50px;">
+                                <strong> x</strong>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+
+                            </td>
+                            <td style=" width: 50%;">
+                                Date:- <strong>10-02-2022</strong>
+
+                            </td>
+                            <td style="text-align: right;">
+                                <strong>{{context.doctor_name}}</strong>(M.B.,D.G.O.)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+
+                            </td>
+                            <td style=" width: 50%;">
+                                Place:- <strong>Santrampur.</strong>
+
+                            </td>
+                            <td style="text-align: right;">
+                                Reg.No.G-9573.
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <table width="100%" id="pndttbl" style="margin-top: 16px;">
+            <tr>
+                <td style="border-bottom: 0;">
+                    <table width="100%" id="pndinr">
+                        <tr>
+                            <td
+                                style="text-align: center; font-weight: bold; text-decoration: underline; border-bottom: 0; font-size: 16px; padding: 10px; ">
+                                DECLERATION OF DOCTOR CONDUCTING ULTRASONOGRAPHY
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td style="border-top: 0;">
+                    <table width="100%" id="pndinr">
+                        <tr>
+                            <td style="font-weight: bold;" colspan="3">
+                                I Dr. {{context.doctor_name}} declared that while conducting ultrasonography of Mrs. {{context.name}} ,I have neither detected nor declared the sex of her foetus to any manner.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+
+                            </td>
+                            <td style=" width: 50%;">
+
+
+                            </td>
+                            <td style="text-align: right; padding-top: 50px;">
+                                <strong> x</strong>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+
+                            </td>
+                            <td style=" width: 50%;">
+                                Date:- <strong>29-06-2022</strong>
+
+                            </td>
+                            <td style="text-align: right;">
+                                <strong>Dr.{{context.doctor_name}}</strong>(M.B.,D.G.O.)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20px;">
+
+                            </td>
+                            <td style=" width: 50%;">
+                                Place:- <strong>Santrampur.</strong>
+
+                            </td>
+                            <td style="text-align: right;">
+                                Reg.No.G-9573.
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+        </table>
+
+    </div>
 </body>
 
 </html>
-
