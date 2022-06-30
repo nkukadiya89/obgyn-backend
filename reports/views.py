@@ -100,7 +100,15 @@ def billing_report(request,language_id=None):
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def mtp_list_report(request, language_id=None):
-    return mtp_list_rpt(request, language_id)
+    data = request.query_params
+    start_date = data.get("start_date", None)
+    end_date = data.get("end_date", None)
+    if start_date:
+        start_date = datetime.strptime(start_date,"%d-%m-%Y").strftime("%Y-%m-%d")
+    end_date = data.get("end_date", None)
+    if end_date:
+        end_date = datetime.strptime(end_date,"%d-%m-%Y").strftime("%Y-%m-%d")
+    return mtp_list_rpt(request, start_date,end_date,language_id)
 
 
 @api_view(['GET'])
