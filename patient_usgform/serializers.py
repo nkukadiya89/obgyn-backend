@@ -113,18 +113,24 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
             patient_opd=instance.patient_opd
         ).first()
         if patient_referal:
-
             referal_manage = list(
                 PatientReferalIndication.objects.filter(
                     patientreferalmodel_id=patient_referal.patient_referal_id
                 ).values_list("managefieldsmodel_id", flat=True)
             )
-
+            
             if len(referal_manage) > 0:
-                mf = ManageFieldsModel.objects.filter(
+                mflist = ManageFieldsModel.objects.filter(
                     mf_id__in=referal_manage
-                ).values_list("field_value", flat=True)
-                ret["referal"] = mf
+                )
+                mf_list =[]
+                for mf in mflist:
+                    print(mf)
+                    mf_dict = {}
+                    mf_dict["indication_id"] = mf.mf_id
+                    mf_dict["indication_name"] = mf.field_value
+                    mf_list.append(mf_dict)
+                ret["indication"] = mf_list
         return ret
 
     def validate(self, data):
