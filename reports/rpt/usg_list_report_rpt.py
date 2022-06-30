@@ -29,11 +29,6 @@ def usg_list_report_rpt(request, language_id=None, start_date=None, end_date=Non
     usg_report_list = PatientUSGFormModel.objects.filter(
         created_at__date__gte=start_date, created_at__date__lte=end_date, deleted=0
     )
-    if len(usg_report_list) <= 0:
-        context = {}
-        context["msg"] = False
-        context["error"] = "Record Does not exist."
-        return JsonResponse(context)
 
     template_name = "reports/en/usg_list_report.html"
     context = {}
