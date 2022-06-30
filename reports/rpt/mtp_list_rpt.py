@@ -9,12 +9,6 @@ from django.http import JsonResponse
 @csrf_exempt
 def mtp_list_rpt(request, language_id=None):
     patient_mtp_list = PatientMtpModel.objects.filter(deleted=0)
-    if len(patient_mtp_list) <= 0:
-        context = {}
-        context["msg"] = False
-        context["error"] = "No Record Found."
-        return JsonResponse(context)
-
 
     if language_id:
         template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id, language_id=language_id,deleted=0).first()
@@ -35,10 +29,7 @@ def mtp_list_rpt(request, language_id=None):
         if patient_opd:
             
             context = {}
-            try:
-                context["date_of_admission"] = patient_opd.patientdischargemodel.admission_date
-            except:
-                context["date_of_admission"] = ""
+            context["date_of_admission"] = patient_opd.patientdischargemodel.admission_date
 
             try:
                 context["name"] = "".join(
