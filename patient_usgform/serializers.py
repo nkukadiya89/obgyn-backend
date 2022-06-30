@@ -118,7 +118,7 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
                     patientreferalmodel_id=patient_referal.patient_referal_id
                 ).values_list("managefieldsmodel_id", flat=True)
             )
-            
+            ret["indication_id"] = referal_manage
             if len(referal_manage) > 0:
                 mflist = ManageFieldsModel.objects.filter(
                     mf_id__in=referal_manage
