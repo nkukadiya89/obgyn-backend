@@ -29,7 +29,7 @@ def mtp_list_rpt(request, language_id=None):
         if patient_opd:
             
             context = {}
-            context["date_of_admission"] = patient_opd.patientdischargemodel.admission_date
+            context["date_of_admission"] = patient_mtp.admission_date
 
             try:
                 context["name"] = "".join(
