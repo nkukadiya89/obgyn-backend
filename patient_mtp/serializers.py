@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from patient.models import PatientModel
 from .models import PatientMtpModel
+from consultation.models import ConsultationModel
 from manage_fields.serializers import ManageFieldsSerializers
 
 
@@ -21,6 +22,14 @@ class PatientMtpSerializers(serializers.ModelSerializer):
                 ret[fld_name] = ManageFieldsSerializers(eval(search_instance)).data[
                     "field_value"
                 ]
+        consultation = ConsultationModel.objects.filter(
+            patient_opd=instance.patient_opd, deleted=0
+        ).first()
+
+        if consultation:
+            ret["ut_weeks"] = consultation.ut_weeks
+            ret["second_rmp"] = "-" if consultation.ut_weeks <= 12 else None
+
 
         return ret
 
