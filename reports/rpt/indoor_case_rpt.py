@@ -34,8 +34,8 @@ def indoor_case_rpt(request, opd_id, language_id=None):
         context_sub["rs"] = patient_indoor.rs
         context_sub["cvs"] = patient_indoor.cvs
         context_sub["pa"] = patient_indoor.pa_gyn if consultation.patient_type == "GYN" else patient_indoor.pa_obs
-        context_sub["ps"] = patient_indoor.ps
-        context_sub["pv"] = patient_indoor.pv
+        context_sub["ps"] = patient_indoor.ps.field_value
+        context_sub["pv"] = patient_indoor.pv.field_value
         
         context_sub["advice_list"] = list(IndoorAdviceModel.objects.filter(patient_indoor=patient_indoor,deleted=0).select_related('advice').values_list("advice__advice",flat=True))
         context_list.append(context_sub)
