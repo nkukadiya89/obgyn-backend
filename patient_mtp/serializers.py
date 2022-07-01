@@ -28,7 +28,10 @@ class PatientMtpSerializers(serializers.ModelSerializer):
 
         if consultation:
             ret["ut_weeks_c"] = consultation.ut_weeks
-            ret["second_rmp_c"] = "-" if consultation.ut_weeks <= 12 else None
+            if consultation.ut_weeks:
+                ret["second_rmp_c"] = "-" if consultation.ut_weeks <= 12 else None
+            else:
+                ret["second_rmp_c"] = None
 
 
         return ret
