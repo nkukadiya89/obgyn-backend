@@ -17,6 +17,7 @@ from .rpt.referal_slip_rpt import referal_slip_rpt
 from .rpt.daily_opd_income import daily_opd_income_rpt
 from .rpt.hospital_bill_rpt import hospital_bill_rpt
 from .rpt.indoor_case_paper_rpt import indoor_case_paper_rpt
+from .rpt.indoor_case_rpt import indoor_case_rpt
 from .rpt.medicine_prescription_rpt import medicine_prescription_rpt
 from .rpt.medicine_bill import medicine_bill_rpt
 from .rpt.monthly_income_rpt import monthly_income_rpt
@@ -240,6 +241,11 @@ def hospital_bill(request,language_id,bill_no):
 def indoor_case_paper(request,language_id,indoor_no):
     return indoor_case_paper_rpt(request,indoor_no,language_id)    
     
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def indoor_case(request,language_id,opd_id):
+    return indoor_case_rpt(request,opd_id,language_id)    
 
 
 @api_view(['GET'])
