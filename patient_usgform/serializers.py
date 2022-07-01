@@ -106,12 +106,15 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
 
         if consultation:
             ret["lmp_date"] = consultation.lmp_date.strftime("%d-%m-%Y")
-            ret["diagnosis"] = consultation.diagnosis.diagnosis_name
+            ret["diagnosis_id"] = consultation.diagnosis.diagnosis_id
+            ret["diagnosis_name"] = consultation.diagnosis.diagnosis_name
             ret["ut_weeks"] = consultation.ut_weeks
 
         patient_referal = PatientReferalModel.objects.filter(
             patient_opd=instance.patient_opd
         ).first()
+
+        
         if patient_referal:
             referal_manage = list(
                 PatientReferalIndication.objects.filter(
@@ -125,7 +128,6 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
                 )
                 mf_list =[]
                 for mf in mflist:
-                    print(mf)
                     mf_dict = {}
                     mf_dict["indication_id"] = mf.mf_id
                     mf_dict["indication_name"] = mf.field_value
