@@ -83,7 +83,7 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
                 ]
 
         usg_child_list = USGFormChildModel.objects.filter(
-            patient_usgform_id=instance.patient_usgform_id
+            patient_opd=instance.patient_opd, deleted=0
         )
         usg_child_lst = []
         for usg_child in usg_child_list:
