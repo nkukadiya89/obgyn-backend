@@ -24,7 +24,7 @@ class PatientMtpSerializers(serializers.ModelSerializer):
                 ]
         consultation = ConsultationModel.objects.filter(
             patient_opd=instance.patient_opd, deleted=0
-        ).order_by('created_at').first()
+        ).first()
 
         if consultation:
             ret["ut_weeks_c"] = consultation.ut_weeks
