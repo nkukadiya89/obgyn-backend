@@ -4,6 +4,7 @@ from consultation.models import ConsultationModel
 from manage_fields.serializers import ManageFieldsSerializers
 from patient.models import PatientModel
 from manage_fields.models import ManageFieldsModel
+from patient_indoor.models import PatientIndoorModel
 from .models import PatientUSGFormModel, USGFormChildModel
 from user.serializers import UserSerializers
 from patient_referal.models import PatientReferalModel, PatientReferalIndication
@@ -82,8 +83,9 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
                     "field_value"
                 ]
 
+        usgform_id_list = list(PatientIndoorModel.objects.filter(patient_opd=instance.patient_opd,deleted=0).values_list('patient_form_id',flat=True))
         usg_child_list = USGFormChildModel.objects.filter(
-            patient_opd=instance.patient_opd, deleted=0
+            patient_usgform_id__in=usgform_id_list, deleted=0
         )
         usg_child_lst = []
         for usg_child in usg_child_list:
