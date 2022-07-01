@@ -83,9 +83,9 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
                     "field_value"
                 ]
 
-        usgform_id_list = list(PatientUSGFormModel.objects.filter(patient_opd=instance.patient_opd,deleted=0).values_list('patient_usgform_id',flat=True))
+        usgform = PatientUSGFormModel.objects.filter(patient_opd=instance.patient_opd).order_by('-created_at').first()
         usg_child_list = USGFormChildModel.objects.filter(
-            patient_usgform_id__in=usgform_id_list, deleted=0
+            patient_usgform_id=usgform.patient_usgform_id, deleted=0
         )
         usg_child_lst = []
         for usg_child in usg_child_list:
