@@ -248,95 +248,32 @@
 <div id="obygyn">
 
     {{ template_header | safe }}
-    <div class="obgyn-title">-: USG REPORT :-</div>
-
-    <table width="100%" id="reporttable" style="font-size: 14px;font-weight: bold;color: #343434;">
+    <div class="obgyn-title">-: USG LIST :-</div>
+    <table width="100%" id="reporttable" style="font-size: 14px;color: #343434;">
         <tr>
-            <td>
-                Receipt Date:
-            </td>
-            <td>
-                {{context.receipt_date|date:'d-m-Y'}}
-            </td>
-            <td style="width: 80px;">
-                Regd. No:
-            </td>
-            <td>
-                <div><img src={{context.regd_no}} width='200' height="60"/></div>
-            </td>
-            <td style="width: 100px;">
-                Hb:
-            </td>
-            <td style="width: 100px;">
-                {{context.hb}}
-            </td>
+            <td><b>Sr. No. (M/Y)</b></td>
+            <td><b>Date</b></td>
+            <td><b>Woman's Name</b></td>
+            <td><b>Name of Husb/Father</b></td>
+            <td><b>Full Address</b></td>
+            <td><b>Mobile No</b></td>
+            <td><b>Age of Preg. Woman</b></td>
+            <td><b>Live M/F</b></td>
+            <td><b>PNDT Procedure</b></td>
         </tr>
+        {% for usg in context.usg_detail %}
         <tr>
-            <td>
-                Name:
-            </td>
-            <td>
-                {{context.name}}
-            </td>
-            <td>
-                Mobile No:
-            </td>
-            <td>
-                {{context.mobile_no}}
-            </td>
-            <td>
-                Blood Group:
-            </td>
-            <td>
-                {{context.blood_group}}
-            </td>
+            <td>{{usg.sr_no}}</td>
+            <td>{{usg.usg_date|date:'d-m-Y'}}</td>
+            <td>{{usg.woman_name}}</td>
+            <td>{{usg.husband_name}}</td>
+            <td>{{usg.address}}</td>
+            <td>{{usg.mobile}}</td>
+            <td>{{usg.age}}</td>
+            <td>{{usg.live_mf}}</td>
+            <td>{{usg.pndt}}</td>
         </tr>
-        <tr>
-            <td>
-                Address:
-            </td>
-            <td colspan="5" style="text-align: left;">
-                {{context.address}}
-            </td>
-
-        </tr>
-        <tr>
-            <td colspan="6">
-                A single intrauterine foctus/s with present cardiac activity<br/>
-                with Ceplalic presentation.<br/>
-                with avg. 19 weeks of gestational age.<br/>
-                Placenta - posterior<br/>
-                Liquar - adequate<br/>
-                No anomaly detected<br/>
-                Remark - {{context.remark}}<br/>
-                LMP acc. to USG-18-08-2021<br/>
-                EDD acc. to USG-25-05-2022
-            </td>
-
-        </tr>
-        <tr>
-            <td colspan="6">
-                &nbsp;
-            </td>
-
-        </tr>
-        <tr>
-            <td colspan="6" style="padding: 0;">
-                <table width="100%">
-                    <tr>
-                        <td style="border: 0;">
-                            Date: {{context.report_date|date:'d-m-Y'}}<br/>
-                            Place:-Santrampur.
-                        </td>
-                        <td style="border: 0;">
-                            x<br/>
-                            Dr.Bharat K.Patel,
-                        </td>
-                    </tr>
-                </table>
-            </td>
-
-        </tr>
+        {% endfor %}
     </table>
 </div>
 </body>

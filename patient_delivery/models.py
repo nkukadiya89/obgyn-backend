@@ -19,7 +19,8 @@ class PatientDeliveryModel(models.Model):
     )
     delivery_type_choice = (
         ("NORMAL", "NORMAL"),
-        ("CESARIAN", "CESARIAN")
+        ("CESARIAN", "CESARIAN"),
+        ("INSTRUMENTAL","INSTRUMENTAL"),
     )
 
     patient_delivery_id = models.AutoField(primary_key=True)
@@ -35,7 +36,7 @@ class PatientDeliveryModel(models.Model):
     husband_father_name = models.CharField(max_length=150, null=True)
     child_name = models.CharField(max_length=100, default="")
     child_gender = models.CharField(max_length=10, choices=gender_choice, default="MALE")
-    delivery_type = models.CharField(max_length=10, choices=delivery_type_choice, default="NORMAL")
+    delivery_type = models.CharField(max_length=20, choices=delivery_type_choice, default="NORMAL")
     religion = models.CharField(max_length=25, default="")
     episio_by = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="delivery_dpisio_by", null=True)
     dayan = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="delivery_dayan", null=True)
@@ -44,6 +45,8 @@ class PatientDeliveryModel(models.Model):
     district = models.ForeignKey(DistrictModel,on_delete=models.DO_NOTHING, null=True)
     state = models.ForeignKey(StateModel,on_delete=models.DO_NOTHING, null=True)
     pin = models.IntegerField(null=True)
+    landmark = models.CharField(max_length=500, null=True)
+    lastname = models.CharField(max_length=100, null=True)
     marriage_age = models.IntegerField(default=0, null=True)
     current_age = models.IntegerField(default=0, null=True)
     weeks = models.IntegerField(default=0, null=True)

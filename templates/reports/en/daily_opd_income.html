@@ -319,46 +319,46 @@
                     Total Rs  <br /> Rs.
                 </th>
             </tr>
-            {% for context in context_list %}
+            {% for context_charge in context.context_list %}
             <tr>
                 <td>
                     {{ forloop.counter }}
                 </td>
                 <td>
-                    {{ context.date |date:'d-m-Y'  }}
+                    {{ context_charge.date |date:'d-m-Y'  }}
                 </td>
                 <td>
-                    {{ context.name }}
+                    {{ context_charge.name }}
                 </td>
                 <td>
-                    {{ context.address }}
+                    {{ context_charge.address }}
                 </td>
                 <td>
-                    {{ context.type }}
+                    {{ context_charge.type }}
                 </td>
                 <td>
-                    {{ context.consulting }}
+                    {{ context_charge.consulting }}
                 </td>
                 <td>
-                    {{ context.sonography }}
+                    {{ context_charge.sonography }}
                 </td>
                 <td>
-                    {{ context.nursing }}
+                    {{ context_charge.nursing }}
                 </td>
                 <td>
-                    {{ context.operative }}
+                    {{ context_charge.operative }}
                 </td>
                 <td>
-                    {{ context.medicine  }}
+                    {{ context_charge.medicine  }}
                 </td>
                 <td>
-                    {{ context.room_charge }}
+                    {{ context_charge.room_charge }}
                 </td>
                 <td>
-                    {{ context.other_charge }}
+                    {{ context_charge.other_charge }}
                 </td>
                 <td>
-                    {{ context.total }}
+                    {{ context_charge.total }}
                 </td>
             </tr>
             {% endfor %}

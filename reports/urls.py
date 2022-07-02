@@ -18,7 +18,14 @@ urlpatterns = [
     path('daily-opd-income/<int:language_id>/',views.daily_opd_income, name="daily_opd_income"),
     path('hospital-bill/<int:language_id>/<str:bill_no>',views.hospital_bill, name="hospital_bill"),
     path('indoor-case-paper/<int:language_id>/<int:indoor_no>/',views.indoor_case_paper, name="indoor_case_paper"),
-    # path('medicine-prescription/<int:language_id>/<int:opd_id>/',views.medicine_prescription, name="medicine_prescription"),
+    path('indoor-case/<int:language_id>/<int:opd_id>/',views.indoor_case, name="indoor_case"),
+    path('medicine-prescription/<int:language_id>/<int:voucher_id>/',views.medicine_prescription, name="medicine_prescription"),
+    path('medicine-bill/<int:language_id>/<int:voucher_id>/',views.medicine_bill, name="medicine_bill"),
+    path('monthly-income/<int:language_id>/',views.monthly_income, name="monthly_income"),
+    path('ovulation-profile/<int:language_id>/<int:ovulation_id>/',views.ovulation_profile, name="ovulation_profile"),
+    path('bill-receipt/<int:language_id>/<int:bill_id>/',views.bill_receipt, name="bill_receipt"),
+    path('usg-list-report/<int:language_id>/',views.usg_list_report, name="usg_list_report"),
+    path('usg-form-report/<int:language_id>/<int:usgform_id>/',views.usg_form_report, name="usg_form_report"),
 
     path('view-report/<int:id>/<int:language_id>/', views.view_report, name="view_report"),
 

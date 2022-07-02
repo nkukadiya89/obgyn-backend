@@ -6,6 +6,7 @@ from patient_delivery.models import PatientDeliveryModel
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
+
 @csrf_exempt
 def birth_rpt(request, id, language_id=None):
     # patient = PatientModel.objects.filter(pk=id).first()
@@ -14,15 +15,25 @@ def birth_rpt(request, id, language_id=None):
     if not patient_delivery:
         context = {}
         context["msg"] = False
-        context["error"] = "Patient not found."
+        context["error"] = "Patient Delivery not found."
         return JsonResponse(context)
 
     patient = patient_delivery.patient
-    
+
+    if not patient:
+        context = {}
+        context["msg"] = False
+        context["error"] = "Patient not found."
+        return JsonResponse(context)
+
     if language_id:
-        template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id, language_id=language_id,deleted=0).first()
+        template_header = TemplateHeaderModel.objects.filter(
+            created_by=request.user.id, language_id=language_id, deleted=0
+        ).first()
     else:
-        template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id,deleted=0).first()
+        template_header = TemplateHeaderModel.objects.filter(
+            created_by=request.user.id, deleted=0
+        ).first()
 
     if not template_header:
         context = {}
@@ -31,13 +42,28 @@ def birth_rpt(request, id, language_id=None):
         return JsonResponse(context)
 
     context = {}
-
     context["mother_name"] = "".join(
-        [patient.first_name, " ", patient.middle_name, " ", patient.last_name])
-    context["father_name"] = patient_delivery.husband_name
-    context["address"] = "".join([" ", patient.city.city_name, " ",
-                                  patient.district.district_name, " ",
-                                  patient.taluka.taluka_name, " ", patient.state.state_name])
+        [
+            patient.first_name if patient.first_name else " ",
+            " ",
+            patient.middle_name if patient.middle_name else " ",
+            " ",
+            patient.last_name if patient.last_name else " ",
+        ]
+    )
+    context["father_name"] = patient_delivery.husband_name if patient_delivery.husband_name else " "
+    context["address"] = "".join(
+        [
+            " ",
+            patient.city.city_name if patient.city.city_name else " ",
+            " ",
+            patient.district.district_name if patient.district.district_name else " ",
+            " ",
+            patient.taluka.taluka_name if patient.taluka.taluka_name else " ",
+            " ",
+            patient.state.state_name if patient.state.state_name else " ",
+        ]
+    )
     context["age"] = patient.age
     context["date"] = patient_delivery.birth_date
     context["time"] = patient_delivery.birth_time
@@ -48,5 +74,11 @@ def birth_rpt(request, id, language_id=None):
     context["episitomy_by"] = patient_delivery.weight
 
     template_name = "reports/en/birth_report.html"
-    return render(request, template_name,
-                  {"context": context, "template_header": template_header.header_text.replace("'", "\"")})
+    return render(
+        request,
+        template_name,
+        {
+            "context": context,
+            "template_header": template_header.header_text.replace("'", '"'),
+        },
+    )

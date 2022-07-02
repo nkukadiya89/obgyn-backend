@@ -247,95 +247,12 @@
 <body>
 <div id="obygyn">
 
-    {{ template_header | safe }}
-    <div class="obgyn-title">-: USG REPORT :-</div>
-
-    <table width="100%" id="reporttable" style="font-size: 14px;font-weight: bold;color: #343434;">
+    <table width="100%" id="reporttable3" style="font-size: 14px;font-weight: bold;color: #343434;">
         <tr>
-            <td>
-                Receipt Date:
-            </td>
-            <td>
-                {{context.receipt_date|date:'d-m-Y'}}
-            </td>
-            <td style="width: 80px;">
-                Regd. No:
-            </td>
-            <td>
-                <div><img src={{context.regd_no}} width='200' height="60"/></div>
-            </td>
-            <td style="width: 100px;">
-                Hb:
-            </td>
-            <td style="width: 100px;">
-                {{context.hb}}
-            </td>
+            <td>FROM-F (PNDT ACT 1994)              No :79</td>
         </tr>
         <tr>
-            <td>
-                Name:
-            </td>
-            <td>
-                {{context.name}}
-            </td>
-            <td>
-                Mobile No:
-            </td>
-            <td>
-                {{context.mobile_no}}
-            </td>
-            <td>
-                Blood Group:
-            </td>
-            <td>
-                {{context.blood_group}}
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Address:
-            </td>
-            <td colspan="5" style="text-align: left;">
-                {{context.address}}
-            </td>
-
-        </tr>
-        <tr>
-            <td colspan="6">
-                A single intrauterine foctus/s with present cardiac activity<br/>
-                with Ceplalic presentation.<br/>
-                with avg. 19 weeks of gestational age.<br/>
-                Placenta - posterior<br/>
-                Liquar - adequate<br/>
-                No anomaly detected<br/>
-                Remark - {{context.remark}}<br/>
-                LMP acc. to USG-18-08-2021<br/>
-                EDD acc. to USG-25-05-2022
-            </td>
-
-        </tr>
-        <tr>
-            <td colspan="6">
-                &nbsp;
-            </td>
-
-        </tr>
-        <tr>
-            <td colspan="6" style="padding: 0;">
-                <table width="100%">
-                    <tr>
-                        <td style="border: 0;">
-                            Date: {{context.report_date|date:'d-m-Y'}}<br/>
-                            Place:-Santrampur.
-                        </td>
-                        <td style="border: 0;">
-                            x<br/>
-                            Dr.Bharat K.Patel,
-                        </td>
-                    </tr>
-                </table>
-            </td>
-
+            <td></td>
         </tr>
     </table>
 </div>

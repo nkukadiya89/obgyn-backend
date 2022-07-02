@@ -20,7 +20,7 @@ class PatientOvulationProfileModel(models.Model):
     ovarian_blood_flow = models.CharField(max_length=100, default="")
     right_ovary_mm = models.FloatField(default=0.0)
     left_ovary_mm = models.FloatField(default=0.0)
-    endometrium_mm = models.CharField(max_length=15, default="")
+    endometrium_mm = models.FloatField(default=0.0)
     remark = models.TextField(null=True)
 
     created_by = models.IntegerField(default=1, unique=False)

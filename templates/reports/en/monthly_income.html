@@ -4,8 +4,7 @@
 
 <head>
     <title>Obgyn register success</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style>
         /* Base CSS styles DO NOT CHANGE OR REMOVE */
         body {
@@ -27,7 +26,7 @@
 
         #obygyn {
             margin: 0 12pt;
-            width:100%;
+            width: 100%;
             padding: 10px 20px;
             margin: 1em auto;
             clear: both;
@@ -241,105 +240,83 @@
             padding: 5px 10px;
         }
 
+        #reporttable3 {
+            border-collapse: collapse;
+        }
+
+        #reporttable3 th,
+        #reporttable3 td {
+            border: 1px solid #343434;
+            padding: 5px 10px;
+            word-break: break-all;
+            font-weight: normal;
+        }
+
+        #reporttable3 th {
+            font-weight: bold;
+        }
+
+        .lefttable td {
+            padding: 2px 10px;
+        }
+
+        .rxtbl {
+            border-collapse: collapse;
+        }
+
+        .rxtbl td {
+            padding: 3px 10px;
+        }
     </style>
 </head>
 
 <body>
-<div id="obygyn">
+    <div id="obygyn">
 
-    {{ template_header | safe }}
-    <div class="obgyn-title">-: USG REPORT :-</div>
+        {{ template_header | safe }}
+        <div class="obgyn-title">-: MTP List :-</div>
+        Date : {{context.start_date|date:'d-m-Y'}} to {{context.end_date|date:'d-m-Y'}}
+        <table width="100%" id="reporttable3" style="font-size: 14px;font-weight: bold;color: #343434;">
+            <tr>
+                <td><b>Sr.No.</b></td>
+                <td><b>Date</b></td>
+                <td><b>Consulting Rs</b></td>
+                <td><b>Sonography Rs</b></td>
+                <td><b>Nursing Rs</b></td>
+                <td><b>Operative / Delivery Rs</b></td>
+                <td><b>Medicine Rs</b></td>
+                <td><b>Room Charges</b></td>
+                <td><b>Other Charges</b></td>
+                <td><b>Total Rs</b></td>
+            </tr>
+            {% for bill in context.bill_detail %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ bill.date|date:'d-m-Y' }}</td>
+                <td>{{ bill.consulting_rs }}</td>
+                <td>{{ bill.usg_rs }}</td>
+                <td>{{ bill.nursing_rs }}</td>
+                <td>{{ bill.operative_rs }}</td>
+                <td>{{ bill.medicine_rs }}</td>
+                <td>{{ bill.room_charge_rs }}</td>
+                <td>{{ bill.other_charge_rs }}</td>
+                <td>{{ bill.total_rs }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="2" align="right"><b>Total</b></td>
+                <td>{{context.col1_total}}</td>
+                <td>{{context.col2_total}}</td>
+                <td>{{context.col3_total}}</td>
+                <td>{{context.col4_total}}</td>
+                <td>{{context.col5_total}}</td>
+                <td>{{context.col6_total}}</td>
+                <td>{{context.col7_total}}</td>
+                <td>{{context.col8_total}}</td>
+            </tr>
+        </table>
 
-    <table width="100%" id="reporttable" style="font-size: 14px;font-weight: bold;color: #343434;">
-        <tr>
-            <td>
-                Receipt Date:
-            </td>
-            <td>
-                {{context.receipt_date|date:'d-m-Y'}}
-            </td>
-            <td style="width: 80px;">
-                Regd. No:
-            </td>
-            <td>
-                <div><img src={{context.regd_no}} width='200' height="60"/></div>
-            </td>
-            <td style="width: 100px;">
-                Hb:
-            </td>
-            <td style="width: 100px;">
-                {{context.hb}}
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Name:
-            </td>
-            <td>
-                {{context.name}}
-            </td>
-            <td>
-                Mobile No:
-            </td>
-            <td>
-                {{context.mobile_no}}
-            </td>
-            <td>
-                Blood Group:
-            </td>
-            <td>
-                {{context.blood_group}}
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Address:
-            </td>
-            <td colspan="5" style="text-align: left;">
-                {{context.address}}
-            </td>
-
-        </tr>
-        <tr>
-            <td colspan="6">
-                A single intrauterine foctus/s with present cardiac activity<br/>
-                with Ceplalic presentation.<br/>
-                with avg. 19 weeks of gestational age.<br/>
-                Placenta - posterior<br/>
-                Liquar - adequate<br/>
-                No anomaly detected<br/>
-                Remark - {{context.remark}}<br/>
-                LMP acc. to USG-18-08-2021<br/>
-                EDD acc. to USG-25-05-2022
-            </td>
-
-        </tr>
-        <tr>
-            <td colspan="6">
-                &nbsp;
-            </td>
-
-        </tr>
-        <tr>
-            <td colspan="6" style="padding: 0;">
-                <table width="100%">
-                    <tr>
-                        <td style="border: 0;">
-                            Date: {{context.report_date|date:'d-m-Y'}}<br/>
-                            Place:-Santrampur.
-                        </td>
-                        <td style="border: 0;">
-                            x<br/>
-                            Dr.Bharat K.Patel,
-                        </td>
-                    </tr>
-                </table>
-            </td>
-
-        </tr>
-    </table>
-</div>
+    </div>
 </body>
 
 </html>
-

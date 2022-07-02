@@ -7,9 +7,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
 @csrf_exempt
-def mtp_list_rpt(request, language_id=None):
-    patient_mtp_list = PatientMtpModel.objects.filter(deleted=0)
-
+def mtp_list_rpt(request,start_date,end_date, language_id=None):
+    patient_mtp_list = PatientMtpModel.objects.filter(termination_date__gte=start_date, created_at__date__lte=end_date,deleted=0)
 
     if language_id:
         template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id, language_id=language_id,deleted=0).first()
@@ -30,19 +29,24 @@ def mtp_list_rpt(request, language_id=None):
         if patient_opd:
             
             context = {}
-            try:
-                context["date_of_admission"] = patient_opd.patientdischargemodel.admission_date
-            except:
-                context["date_of_admission"] = ""
+            context["date_of_admission"] = patient_mtp.admission_date
 
-            context["name"] = "".join(
-                [patient_opd.patient.first_name, " ", patient_opd.patient.middle_name, " ", patient_opd.patient.last_name])
-            context["husband_name"] = patient_opd.patient.husband_father_name
-            context["age"] = patient_opd.patient.age
-            context["religion"] = patient_opd.patient.religion
-            context["address"] = "".join([" ", patient_opd.patient.city.city_name, " ",
-                                        patient_opd.patient.district.district_name, " ",
-                                        patient_opd.patient.taluka.taluka_name, " ", patient_opd.patient.state.state_name])
+            try:
+                context["name"] = "".join(
+                    [patient_opd.patient.first_name, " ", patient_opd.patient.middle_name, " ", patient_opd.patient.last_name])
+                context["husband_name"] = patient_opd.patient.husband_father_name
+                context["age"] = patient_opd.patient.age
+                context["religion"] = patient_opd.patient.religion.field_value
+                context["address"] = "".join([" ", patient_opd.patient.city.city_name, " ",
+                                            patient_opd.patient.district.district_name, " ",
+                                            patient_opd.patient.taluka.taluka_name, " ", patient_opd.patient.state.state_name])
+            except:
+                context["name"] = ""
+                context["husband_name"] = ""
+                context["age"] =""
+                context["religion"] = ""
+                context["address"] = ""
+                
             context["duration"] = "pending"
             context["reason"] = patient_mtp.reason_for_mtp
             context["termination_date"] = patient_mtp.termination_date

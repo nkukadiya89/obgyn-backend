@@ -1,21 +1,22 @@
+from ast import Delete
 from django.shortcuts import render
 from template_header.models import TemplateHeaderModel
-from patient_billing.models import PatientBillingModel
-from patient_opd.models import PatientOpdModel
+from patient_prescription.models import PatientPrescriptionModel
+from patient_voucher.models import PatientVoucherModel, VoucherItemModel
 from consultation.models import ConsultationModel
 
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
 @csrf_exempt
-def hospital_bill_rpt(request,bill_no, language_id=None):
+def medicine_prescription_rpt(request,voucher_id, language_id=None):
 
-    patient_billing =PatientBillingModel.objects.filter(patient_billing_id=bill_no).first()
+    patient_voucher = PatientVoucherModel.objects.filter(pk=voucher_id).first()
 
-    if patient_billing == None:
+    if patient_voucher == None:
         context = {}
         context["msg"] = False
-        context["error"] = "Patient Bill does not exist.."
+        context["error"] = "Record does not exist.."
         return JsonResponse(context)
 
     if language_id:
@@ -29,15 +30,37 @@ def hospital_bill_rpt(request,bill_no, language_id=None):
         context["error"] = "Please create report header."
         return JsonResponse(context)
 
-    context_list=[]
 
-    patient_opd = patient_billing.patient_opd
+    patient_opd = patient_voucher.patient_opd
 
-    if patient_opd:
-        
+    if patient_opd == None:
         context = {}
-        context["receipt_date"] = patient_billing.created_at
-        context["invoice_no"] = patient_billing.invoice_no
+        context["msg"] = False
+        context["error"] = "OPD does not exist.."
+        return JsonResponse(context)
+
+    consultation = ConsultationModel.objects.filter(patient_opd=patient_opd,deleted=0).first()
+    if consultation == None:
+        context = {}
+        context["msg"] = False
+        context["error"] = "Consultation does not exist.."
+        return JsonResponse(context)
+
+    if patient_voucher:
+
+        voucher_item_list = VoucherItemModel.objects.filter(patient_voucher=patient_voucher,deleted=0)
+
+        if len(voucher_item_list)<=0:
+            context = {}
+            context["msg"] = False
+            context["error"] = "Record not Found."
+            return JsonResponse(context)
+
+        context = {}
+        context["receipt_date"] = patient_voucher.bill_date
+        context["bill_no"] = patient_voucher.voucher_no
+        context["hb"] = consultation.hb
+        context["blood_group"] = consultation.blood_group
         context["name"] = "".join(
             [
                 patient_opd.patient.first_name  if patient_opd.patient.first_name else " ",
@@ -60,27 +83,17 @@ def hospital_bill_rpt(request,bill_no, language_id=None):
             ]
         )
         
-        context["mobile"] = patient_opd.patient.phone if "F" not in patient_opd.patient.phone else ""
-        consultation = ConsultationModel.objects.filter(patient_opd=patient_opd).first()
+        context["mobile"] = patient_opd.patient.phone if "F" not in patient_opd.patient.phone else " "
 
-        if consultation:
-            context["blood_group"] = consultation.blood_group
-            context["diagnosis"] = consultation.diagnosis.diagnosis_name
-        else:
-            context["blood_group"] = ""
-            context["diagnosis"] = ""
-        
-        context["admission_date"] = patient_billing.admission_date
-        context["discharge_date"] = patient_billing.discharge_date
-        context["consulting_rs"] = patient_billing.consulting_fees
-        context["sonography_rs"] = patient_billing.usg_rs
-        context["nursing_rs"] = patient_billing.nursing_rs
-        context["operative_rs"] = patient_billing.procedure_charge
-        context["medicine_rs"] = patient_billing.medicine_rs
-        context["room_charge_rs"] = patient_billing.room_rs
-        context["other_charge_rs"] = patient_billing.other_rs
-        context["total_rs"] = patient_billing.total_rs
-        
-    template_name = "reports/en/hospital_bill.html"
+        medicine =[]
+        for voucher_item in voucher_item_list:
+            context_sub={}
+            context_sub["medicine"] = voucher_item.surgical_item.drug_name
+            context_sub["unit"] = voucher_item.unit
+            medicine.append(context_sub)
+      
+        context["medicine"] = medicine
+    
+    template_name = "reports/en/medicine_prescription.html"
     return render(request, template_name,
                   {"context": context, "template_header": template_header.header_text.replace("'", "\"")})

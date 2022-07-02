@@ -278,7 +278,7 @@
 
         <table height="155px" width="100%" id="reporttable3" style="font-size: 14px;font-weight: bold;color: #343434;">
             <tr>
-                <td colspan="2" align="right">Regd No.:</td>
+                <td colspan="2" align="right">Regd No.: <img src={{context.regd_no}} width='200' height="60"/></td>
             </tr>
             <tr>
                 <td align="left" colspan="2">Name : <b>{{context.name}}</b></td>
@@ -294,7 +294,7 @@
                 <td align="left">Gender : <b>{{context.gender}}</b></td>
             </tr>
             <tr>
-                <td align="left">D.O.A. : <b>{{context.admission_date}}</b></td>
+                <td align="left">D.O.A. : <b>{{context.admission_date|date:'d-m-Y'}}</b></td>
                 <td align="left">T.O.A. : <b>{{context.admission_time}}</b></td>
             </tr>
             <tr>
@@ -307,25 +307,25 @@
                 <td align="left" colspan="2">Type of Operation/Delivery : <b>{{context.operation}}</b></td>
             </tr>
             <tr>
-                <td align="left">Date Of Operation/Delivery : <b>{{context.operation_date}}</b></td>
+                <td align="left">Date Of Operation/Delivery : <b>{{context.operation_date|date:'d-m-Y'}}</b></td>
                 <td align="left">AND Time : <b>{{context.operation_time}}</b></td>
             </tr>
             <tr>
-                <td align="left" colspan="2">Name Of Surgen : <b>{{context.surgeon_name}}</b></td>
+                <td align="left" colspan="2">Name Of Surgen : <b>{{context.doctor}}</b></td>
             </tr>
             <tr>
-                <td align="left" colspan="2">Name Of anesthetist : <b>{{context.anesthetist_name}}</b></td>
+                <td align="left" colspan="2">Name Of anesthetist : <b></b></td>
             </tr>
             <tr>
-                <td align="left" colspan="2">Final Diagnosis : <b>{{context.final_diagnosis}}</b></td>
+                <td align="left" colspan="2">Final Diagnosis : <b>{{context.provisional_diagnosis}}</b></td>
             </tr>
             <tr>
-                <td align="left">D.O.D : <b>{{context.discharge_date}}</b></td>
+                <td align="left">D.O.D : <b>{{context.discharge_date|date:'d-m-Y'}}</b></td>
                 <td align="left">T.O.D : <b>{{context.discharge_time}}</b></td>
             </tr>
             <tr>
-                <td align="left">Condition on discharge : <b>{{context.discharge_condition}}</b></td>
-                <td align="left">Advised by : <b>{{context.advised}}</b></td>
+                <td align="left">Condition on discharge : <b><input type="checkbox"></b></td>
+                <td align="left">Advised by : <b>{{context.doctor}}</b></td>
             </tr>
             <tr>
                 <td align="left"></td>
@@ -333,15 +333,15 @@
             </tr>
             <tr>
                 <td align="left"></td>
-                <td align="left">agaist medical advice</td>
+                <td align="left"><input type="checkbox">agaist medical advice</td>
             </tr>
             <tr>
                 <td align="left"></td>
-                <td align="left">Absconded</td>
+                <td align="left"><input type="checkbox">Absconded</td>
             </tr>
             <tr>
                 <td align="left"></td>
-                <td align="left">Died</td>
+                <td align="left"><input type="checkbox">Died</td>
             </tr>
             <tr>
                 <td align="left">Sign of R.M.O.</td>

@@ -1,10 +1,13 @@
 from rest_framework import serializers
+from consultation.models import ConsultationModel
 
 from manage_fields.serializers import ManageFieldsSerializers
 from patient.models import PatientModel
 from manage_fields.models import ManageFieldsModel
+from patient_indoor.models import PatientIndoorModel
 from .models import PatientUSGFormModel, USGFormChildModel
 from user.serializers import UserSerializers
+from patient_referal.models import PatientReferalModel, PatientReferalIndication
 from datetime import datetime, date
 from dateutil.relativedelta import *
 
@@ -14,8 +17,13 @@ class USGFormChildSerializers(serializers.ModelSerializer):
         ret = super(USGFormChildSerializers, self).to_representation(instance)
 
         if "child_dob" in ret:
-            ret["child_year"] = date.today().year - datetime.strptime(ret["child_dob"], "%Y-%m-%d").year
-            ret["child_month"] = date.today().month - datetime.strptime(ret["child_dob"], "%Y-%m-%d").month
+            ret["child_year"] = (
+                date.today().year - datetime.strptime(ret["child_dob"], "%Y-%m-%d").year
+            )
+            ret["child_month"] = (
+                date.today().month
+                - datetime.strptime(ret["child_dob"], "%Y-%m-%d").month
+            )
 
             child_dob = datetime.strptime(ret["child_dob"], "%Y-%m-%d")
             no_of_month = ((date.today().year - child_dob.year) * 12) + (
@@ -75,8 +83,9 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
                     "field_value"
                 ]
 
+        usgform = PatientUSGFormModel.objects.filter(patient_opd=instance.patient_opd).order_by('-created_at').first()
         usg_child_list = USGFormChildModel.objects.filter(
-            patient_usgform_id=instance.patient_usgform_id
+            patient_usgform_id=usgform.patient_usgform_id, deleted=0
         )
         usg_child_lst = []
         for usg_child in usg_child_list:
@@ -92,6 +101,40 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
             usg_child_lst.append(usg_childs)
 
         ret["usg_child"] = usg_child_lst
+
+        consultation = ConsultationModel.objects.filter(
+            patient_opd=instance.patient_opd, deleted=0
+        ).first()
+
+        if consultation:
+            ret["lmp_date"] = consultation.lmp_date.strftime("%d-%m-%Y")
+            ret["diagnosis_id"] = consultation.diagnosis.diagnosis_id
+            ret["diagnosis_name"] = consultation.diagnosis.diagnosis_name
+            ret["ut_weeks"] = consultation.ut_weeks
+
+        patient_referal = PatientReferalModel.objects.filter(
+            patient_opd=instance.patient_opd
+        ).first()
+
+        
+        if patient_referal:
+            referal_manage = list(
+                PatientReferalIndication.objects.filter(
+                    patientreferalmodel_id=patient_referal.patient_referal_id
+                ).values_list("managefieldsmodel_id", flat=True)
+            )
+            ret["indication_id"] = referal_manage
+            if len(referal_manage) > 0:
+                mflist = ManageFieldsModel.objects.filter(
+                    mf_id__in=referal_manage
+                )
+                mf_list =[]
+                for mf in mflist:
+                    mf_dict = {}
+                    mf_dict["indication_id"] = mf.mf_id
+                    mf_dict["indication_name"] = mf.field_value
+                    mf_list.append(mf_dict)
+                ret["indication"] = mf_list
         return ret
 
     def validate(self, data):
@@ -110,7 +153,6 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
     consent_obtained_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
     procedure_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
     sonography_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
-    
 
     class Meta:
         model = PatientUSGFormModel
