@@ -8,7 +8,7 @@ from django.http import JsonResponse
 
 @csrf_exempt
 def mtp_list_rpt(request,start_date,end_date, language_id=None):
-    patient_mtp_list = PatientMtpModel.objects.filter(termination_date__gte=start_date, created_at__date__lte=end_date,deleted=0)
+    patient_mtp_list = PatientMtpModel.objects.filter(created_at__date__gte=start_date, created_at__date__lte=end_date,deleted=0)
 
     if language_id:
         template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id, language_id=language_id,deleted=0).first()
