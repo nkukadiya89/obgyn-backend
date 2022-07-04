@@ -270,63 +270,192 @@
 
 <body>
     <div id="obygyn">
+        {{ template_header |safe }}
+        <div class="obgyn-title" style="margin-bottom: 10px; font-size: 18px; padding:  0px;">
+            -: Birth Report :-</div>
 
-
-        <div class="obgyn-title"
-            style="margin-bottom: 16px; font-size: 18px; border-top: 1px solid #343434; border-bottom: 1px solid #343434; padding: 8px 0px;">
-            -: Referal Slip :-</div>
-        <table width="100%" class="rxtbl" style="font-weight: bold; font-size: 14px; margin-bottom: 16px;">
-
-            <tr>
-                <td style="text-align: left; width: 60%; vertical-align: top;"><label>Date:</label>01-01-2022</td>
-                <td style="text-align: left;">
-                    Dr.Bharat K. Patel<br />
-                    M.B.B.S.,D.G.O.<br />
-                    Shraddha Hospital,Santrampur,Mahisagar.
-                </td>
-            </tr>
-
-        </table>
         <table width="100%" id="reporttable2" style="font-size: 14px;font-weight: bold;color: #343434;">
 
             <tr>
-                <th>
-                    Name
-                </th>
-                <th>
-                    Address
-                </th>
-                <th>
-                    Mobile
-                </th>
-                <th>
-                    Age
-                </th>
-                <th>
-                    Indication For USG
-                </th>
+                <td>
+                    <strong>Mother's Name:</strong>
+                </td>
+                <td colspan="2">
+                    {{ context.mother_name }}
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0;">
+                    &nbsp;
+                </td>
+                <td style="padding: 0;" colspan="2">
+                    &nbsp;
+                </td>
             </tr>
             <tr>
                 <td>
-                    {{context.name}}
+                    <strong>Father's Name:</strong>
+                </td>
+                <td colspan="2">
+                    {{ context.father_name }}
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0;">
+                    &nbsp;
+                </td>
+                <td style="padding: 0;" colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Village:</strong>
                 </td>
                 <td>
-                    {{context.address}}
+                    {{ context.address }}
                 </td>
                 <td>
-                    {{context.mobile_no}}
+                    <strong>Age:</strong> {{ context.age }} years
                 </td>
-                <td>
-                    {{context.age}}
+            </tr>
+            <tr>
+                <td style="padding: 0;">
+                    &nbsp;
                 </td>
+                <td style="padding: 0;" colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
                 <td>
-                    {% for indication in context.indication %}
-                        ->{{indication}}<br>
-                    {% endfor %}
+                    <strong>Date:</strong>
+                </td>
+                <td colspan="2">
+                    {{ context.date }}
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0;">
+                    &nbsp;
+                </td>
+                <td style="padding: 0;" colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Time:</strong>
+                </td>
+                <td colspan="2">
+                    {{ context.time }}
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0;">
+                    &nbsp;
+                </td>
+                <td style="padding: 0;" colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Gender:</strong>
+                </td>
+                <td colspan="2">
+                    {{ context.gender }}
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0;">
+                    &nbsp;
+                </td>
+                <td style="padding: 0;" colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Weight:</strong>
+                </td>
+                <td colspan="2">
+                    {{ context.weight }}
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0;">
+                    &nbsp;
+                </td>
+                <td style="padding: 0;" colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Child Status:</strong>
+                </td>
+                <td colspan="2">
+                    {{ context.child_status }}
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0;">
+                    &nbsp;
+                </td>
+                <td style="padding: 0;" colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>child count:</strong>
+                </td>
+                <td colspan="2">
+                   {{ context.child_count }}
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0;">
+                    &nbsp;
+                </td>
+                <td style="padding: 0;" colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Episiotomy By:</strong>
+                </td>
+                <td colspan="2">
+                    Dr.B.K.Patel <b><i>(Fix Name)</i></b>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 0;">
+                    &nbsp;
+                </td>
+                <td style="padding: 0;" colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align: center;">
+                    note text goes here note text goes here note text goes here note text goes here note text goes here
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    &nbsp;
                 </td>
             </tr>
         </table>
-        <div class="obgyn-title" style="margin-bottom: 10px; margin-top: 24px; font-size: 16px;">Sign:</div>
+
     </div>
 </body>
 

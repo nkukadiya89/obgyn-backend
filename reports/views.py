@@ -9,6 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .rpt.usg_report_rpt import usg_rpt
 from .rpt.consultation_rpt import consultation_rpt
 from .rpt.birth_rpt import birth_rpt
+from .rpt.child_birth_rpt import child_birth_rpt
 from .rpt.delivery_rpt import delivery_rpt
 from .rpt.billing_rpt import billing_rpt
 from .rpt.discharge_rpt import discharge_rpt
@@ -66,6 +67,13 @@ def discharge_report(request, id, language_id=None):
 @permission_classes([IsAuthenticated])
 def birth_report(request, id, language_id=None):
     return birth_rpt(request, id, language_id)
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def child_birth(request, id, language_id=None):
+    return child_birth_rpt(request, id, language_id)
 
 
 @api_view(['GET'])

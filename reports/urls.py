@@ -9,6 +9,7 @@ urlpatterns = [
     path('usg-report/<int:id>/<int:language_id>/', views.usg_report, name="usg_report"),
     path('consultation-report/<int:id>/<int:language_id>/', views.consultation_report, name="consultation_report"),
     path('birth-report/<int:id>/<int:language_id>/', views.birth_report, name="birth_report"),
+    path('child-birth/<int:id>/<int:language_id>/', views.child_birth, name="child_birth"),
     path('delivery-report/<int:language_id>/', views.delivery_report, name="delivery_report"),
     path('billing-report/<int:language_id>/', views.billing_report, name="billing_report"),
     path('discharge-card-report/<int:id>/<int:language_id>/', views.discharge_report, name="discharge_report"),
