@@ -75,7 +75,7 @@ def consultation_rpt(request, id, language_id=None):
         ]
     )
 
-    context["mobile_no"] = patient_opd.patient.phone
+    context["mobile_no"] = patient_opd.patient.phone if "F" not in patient_opd.patient.phone else " "
 
     context["report_date"] = str(patient_opd.opd_date)
 
