@@ -231,7 +231,7 @@ def get_unique_patient(request, id=None):
         else:
             patient = PatientModel.objects.filter(
                 Q(deleted=0, created_by=1)
-                | Q(created_by=request.user.id)
+                | Q(created_by=request.user.id, deleted=0)
             )
         data["total_record"] = len(patient)
 
