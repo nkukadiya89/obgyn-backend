@@ -224,6 +224,8 @@ def get_unique_patient(request, id=None):
     else:
         distinc_key = query_string["fields"]
 
+    if "search" in query_string:
+        search_val = query_string["search"].split("=")[0]
     data = {}
     try:
         if id:
@@ -233,8 +235,10 @@ def get_unique_patient(request, id=None):
                 Q(deleted=0, created_by=1)
                 | Q(created_by=request.user.id, deleted=0)
             )
-        data["total_record"] = len(patient)
 
+        data["total_record"] = len(patient)
+        search_string = "patient.filter(" + distinc_key + "__icontains='" + search_val + "')"
+        patient = eval(search_string)
         patient = patient.distinct(distinc_key)
     except PatientModel.DoesNotExist:
         data["success"] = False
