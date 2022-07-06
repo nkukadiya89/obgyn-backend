@@ -1,11 +1,9 @@
-from django.shortcuts import render
-from patient_opd.models import PatientOpdModel
-from template_header.models import TemplateHeaderModel
-from patient.models import PatientModel
-from patient_delivery.models import PatientDeliveryModel
-
-from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+
+from patient_delivery.models import PatientDeliveryModel
+from patient_opd.models import PatientOpdModel
 
 
 @csrf_exempt
@@ -54,7 +52,8 @@ def child_birth_rpt(request, id, language_id=None):
             patient_delivery.state.state_name if patient_delivery.state.state_name else " ",
         ]
     )
-
+    context["mother_taluka"] = patient_delivery.city.city_name if patient_delivery.city.city_name else " "
+    context["mother_city"] = patient_delivery.taluka.taluka_name if patient_delivery.taluka.taluka_name else " "
     context["address"] = "".join(
         [
             " ",
@@ -67,6 +66,9 @@ def child_birth_rpt(request, id, language_id=None):
             patient.state.state_name if patient.state.state_name else " ",
         ]
     )
+    context["district"] = patient_opd.consulted_by.hospital.district.district_name if patient_opd.consulted_by.hospital.district.district_name else " "
+    context["taluka"] = patient_opd.consulted_by.hospital.taluka.taluka_name if patient_opd.consulted_by.hospital.taluka.taluka_name else " "
+    context["city"] = patient_opd.consulted_by.hospital.city.city_name if patient_opd.consulted_by.hospital.city.city_name else " "
 
     context["age"] = patient.age
     context["date"] = patient_delivery.birth_date
@@ -106,13 +108,14 @@ def child_birth_rpt(request, id, language_id=None):
     context["live_male_female"] = patient_delivery.live_male_female
     context["delivery_type"] = patient_delivery.delivery_type
     context["pregnancy_weeks"] = patient_delivery.weeks
+    context["mobile"] = patient.phone
 
-    template_name = "reports/en/birth_report.html"
+    template_name = "reports/en/child_birth.html"
     return render(
         request,
         template_name,
         {
             "context": context,
-            
+
         },
     )
