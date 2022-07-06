@@ -1,462 +1,338 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 
 
 <head>
     <title>Obgyn register success</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <style>
-        /* Base CSS styles DO NOT CHANGE OR REMOVE */
-        body {
-            margin: 0;
-            padding: 0;
-            font: 62.5%/1.5 Helvetica, Arial, Verdana, sans-serif;
-            background-color: #f5f5f5;
-        }
-
-        ul,
-        ul li,
-        p,
-        div,
-        ol {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-        }
-
-        #obygyn {
-            margin: 0 12pt;
-            width:100%;
-            padding: 10px 20px;
-            margin: 1em auto;
-            clear: both;
-            position: relative;
-            overflow: hidden;
-            background: #fff;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        #onlyne h3 {
-            font-size: 20px;
-            margin-bottom: 16px;
-            background: #f5f5f5;
-            text-align: center;
-            padding: 5px;
-            border: 1px solid #e6e6e6;
-        }
-
-        #onlyne h5 {
-            font-size: 18px;
-            margin-top: 0;
-            margin-bottom: 16px;
-        }
-
-        #obygyn {
-            font-family: Helvetica, Arial, Verdana, sans-serif !important
-        }
-
-        #onlyne h2 {
-            font-size: 22px;
-            margin: 0;
-            margin-bottom: 16px;
-            background: #00BAB9;
-            text-align: center;
-            padding: 5px;
-            color: #fff;
-        }
-
-
-
-        #obygyn-header {
-            margin-top: 0.3cm;
-            padding-bottom: 16px;
-            overflow: hidden;
-            text-align: center;
-        }
-
-        #instruction h5 {
-            font-weight: bold;
-            display: block;
-            margin: 0;
-
-        }
-
-        #congo {
-            background: #00BAB9;
-            color: #fff;
-            text-align: center;
-            padding: 16px 32px;
-            font-size: 26px;
-            font-weight: bold;
-        }
-
-        #congo .checked {
-            width: 100px;
-        }
-
-        #instruction {
-            font-size: 14px;
-            margin: 0;
-            padding-bottom: 5px;
-        }
-
-        #thanks {
-            font-size: 14px;
-            margin: 0;
-            padding: 16px;
-        }
-
-        #thanks h5 {
-            font-weight: bold;
-            display: block;
-            margin: 0;
-
-        }
-
-        #resettext {
-            font-size: 14px;
-            margin: 0;
-            padding: 16px;
-        }
-
-        #btnrow {
-            padding: 16px;
-            text-align: center;
-        }
-
-        #btnrow .btn {
-            font-size: 14px;
-            background: #00BAB9;
-            color: #ffffff;
-            font-size: 16px;
-            font-weight: normal;
-            text-decoration: none;
-            padding: 10px 16px;
-            display: inline-block;
-        }
-
-        #helptext {
-            font-size: 14px;
-            margin: 0;
-            padding: 16px;
-            color: #afafaf;
-            border-top: 1px solid #f1f1f1;
-        }
-
-        .obgyn-title {
-            text-align: center;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        #headertbl {
-            border-collapse: collapse;
-        }
-
-        #headertbl td {
-            border: 1px solid #343434;
-        }
-
-        .hospitalName {
-            font-size: 26px;
-            font-weight: bold;
-            text-transform: uppercase;
-            text-align: center;
-        }
-
-        #headertbl td .hospitalName table td {
-            border: 0;
-        }
-
-        #headertbl td .doctorname {
-            margin-top: 10px;
-        }
-
-        #headertbl td .doctorname td {
-            border: 0;
-            text-align: center;
-            font-size: 20px;
-            line-height: 20px;
-        }
-
-        .colum1 {
-            padding: 10px;
-            text-align: center;
-            font-style: italic;
-        }
-
-        .colum1 h3 {
-            font-size: 18px;
-            font-weight: bold;
-            margin: 0;
-            color: #343434;
-        }
-
-        .colum1 h5 {
-            font-size: 16px;
-            font-weight: bold;
-            margin: 0;
-            color: #343434;
-        }
-
-        .hospitalName .plus {
-            font-size: 36px;
-            opacity: 0.7;
-            line-height: 32px;
-        }
-
-        .colum3 {
-            width: 200px;
-            text-align: right;
-            vertical-align: top;
-            padding: 10px;
-        }
-
-        .colum3 .call {
-            font-size: 13px;
-        }
-
-        .colum3 .call label {
-            font-weight: bold;
-        }
-
-        .colum3 .designation {
-            font-weight: bold;
-            font-size: 12px;
-        }
-
-        .colum3 .speciality {
-            font-weight: bold;
-            font-size: 14px;
-            margin-top: 10px;
-        }
-
-        #reporttable {
-            border-collapse: collapse;
-        }
-
-        #reporttable td {
-            border: 1px solid #343434;
-            padding: 5px 10px;
-        }
-
-        #reporttable2 {
-            border-collapse: collapse;
-        }
-
-        #reporttable2 th,
-        #reporttable2 td {
-            border: 1px solid #343434;
-            padding: 5px 10px;
-        }
-
-        #reporttable2 td {
-            font-weight: normal;
-        }
-
-        .lefttable td {
-            padding: 2px 10px;
-        }
-
-        .rxtbl {
-            border-collapse: collapse;
-        }
-
-        .rxtbl td {
-            padding: 3px 10px;
-        }
-    </style>
 </head>
-
 <body>
-    <div id="obygyn">
-        {{ template_header |safe }}
-        <div class="obgyn-title" style="margin-bottom: 10px; font-size: 18px; padding:  0px;">
-            -: Birth Report :-</div>
 
-        <table width="100%" id="reporttable2" style="font-size: 14px;font-weight: bold;color: #343434;">
+<div id="main-report" align="center">
 
-            <tr>
-                <td>
-                    <strong>Mother's Name:</strong>
-                </td>
-                <td colspan="2">
-                    {{ context.mother_name }}
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 0;">
-                    &nbsp;
-                </td>
-                <td style="padding: 0;" colspan="2">
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <strong>Father's Name:</strong>
-                </td>
-                <td colspan="2">
-                    {{ context.father_name }}
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 0;">
-                    &nbsp;
-                </td>
-                <td style="padding: 0;" colspan="2">
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <strong>Village:</strong>
-                </td>
-                <td>
-                    {{ context.address }}
-                </td>
-                <td>
-                    <strong>Age:</strong> {{ context.age }} years
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 0;">
-                    &nbsp;
-                </td>
-                <td style="padding: 0;" colspan="2">
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <strong>Date:</strong>
-                </td>
-                <td colspan="2">
-                    {{ context.date }}
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 0;">
-                    &nbsp;
-                </td>
-                <td style="padding: 0;" colspan="2">
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <strong>Time:</strong>
-                </td>
-                <td colspan="2">
-                    {{ context.time }}
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 0;">
-                    &nbsp;
-                </td>
-                <td style="padding: 0;" colspan="2">
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <strong>Gender:</strong>
-                </td>
-                <td colspan="2">
-                    {{ context.gender }}
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 0;">
-                    &nbsp;
-                </td>
-                <td style="padding: 0;" colspan="2">
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <strong>Weight:</strong>
-                </td>
-                <td colspan="2">
-                    {{ context.weight }}
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 0;">
-                    &nbsp;
-                </td>
-                <td style="padding: 0;" colspan="2">
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <strong>Child Status:</strong>
-                </td>
-                <td colspan="2">
-                    {{ context.child_status }}
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 0;">
-                    &nbsp;
-                </td>
-                <td style="padding: 0;" colspan="2">
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <strong>child count:</strong>
-                </td>
-                <td colspan="2">
-                   {{ context.child_count }}
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 0;">
-                    &nbsp;
-                </td>
-                <td style="padding: 0;" colspan="2">
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <strong>Episiotomy By:</strong>
-                </td>
-                <td colspan="2">
-                    Dr.B.K.Patel <b><i>(Fix Name)</i></b>
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 0;">
-                    &nbsp;
-                </td>
-                <td style="padding: 0;" colspan="2">
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3" style="text-align: center;">
-                    note text goes here note text goes here note text goes here note text goes here note text goes here
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    &nbsp;
-                </td>
-            </tr>
-        </table>
 
-    </div>
+
+
+<tr>
+<td width="100%">
+<table width="100%" class="report"style="visibility:hidden">
+<tbody>
+
+ <td width="32%">
+      <table width="100%" class="report">
+ 
+     <tr style="visibility:visible"><td colspan="4"style="height:10px;font-size:17px;text-align:center;">દરેક જન્મ નોધ માટે ભરવું ફરજીયાત છે.
+     <tr style="visibility:visible"><td colspan="4" style="font-size:18px;text-align:center;">    
+     
+     
+         <tr style="border:none;visibility:visible">
+                        <td width="35%" style="border:none;"># ફોર્મ નં-૧  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td><b>(Rg.No:{{context.receipt_no}})</b></td></tr>
+           <tr style="border:none;visibility:visible">
+                       <td width="35%" style="border:none;"># કાયદાકીય માહિતી </td></tr>
+           <tr style="border:none;visibility:visible">          
+               <td width="35%" style="border:none;"># આ ભાગ જન્મ રજીસ્ટર </td><td>સાથે જોડવો.</td>                        
+                        </tr>                       
+                                                   
+        <tr style="visibility:visible"><td colspan="4" style="font-size:18px;text-align:center;">   <h2 style=" background-color: #f0f0f0;font-size:20px;font-weight: bold;padding-bottom: 5px;padding-top: 5px;text-decoration: underline;visibility:visible">જન્મ રીપોર્ટ </h2>
+                 </td></tr>
+       
+            <tr style="border:none;visibility:visible">
+                  <td width="46%" style="border:none;">1.જન્મ તારીખ: </td>
+                  <td width="54%" style="border:none;"><b>{{context.date}}</b></td>   </tr>
+          
+            <tr style="border:none;visibility:visible">
+                  <td style="border:none;">2.જન્મ સમય: </td>
+                    <td style="border:none;"><b>{{context.time}}</b></td>
+                    </tr>
+                    
+                         <tr style="border:none;visibility:visible">
+                  <td style="border:none;">3.જાતિ(પુરુષ/સ્ત્રી): </td>
+                    <td style="border:none;"><b>{{context.gender}}</b></td>
+                    </tr>
+
+            <tr style="border:none;visibility:visible">
+                  <td style="border:none;">4.બાળકનું નામ: </td>
+                    <td style="border:none;"><b>-</b></td>
+                    </tr>
+            <tr style="border:none;visibility:visible">
+                  <td style="border:none;">5.માતાનું નામ:</td>
+                    <td style="border:none;"><b> {{context.mother_name}}</b></td>
+                    </tr>
+
+            <tr style="border:none;visibility:visible">
+                  <td style="border:none;">6.પિતાનું નામ: </td>
+                    <td style="border:none;"><b>{{context.father_name}}</b></td>
+                    </tr>
+
+            <tr style="border:none;visibility:visible">
+                  <td style="border:none;">7.મા./પિ.નું સરનામું: </td>
+                    <td style="border:none;"><b>{{context.address}}</b></td>
+                    </tr>
+
+      
+                 <tr style="border:none;visibility:visible">
+                  <td style="border:none;">8.જન્મનું સ્થળ:</td>
+                    <td style="border:none;">--</td>
+                    </tr> 
+                    
+                      <tr style="border:none;visibility:visible">
+                  <td style="border:none;">૧. દવા./સ.નું નામ:-</td>
+                    <td style="border:none;"><b>{{context.hospital_name}}</b></td>
+                    </tr> 
+           
+               <tr style="border:none;visibility:visible">
+                  <td style="border:none;">૨ સરનામું:</td>
+                    <td style="border:none;"><b>{{context.hospital_address}}</b></td>
+                    </tr>
+
+
+            <tr style="border:none;visibility:hidden">
+                  <td style="border:none;">માહિતી આપનારનું <br/>નામ/સરનામું: </td>
+                    <td style="border:none;"></td>
+                    </tr>
+              <tr style="border:none;visibility:hidden">
+                  <td style="border:none;"></td>
+                    <td style="border:none;"></td>
+                    </tr>
+                    
+             <tr style="border:none;visibility:hidden">
+                  <td style="border:none;"></td>
+                    <td style="border:none;"></td>
+                    </tr>
+                    
+
+                    <tr style="border:none;visibility:hidden">
+                  <td style="border:none;">તારીખ: </td>
+                    <td style="border:none;">મા.આપનારની સહી/<br/>ડા.હા.અંગુઠાનું નિશાન:</td>
+                    </tr>
+                   
+
+ </table> 
+      <table width="100%" class="report" style="visibility:visible">
+   <tr style="visibility:visible"><td colspan="4" style="text-align:center;visibility:visible">
+                    <h2 style="font-size:18px;display:block;visibility:visible">રજીસ્ટારે ભરવું.</h2>
+                 </td></tr>               
+                 
+                 
+                    <tr style="border:none;visibility:visible">
+                        <td width="27%"style="border:none;">નો. નંબર: </td>
+                         <td width="23%"style="border:none;"></td>
+                    <td width="30%"style="border:none;">નો.તારીખ: </td>
+                     <td width="20%"style="border:none;"></td>
+                    </tr>
+                      <tr style="border:none;visibility:visible">
+                        <td style="border:none;">જીલ્લો: </td>
+                           <td style="border:none;"><b>{{context.district}}</b></td>
+                          <td style="border:none;">નો.એકમ: </td>
+                             <td style="border:none;"></td>
+                    </tr>
+                   
+                      <tr style="border:none;visibility:visible">
+                       <td style="border:none;">તાલુકો:</td>
+                       <td style="border:none;"><b>{{context.taluka}}</b></td>
+                        <td style="border:none;"></td>
+                        <td style="border:none;"></td>
+                    </tr>
+                        <tr style="border:none;visibility:visible">
+                       <td style="border:none;">ગામ/શહેર:</td>
+                        <td style="border:none;"><b>{{context.city}}</b></td>
+                         <td style="border:none;"></td>
+                        <td style="border:none;"></td>
+                    </tr>
+                        <tr style="border:none;visibility:visible">
+                       <td style="border:none;">નોધ:</td>
+                        <td style="border:none;"></td>
+                      
+                        <td style="border:none;visibility:visible">રજી.ની સહી:<br/></td>
+                          <td style="border:none;"></td>
+                    </tr>
+                      <tr style="border:none;visibility:visible">
+                        <td style="border:none;"> </td>
+                          <td style="border:none;"> </td>
+                        <td style="border:none;">રજી.નું નામ: </td>
+                          <td style="border:none;"></td>
+                    </tr>
+                    
+ 
+ </table> </td> 
+ <td width="1%">  </td>
+ <td width="67%">
+      <table width="100%" class="report">
+                       
+                   
+
+         <tr style="visibility:visible"><td colspan="4"style="height:10px;font-size:17px;text-align:center;">દરેક જન્મ નોધ માટે ભરવું ફરજીયાત છે.   :: ફોર્મ નં-૧ ::</td></tr>
+       <tr>
+       
+       
+             <tr style="border:none;visibility:visible">
+                        <td width="44%" style="border:none;">=>કાયદાકીય માહિતી </td>
+                        <td width="56%" style="border:none;">=>જોડિયા બાળક જન્મના કિસ્સામાં દરેક બાળક માટે અલગ ફોર્મ ભરવું</td>
+                        
+                        </tr>
+                        
+                        
+                                 <tr style="border:none;visibility:visible">
+                        <td style="border:none;">=> આ ભાગ કાપીને ફોર્મ નં-૧૧ માં માસિક સમરી રીપોર્ટ </td>
+                        <td style="border:none;">=>અને ડાબી બાજુએ આપેલા રીમાર્કસ કોલમમાં જે તે કિસ્સા પ્રમાણે </td></tr>
+                          <tr style="border:none;visibility:visible">
+                        <td style="border:none;">=>સાથે તાલુકા રજીસ્ટારને મોકલાવો.</td>
+                        <td style="border:none;">=>જોડિયા અથવા ત્રિપુટીના જન્મ :.....વગેરે એવો ઉલ્લેખ કરવો.</td>  
+                        </tr>
+       </table>
+      <table width="100%" class="report"> 
+          <tr style="visibility:visible">  <td colspan="4"style="font-size:18px;text-align:center;">     
+                <h2 style=" background-color: #f0f0f0;font-size: 20px;font-weight: bold;padding-bottom:5px;padding-top: 5px;text-decoration: underline;visibility:visible">જન્મ રીપોર્ટ</h2>
+                 </td></tr>
+         
+                             <tr style="border:none;visibility:visible">
+                        <td width="29%" style="border:none;">9.માતાનું રહેઠાણ: </td>
+                        <td width="28%" style="border:none;">--</td>
+                        <td width="37%" style="border:none;">18.પ્રસુતિ વખતે લીધેલી સારવારનો પ્રકાર:</td>
+                        <td width="6%" style="border:none;"> </td>
+            
+                                                   <tr style="border:none;visibility:visible">
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;અ.જીલ્લો:/પીન:</td>
+                        <td style="border:none;"><b>{{context.mother_address}}</b> </td>
+                        <td style="border:none;">(યોગ્ય જગ્યાએ ટીકમાર્ક કરો)</td>
+                        <td style="border:none;"></td>    
+                    
+                                 <tr style="border:none;visibility:visible">
+                        <td style="border:none;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;         બ.તાલુકો: </td>
+                        <td style="border:none;"><b> {{context.mother_taluka}}</b></td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1)સંથાકીય-સરકારી </td>
+                        <td style="border:none;"></td>  
+                        
+                                                         <tr style="border:none;visibility:visible">
+                        <td style="border:none;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        ક.સ્થળ: </td>
+                        <td style="border:none;">શહેર/ ગામ</td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2)સંથાકીય-ખાનગી અથવા બિનસરકારી </td>
+                        <td style="border:none;"></td> </tr> 
+                          <tr style="border:none;visibility:visible">
+                        <td style="border:none;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     ડ.ગામ/શહેરનું નામ:</td>
+                        <td style="border:none;"><b>{{context.mother_city}}</b> </td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(3)ડૉકટાર,નર્સ અથવા </td>
+                        <td style="border:none;"></td></tr>
+                        
+                           <tr style="border:none;visibility:visible">
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     ઈ.મોબાઇલ:</td>
+                        <td style="border:none;"><b>{{context.mobile}}</b> </td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;તાલીંમી મીડવાઈફ </td>
+                        <td style="border:none;"></td></tr>
+
+                         <tr style="border:none;visibility:visible">  
+                        <td style="border:none;">10.કુટુંબનો ધર્મ: </td>
+                        <td style="border:none;"><b>{{context.religion}}</b>  </td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(4)દાયણ </td>
+                        <td style="border:none;"></td> </tr> 
+                        
+                         <tr style="border:none;visibility:visible">  
+                        <td style="border:none;">11.પિતાનો અભ્યાસ: </td>
+                        <td style="border:none;"><b>{{context.father_education}}</b></td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(5)સંબંધી અથવા અન્ય</td>
+                        <td style="border:none;"></td> </tr>   
+                    <tr style="border:none;visibility:visible">  
+                        <td style="border:none;">12.માતાનો અભ્યાસ: </td>
+                        <td style="border:none;"><b>{{context.mother_education}}</b> </td>
+                        <td style="border:none;">19.પ્રસુતિનો પ્રકાર: </td>
+                        <td style="border:none;"></td> </tr>   
+                  <tr style="border:none;visibility:visible">  
+                        <td style="border:none;">13.પિતાનો ધંધો:</td>
+                        <td style="border:none;"><b>{{context.father_occupation}}</b></td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.કુદરતી </td>
+                        <td style="border:none;"></td> </tr>   
+                                <tr style="border:none;visibility:visible">  
+                        <td style="border:none;">14.માતાનો ધંધો: </td>
+                        <td style="border:none;"><b>{{context.mother_education}}</b></td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.વાઢકાપથી </td>
+                        <td style="border:none;"></td> </tr>        
+                                                 <tr style="border:none;visibility:visible">  
+                        <td style="border:none;">15.લગ્ન વખતે માતાની ઉમંર(વર્ષમાં):</td>
+                        <td style="border:none;"><b>{{context.marriage_age}}</b></td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.ચીમટો/શૂન્યાવકાશ </td>
+                        <td style="border:none;"></td> </tr>
+                                                            <tr style="border:none;visibility:visible">  
+                        <td style="border:none;">16.સુવાવડ વખતે માતાની</td>
+                        <td style="border:none;"><b>{{context.age}}</b></td>
+                        <td style="border:none;">20.બાળકનું વજન</td>
+                        <td style="border:none;"><b>{{context.weight}}</b></td> </tr>
+                    
+                     <tr style="border:none;visibility:visible">  
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ઉમંર(વર્ષમાં):</td>
+                        <td style="border:none;"></td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(કિલોગ્રામમા):</td>
+                        <td style="border:none;"></td> </tr>
+
+                    
+                      <tr style="border:none;visibility:visible">  
+                        <td style="border:none;">17.આ બાળક સાથે જીવિત </td>
+                        <td style="border:none;"><b>{{context.live_male_female}}</b></td>
+                        <td style="border:none;">21.સગર્ભાવસ્થાનો ગાળો </td>
+                        <td style="border:none;"><b>{{context.pregnancy_weeks}}</b></td> </tr>
+                       <tr style="border:none;visibility:visible">  
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;બાળકોની સંખ્યા:(પુ./સ્ત્રી)</td>
+                        <td style="border:none;"></td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(અઠવાડિયામાં) </td>
+                        <td style="border:none;"></td> </tr>
+                               
+ 
+
+
+ 
+ </table>
+      <table width="100%" class="report" style="visibility:visible">
+   <tr style="visibility:visible"><td colspan="4" style="text-align:center;visibility:visible">
+                    <h2 style="font-size:18px;display:block;visibility:visible">રજીસ્ટારે ભરવું.</h2>
+                 </td></tr>               
+                   <tr style="border:none;visibility:visible">
+                        <td width="20%" style="border:none;">નામ: </td>
+                       <td width="35%" style="border:none;">
+                           {{contex.mother_name}}</td>
+                        <td width="20%" style="border:none;">નોધણી  નંબર:</td>
+                        <td width="25%" style="border:none;"></td>
+                    </tr>
+                      <tr style="border:none;visibility:visible">
+                        <td style="border:none;">જીલ્લો: </td>
+                        <td style="border:none;"><b>{{context.mother_address}}</b> </td>
+                        <td style="border:none;">જન્મ તારીખ:</td>
+                        <td style="border:none;"><b>{{context.date}} </b></td>
+                    </tr>
+                      <tr style="border:none;visibility:visible">
+                        <td style="border:none;">તાલુકો:</td>
+                        <td style="border:none;"><b> {{context.mother_taluka}}</b></td>
+                        <td style="border:none;">જાતિ:</td>
+                        <td style="border:none;"> <b>{{context.gender}}</b></td>
+                    </tr>
+                      <tr style="border:none;visibility:visible">
+                        <td style="border:none;">શહેર/ગામ: </td>
+                        <td style="border:none;"><b>{{context.mother_city}}</b> </td>
+                        <td style="border:none;">જન્મનું સ્થળ:</td>
+                         <td style="border:none;">દવાખાનું/સંસ્થા/ઘર </td>
+                        
+                    </tr>
+                      <tr style="border:none;visibility:visible">
+                        <td style="border:none;">નોધણી એકમ: </td>
+                      <td style="border:none;"></td>
+
+                            <td style="border:none;">નોધણી તારીખ: </td>
+                          <td style="border:none;"></td>
+                    </tr> 
+                          <tr style="border:none;visibility:visible">
+                        <td style="border:none;">  કોડ નંબર:</td>
+                            <td style="border:none;"></td>
+                          <td style="border:none;">રજીસ્ટારની સહી: </td>
+                      <td style="border:none;">રજી.નું નામ:</td>
+
+                    </tr> 
+                  
+  
+  
+ 
+   </table> </td>  
+   
+   </tbody>
+   </table> </td></tr>                   
+
 </body>
 
 </html>

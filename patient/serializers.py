@@ -132,3 +132,58 @@ class PatientSerializers(serializers.ModelSerializer):
             "state": {"required": True},
             "hospital": {"required": True},
         }
+
+
+class DynamicFieldModelSerializer(serializers.ModelSerializer):
+    def __init__(self, *args, **kwargs):
+        fields = kwargs.pop("fields", None)
+
+        super(DynamicFieldModelSerializer, self).__init__(*args, **kwargs)
+
+        fields = set(fields.split(","))
+
+        if fields is not None:
+            allowed = fields
+            existing = set(self.fields)
+
+            for field_name in existing - allowed:
+                self.fields.pop(field_name)
+
+    def to_representation(self, instance, *args, **kwargs):
+        ret = super(DynamicFieldModelSerializer, self).to_representation(instance)
+
+
+        if "phone" in ret:
+            if "F_" in instance.phone:
+                ret["phone"] = ""
+        return ret
+
+    class Meta:
+        model = PatientModel
+        fields = [
+            "patient_id",
+            "first_name",
+            "last_name",
+            "middle_name",
+            "name_title",
+            "phone",
+            "state",
+            "city",
+            "married",
+            "date_of_opd",
+            "registered_no",
+            "grand_father_name",
+            "grand_title",
+            "husband_father_name",
+            "husband_title",
+            "age",
+            "taluka",
+            "district",
+            "created_by",
+            "deleted",
+            "hospital",
+            "profile_image",
+            "landmark",
+            "registered_no",
+            "gender",
+        ]

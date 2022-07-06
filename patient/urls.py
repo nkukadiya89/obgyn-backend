@@ -1,6 +1,6 @@
 from django.urls import path, include
 
-from .views import PatientAPI, patch, get, create, delete
+from .views import PatientAPI, patch, get, create, delete, get_unique_patient
 
 urlpatterns = [
     path('<int:id>/', PatientAPI.as_view()),
@@ -8,8 +8,8 @@ urlpatterns = [
     path('get/<int:id>', get),
     path('create/', create),
     path('delete/', delete),
+    path("unique_patient/", get_unique_patient, name="unique_patient"),
 
-    
     path('update/<int:id>/', patch),
     path('consultation/', include('consultation.urls')),
     path('referal/', include('patient_referal.urls')),
