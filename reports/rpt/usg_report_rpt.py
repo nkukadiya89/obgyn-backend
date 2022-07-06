@@ -10,7 +10,14 @@ from django.http import JsonResponse
 
 @csrf_exempt
 def usg_rpt(request, id, language_id=None):
-    patient_opd = PatientOpdModel.objects.filter(pk=id,deleted=0)
+    usg_report = PatientUSGReportModel.objects.filter(pk=id,deleted=0).first()
+    if usg_report == None:
+        context = {}
+        context["msg"] = False
+        context["error"] = "Record Does not exist."
+        return JsonResponse(context)
+
+    patient_opd = usg_report.patient_opd
 
     if language_id:
         template_header = TemplateHeaderModel.objects.filter(created_by=request.user.id, language_id=language_id,deleted=0).first()
@@ -23,7 +30,7 @@ def usg_rpt(request, id, language_id=None):
         context["error"] = "Please create report header."
         return JsonResponse(context)
 
-    patient_opd = patient_opd.first()
+    patient_opd = patient_opd
     if patient_opd == None:
         context = {}
         context["msg"] = False
@@ -37,12 +44,6 @@ def usg_rpt(request, id, language_id=None):
         context["error"] = "OPD Does not exist."
         return JsonResponse(context)
 
-    usg_report = PatientUSGReportModel.objects.filter(patient_opd=patient_opd,deleted=0).first()
-    if usg_report == None:
-        context = {}
-        context["msg"] = False
-        context["error"] = "Record Does not exist."
-        return JsonResponse(context)
 
     template_name = "reports/en/usg_report.html"
     context = {}
