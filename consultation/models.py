@@ -66,7 +66,7 @@ class ConsultationModel(models.Model):
     oedema = models.CharField(max_length=25, default="", null=True)
     rs = models.CharField(max_length=25, default="", null=True)
     cvs = models.CharField(max_length=25, default="", null=True)
-    breast = models.CharField(max_length=25, default="", null=True)
+    breast = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="breast")
     pa_gyn = models.BooleanField(default=False, null=True)
     pa_value = models.CharField(max_length=25,default="", null=True)
     pa_obs = models.BooleanField(default=False, null=True)

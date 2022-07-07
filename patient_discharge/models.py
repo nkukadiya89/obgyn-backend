@@ -20,7 +20,7 @@ class PatientDischargeModel(models.Model):
     name_of_operation = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="name_of_operation")
     ot_date = models.DateField(default=now)
     ot_time = models.CharField(max_length=15, default="")
-    treatment_given = models.CharField(max_length=250, default="")
+    treatment_given = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="treatment_given")
     advice = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="pd_advice")
     any_history = models.TextField(null=True)
     assisted = models.CharField(max_length=250, default="")

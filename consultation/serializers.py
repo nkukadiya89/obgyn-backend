@@ -34,7 +34,7 @@ class ConsultationSerializers(serializers.ModelSerializer):
         if first_edd:
             ret["first_edd"] =first_edd.strftime("%d-%m-%Y")
 
-        for fld_nm in ["co", "ho", "eb_pp", "ps", "pv", "fu"]:
+        for fld_nm in ["co", "ho", "eb_pp", "ps", "pv", "fu","breast"]:
             fld_name = fld_nm + "_name"
             search_instance = "instance" + "." + fld_nm
             if fld_nm in ret:
