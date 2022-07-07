@@ -90,7 +90,7 @@ def delivery_rpt(request, start_date=None, end_date=None,id_list=None, language_
 
         context["mobile"] = patient_delivery.patient.phone if "F" not in patient_delivery.patient.phone else " "
         context["nationality"] = "Indian"
-        context["religion"] = patient_delivery.religion
+        context["religion"] = patient_delivery.religion.field_value
         context["age"] = patient.age
         context["child_count"] = int(patient_delivery.no_of_delivery) + 1
         context["weight"] = patient_delivery.weight

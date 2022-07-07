@@ -82,7 +82,7 @@ def discharge_rpt(request, id, language_id=None):
         context["ot_time_date"] = (
             str(patient_discharge.ot_date.strftime("%d-%m-%Y")) + " " + str(patient_discharge.ot_time)
         )
-        context["treatment_given"] = patient_discharge.treatment_given
+        context["treatment_given"] = patient_discharge.treatment_given.field_value
         context["advice"] = patient_discharge.advice.field_value if patient_discharge.advice.field_value else " "
         context["remark"] = patient_discharge.remark
         context["name_of_operation"] = patient_discharge.name_of_operation.field_value if patient_discharge.name_of_operation.field_value else " "
