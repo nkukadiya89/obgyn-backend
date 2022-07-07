@@ -19,7 +19,7 @@ class PatientDischargeSerializers(serializers.ModelSerializer):
         if "diagnosis" in ret:
             ret["diagnosis_name"] = DiagnosisSerializers(instance.diagnosis).data["diagnosis_name"]
 
-        for fld_nm in ["advice", "complain_of", "name_of_operation"]:
+        for fld_nm in ["advice", "complain_of", "name_of_operation","treatment_given"]:
             fld_name = fld_nm + "_name"
             search_instance = "instance" + "." + fld_nm
             if fld_nm in ret:
