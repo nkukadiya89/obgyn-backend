@@ -1,26 +1,25 @@
 import json
+from django.db.models import Q
+from django.db.models.functions import Lower
 
 from django.utils.timezone import now
 from rest_framework import status
 from rest_framework.decorators import (
     api_view,
     authentication_classes,
-    permission_classes,
 )
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
-from patient_opd.models import PatientOpdModel
 from user.models import User
+from utility.aws_file_upload import upload_barcode_image
+from utility.decorator import validate_permission, validate_permission_id
 from utility.search_filter import filtering_query
 from .models import PatientModel
-from .serializers import PatientSerializers
-from utility.decorator import validate_permission, validate_permission_id
-from utility.aws_file_upload import upload_barcode_image
+from .serializers import PatientSerializers, DynamicFieldModelSerializer
 
 
 class PatientAPI(APIView):
@@ -122,7 +121,8 @@ def create(request):
                         patient.upload_file(file)
                         patient.save()
 
-            patient.regd_no_barcode, mob_url = upload_barcode_image(patient.registered_no,patient.phone,patient.patient_id)
+            patient.regd_no_barcode, mob_url = upload_barcode_image(patient.registered_no, patient.phone,
+                                                                    patient.patient_id)
             patient.save()
 
             data["success"] = True
@@ -167,7 +167,8 @@ def patch(request, id):
                     patient.upload_file(file)
                     patient.save()
 
-            patient.regd_no_barcode ,mob_url= upload_barcode_image(patient.registered_no,patient.phone,patient.patient_id)
+            patient.regd_no_barcode, mob_url = upload_barcode_image(patient.registered_no, patient.phone,
+                                                                    patient.patient_id)
             patient.save()
 
             data["success"] = True
@@ -208,4 +209,43 @@ def get(request, id=None):
         data["success"] = True
         data["msg"] = "OK"
         data["data"] = serilizer.data
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+# ================= Retrieve Single or Multiple records=========================
+@api_view(["GET"])
+@authentication_classes([JWTAuthentication])
+@validate_permission_id("patient", "view")
+# ================= Retrieve Single or Multiple records=========================
+def get_unique_patient(request, id=None):
+    query_string = request.query_params
+    if "," in query_string["fields"]:
+        distinc_key = query_string["fields"].split(",")[1]
+    else:
+        distinc_key = query_string["fields"]
+
+    data = {}
+    try:
+        if id:
+            patient = PatientModel.objects.filter(pk=id, deleted=0).order_by(Lower(distinc_key))
+        else:
+            patient = PatientModel.objects.filter(
+                Q(deleted=0, created_by=1)
+                | Q(created_by=request.user.id)
+            )
+        data["total_record"] = len(patient)
+
+        patient = patient.distinct(distinc_key)
+    except PatientModel.DoesNotExist:
+        data["success"] = False
+        data["msg"] = "Record Does not exist"
+        data["data"] = []
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "GET":
+        serializer = DynamicFieldModelSerializer(patient, many=True, fields=query_string["fields"])
+
+        data["success"] = True
+        data["msg"] = "OK"
+        data["data"] = serializer.data
         return Response(data=data, status=status.HTTP_200_OK)

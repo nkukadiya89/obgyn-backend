@@ -14,9 +14,14 @@ class PatientBillingSerializers(serializers.ModelSerializer):
             ret["patient_opd_id"] = ret["patient_opd"]
             del ret["patient_opd"]
 
-        if "procedure_name" in ret:
-            ret["procedure_name_name"] = ManageFieldsSerializers(instance.procedure_name).data["field_value"]
-        
+        for fld_nm in ["procedure_name", "room_type", "other_charge"]:
+            fld_name = fld_nm + "_name"
+            search_instance = "instance" + "." + fld_nm
+            if fld_nm in ret:
+                ret[fld_name] = ManageFieldsSerializers(eval(search_instance)).data[
+                    "field_value"
+                ]
+
         if "diagnosis" in ret:
             ret["diagnosis_name"] = DiagnosisSerializers(instance.diagnosis).data["diagnosis_name"]
 
@@ -35,6 +40,7 @@ class PatientBillingSerializers(serializers.ModelSerializer):
             data["patient_id"] = patient[0].patient_id
         else:
             raise serializers.ValidationError("Patient is missing")
+            
         data["consulting_fees"] = float(data["rs_per_visit"]) * int(data["no_of_visit"])
         data["usg_rs"] = float(data["rs_per_usg"]) * int(data["no_of_usg"])
         data["room_rs"] = float(data["rs_per_room"]) * int(data["room_no_of_day"])

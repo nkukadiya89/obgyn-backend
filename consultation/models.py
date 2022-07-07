@@ -94,6 +94,7 @@ class ConsultationModel(models.Model):
     tsh = models.FloatField(default=0, null=True)
     vdrl = models.CharField(max_length=25, default="", null=True)
     other = models.TextField(null=True)
+    married_life = models.IntegerField(default=0)
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)

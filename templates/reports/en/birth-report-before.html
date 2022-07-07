@@ -1,0 +1,396 @@
+﻿<?php require "_header.php";?>
+<div id="main-report" align="center">
+<div style="float:left">
+<a href="addedit_delivery.php">&laquo;&nbsp;Back to Patient Entry</a>
+</div><br/><br/>
+
+<?php 
+	$header_row_string="";
+	$_SESSION['header_image']='0';
+			 ob_start();
+	?>	
+   
+<tr>
+<td width="100%">
+<table width="100%" class="report">
+<tbody>
+
+<td width="32%" style="visibility:visiblle">
+ <table width="100%" class="report">
+
+ 
+     <tr><td colspan="4"style="height:10px;font-size:17px;text-align:center;visibility:hidden">દરેક જન્મ નોધ માટે ભરવું ફરજીયાત છે.
+     <tr><td colspan="4" style="font-size:18px;text-align:center;visibility:hidden"> 
+               	<tr style="border:none;visibility:hidden">
+                    <td width="35%" style="border:none;"># ફોર્મ નં-૧  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="border:none;"><b>(Rg.No:<?php echo $row['reciept_no'];?>)</b></td></tr>
+ <tr style="border:none;visibility:hidden">
+                        <td width="35%" style="border:none;"># કાયદાકીય માહિતી </td></tr>
+                        <tr style="border:none;visibility:hidden">
+                   <td width="35%" style="border:none;"># આ ભાગ જન્મ રજીસ્ટર </td><td style="border:none;">સાથે જોડવો.</td>                        
+                        </tr>                       
+        <tr><td colspan="4" style="font-size:18px;text-align:center;visibility:hidden">   <h2 style=" background-color: #f0f0f0;font-size:20px;font-weight: bold;padding-bottom: 5px;padding-top: 5px;text-decoration: underline;">જન્મ રીપોર્ટ </h2>
+                 </td></tr>
+       
+            <tr style="border:none;visibility:hidden">
+                  <td width="46%" style="border:none;">1.જન્મ તારીખ: </td>
+                    <td width="54%" style="border:none;"><b><?php echo date('d-m-Y',strtotime($row['dob'])); ?></b></td>
+                    </tr>
+          
+            <tr style="border:none;visibility:hidden">
+                  <td style="border:none;">2.જન્મ સમય: </td>
+                    <td style="border:none;"><b><?php echo $row['dot'];?></b></td>
+                    </tr>
+                    
+                         <tr style="border:none;visibility:hidden">
+                  <td style="border:none;">3.જાતિ(પુરુષ/સ્ત્રી): </td>
+                    <td style="border:none;"><b><?php echo $row['gender'];?></b></td>
+                    </tr>
+
+            <tr style="border:none;visibility:hidden">
+                  <td style="border:none;">4.બાળકનું નામ: </td>
+                    <td style="border:none;"><b><?php echo $row['child_name']?></b></td>
+                    </tr>
+            <tr style="border:none;visibility:hidden">
+                  <td style="border:none;">5.માતાનું નામ:</td>
+                <td style="border:none;"><b> <?php echo $row['name']?> <?php echo $row['husband']?> <?php echo $row['sname']?></b></td>
+                    </tr>
+
+            <tr style="border:none;visibility:hidden">
+                  <td style="border:none;">6.પિતાનું નામ: </td>
+       <td style="border:none;"><b><?php echo $row['husband']?> <?php echo $row['husband_father']?> <?php echo $row['sname']?></b></td>
+                    </tr>
+
+            <tr style="border:none;visibility:hidden">
+                  <td style="border:none;">7.મા./પિ.નું સરનામું: </td>
+                    <td style="border:none;"><b><?php echo $row['village']?>,<?php echo $row['taluka']?>,<?php echo $row['address']?></b><br/><b><?php echo $row['pin_no']?></b></td>
+                    </tr>
+
+      
+                 <tr style="border:none;visibility:hidden">
+                  <td style="border:none;">8.જન્મનું સ્થળ:</td>
+                    <td style="border:none;">--</td>
+                    </tr> 
+                    
+                      <tr style="border:none;visibility:hidden">
+                  <td style="border:none;">૧. દવા./સ.નું નામ:-</td>
+                    <td style="border:none;"><b>શ્રધ્ધા હોસ્પિટલ</b></td>
+                    </tr> 
+           
+               <tr style="border:none;visibility:hidden">
+                  <td style="border:none;">૨ સરનામું:</td>
+                    <td style="border:none;"><b>કોલેજ રોડ,સંતરામપુર,<br/>જી.મહીસાગર,પીન-૩૮૯૨૬૦.</b></td>
+                    </tr>
+            <tr style="border:none;visibility:visible">
+                  <td style="border:none;">&nbsp;</td>
+                    <td style="border:none;"></td>
+                       </tr>   
+
+            <tr style="border:none;visibility:visible">          
+                  <td style="border:none;">>>માહિતી આપનારનું <br/>નામ/સરનામું: </td>
+                    <td style="border:none;"></td>
+                    </tr>
+                    
+                  <tr style="border:none;visibility:visible">
+                  <td style="border:none;"></td>
+                    <td style="border:none;"></td>
+                    </tr>
+            
+             <tr style="border:none;visibility:visible">
+                  <td style="border:none;"></td>
+                    <td style="border:none;"></td>
+                    </tr>
+                    <tr style="border:none;visibility:visible">
+                  <td style="border:none;">તારીખ: </td>
+                    <td style="border:none;">મા.આપનારની સહી/<br/>ડા.હા.અંગુઠાનું નિશાન:</td>
+                    </tr>
+
+ </table> 
+ 
+ 
+ 
+  <table width="100%" class="report" style="visibility:hidden">
+   <tr><td colspan="4" style="text-align:center;">
+                    <h2 style="font-size:18px;display:block;visibility:hidden">રજીસ્ટારે ભરવું.</h2>
+                 </td></tr>
+ 
+ 
+                  <tr style="border:none;visibility:hidden">
+                        <td width="27%"style="border:none;">નો. નંબર: </td>
+                         <td width="23%"style="border:none;"></td>
+                    <td width="30%"style="border:none;">નો.તારીખ: </td>
+                     <td width="20%"style="border:none;"></td>
+                    </tr>
+                   
+                 
+                     <tr style="border:none;visibility:hidden">
+                        <td style="border:none;">જીલ્લો: </td>
+                           <td style="border:none;"><b><?php echo $row['address']?></b></td>
+                          <td style="border:none;">નો.એકમ: </td>
+                             <td style="border:none;"></td>
+                    </tr>
+                    
+                      <tr style="border:none;visibility:hidden">
+                       <td style="border:none;">તાલુકો:</td>
+                       <td style="border:none;"><b><?php echo $row['taluka']?> </b></td>
+                        <td style="border:none;"></td>
+                        <td style="border:none;"></td>
+                    </tr>
+                        <tr style="border:none;visibility:hidden">
+                       <td style="border:none;">ગામ/શહેર:</td>
+                        <td style="border:none;"><b><?php echo $row['village']?></b></td>
+                         <td style="border:none;"></td>
+                        <td style="border:none;"></td>
+                    </tr>
+                        <tr style="border:none;visibility:hidden">
+                       <td style="border:none;">નોધ:</td>
+                        <td style="border:none;"></td>
+                      
+                        <td style="border:none;">રજી.ની સહી:<br/></td>
+                          <td style="border:none;"></td>
+                    </tr>
+                      <tr style="border:none;visibility:hidden">
+                        <td style="border:none;"> </td>
+                          <td style="border:none;"> </td>
+                        <td style="border:none;">રજી.નું નામ: </td>
+                          <td style="border:none;"></td>
+                    </tr>
+                    
+ 
+ </table> </td> 
+<td width="1%"style="visibility:visiblle"></td>
+<td width="67%" style="visibility:visiblle">
+ <table width="100%" class="report">                 
+     
+ <tr><td colspan="4"style="height:10px;font-size:18px;text-align:center;visibility:hidden">દરેક જન્મ નોધ માટે ભરવું ફરજીયાત છે.   :: ફોર્મ નં-૧ ::</td></tr>
+      
+       <tr style="border:none;visibility:hidden">
+                        <td width="44%" style="border:none;">=>કાયદાકીય માહિતી </td>
+                        <td width="56%" style="border:none;">=>જોડિયા બાળક જન્મના કિસ્સામાં દરેક બાળક માટે અલગ ફોર્મ ભરવું</td>
+                        
+                        </tr>
+                        
+                        
+                                 <tr style="border:none;visibility:hidden">
+                        <td style="border:none;">=> આ ભાગ કાપીને ફોર્મ નં-૧૧ માં માસિક સમરી રીપોર્ટ </td>
+                        <td style="border:none;">=>અને ડાબી બાજુએ આપેલા રીમાર્કસ કોલમમાં જે તે કિસ્સા પ્રમાણે </td></tr>
+                          <tr style="border:none;visibility:hidden">
+                        <td style="border:none;">=>સાથે તાલુકા રજીસ્ટારને મોકલાવો.</td>
+                        <td style="border:none;">=>જોડિયા અથવા ત્રિપુટીના જન્મ :.....વગેરે એવો ઉલ્લેખ કરવો.</td>  
+                        </tr>
+       </table>
+      <table width="100%" class="report"style="visibility:visible"> 
+          <tr>  <td colspan="4"style="font-size:18px;text-align:center;">     
+                <h2 style=" background-color: #f0f0f0;font-size: 20px;font-weight: bold;padding-bottom:5px;padding-top: 5px;text-decoration: underline;visibility:hidden">જન્મ રીપોર્ટ</h2>
+                 </td></tr>
+         
+                             <tr style="border:none;visibility:hidden">
+                        <td width="29%" style="border:none;">9.માતાનું રહેઠાણ: </td>
+                        <td width="28%" style="border:none;">--</td>
+                        <td width="37%" style="border:none;">18.પ્રસુતિ વખતે લીધેલી સારવારનો પ્રકાર:</td>
+                        <td width="6%" style="border:none;"> </td>
+            
+                                                   <tr style="border:none;visibility:hidden">
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;અ.જીલ્લો:/પીન:</td>
+                        <td style="border:none;"><b><?php echo $row['address']?>/<?php echo $row['pin_no']?></b> </td>
+                        <td style="border:none;">(યોગ્ય જગ્યાએ ટીકમાર્ક કરો)</td>
+                        <td style="border:none;"></td>    
+                    
+                                 <tr style="border:none;visibility:hidden">
+                        <td style="border:none;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;         બ.તાલુકો: </td>
+                        <td style="border:none;"><b> <?php echo $row['taluka']?></b></td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1)સંથાકીય-સરકારી </td>
+                        <td style="border:none;"></td>  
+                        
+                                                         <tr style="border:none;visibility:hidden">
+                        <td style="border:none;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        ક.સ્થળ: </td>
+                        <td style="border:none;">શહેર/ ગામ</td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2)સંથાકીય-ખાનગી અથવા બિનસરકારી </td>
+                        <td style="border:none;"></td> </tr> 
+                          <tr style="border:none;visibility:hidden">
+                        <td style="border:none;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     ડ.ગામ/શહેરનું નામ:</td>
+                        <td style="border:none;"><b><?php echo $row['village']?></b> </td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(3)ડૉકટાર,નર્સ અથવા </td>
+                        <td style="border:none;"></td></tr>
+                        
+                           <tr style="border:none;visibility:hidden">
+                        <td style="border:none;"></td>
+                        <td style="border:none;"> </td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;તાલીંમી મીડવાઈફ </td>
+                        <td style="border:none;"></td></tr>
+
+                         <tr style="border:none;visibility:hidden">  
+                        <td style="border:none;">10.કુટુંબનો ધર્મ: </td>
+                        <td style="border:none;"><b><?php echo $row['religion']?></b>  </td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(4)દાયણ </td>
+                        <td style="border:none;"></td> </tr> 
+                        
+                         <tr style="border:none;visibility:hidden">  
+                        <td style="border:none;">11.પિતાનો અભ્યાસ: </td>
+                        <td style="border:none;"><b><?php echo $row['father_education']?> </b></td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(5)સંબંધી અથવા અન્ય</td>
+                        <td style="border:none;"></td> </tr>   
+                    <tr style="border:none;visibility:hidden">  
+                        <td style="border:none;">12.માતાનો અભ્યાસ: </td>
+                        <td style="border:none;"><b><?php echo $row['mother_education']?></b> </td>
+                        <td style="border:none;">19.પ્રસુતિનો પ્રકાર: </td>
+                        <td style="border:none;"></td> </tr>   
+                  <tr style="border:none;visibility:hidden">  
+                        <td style="border:none;">13.પિતાનો ધંધો:</td>
+                        <td style="border:none;"><b><?php echo $row['father_ocupation']?></b></td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.કુદરતી </td>
+                        <td style="border:none;"></td> </tr>   
+                                <tr style="border:none;visibility:hidden">  
+                        <td style="border:none;">14.માતાનો ધંધો: </td>
+                        <td style="border:none;"><b><?php echo $row['mother_ocupation']?></b></td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.વાઢકાપથી </td>
+                        <td style="border:none;"></td> </tr>        
+                                                 <tr style="border:none;visibility:hidden">  
+                        <td style="border:none;">15.લગ્ન વખતે માતાની ઉમંર(વર્ષમાં):</td>
+                        <td style="border:none;"><b><?php echo $row['marrige_age']?></b></td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.ચીમટો/શૂન્યાવકાશ </td>
+                        <td style="border:none;"></td> </tr>
+                                                            <tr style="border:none;visibility:hidden">  
+                        <td style="border:none;">16.સુવાવડ વખતે માતાની</td>
+                        <td style="border:none;"><b><?php echo $row['age']?></b></td>
+                        <td style="border:none;">20.બાળકનું વજન</td>
+                        <td style="border:none;"><b><?php echo $row['weight']?></b></td> </tr>
+                    
+                     <tr style="border:none;visibility:hidden">  
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ઉમંર(વર્ષમાં):</td>
+                        <td style="border:none;"></td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(કિલોગ્રામમા):</td>
+                        <td style="border:none;"></td> </tr>
+
+                    
+                                                            <tr style="border:none;visibility:hidden">  
+                        <td style="border:none;">17.આ બાળક સાથે જીવિત </td>
+                        <td style="border:none;"><b><?php echo $row['live_mf']?></b></td>
+                        <td style="border:none;">21.સગર્ભાવસ્થાનો ગાળો </td>
+                        <td style="border:none;"><b><?php echo $row['preg_week']?></b></td> </tr>
+                       <tr style="border:none;visibility:hidden">  
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;બાળકોની સંખ્યા:(પુ./સ્ત્રી)</td>
+                        <td style="border:none;"></td>
+                        <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(અઠવાડિયામાં) </td>
+                        <td style="border:none;"></td> </tr>
+                               
+ 
+
+
+ 
+ </table>
+ 
+  <table width="100%" class="report" style="visibility:hidden">
+   <tr><td colspan="4" style="text-align:center;">
+                    <h2 style="font-size:18px;display:block;visibility:hidden">રજીસ્ટારે ભરવું.</h2>
+                 </td></tr>
+
+                    <tr style="border:none;visibility:hidden">
+                        <td width="20%" style="border:none;">નામ: </td>
+                       <td width="35%" style="border:none;"><?php echo $row['name']?> <?php echo $row['husband']?> <?php echo $row['sname']?></td>
+                        <td width="20%" style="border:none;">નોધણી  નંબર:</td>
+                        <td width="25%" style="border:none;"></td>
+                    </tr>
+                      <tr style="border:none;visibility:hidden;">
+                        <td style="border:none;">જીલ્લો: </td>
+                        <td style="border:none;"><b><?php echo $row['address']?></b> </td>
+                        <td style="border:none;">જન્મ તારીખ:</td>
+                        <td style="border:none;"><b><?php echo date('d-m-Y',strtotime($row['dob'])); ?> </b></td>
+                    </tr>
+                      <tr style="border:none;visibility:hidden">
+                        <td style="border:none;">તાલુકો:</td>
+                        <td style="border:none;"><b> <?php echo $row['taluka']?></b></td>
+                        <td style="border:none;">જાતિ:</td>
+                        <td style="border:none;"> <b><?php echo $row['gender']?></b></td>
+                    </tr>
+                      <tr style="border:none;visibility:hidden">
+                        <td style="border:none;">શહેર/ગામ: </td>
+                        <td style="border:none;"><b><?php echo $row['village']?></b> </td>
+                        <td style="border:none;">જન્મનું સ્થળ:</td>
+                         <td style="border:none;">દવાખાનું/સંસ્થા/ઘર </td>
+                        
+                    </tr>
+                      <tr style="border:none;visibility:hidden">
+                        <td style="border:none;">નોધણી એકમ: </td>
+                      <td style="border:none;"></td>
+
+                            <td style="border:none;">નોધણી તારીખ: </td>
+                          <td style="border:none;"></td>
+                    </tr> 
+                          <tr style="border:none;visibility:hidden">
+                        <td style="border:none;">  કોડ નંબર:</td>
+                            <td style="border:none;"></td>
+                          <td style="border:none;">રજીસ્ટારની સહી: </td>
+                      <td style="border:none;">રજી.નું નામ:</td>
+
+                    </tr> 
+                  
+  
+  
+ 
+   </table> </td>  </tr>
+   
+   </tbody>
+   </table> </td></tr>                   
+<?php  
+			
+			$HtmlCode= ob_get_contents();
+				$HtmlCode.="<style>
+			body{ @page { 
+        size: landscape;   }
+    body {    writing-mode: tb-rl;   }		}
+			</style>";
+            ob_end_flush();
+			$HtmlUrl  =	"birth-report.html";
+			$HtmlPath =	"report/".$HtmlUrl;
+			createHTMLReportPage($header_row_string,$HtmlUrl,$HtmlPath,$HtmlCode); 
+		
+		?>
+      	<br/>
+        
+		<form name="frm" id="frm" action="" method="post">		
+			<input type="hidden"   name="txtFile" id="txtFile" value="<?php echo $HtmlUrl ;?>" />
+            <input type="button"  name="btnPrint" id="btnPrint" value="Print" onClick="SetPageAction('PRINT');"/>
+			<input type="button"  name="btnPdf" id="btnPdf" value="Create PDF" onClick="SetPageAction('PDF');"/>
+			<input type="button" name="btnHtml" id="btnHtml" value="Create HTML" onClick="SetPageAction('HTML');"/>
+			<input type="button" name="btnWord" id="btnWord" value="Create WORD" onClick="SetPageAction('WORD');"/>
+			<input type="button" name="btnExcel" id="btnExcel" value="Create EXCEL" onClick="SetPageAction('Excel');"/>
+		</form>
+			<script language="javascript" type="text/javascript">
+			//	SetPageAction('PRINT');
+                function SetPageAction(varAction) {
+                    if(varAction=="PRINT"){			
+                        document.frm.action="print/create-print.php";
+                        document.frm.submit();
+					  }
+					else if(varAction=="PDF"){			
+                        document.frm.action="convertpdf/create-pdf.php";
+                        document.frm.target = "_blank";
+                        document.frm.submit();
+                    }
+                    else if(varAction=="HTML"){
+                        document.frm.action="<?php echo $HtmlPath ;?>";
+                        document.frm.target = "_blank";
+                        document.frm.submit();
+                    }
+                    else if(varAction=="WORD"){
+                        document.frm.action="convertword/create-word.php";
+                        document.frm.target="_blank";
+                        document.frm.submit();
+                    }
+                    else if(varAction=="Excel"){
+                        document.frm.action="convertword/create-excel.php";
+                        document.frm.target="_blank";
+                        document.frm.submit();
+                    }
+                                               }
+				
+            </script>
+			
+			<?php
+		
+		
+				
+?>
+</div>
+
+<?php require "_footer.php";?>
