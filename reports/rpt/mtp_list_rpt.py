@@ -54,7 +54,7 @@ def mtp_list_rpt(request,start_date,end_date, language_id=None):
             )
             context["husband_name"] = patient_opd.patient.husband_father_name if patient_opd.patient.husband_father_name else " "
             context["age"] = patient_opd.patient.age
-            context["religion"] = patient_opd.patient.religion.field_value
+            context["religion"] = patient_opd.patient.religion.field_value if patient_opd.patient.religion.field_value else " "
 
             context["duration"] = "pending"
             context["reason"] = patient_mtp.reason_for_mtp
