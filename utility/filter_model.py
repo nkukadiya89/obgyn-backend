@@ -239,6 +239,7 @@ class ModelFilterDIAGNOSIS:
         return model
 
 
+
 class ModelFilterMEDICINE:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
