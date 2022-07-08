@@ -26,6 +26,7 @@ class PatientMtpModel(models.Model):
     ut_weeks = models.IntegerField(default=0, null=True)
     religion = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="mtp_religion")
     remark = models.TextField(null=True)
+    live_male_female = models.CharField(max_length=15,null=True)
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
