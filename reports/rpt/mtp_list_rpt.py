@@ -31,22 +31,31 @@ def mtp_list_rpt(request,start_date,end_date, language_id=None):
             context = {}
             context["date_of_admission"] = patient_mtp.admission_date
 
-            try:
-                context["name"] = "".join(
-                    [patient_opd.patient.first_name, " ", patient_opd.patient.middle_name, " ", patient_opd.patient.last_name])
-                context["husband_name"] = patient_opd.patient.husband_father_name
-                context["age"] = patient_opd.patient.age
-                context["religion"] = patient_opd.patient.religion.field_value
-                context["address"] = "".join([" ", patient_opd.patient.city.city_name, " ",
-                                            patient_opd.patient.district.district_name, " ",
-                                            patient_opd.patient.taluka.taluka_name, " ", patient_opd.patient.state.state_name])
-            except:
-                context["name"] = ""
-                context["husband_name"] = ""
-                context["age"] =""
-                context["religion"] = ""
-                context["address"] = ""
-                
+            context["name"] = "".join(
+                [
+                    patient_opd.patient.first_name if patient_opd.patient.first_name else " ",
+                    " ",
+                    patient_opd.patient.middle_name if patient_opd.patient.middle_name else " ",
+                    " ",
+                    patient_opd.patient.last_name if patient_opd.patient.last_name else " ",
+                ]
+            )
+            context["address"] = "".join(
+                [
+                    " ",
+                    patient_opd.patient.city.city_name if patient_opd.patient.city.city_name else " ",
+                    " ",
+                    patient_opd.patient.district.district_name if patient_opd.patient.district.district_name else " ",
+                    " ",
+                    patient_opd.patient.taluka.taluka_name if patient_opd.patient.taluka.taluka_name else " ",
+                    " ",
+                    patient_opd.patient.state.state_name if patient_opd.patient.state.state_name else " ",
+                ]
+            )
+            context["husband_name"] = patient_opd.patient.husband_father_name if patient_opd.patient.husband_father_name else " "
+            context["age"] = patient_opd.patient.age
+            context["religion"] = patient_opd.patient.religion.field_value if patient_opd.patient.religion.field_value else " "
+
             context["duration"] = "pending"
             context["reason"] = patient_mtp.reason_for_mtp
             context["termination_date"] = patient_mtp.termination_date

@@ -37,7 +37,7 @@ class PatientDeliveryModel(models.Model):
     child_name = models.CharField(max_length=100, default="")
     child_gender = models.CharField(max_length=10, choices=gender_choice, default="MALE")
     delivery_type = models.CharField(max_length=20, choices=delivery_type_choice, default="NORMAL")
-    religion = models.CharField(max_length=25, default="")
+    religion = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="delivery_religion", null=True)
     episio_by = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="delivery_dpisio_by", null=True)
     dayan = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="delivery_dayan", null=True)
     city = models.ForeignKey(CityModel,on_delete=models.DO_NOTHING, null=True)
