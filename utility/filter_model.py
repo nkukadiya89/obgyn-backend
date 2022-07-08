@@ -239,6 +239,7 @@ class ModelFilterDIAGNOSIS:
         return model
 
 
+
 class ModelFilterMEDICINE:
     def filter_fields(self, model, filter_fields):
         for fields in filter_fields:
@@ -250,6 +251,8 @@ class ModelFilterMEDICINE:
                 model = model.filter(contain__icontains=fld_value)
             if fld_name == "medicine_type":
                 model = model.filter(medicine_type__medicine_type__icontains=fld_value)
+            if fld_name == "medicine_type_id":
+                model = model.filter(medicine_type_id=fld_value)
             if fld_name == "per_day":
                 model = model.filter(per_day=fld_value)
             if fld_name == "for_day":
