@@ -14,6 +14,7 @@ class PatientUSGReportModel(models.Model):
     regd_no = models.CharField(max_length=100, default="")
 
     report_date = models.DateField(default=now,null=True)
+    report_time = models.CharField(max_length=25, null=True)
     no_of_foetus = models.CharField(max_length=25, default="",null=True)
     cardiac_activity = models.CharField(max_length=100, default="",null=True)
     presentation = models.TextField(null=True)
