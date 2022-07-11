@@ -28,7 +28,7 @@ class ConsultationModel(models.Model):
     patient = models.ForeignKey(PatientModel, on_delete=models.DO_NOTHING, null=True)
     
     patient_type = models.CharField(max_length=5, choices=patient_type_choice, default="OB")
-    patient_detail = models.CharField(max_length=8, choices=patient_detail_choice, default="PARTIAL")
+    patient_detail = models.CharField(max_length=8, choices=patient_detail_choice, null=True)
     parity = models.CharField(max_length=25, default="", null=True)
     prev_del_type = models.CharField(max_length=25, default="", null=True)
     present_history = models.CharField(max_length=250, default="", null=True)
@@ -83,6 +83,9 @@ class ConsultationModel(models.Model):
     fu = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="fu")
     fu_date = models.DateField(default=now, null=True)
     remark = models.TextField(null=True)
+    mh_every = models.IntegerField(default=0, null=True)
+    mh_for = models.IntegerField(default=0, null=True)
+    mh_severity = models.CharField(max_length=25, default="", null=True)
 
     # ================= investigation===================
     hb = models.IntegerField( default=0, null=True)

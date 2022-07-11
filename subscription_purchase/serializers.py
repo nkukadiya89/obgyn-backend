@@ -51,6 +51,16 @@ class Subscription_PurchaseSerializers(serializers.ModelSerializer):
         
         return data
 
+        if "hospital" in ret:
+            ret["hospital_name"] = UserSerializers(instance.hospital).data["hospital_name"]
+            ret["hospital"] = UserSerializers(instance.hospital).data["hospital"]
+
+        if "subscription" in ret:
+            ret["subscription_name"] = SubscriptionSerializers(instance.subscription).data["subscription_name"]
+            ret["subscription"] = SubscriptionSerializers(instance.subscription).data["subscription_id"]
+        return ret
+
+        
     subscription_purchase_id = serializers.IntegerField(read_only=True)
     start_date = serializers.DateField(format="%d-%m-%Y")
     over_date = serializers.DateField(read_only=True,format="%d-%m-%Y")
