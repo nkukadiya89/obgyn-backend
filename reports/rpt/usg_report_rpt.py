@@ -81,7 +81,23 @@ def usg_rpt(request, id, language_id=None):
     )
     context["remark"] = usg_report.remark
     context["mobile_no"] = patient_opd.patient.phone if "F" not in patient_opd.patient.phone else " "
-    
+    context["report_detail"] = f"""A {usg_report.no_of_foetus} intrauterine foctus/s with {usg_report.cardiac_activity} cardiac activity
+    with {usg_report.presentation} presentation.
+    with avg. {usg_report.avg_weeks} weeks of gestational age.
+    GS {usg_report.ga_weeks} weeks and {usg_report.ga_day} day
+    CRL {usg_report.crl_weeks} weeks and {usg_report.crl_day} day
+    FL {usg_report.fl_weeks} weeks and {usg_report.fl_day} day
+    BPD {usg_report.bpd_weeks} weeks and {usg_report.bpd_day} day
+    HC {usg_report.hc_weeks} weeks and {usg_report.hc_day} day
+    AC {usg_report.ac_weeks} weeks and {usg_report.ac_day} day
+    AVG {usg_report.avg_weeks} weeks and {usg_report.avg_day} day
+    Placenta - {usg_report.placental_location.field_value}
+    Liquar - {usg_report.amount_of_liquor }
+    {usg_report.anomalies.field_value if usg_report.anomalies.field_value else " "}"""
+
+    context["avg_edd"] = usg_report.avg_edd
+    context["possible_lmp"] = usg_report.possible_lmp
+
     context["report_date"] = patient_opd.opd_date
     return render(request, template_name,
                   {"context": context, "template_header": template_header.header_text.replace("'", "\"")})

@@ -239,6 +239,21 @@
         #reporttable td {
             border: 1px solid #343434;
             padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        #reporttable1 td {
+            font-size: 12px;
+        }
+
+                #reporttable {
+            border-collapse: collapse;
+        }
+
+        #reporttable td {
+            border: 1px solid #343434;
+            padding: 5px 10px;
+            font-size: 12px;
         }
 
         .lefttable td {
@@ -257,9 +272,8 @@
 
 <body>
     <div id="obygyn">
-        <div class="obgyn-title">-: USG REPORT :-</div>
         {{template_header | safe }}
-        <div class="obgyn-title">-: USG REPORT :-</div>
+        <div class="obgyn-title">-: OPD Case Paper :-</div>
 
         <table width="100%" id="reporttable" style="font-size: 14px;font-weight: bold;color: #343434;">
             <tr>
@@ -296,7 +310,7 @@
                     Hb:
                 </td>
                 <td>
-                    {{ context.hb }}
+                    {{ context.hb }} gm %
                 </td>
             </tr>
             <tr>
@@ -318,7 +332,7 @@
                     H/O:
                 </td>
                 <td>
-                    {{ context.ho }}
+                    {{ context.ho }} months of amenorrhea
                 </td>
                 <td>
                     C/O:
@@ -330,15 +344,15 @@
                     Age:
                 </td>
                 <td>
-                    {{ context.age }}
+                    {{ context.age }} years
                 </td>
             </tr>
 
         </table>
-        <table width="100%" style="font-size: 14px;font-weight: bold;color: #343434; border-collapse: collapse;">
+        <table id="reporttable1" width="100%" style="font-size: 14px;font-weight: bold;color: #343434; border-collapse: collapse;">
             <tr>
                 <td style="border:1px solid #343434; border-top:0; width: 40%; padding: 0;">
-                    <table width="100%" class="lefttable">
+                    <table width="100%" class="reporttable">
                         <tr>
                             <td colspan="4"
                                 style="text-align: center; font-weight: bold; font-size: 16px; padding: 5px 10px; border-bottom: 1px solid #343434;">
@@ -418,7 +432,7 @@
                     </table>
                 </td>
                 <td style="border:1px solid #343434; border-top:0; vertical-align: top;">
-                    <table width="100%" class="rxtbl">
+                    <table width="100%" class="reporttable">
                         <tr>
                             <td colspan="3">Rx,</td>
                         </tr>
@@ -432,6 +446,14 @@
                         {% endfor %}
                     </table>
                 </td>
+            </tr>
+        </table>
+        <table width="100%" id="reporttable">
+            <tr>
+                <td align="left">Diagnosis</td>
+            </tr>
+            <tr>
+                <td align="left">Remark</td>
             </tr>
         </table>
     </div>

@@ -1,4 +1,6 @@
 from django.shortcuts import render
+import consultation
+from consultation.models import ConsultationModel
 import patient_billing
 from template_header.models import TemplateHeaderModel
 from patient_billing.models import PatientBillingModel
@@ -41,6 +43,8 @@ def daily_opd_income_rpt(request, rpt_date=None, language_id=None):
     for patient_opd in patient_otp_list:
         patient_opd_id=patient_opd.patient_opd_id
 
+        consultation = ConsultationModel.objects.filter(patient_opd=patient_opd).first()
+
         patient_billing_list = PatientBillingModel.objects.filter(deleted=0,patient_opd=patient_opd)
         for patient_billing in patient_billing_list:            
             context_sub={}
@@ -66,7 +70,12 @@ def daily_opd_income_rpt(request, rpt_date=None, language_id=None):
                     patient_opd.patient.state.state_name if patient_opd.patient.state.state_name else " ",
                 ]
             )
-            context_sub["type"] = "consultation"
+
+            if consultation.patient_type == "OB":
+                context_sub["type"] = "Obstract"
+            else:
+                context_sub["type"] = "Gynec"
+
 
             try:
                 context_sub["consulting"] = patient_billing.consulting_fees

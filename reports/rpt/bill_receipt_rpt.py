@@ -32,6 +32,7 @@ def bill_receipt_rpt(request,bill_id, language_id=None):
     if patient_opd:
         
         context = {}
+        context["regd_no"] = patient_opd.patient.regd_no_barcode
         context["name"] = "".join(
             [
                 patient_opd.patient.first_name  if patient_opd.patient.first_name else " ",
@@ -41,6 +42,19 @@ def bill_receipt_rpt(request,bill_id, language_id=None):
                 patient_opd.patient.last_name if patient_opd.patient.last_name else " ",
             ]
         )
+        context["address"] = "".join(
+        [
+            " ",
+            patient_opd.patient.city.city_name if patient_opd.patient.city.city_name else " ",
+            " ",
+            patient_opd.patient.district.district_name if patient_opd.patient.district.district_name else " ",
+            " ",
+            patient_opd.patient.taluka.taluka_name if patient_opd.patient.taluka.taluka_name else " ",
+            " ",
+            patient_opd.patient.state.state_name if patient_opd.patient.state.state_name else " ",
+        ]
+    )
+
         
         context["bill_no"] = patient_billing.invoice_no
         context["receipt_date"] = patient_billing.invoice_date

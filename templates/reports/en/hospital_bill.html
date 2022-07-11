@@ -280,7 +280,7 @@
             <tr>
                 <td>Receipt Date</td><td>{{context.receipt_date | date:'d-m-Y'}}</td>
                 <td>Bill No</td><td>{{context.invoice_no}}</td>
-                <td>Voucher No</td><td>{{context.invoice_no}}</td>
+                <td colspan="2"></td>
             </tr>
             <tr>
                 <td>Name</td><td>{{context.name}}</td>
@@ -294,8 +294,8 @@
         <br>
         <table width="100%" id="reporttable3" style="font-size: 14px;font-weight: bold;color: #343434;">
             <tr>
-                <td>Admission Date</td><td>{{context.admission_date | date:'d-m-Y'}}</td>
-                <td>Discharge Date</td><td>{{context.discharge_date | date:'d-m-Y'}}</td>
+                <td>Admission Date</td><td>{{context.admission_date | date:'d-m-Y'}}&nbsp;{{context.admission_time}}</td>
+                <td>Discharge Date</td><td>{{context.discharge_date | date:'d-m-Y'}}&nbsp;{{context.discharge_time}}</td>
             </tr>
         </table>
         <br>
@@ -308,28 +308,28 @@
         <br>
         <table width="100%" id="reporttable3" style="font-size: 14px;font-weight: bold;color: #343434;">
             <tr>
-                <td>Particulars</td><td>-</td><td>Amount(Rs-Ps)</td>
+                <td>Particulars</td><td>Vouche No</td><td>Amount(Rs-Ps)</td>
             </tr>
             <tr>
-                <td>Consulting Rs</td><td>-</td><td>{{context.consulting_rs}}</td>
+                <td>Consulting Rs</td><td>{{context.consulting_rs.no}}</td><td>{{context.consulting_rs.amount}}</td>
             </tr>
             <tr>
-                <td>Sonography Rs</td><td>-</td><td>{{context.sonography_rs}}</td>
+                <td>Sonography Rs</td><td>{{context.sonography_rs.no}}</td><td>{{context.sonography_rs.amount}}</td>
             </tr>
             <tr>
-                <td>Nursing Rs</td><td>-</td><td>{{context.nursing_rs}}</td>
+                <td>Nursing Rs</td><td>{{context.nursing_rs.no}}</td><td>{{context.nursing_rs.amount}}</td>
             </tr>
             <tr>
-                <td>Operative Rs</td><td>-</td><td>{{context.operative_rs}}</td>
+                <td>Operative Rs</td><td>{{context.operative_rs.no}}</td><td>{{context.operative_rs.amount}}</td>
             </tr>
             <tr>
-                <td>Medicine Rs</td><td>-</td><td>{{context.medicine_rs}}</td>
+                <td>Medicine Rs</td><td>{{context.medicine_rs.no}}</td><td>{{context.medicine_rs.amount}}</td>
             </tr>
             <tr>
-                <td>Room Charges</td><td>-</td><td>{{context.room_charge_rs}}</td>
+                <td>Room Charges</td><td>{{context.room_charge_rs.no}}</td><td>{{context.room_charge_rs.amount}}</td>
             </tr>
             <tr>
-                <td>Other Charges</td><td>-</td><td>{{context.other_charge_rs}}</td>
+                <td>Other Charges</td><td>{{context.other_charge_rs.no}}</td><td>{{context.other_charge_rs.amount}}</td>
             </tr>
             <tr>
                 <td>Total Rs</td><td>-</td><td>{{context.total_rs}}</td>

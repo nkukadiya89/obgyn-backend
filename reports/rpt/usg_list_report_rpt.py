@@ -88,14 +88,8 @@ def usg_list_report_rpt(request, language_id=None, start_date=None, end_date=Non
         )
         context_sub["mobile"] = usg_report.patient_opd.patient.phone if "F" not in usg_report.patient_opd.patient.phone else " "
         context_sub["age"] = usg_report.patient_opd.patient.age
-        context_sub["live_mf"] = (
-            consultation.ftnd_male_live
-            if consultation.ftnd_male_live
-            else "0" + "/" + consultation.ftnd_female_live
-            if consultation.ftnd_female_live
-            else "0"
-        )
-        context_sub["pndt"] = "pending"
+        context_sub["live_mf"] = usg_report.live_male_female
+        context_sub["pndt"] = "Sonography"
 
         usg_detail.append(context_sub)
     context["usg_detail"] = usg_detail

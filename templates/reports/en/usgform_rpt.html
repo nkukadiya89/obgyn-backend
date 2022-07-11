@@ -281,7 +281,7 @@
         #pndinr td {
             border: 0;
             padding: 2px 5px;
-            font-size: 10px;
+            font-size: 11px;
             vertical-align: top;
         }
 
@@ -301,23 +301,6 @@
         </tr>
     </table>
         <table width="100%" id="pndttbl">
-            <tr>
-                <td>
-                    <table width="100%" id="pndinr">
-                        <tr>
-                            <td style="width: 20px;">
-
-                            </td>
-                            <td style="font-size: 30px; width: 50%;">
-                                FROM-F(PNDT ACT 1994)
-                            </td>
-                            <td>
-                                No:<strong>17</strong>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
             <tr>
                 <td>
                     <table width="100%" id="pndinr">
@@ -477,7 +460,7 @@
                                 Last Menstrul Period/Weeks of Pregnancy:-
                             </td>
                             <td>
-                                <strong> -/ {{context.week_of_pregnancy}}</strong>
+                                <strong> -/ {{context.week_of_pregnancy|date:'d-m-Y'}}</strong>
                             </td>
                         </tr>
                         <tr>
@@ -575,7 +558,7 @@
                                 Date on which procedure was carried out:-
                             </td>
                             <td>
-                                <strong> {{context.procedure_date}}</strong>
+                                <strong> {{context.consent_obtained_date}}</strong>
                             </td>
                         </tr>
                         <tr>
@@ -586,7 +569,7 @@
                                 Result of ultrasonography:-
                             </td>
                             <td>
-                                <strong>single live foetus (7gest.weeks)</strong>
+                                <strong>{{context.ultrasonic_result}}</strong>
                             </td>
                         </tr>
                         <tr>
@@ -597,7 +580,7 @@
                                 The result of prenatal diagnostic procedure was conveyed to
                             </td>
                             <td>
-                                <strong> {{context.result_conveyed_to}} on 10-02-2022</strong>
+                                <strong> {{context.result_conveyed_to}} on {{context.last_week_of_pregnancy}}</strong>
                             </td>
                         </tr>
                         <tr>
@@ -609,7 +592,7 @@
                                 detected in the daignostic procedure:-
                             </td>
                             <td>
-                                <strong>No</strong>
+                                <strong>{{context.any_indication_mtp}}</strong>
                             </td>
                         </tr>
                         <tr>

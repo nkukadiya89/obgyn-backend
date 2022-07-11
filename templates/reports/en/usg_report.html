@@ -302,15 +302,10 @@
         </tr>
         <tr>
             <td colspan="6">
-                A single intrauterine foctus/s with present cardiac activity<br/>
-                with Ceplalic presentation.<br/>
-                with avg. 19 weeks of gestational age.<br/>
-                Placenta - posterior<br/>
-                Liquar - adequate<br/>
-                No anomaly detected<br/>
+                {{context.report_detail|linebreaks}}
                 Remark - {{context.remark}}<br/>
-                LMP acc. to USG-18-08-2021<br/>
-                EDD acc. to USG-25-05-2022
+                LMP acc. to USG-{{context.avg_edd|date:'d-m-Y'}}<br/>
+                EDD acc. to USG-{{context.possible_lmp|date:'d-m-Y'}}
             </td>
 
         </tr>
