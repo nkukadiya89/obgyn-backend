@@ -55,6 +55,7 @@ def referal_slip_rpt(request, opd_id, language_id=None):
 
     context["mobile_no"] = patient_opd.patient.phone if "F" not in patient_opd.patient.phone else " "
     context["age"] = patient_opd.patient.age
+    context["referal_date"] = patient_opd.opd_date
     
     indication = list(PatientReferalIndication.objects.filter(patientreferalmodel=patient_referal.patient_referal_id).values_list("managefieldsmodel_id",flat=True))
     indication_list = list(ManageFieldsModel.objects.filter(mf_id__in=indication).values_list('field_value',flat=True))
