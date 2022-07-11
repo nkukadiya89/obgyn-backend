@@ -21,6 +21,7 @@ def usg_form_report_rpt(request, usg_form_id, language_id=None):
         return JsonResponse(context)
 
     patient_opd = usg_form.patient_opd
+
     if patient_opd == None:
         context = {}
         context["msg"] = False
