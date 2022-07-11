@@ -3,6 +3,7 @@ from template_header.models import TemplateHeaderModel
 from patient_billing.models import PatientBillingModel
 from patient_opd.models import PatientOpdModel
 from consultation.models import ConsultationModel
+from patient_voucher.models import PatientVoucherModel
 
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -63,6 +64,7 @@ def hospital_bill_rpt(request,bill_no, language_id=None):
         context["mobile"] = patient_opd.patient.phone if "F" not in patient_opd.patient.phone else ""
         consultation = ConsultationModel.objects.filter(patient_opd=patient_opd).first()
 
+
         if consultation:
             context["blood_group"] = consultation.blood_group
             context["diagnosis"] = consultation.diagnosis.diagnosis_name
@@ -70,16 +72,69 @@ def hospital_bill_rpt(request,bill_no, language_id=None):
             context["blood_group"] = ""
             context["diagnosis"] = ""
         
+        total=0
         context["admission_date"] = patient_billing.admission_date
+        context["admission_time"] = patient_billing.admission_time
         context["discharge_date"] = patient_billing.discharge_date
-        context["consulting_rs"] = patient_billing.consulting_fees
-        context["sonography_rs"] = patient_billing.usg_rs
-        context["nursing_rs"] = patient_billing.nursing_rs
-        context["operative_rs"] = patient_billing.procedure_charge
-        context["medicine_rs"] = patient_billing.medicine_rs
-        context["room_charge_rs"] = patient_billing.room_rs
-        context["other_charge_rs"] = patient_billing.other_rs
-        context["total_rs"] = patient_billing.total_rs
+        context["discharge_time"] = patient_billing.discharge_time
+        voucher = PatientVoucherModel.objects.filter(patient_opd=patient_opd,voucher_type="C",deleted=0).last()
+        if voucher:
+            voucher_detail={"no":voucher.voucher_no ,"amount":voucher.amount}
+            total += float(voucher.amount)
+        else:
+            voucher_detail={"no":"" ,"amount":0}
+        context["consulting_rs"] = voucher_detail
+
+        voucher = PatientVoucherModel.objects.filter(patient_opd=patient_opd,voucher_type="S",deleted=0).last()
+        if voucher:
+            voucher_detail={"no":voucher.voucher_no ,"amount":voucher.amount}
+            total += float(voucher.amount)
+        else:
+            voucher_detail={"no":"" ,"amount":0}
+
+        context["sonography_rs"] = voucher_detail
+
+        voucher = PatientVoucherModel.objects.filter(patient_opd=patient_opd,voucher_type="N",deleted=0).last()
+        if voucher:
+            voucher_detail={"no":voucher.voucher_no ,"amount":voucher.amount}
+            total += float(voucher.amount)
+        else:
+            voucher_detail={"no":"" ,"amount":0}
+        context["nursing_rs"] = voucher_detail
+
+        voucher = PatientVoucherModel.objects.filter(patient_opd=patient_opd,voucher_type="O",deleted=0).last()
+        if voucher:
+            voucher_detail={"no":voucher.voucher_no ,"amount":voucher.amount}
+            total += float(voucher.amount)
+        else:
+            voucher_detail={"no":"" ,"amount":0}
+        context["operative_rs"] = voucher_detail
+
+        voucher = PatientVoucherModel.objects.filter(patient_opd=patient_opd,voucher_type="M",deleted=0).last()
+        if voucher:
+            voucher_detail={"no":voucher.voucher_no ,"amount":voucher.amount}
+            total += float(voucher.amount)
+        else:
+            voucher_detail={"no":"" ,"amount":0}
+        context["medicine_rs"] = voucher_detail
+
+        voucher = PatientVoucherModel.objects.filter(patient_opd=patient_opd,voucher_type="R",deleted=0).last()
+        if voucher:
+            voucher_detail={"no":voucher.voucher_no ,"amount":voucher.amount}
+            total += float(voucher.amount)
+        else:
+            voucher_detail={"no":"" ,"amount":0}
+        context["room_charge_rs"] = voucher_detail
+
+        voucher = PatientVoucherModel.objects.filter(patient_opd=patient_opd,voucher_type="E",deleted=0).last()
+        if voucher:
+            voucher_detail={"no":voucher.voucher_no ,"amount":voucher.amount}
+            total += float(voucher.amount)
+        else:
+            voucher_detail={"no":"" ,"amount":0}
+        context["other_charge_rs"] = voucher_detail
+
+        context["total_rs"] = total
         
     template_name = "reports/en/hospital_bill.html"
     return render(request, template_name,

@@ -134,6 +134,13 @@ def usg_form_report_rpt(request, usg_form_id, language_id=None):
     context["procedure_date"] = usg_form.procedure_date
     context["result_conveyed_to"] = usg_form.result_of_diagnostic_conveyed_to
 
+    context["consent_date"] = usg_form.consent_obtained_date
+    context["last_week_of_pregnancy"] = usg_form.procedure_date
+    context["consent_obtained_date"] = usg_form.consent_obtained_date
+    context["report_date"] = str(patient_opd.opd_date)
+    context["ultrasonic_result"] = f"MTP : RESULT OF SONOGRAPHY {usg_form.ut_weeks} weeks preganancy"
+    context["any_indication_mtp"] = usg_form.any_indication_mtp.field_value
+
     context["report_date"] = str(patient_opd.opd_date)
     template_name = "reports/en/usgform_rpt.html"
     return render(request, template_name, {"context": context})

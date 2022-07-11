@@ -42,8 +42,6 @@ def indoor_case_rpt(request, opd_id, language_id=None):
     context["context_list"] = context_list
 
 
-    print(context)
-
     template_name = "reports/en/indoor_case.html"
     return render(request, template_name,
                   {"context_list": context,})

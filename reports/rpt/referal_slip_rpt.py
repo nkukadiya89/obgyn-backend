@@ -59,6 +59,7 @@ def referal_slip_rpt(request, opd_id, language_id=None):
     indication = list(PatientReferalIndication.objects.filter(patientreferalmodel=patient_referal.patient_referal_id).values_list("managefieldsmodel_id",flat=True))
     indication_list = list(ManageFieldsModel.objects.filter(mf_id__in=indication).values_list('field_value',flat=True))
     context["indication"] = indication_list
+    context["referal_date"] = patient_opd.opd_date
     
 
     template_name = "reports/en/referal_slip.html"

@@ -37,6 +37,8 @@ class PatientUSGFormModel(models.Model):
     any_indication_mtp = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="any_indication_mtp")
     mtp_done = models.CharField(max_length=100, null=True)
     remark = models.TextField(null=True)
+    live_male_female = models.CharField(max_length=15,null=True)
+    
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)

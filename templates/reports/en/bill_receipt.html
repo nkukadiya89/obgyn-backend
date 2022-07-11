@@ -279,12 +279,14 @@
         {{ template_header | safe }}
         <div class="obgyn-title">-: RECEIPT :-</div>
 
-        <table height="155px" width="100%" id="reporttable3" style="font-size: 14px;font-weight: bold;color: #343434;">
+        <table height="85px" width="100%" id="reporttable3" style="font-size: 14px;font-weight: bold;color: #343434;">
             <tr>
-                <td align="left" colspan="2">Name : <b>{{context.name}}</b><br><br>
-                    <img src={{context.regd_no}} width='200' height="60"/><br><br>
-                    {{context.receipt_date|date:'d-m-Y'}}
+                <td width="50%">Name : <b>{{context.name}} &nbsp;</b><br>Address : <b>{{context.address}}</b></td>
+                <td width="25%" align="center">
+                    <img src={{context.regd_no}} width='200' height="60"/>
+                    
                 </td>
+                <td width="25%">{{context.receipt_date|date:'d-m-Y'}}</td>
             </tr>
         </table>
         <table height="155px" width="100%" id="reporttable3" style="font-size: 14px;font-weight: bold;color: #343434;">

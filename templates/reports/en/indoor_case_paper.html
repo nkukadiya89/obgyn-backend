@@ -290,15 +290,12 @@
                 <td align="left" colspan="2">Address : {{context.address}}</b></td>
             </tr>
             <tr>
-                <td align="left">Age : <b>{{context.age}}</b></td>
+                <td align="left">Age : <b>{{context.age}} year</b></td>
                 <td align="left">Gender : <b>{{context.gender}}</b></td>
             </tr>
             <tr>
                 <td align="left">D.O.A. : <b>{{context.admission_date|date:'d-m-Y'}}</b></td>
                 <td align="left">T.O.A. : <b>{{context.admission_time}}</b></td>
-            </tr>
-            <tr>
-                <td align="left" colspan="2">Name Of Doctor: <b>{{context.doctor}}</b></td>
             </tr>
             <tr>
                 <td align="left" colspan="2">Provisinal Diagnosis: <b>{{context.provisional_diagnosis}}</b></td>
@@ -308,7 +305,7 @@
             </tr>
             <tr>
                 <td align="left">Date Of Operation/Delivery : <b>{{context.operation_date|date:'d-m-Y'}}</b></td>
-                <td align="left">AND Time : <b>{{context.operation_time}}</b></td>
+                <td align="left">Time : <b>{{context.operation_time}}</b></td>
             </tr>
             <tr>
                 <td align="left" colspan="2">Name Of Surgen : <b>{{context.doctor}}</b></td>
@@ -324,12 +321,12 @@
                 <td align="left">T.O.D : <b>{{context.discharge_time}}</b></td>
             </tr>
             <tr>
-                <td align="left">Condition on discharge : <b><input type="checkbox"></b></td>
+                <td align="left">Condition on discharge : <b></b></td>
                 <td align="left">Advised by : <b>{{context.doctor}}</b></td>
             </tr>
             <tr>
                 <td align="left"></td>
-                <td align="left">on request</td>
+                <td align="left"><input type="checkbox">on request</td>
             </tr>
             <tr>
                 <td align="left"></td>
