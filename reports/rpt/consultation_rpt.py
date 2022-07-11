@@ -109,6 +109,8 @@ def consultation_rpt(request, id, language_id=None):
     context["pa"] = consultation.pa_value
     context["ps"] = consultation.ps.field_value
     context["pv"] = consultation.pv.field_value
+    context["fu_date"] = consultation.fu_date
+    context["first_edd"] = patient_opd.patient.first_edd
 
     prescription_list = PatientPrescriptionModel.objects.filter(consultation=consultation)
 
@@ -117,6 +119,10 @@ def consultation_rpt(request, id, language_id=None):
         prescribe = {}
         prescribe["type"] = prescription.medicine.medicine_type.medicine_type
         prescribe["medicine"] = prescription.medicine.medicine
+        prescribe["morning"] = prescription.medicine.morning_timing.timing
+        prescribe["noon"] = prescription.medicine.noon_timing.timing
+        prescribe["evening"] = prescription.medicine.evening_timing.timing
+        prescribe["bed"] = prescription.medicine.bed_timing.timing
         prescribe["total"] = prescription.medicine.total_tablet
 
         context_sub.append(prescribe)

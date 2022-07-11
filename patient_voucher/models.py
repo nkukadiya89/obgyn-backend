@@ -10,17 +10,18 @@ from surgical_item.models import SurgicalItemModel
 
 
 # Create your models here.
+voucher_type_choice = (
+    ('S', 'Surgical Item'),
+    ('C', 'Consultation'),
+    ('U', 'USG'),
+    ('R', 'Room'),
+    ('O', 'Operative'),
+    ('M', 'Medicine'),
+    ('N', 'Nursing'),
+    ('E', 'Other')
+)
+
 class PatientVoucherModel(models.Model):
-    voucher_type_choice = (
-        ('S', 'Surgical Item'),
-        ('C', 'Consultation'),
-        ('U', 'USG'),
-        ('R', 'Room'),
-        ('O', 'Operative'),
-        ('M', 'Medicine'),
-        ('N', 'Nursing'),
-        ('E', 'Other')
-    )
 
     patient_voucher_id = models.AutoField(primary_key=True)
     patient_opd = models.ForeignKey(PatientOpdModel, on_delete=models.DO_NOTHING, null=True)
@@ -29,7 +30,7 @@ class PatientVoucherModel(models.Model):
 
     voucher_no = models.CharField(max_length=25, default="", null=True)
     bill_date = models.DateField(null=True)
-    voucher_type = models.CharField(max_length=2, default="S")
+    voucher_type = models.CharField(max_length=2, choices=voucher_type_choice, default="S")
     amount = models.FloatField(default=0)
 
     created_by = models.IntegerField(default=1, unique=False)
