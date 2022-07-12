@@ -3,9 +3,11 @@ from django.shortcuts import render, HttpResponse
 
 from rest_framework import status
 from consultation.models import ConsultationModel
+from manage_fields.models import ManageFieldsModel
 from patient_opd.models import PatientOpdModel
 from patient_usgform.models import PatientUSGFormModel, USGFormChildModel
 from template_header.models import TemplateHeaderModel
+from patient_referal.models import PatientReferalModel, PatientReferalIndication
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, date
 from django.http import JsonResponse
@@ -26,6 +28,13 @@ def usg_form_report_rpt(request, usg_form_id, language_id=None):
         context = {}
         context["msg"] = False
         context["error"] = "OPD Does not exist."
+        return JsonResponse(context)
+
+    patient_referal = PatientReferalModel.objects.filter(patient_opd=patient_opd, deleted=0).first()
+    if not patient_referal:
+        context = {}
+        context["msg"] = False
+        context["error"] = "Record Not found."
         return JsonResponse(context)
 
     consultation = ConsultationModel.objects.filter(patient_opd=patient_opd).first()
@@ -133,6 +142,10 @@ def usg_form_report_rpt(request, usg_form_id, language_id=None):
     )
     context["procedure_date"] = usg_form.procedure_date
     context["result_conveyed_to"] = usg_form.result_of_diagnostic_conveyed_to
+
+    indication = list(PatientReferalIndication.objects.filter(patientreferalmodel=patient_referal.patient_referal_id).values_list("managefieldsmodel_id",flat=True))
+    indication_list = list(ManageFieldsModel.objects.filter(mf_id__in=indication).values_list('field_value',flat=True))
+    context["indication"] = indication_list
 
     context["consent_date"] = usg_form.consent_obtained_date
     context["last_week_of_pregnancy"] = usg_form.procedure_date

@@ -281,7 +281,7 @@
         #pndinr td {
             border: 0;
             padding: 2px 5px;
-            font-size: 11px;
+            font-size: 16px;
             vertical-align: top;
         }
 
@@ -491,7 +491,9 @@
                                 Indications for diagnosis Procedure:-
                             </td>
                             <td>
-                                <strong> =>Estimation of gestational age(dating)</strong>
+                                <strong> {% for indication in context.indication %}
+                                    ->{{indication}}<br>
+                                {% endfor %}</strong>
                             </td>
                         </tr>
                         <tr>
@@ -580,7 +582,7 @@
                                 The result of prenatal diagnostic procedure was conveyed to
                             </td>
                             <td>
-                                <strong> {{context.result_conveyed_to}} on {{context.last_week_of_pregnancy|date:'d-m-Y'}}</strong>
+                                <strong> {{context.result_conveyed_to}}</strong>
                             </td>
                         </tr>
                         <tr>

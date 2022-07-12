@@ -74,7 +74,14 @@ class ConsultationSerializers(serializers.ModelSerializer):
 
         if  0 >= int(data["spo2"]) >= 100:
             raise serializers.ValidationError("Enter valid SpO2%")
-        
+
+        if data["mh_every"]:
+            if 0 <= int(data["mh_every"]) <= 90:
+                raise serializers.ValidationError("mh_every is not in the 0-90 ")    
+
+        if data["mh_for"]:
+            if 0 <= int(data["mh_for"]) <= 30:
+                raise serializers.ValidationError("mh_for is not in the 0-30 ")        
 
         if "regd_no" in data:
             patient = PatientModel.objects.filter(registered_no=data["regd_no"])
