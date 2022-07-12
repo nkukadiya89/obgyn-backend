@@ -304,7 +304,7 @@
                     8.duration of pregnency
                 </th>
                 <th>
-                    9.reason for which preg is terminated
+                    9.reason for <br> which preg <br>is terminated
                 </th>
                 <th>
                     10.date termination of preg
@@ -348,11 +348,11 @@
                 <td>
                     {{ context.duration }}
                 </td>
-                <td>
+                <td style="width: 100px;">
                     {{ context.reason }}
                 </td>
                 <td>
-                    {{ context.termination_date |date:'d-m-Y'  }}
+                    {{ context.date_of_admission |date:'d-m-Y'  }}
                 </td>
                 <td>
                     {{ context.discharge_date |date:'d-m-Y' }}
