@@ -3,7 +3,7 @@ from rest_framework import serializers
 from medicine.models import MedicineModel
 
 from patient.models import PatientModel
-from .models import PatientVoucherModel, VoucherItemModel
+from .models import PatientVoucherModel, VoucherItemModel, voucher_type_choice
 from surgical_item.models import SurgicalItemModel
 from surgical_item.serializers import SurgicalItemSerializers
 from medicine.serializers import MedicineSerializers
@@ -21,6 +21,10 @@ class PatientVoucherSerializers(serializers.ModelSerializer):
         voucher_item = VoucherItemModel.objects.filter(patient_voucher_id=instance.patient_voucher_id)
         voucher_item = VoucherItemSerializers(voucher_item, many=True)
 
+        ret["voucher_type_name"] = [vt[1] for vt in voucher_type_choice if vt[0] == instance.voucher_type][0]
+        
+        # if "voucher_type" in ret:
+        #     ret["voucher_type_name"] = voucher_type_choice[instance.voucher_type]
 
         ret["surgical_item"] = voucher_item.data
         return ret

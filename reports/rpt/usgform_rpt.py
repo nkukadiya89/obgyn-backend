@@ -77,7 +77,6 @@ def usg_form_report_rpt(request, usg_form_id, language_id=None):
             patient_opd.patient.state.state_name if patient_opd.patient.state.state_name else " ",
         ]
     )
-    context["remark"] = usg_report.remark
     context["mobile_no"] = patient_opd.patient.phone if "F" not in patient_opd.patient.phone else " "
     
     context["report_date"] = str(patient_opd.opd_date)

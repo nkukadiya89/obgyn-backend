@@ -294,19 +294,20 @@
         <br>
         <table width="100%" id="reporttable3" style="font-size: 14px;font-weight: bold;color: #343434;">
             <tr>
-                <td colspan="2" align="left"><b>Rx</b></td>
+                <td colspan="3" align="left"><b>Rx</b></td>
             </tr>
             <tr>
-                <td><b>Medicine</b></td><td><b>Unit</b></td>
+                <td>&nbsp;</td><td><b>Medicine</b></td><td><b>Unit</b></td>
             </tr>
             {% for medicine in context.medicine %}
                 <tr>
+                    <td>{{forloop.counter}}</td>
                     <td>{{medicine.medicine}}</td>
                     <td>{{medicine.unit}}</td>
                 </tr>
             {% endfor %}
             <tr>
-                <td align="center" colspan="2"><br><br>Sign:<br><br></td>
+                <td align="center" colspan="3"><br><br>Sign:<br><br></td>
             </tr>
         </table>
     </div>
