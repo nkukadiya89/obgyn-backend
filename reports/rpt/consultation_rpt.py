@@ -47,7 +47,7 @@ def consultation_rpt(request, id, language_id=None):
 
         
     context = {}
-    context["receipt_date"] = str(patient_opd.opd_date)
+    context["receipt_date"] = patient_opd.opd_date
     context["regd_no"] = patient_opd.patient.regd_no_barcode
 
 
