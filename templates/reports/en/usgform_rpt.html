@@ -491,7 +491,9 @@
                                 Indications for diagnosis Procedure:-
                             </td>
                             <td>
-                                <strong> =>Estimation of gestational age(dating)</strong>
+                                <strong> {% for indication in context.indication %}
+                                    ->{{indication}}<br>
+                                {% endfor %}</strong>
                             </td>
                         </tr>
                         <tr>
