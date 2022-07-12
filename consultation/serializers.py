@@ -76,11 +76,11 @@ class ConsultationSerializers(serializers.ModelSerializer):
             raise serializers.ValidationError("Enter valid SpO2%")
 
         if data["mh_every"]:
-            if 0 >= int(data["mh_every"]) <= 90:
+            if 0 >= int(data["mh_every"]) >= 90:
                 raise serializers.ValidationError("mh_every is not in the 0-90 ")    
 
         if data["mh_for"]:
-            if 0 >= int(data["mh_for"]) <= 30:
+            if 0 >= int(data["mh_for"]) >= 30:
                 raise serializers.ValidationError("mh_for is not in the 0-30 ")        
 
         if "regd_no" in data:
