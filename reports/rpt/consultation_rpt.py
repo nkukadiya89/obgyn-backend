@@ -98,6 +98,8 @@ def consultation_rpt(request, id, language_id=None):
     context["ftlscs_male_dead"] = consultation.ftlscs_male_dead
     context["ftlscs_female_live"] = consultation.ftlscs_female_live
     context["ftlscs_female_dead"] = consultation.ftlscs_female_dead
+    context["diagnosis"] = consultation.diagnosis.diagnosis_name
+    context["remark"] = consultation.remark
 
     context["phfh"] = consultation.fhs
     context["tprbp"] = "/".join(

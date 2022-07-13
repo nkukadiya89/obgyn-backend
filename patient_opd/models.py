@@ -15,6 +15,7 @@ class PatientOpdModel(models.Model):
     opd_time = models.CharField(max_length=10, default="")
     regd_no = models.CharField(max_length=100, default="")
     patient = models.ForeignKey(PatientModel, on_delete=models.DO_NOTHING)
+    is_paid = models.BooleanField(default=False)
     status = models.CharField(
         max_length=25, null=True, default="consultation"
     )  # This will be enable when any examination table gets entry of particular patient
