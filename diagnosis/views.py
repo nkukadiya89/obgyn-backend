@@ -141,14 +141,25 @@ def patch(request, id):
 def get(request, id=None):
     query_string = request.query_params
 
+    adminRecord=False
+    if "adminRecord" in query_string:
+        adminRecord = True if query_string["adminRecord"] == "true" else False
+
     data = {}
+
     try:
         if id:
             diagnosis = DiagnosisModel.objects.filter(pk=id, deleted=0)
         else:
-            diagnosis = DiagnosisModel.objects.filter(
-                Q(deleted=0, created_by=1) | Q(created_by=request.user.id)
-            )
+            if adminRecord:
+                diagnosis = DiagnosisModel.objects.filter(
+                    Q(deleted=0, created_by=1) | Q(created_by=request.user.id, deleted=0)
+                )
+            else:
+                diagnosis = DiagnosisModel.objects.filter(
+                    created_by=request.user.id, deleted=0
+                )
+
         data["total_record"] = len(diagnosis)
         diagnosis, data = filtering_query(
             diagnosis, query_string, "diagnosis_id", "DIAGNOSIS"
