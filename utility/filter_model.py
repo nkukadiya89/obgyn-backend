@@ -218,7 +218,7 @@ class ModelFilterDIAGNOSIS:
                 model = model.filter(diagnosis_name__icontains=fld_value)
             if fld_name == "ut_weeks":
                 model = model.filter(ut_weeks=fld_value)
-            if fld_name == "ut_days":
+            if fld_name == "fu":
                 model = model.filter(ut_days=fld_value)
             if fld_name == "diagnosis_type":
                 model = model.filter(diagnosis_type__icontains=fld_value)

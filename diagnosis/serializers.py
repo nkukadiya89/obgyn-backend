@@ -60,10 +60,11 @@ class DiagnosisSerializers(serializers.ModelSerializer):
         return data
 
     diagnosis_id = serializers.IntegerField(read_only=True)
+    fu = serializers.IntegerField(source="ut_days")
 
     # medicine = MedicineSerializers(many=True)
     class Meta:
         model = DiagnosisModel
-        fields = ['diagnosis_id', 'diagnosis_type', 'diagnosis_name', 'medicine', 'ut_weeks', 'ut_days', 'advice',
+        fields = ['diagnosis_id', 'diagnosis_type', 'diagnosis_name', 'medicine', 'ut_weeks', 'fu', 'advice',
                   'created_by',
                   'deleted']
