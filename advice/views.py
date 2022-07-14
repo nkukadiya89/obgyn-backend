@@ -216,6 +216,9 @@ class AdviceGroupAPI(APIView):
             data["data"] = []
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
+        advice_group = advice_group.filter(created_by__ne=request.user.id)
+
+
         if request.method == "DELETE":
             result = advice_group.update(deleted=1)
             data["success"] = True
