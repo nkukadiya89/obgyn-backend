@@ -15,7 +15,8 @@ from manage_fields.models import ManageFieldsModel
 class PatientDeliveryModel(models.Model):
     gender_choice = (
         ("MALE", "MALE"),
-        ("FEMALE", "FEMALE")
+        ("FEMALE", "FEMALE"),
+        ("OTHER", "OTHER")
     )
     delivery_type_choice = (
         ("NORMAL", "NORMAL"),
