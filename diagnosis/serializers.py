@@ -60,7 +60,7 @@ class DiagnosisSerializers(serializers.ModelSerializer):
         return data
 
     diagnosis_id = serializers.IntegerField(read_only=True)
-    fu = serializers.IntegerField(source="ut_days")
+    fu = serializers.IntegerField(source="ut_days", allow_null=True)
 
     # medicine = MedicineSerializers(many=True)
     class Meta:
