@@ -293,14 +293,23 @@ def get_timing(request, id=None):
     data = {}
     query_string = request.query_params
 
+    adminRecord=False
+    if "adminRecord" in query_string:
+        adminRecord = True if query_string["adminRecord"] == "true" else False
+
     try:
         if id:
             timing = TimingModel.objects.filter(pk=id, deleted=0)
         else:
-            timing = TimingModel.objects.filter(
-                Q(deleted=0, created_by=1)
-                | Q(created_by=request.user.id,deleted=0)
-            )
+            if adminRecord:
+                timing = TimingModel.objects.filter(
+                    Q(deleted=0, created_by=1)
+                    | Q(created_by=request.user.id,deleted=0)
+                )
+            else:
+                timing = TimingModel.objects.filter(
+                    created_by=request.user.id, deleted=0
+                )
 
         data["total_record"] = len(timing)
         timing, data = filtering_query(timing, query_string, "timing_id", "TIMING")
@@ -428,15 +437,24 @@ def patch_medicine(request, id):
 def get_medicine(request, id=None):
     query_string = request.query_params
 
+    adminRecord=False
+    if "adminRecord" in query_string:
+        adminRecord = True if query_string["adminRecord"] == "true" else False
+
     data = {}
     try:
         if id:
             medicine = MedicineModel.objects.filter(pk=id, deleted=0)
         else:
-            medicine = MedicineModel.objects.filter(
-                Q(deleted=0, created_by=1)
-                | Q(created_by=request.user.id)
+            if adminRecord:
+                medicine = MedicineModel.objects.filter(
+                    Q(deleted=0, created_by=1)
+                    | Q(created_by=request.user.id)
             )
+            else:
+                medicine = MedicineModel.objects.filter(
+                    created_by=request.user.id, deleted=0
+                )
 
         data["total_record"] = len(medicine)
 
@@ -474,15 +492,24 @@ def get_medicine(request, id=None):
 def get_or_medicine(request, id=None):
     query_string = request.query_params
 
+    adminRecord=False
+    if "adminRecord" in query_string:
+        adminRecord = True if query_string["adminRecord"] == "true" else False
+
     data = {}
     try:
         if id:
             medicine = MedicineModel.objects.filter(pk=id, deleted=0)
         else:
-            medicine = MedicineModel.objects.filter(
-                Q(deleted=0, created_by=1)
-                | Q(created_by=request.data.get("created_by"))
+            if adminRecord:
+                medicine = MedicineModel.objects.filter(
+                    Q(deleted=0, created_by=1)
+                    | Q(created_by=request.data.get("created_by"))
             )
+            else:
+                medicine = MedicineModel.objects.filter(
+                    created_by=request.user.id, deleted=0
+                )
 
         data["total_record"] = len(medicine)
 
@@ -517,15 +544,25 @@ def get_or_medicine(request, id=None):
 # ================= Retrieve Single or Multiple records=========================
 def get_medicine_type(request, id=None):
     query_string = request.query_params
+
+    adminRecord=False
+    if "adminRecord" in query_string:
+        adminRecord = True if query_string["adminRecord"] == "true" else False
+
     data = {}
     try:
         if id:
             medicine_type = MedicineTypeModel.objects.filter(pk=id, deleted=0)
         else:
-            medicine_type = MedicineTypeModel.objects.filter(
-                Q(deleted=0, created_by=1)
-                | Q(created_by=request.user.id)
+            if adminRecord:
+                medicine_type = MedicineTypeModel.objects.filter(
+                    Q(deleted=0, created_by=1)
+                    | Q(created_by=request.user.id)
             )
+            else:
+                medicine_type = MedicineTypeModel.objects.filter(
+                    created_by=request.user.id, deleted=0
+                )
 
         data["total_record"] = len(medicine_type)
         medicine_type, data = filtering_query(

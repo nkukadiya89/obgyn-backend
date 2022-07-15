@@ -287,14 +287,23 @@ def patch(request, id):
 def get(request, id=None):
     query_string = request.query_params
 
+    adminRecord=False
+    if "adminRecord" in query_string:
+        adminRecord = True if query_string["adminRecord"] == "true" else False
+
     data = {}
     try:
         if id:
             surgical_item = SurgicalItemModel.objects.filter(pk=id, deleted=0)
         else:
-            surgical_item = SurgicalItemModel.objects.filter(
-                Q(deleted=0, created_by=1) | Q(created_by=request.user.id)
+            if adminRecord:
+                surgical_item = SurgicalItemModel.objects.filter(
+                    Q(deleted=0, created_by=1) | Q(created_by=request.user.id)
             )
+            else:
+                surgical_item = SurgicalItemModel.objects.filter(
+                    created_by=request.user.id, deleted=0
+                )
 
         data["total_record"] = len(surgical_item)
         surgical_item, data = filtering_query(
@@ -322,6 +331,10 @@ def get(request, id=None):
 def get_group(request, id=None):
     query_string = request.query_params
 
+    adminRecord=False
+    if "adminRecord" in query_string:
+        adminRecord = True if query_string["adminRecord"] == "true" else False
+
     data = {}
     try:
         if id:
@@ -329,9 +342,14 @@ def get_group(request, id=None):
                 pk=id, deleted=0
             )
         else:
-            surgical_item_group = SurgicalItemGroupModel.objects.filter(
-                Q(deleted=0, created_by=1) | Q(created_by=request.user.id, deleted=0)
+            if adminRecord:
+                surgical_item_group = SurgicalItemGroupModel.objects.filter(
+                    Q(deleted=0, created_by=1) | Q(created_by=request.user.id, deleted=0)
             )
+            else:
+                surgical_item_group = SurgicalItemGroupModel.objects.filter(
+                    created_by=request.user.id, deleted=0
+                )
 
             data["total_record"] = len(surgical_item_group)
             surgical_item_group, data = filtering_query(
