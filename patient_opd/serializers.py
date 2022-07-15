@@ -98,7 +98,7 @@ class PatientOpdSerializers(serializers.ModelSerializer):
 
     patient_opd_id = serializers.IntegerField(read_only=True)
     opd_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
-    is_paid = serializers.BooleanField(required=True)
+
 
     class Meta:
         model = PatientOpdModel

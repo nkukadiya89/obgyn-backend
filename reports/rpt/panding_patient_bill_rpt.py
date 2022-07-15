@@ -32,36 +32,47 @@ def panding_patient_bill_rpt(request, start_date=None, end_date=None, language_i
 
     context_list = []
     for patient_billing in patient_billing_list:
-        patient_opd_id = patient_billing.patient_opd_id 
+        patient_opd_id = patient_billing.patient_opd_id
         patient_opd = PatientOpdModel.objects.filter(pk=patient_opd_id).first()
+        
+        
+
+        
+
+        context = {}
+        context["total_rs"] = patient_billing.total_rs
 
         if patient_opd:
-
-            context = {}
-            context["total_rs"] = patient_billing.total_rs
+            
             # context["patient_opd"] = patient_billing.patient_opd
             # context["date_of_admission"] = patient_billing.admission_date
+            if patient_opd.is_paid == False:
 
-            context["name"] = "".join(
-                [
-                    patient_opd.patient.first_name
-                    if patient_opd.patient.first_name
-                    else " ",
-                    " ",
-                    patient_opd.patient.middle_name
-                    if patient_opd.patient.middle_name
-                    else " ",
-                    " ",
-                    patient_opd.patient.last_name
-                    if patient_opd.patient.last_name
-                    else " ",
-                ]
-            )
+                context["name"] = "".join(
+                    [
+                        patient_opd.patient.first_name
+                        if patient_opd.patient.first_name
+                        else " ",
+                        " ",
+                        patient_opd.patient.middle_name
+                        if patient_opd.patient.middle_name
+                        else " ",
+                        " ",
+                        patient_opd.patient.last_name
+                        if patient_opd.patient.last_name
+                        else " ",
+                    ]
+                )
+        
+                
             context["is_paid"] = (
                 patient_opd.is_paid
                 if patient_opd.is_paid == False
                 else " "
             )
+
+
+        
             
         context_list.append(context)
         
