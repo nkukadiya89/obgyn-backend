@@ -26,6 +26,7 @@ from .rpt.ovulation_profile_rpt import ovulation_profile_rpt
 from .rpt.bill_receipt_rpt import bill_receipt_rpt
 from .rpt.usg_list_report_rpt import usg_list_report_rpt
 from .rpt.usg_form_report_rpt import usg_form_report_rpt
+from .rpt.panding_patient_bill_rpt import panding_patient_bill_rpt
 from patient_delivery.models import PatientDeliveryModel
 from django.db.models import Count
 from datetime import datetime,date
@@ -118,6 +119,34 @@ def mtp_list_report(request, language_id=None):
     if end_date:
         end_date = datetime.strptime(end_date,"%d-%m-%Y").strftime("%Y-%m-%d")
     return mtp_list_rpt(request, start_date,end_date,language_id)
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def panding_patient_bill_report(request,language_id=None):
+    data = request.query_params
+    start_date = data.get("start_date", None)
+    end_date = data.get("end_date", None)
+    if start_date:
+        start_date = datetime.strptime(start_date,"%d-%m-%Y").strftime("%Y-%m-%d")
+    end_date = data.get("end_date", None)
+    if end_date:
+        end_date = datetime.strptime(end_date,"%d-%m-%Y").strftime("%Y-%m-%d")
+    return panding_patient_bill_rpt(request, start_date, end_date, language_id)
+
+# @api_view(['GET'])
+# @authentication_classes([JWTAuthentication])
+# @permission_classes([IsAuthenticated])
+# def panding_patient_bill_report(request, id, language_id=None):
+#     data = request.query_params
+#     start_date = data.get("start_date", None)
+#     end_date = data.get("end_date", None)
+#     if start_date:
+#         start_date = datetime.strptime(start_date,"%d-%m-%Y").strftime("%Y-%m-%d")
+#     end_date = data.get("end_date", None)
+#     if end_date:
+#         end_date = datetime.strptime(end_date,"%d-%m-%Y").strftime("%Y-%m-%d")
+#     return panding_patient_bill_rpt(request, id, language_id)
 
 
 @api_view(['GET'])

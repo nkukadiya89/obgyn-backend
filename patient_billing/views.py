@@ -95,6 +95,7 @@ def create(request):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
         else:
             request.data["patient_opd"] = request.data["patient_opd_id"]
+        
 
         serializer = PatientBillingSerializers(patient_billing, data=request.data)
 
@@ -104,6 +105,7 @@ def create(request):
                 pk=request.data["patient_opd_id"]
             ).first()
             patient_opd.status = "billing"
+            patient_opd.is_paid = True
             patient_opd.save()
 
             patient_billing = PatientBillingModel.objects.filter(
