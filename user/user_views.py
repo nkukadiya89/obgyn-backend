@@ -42,6 +42,13 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             monthly_usg=monthly_usg
             yearly_usg=yearly_usg
 
+        if self.user.user_type.upper() == "SUPER ADMIN":
+            permission_list["USER_PERM"] = "hospital,doctor,staff"
+        elif self.user.user_type.upper() == "HOSPITAL":
+            permission_list["USER_PERM"] = "doctor,staff"
+        elif self.user.user_type.upper() == "DOCTOR":
+            permission_list["USER_PERM"] = "staff"
+
         token.update({"userData": {'userName': self.user.username, 'userId': self.user.id,
                                    "defaultLanguageId": LanguageModel.objects.get(
                                        pk=self.user.default_language_id).language_id,

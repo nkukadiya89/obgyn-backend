@@ -14,8 +14,12 @@ class DiagnosisSerializers(serializers.ModelSerializer):
         for medicine1 in ret["medicine"]:
             medicine_name = MedicineModel.objects.get(pk=medicine1)
             medicine_name_list[medicine_name.medicine_id] = medicine_name.medicine
+            
 
             ret['medicine_name'] = medicine_name_list
+            ret["medicine_type"] = medicine_name.medicine_type.medicine_type_id if medicine_name.medicine_type else 0
+            ret["medicine_type_name"] = medicine_name.medicine_type.medicine_type if medicine_name.medicine_type else " "
+            
             # ret.pop("medicine")
 
         return ret
