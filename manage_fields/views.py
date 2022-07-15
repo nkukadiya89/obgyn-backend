@@ -139,16 +139,25 @@ def patch_mf(request, id):
 # ================= Retrieve Single or Multiple records=========================
 def get_mf(request, id=None):
     query_string = request.query_params
-    user = request.user
+
+    adminRecord=False
+    if "adminRecord" in query_string:
+        adminRecord = True if query_string["adminRecord"] == "true" else False
+
     data = {}
     try:
         if id:
             manage_fields = ManageFieldsModel.objects.filter(pk=id, deleted=0)
         else:
-            manage_fields = ManageFieldsModel.objects.filter(
-                Q(deleted=0, created_by=1)
-                | Q(created_by=request.user.id, deleted=0)
+            if adminRecord:
+                manage_fields = ManageFieldsModel.objects.filter(
+                    Q(deleted=0, created_by=1)
+                    | Q(created_by=request.user.id, deleted=0)
             )
+            else:
+                manage_fields = ManageFieldsModel.objects.filter(
+                    created_by=request.user.id, deleted=0
+                )
 
         data["total_record"] = len(manage_fields)
         manage_fields, data = filtering_query(
@@ -294,15 +303,26 @@ def patch_mfm(request, id):
 def get_mfm(request, id=None):
 
     query_string = request.query_params
+
+    adminRecord=False
+    if "adminRecord" in query_string:
+        adminRecord = True if query_string["adminRecord"] == "true" else False
+        
     data = {}
     try:
         if id:
             field_master = FieldMasterModel.objects.filter(pk=id, deleted=0)
         else:
-            field_master = FieldMasterModel.objects.filter(
-                Q(deleted=0, created_by=1)
-                | Q(created_by=request.user.id, deleted=0)
+            if adminRecord:
+                field_master = FieldMasterModel.objects.filter(
+                    Q(deleted=0, created_by=1)
+                    | Q(created_by=request.user.id, deleted=0)
             )
+            else:
+                field_master = FieldMasterModel.objects.filter(
+                    created_by=request.user.id, deleted=0
+                )
+            
 
         data["total_record"] = len(field_master)
         field_master, data = filtering_query(
