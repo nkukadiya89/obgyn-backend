@@ -1,7 +1,9 @@
 from rest_framework import serializers
 
+from patient_opd.models import PatientOpdModel
 from patient.models import PatientModel
 from .models import PatientBillingModel
+from patient_opd.serializers import PatientOpdSerializers
 from manage_fields.serializers import ManageFieldsSerializers
 from diagnosis.serializers import DiagnosisSerializers
 
@@ -12,7 +14,12 @@ class PatientBillingSerializers(serializers.ModelSerializer):
 
         if "patient_opd" in ret:
             ret["patient_opd_id"] = ret["patient_opd"]
+            ret["is_paid"] = PatientOpdSerializers(instance.patient_opd).data["is_paid"]
+            ret["first_name"] = PatientOpdSerializers(instance.patient_opd).data["first_name"]
+            ret["middle_name"] = PatientOpdSerializers(instance.patient_opd).data["middle_name"]
+            ret["last_name"] = PatientOpdSerializers(instance.patient_opd).data["last_name"]
             del ret["patient_opd"]
+
 
         for fld_nm in ["procedure_name", "room_type", "other_charge"]:
             fld_name = fld_nm + "_name"
