@@ -42,7 +42,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             monthly_usg=monthly_usg
             yearly_usg=yearly_usg
 
-        if self.user.user_type.upper() == "SUPER ADMIN":
+        if self.user.user_type.upper() == "SUPER ADMIN" or self.user.user_type.upper() == "ADMIN":
             permission_list["USER_PERM"] = "hospital,doctor,staff"
         elif self.user.user_type.upper() == "HOSPITAL":
             permission_list["USER_PERM"] = "doctor,staff"
