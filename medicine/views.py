@@ -293,7 +293,7 @@ def get_timing(request, id=None):
     data = {}
     query_string = request.query_params
 
-    adminRecord=False
+    adminRecord=True
     if "adminRecord" in query_string:
         adminRecord = True if query_string["adminRecord"] == "true" else False
 
@@ -437,7 +437,7 @@ def patch_medicine(request, id):
 def get_medicine(request, id=None):
     query_string = request.query_params
 
-    adminRecord=False
+    adminRecord=True
     if "adminRecord" in query_string:
         adminRecord = True if query_string["adminRecord"] == "true" else False
 
@@ -492,7 +492,7 @@ def get_medicine(request, id=None):
 def get_or_medicine(request, id=None):
     query_string = request.query_params
 
-    adminRecord=False
+    adminRecord=True
     if "adminRecord" in query_string:
         adminRecord = True if query_string["adminRecord"] == "true" else False
 

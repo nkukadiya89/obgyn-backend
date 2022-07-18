@@ -287,7 +287,7 @@ def patch(request, id):
 def get(request, id=None):
     query_string = request.query_params
 
-    adminRecord=False
+    adminRecord=True
     if "adminRecord" in query_string:
         adminRecord = True if query_string["adminRecord"] == "true" else False
 
@@ -331,7 +331,7 @@ def get(request, id=None):
 def get_group(request, id=None):
     query_string = request.query_params
 
-    adminRecord=False
+    adminRecord=True
     if "adminRecord" in query_string:
         adminRecord = True if query_string["adminRecord"] == "true" else False
 
