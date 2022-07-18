@@ -13,6 +13,7 @@ def medicine_prescription_rpt(request,voucher_id, language_id=None):
 
     patient_voucher = PatientVoucherModel.objects.filter(pk=voucher_id).first()
 
+
     if patient_voucher == None:
         context = {}
         context["msg"] = False
@@ -46,54 +47,83 @@ def medicine_prescription_rpt(request,voucher_id, language_id=None):
         context["error"] = "Consultation does not exist.."
         return JsonResponse(context)
 
+
     if patient_voucher:
 
-        voucher_item_list = VoucherItemModel.objects.filter(patient_voucher=patient_voucher,deleted=0)
+        if patient_voucher.voucher_type == "S":
+            voucher_item_list = VoucherItemModel.objects.filter(patient_voucher=patient_voucher,deleted=0)
+            
+            if len(voucher_item_list)<=0:
+                context = {}
+                context["msg"] = False
+                context["error"] = "Record not Found."
+                return JsonResponse(context)
 
-        if len(voucher_item_list)<=0:
             context = {}
-            context["msg"] = False
-            context["error"] = "Record not Found."
-            return JsonResponse(context)
+            context["receipt_date"] = patient_voucher.bill_date
+            context["bill_no"] = patient_voucher.voucher_no
+            context["hb"] = consultation.hb
+            context["blood_group"] = consultation.blood_group
+            context["name"] = "".join(
+                [
+                    patient_opd.patient.first_name  if patient_opd.patient.first_name else " ",
+                    " ",
+                    patient_opd.patient.middle_name if patient_opd.patient.middle_name else " ",
+                    " ",
+                    patient_opd.patient.last_name if patient_opd.patient.last_name else " ",
+                ]
+            )
+            context["address"] = "".join(
+                [
+                    " ",
+                    patient_opd.patient.city.city_name if patient_opd.patient.city.city_name else " ",
+                    " ",
+                    patient_opd.patient.district.district_name if patient_opd.patient.district.district_name else " ",
+                    " ",
+                    patient_opd.patient.taluka.taluka_name if patient_opd.patient.taluka.taluka_name else " ",
+                    " ",
+                    patient_opd.patient.state.state_name if patient_opd.patient.state.state_name else " ",
+                ]
+            )
+            
+            context["mobile"] = patient_opd.patient.phone if "F" not in patient_opd.patient.phone else " "
 
-        context = {}
-        context["receipt_date"] = patient_voucher.bill_date
-        context["bill_no"] = patient_voucher.voucher_no
-        context["hb"] = consultation.hb
-        context["blood_group"] = consultation.blood_group
-        context["name"] = "".join(
-            [
-                patient_opd.patient.first_name  if patient_opd.patient.first_name else " ",
-                " ",
-                patient_opd.patient.middle_name if patient_opd.patient.middle_name else " ",
-                " ",
-                patient_opd.patient.last_name if patient_opd.patient.last_name else " ",
-            ]
-        )
-        context["address"] = "".join(
-            [
-                " ",
-                patient_opd.patient.city.city_name if patient_opd.patient.city.city_name else " ",
-                " ",
-                patient_opd.patient.district.district_name if patient_opd.patient.district.district_name else " ",
-                " ",
-                patient_opd.patient.taluka.taluka_name if patient_opd.patient.taluka.taluka_name else " ",
-                " ",
-                patient_opd.patient.state.state_name if patient_opd.patient.state.state_name else " ",
-            ]
-        )
+            medicine =[]
+            for voucher_item in voucher_item_list:
+                context_sub={}
+                context_sub["medicine"] = voucher_item.surgical_item.drug_name
+                context_sub["unit"] = voucher_item.unit
+                medicine.append(context_sub)
         
-        context["mobile"] = patient_opd.patient.phone if "F" not in patient_opd.patient.phone else " "
+            context["medicine"] = medicine
 
-        medicine =[]
-        for voucher_item in voucher_item_list:
-            context_sub={}
-            context_sub["medicine"] = voucher_item.surgical_item.drug_name
-            context_sub["unit"] = voucher_item.unit
-            medicine.append(context_sub)
-      
-        context["medicine"] = medicine
-    
-    template_name = "reports/en/medicine_prescription.html"
+        else:
+            # voucher_type = patient_voucher.voucher_type 
+            # voucher_type = PatientVoucherModel.objects.filter(voucher_type="voucher_type_name")
+            context = {}
+            context["amount"] = patient_voucher.amount
+            context["voucher_type"] = patient_voucher.voucher_type
+            # for voucher_type in patient_voucher:
+            #     context["voucher_type"] = voucher_type.voucher_type_name
+            #     # context_sub["unit"] = voucher_item.unit
+        
+            # context["medicine"] = medicine
+            # context["hb"] = consultation.hb
+            # context["blood_group"] = consultation.blood_group
+            context["name"] = "".join(
+                [
+                    patient_opd.patient.first_name  if patient_opd.patient.first_name else " ",
+                    " ",
+                    patient_opd.patient.middle_name if patient_opd.patient.middle_name else " ",
+                    " ",
+                    patient_opd.patient.last_name if patient_opd.patient.last_name else " ",
+                ]
+            )
+        if patient_voucher.voucher_type == "S":  
+            
+            template_name = "reports/en/medicine_prescription.html"
+        else:
+            template_name = "reports/en/voucher_choice.html"
+
     return render(request, template_name,
-                  {"context": context, "template_header": template_header.header_text.replace("'", "\"")})
+                    {"context": context, "template_header": template_header.header_text.replace("'", "\"")})

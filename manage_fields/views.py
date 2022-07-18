@@ -140,7 +140,7 @@ def patch_mf(request, id):
 def get_mf(request, id=None):
     query_string = request.query_params
 
-    adminRecord=False
+    adminRecord=True
     if "adminRecord" in query_string:
         adminRecord = True if query_string["adminRecord"] == "true" else False
 
@@ -304,7 +304,7 @@ def get_mfm(request, id=None):
 
     query_string = request.query_params
 
-    adminRecord=False
+    adminRecord=True
     if "adminRecord" in query_string:
         adminRecord = True if query_string["adminRecord"] == "true" else False
         

@@ -274,37 +274,21 @@
     <div id="obygyn">
 
         {{ template_header | safe }}
-        <div class="obgyn-title">-: Panding Patient Billing Report :-</div>
+        <div class="obgyn-title">-: Voucher Choice:-</div>
 
         <table width="100%" id="reporttable3" style="font-size: 14px;font-weight: bold;color: #343434;">
 
             <tr>
-                <th style="width: 60px;">
-                    Sr.NO
-                </th>
-                <th>
-                    Patient Name
-                </th>
-                <th>
-                    Barcode
-                </th>
-              
-            </tr>
-            {% for context in context_list %}
-            <tr>
+                <td><b>Patient Name</b></td>
+                <td><b>Voucher Type</b></td>
+                <td align="center"><b>Amount</b></td>
 
-                <td>
-                    {{ forloop.counter }}
-                </td>
-                <td>
-                    {{context.name}}
-                </td>
-                <td style="text-align: center;">
-                    <img src={{context.regd_no}} width='200' height="60"/>
-                </td>
-                
             </tr>
-            {% endfor %}
+            <tr>
+                <td>{{context.name}}</td>
+                <td>{{context.voucher_type}}</td>
+                <td align="center">{{context.amount}}</td>
+            </tr>
         </table>
 
     </div>

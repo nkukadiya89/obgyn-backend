@@ -141,15 +141,26 @@ def patch(request, id):
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
+    
+    adminRecord=True
+    if "adminRecord" in query_string:
+        adminRecord = True if query_string["adminRecord"] == "true" else False
+
     data = {}
     try:
         if id:
             advice = AdviceModel.objects.filter(pk=id, deleted=0)
         else:
-            advice = AdviceModel.objects.filter(
-                Q(deleted=0, created_by=1)
-                | Q(created_by=request.user.id, deleted=0)
+            if adminRecord:
+
+                advice = AdviceModel.objects.filter(
+                    Q(deleted=0, created_by=1)
+                    | Q(created_by=request.user.id, deleted=0)
             )
+            else:
+                advice = AdviceModel.objects.filter(
+                    created_by=request.user.id, deleted=0
+                )
 
         data["total_record"] = len(advice)
         advice, data = filtering_query(advice, query_string, "advice_id", "ADVICE")
@@ -287,7 +298,7 @@ def patch_group(request, id):
 def get_group(request, id=None):
     query_string = request.query_params
 
-    adminRecord=False
+    adminRecord=True
     if "adminRecord" in query_string:
         adminRecord = True if query_string["adminRecord"] == "true" else False
 
