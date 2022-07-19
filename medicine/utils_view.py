@@ -12,7 +12,7 @@ def link_diagnosis(request, medicine_id):
             deleted=0, created_by=request.data.get('created_by'), diagnosis_name__iexact=request.data.get('diagnosis_name'), diagnosis_type="D").first()
     elif diagnosis_type.upper() == "U":
         diagnosis = DiagnosisModel.objects.filter(
-            deleted=0, created_by=request.data.get('created_by'), fu=request.data.get('ut_days'), utweeks=request.data.get('ut_weeks'), diagnosis_type="U").first()
+            deleted=0, created_by=request.data.get('created_by'), fu=request.data.get('fu'), ut_weeks=request.data.get('ut_weeks'), diagnosis_type="U").first()
 
     if diagnosis == None:
         diagnosis = DiagnosisModel()
@@ -23,8 +23,8 @@ def link_diagnosis(request, medicine_id):
                 'diagnosis_name', "")
         else:
             diagnosis_dict["diagnosis_type"] = "U"
-            diagnosis_dict["fu"] = request.data.get('ut_days')
-            diagnosis_dict["utweeks"] = request.data.get('ut_weeks')
+            diagnosis_dict["fu"] = request.data.get('fu')
+            diagnosis_dict["ut_weeks"] = request.data.get('ut_weeks')
 
         diagnosis_dict["medicine"] = [medicine_id]
         diagnosis_dict["created_by"] = request.data.get('created_by')

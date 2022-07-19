@@ -27,7 +27,7 @@ class DiagnosisSerializers(serializers.ModelSerializer):
     def validate(self, data):
         diagnosis_name = data.get('diagnosis_name', "")
         ut_weeks = data.get("ut_weeks", 0)
-        ut_days = data.get("ut_days", 0)
+        fu = data.get("fu", 0)
         diagnosis_type = data.get("diagnosis_type")
         created_by = data.get('created_by')
 
@@ -64,7 +64,6 @@ class DiagnosisSerializers(serializers.ModelSerializer):
         return data
 
     diagnosis_id = serializers.IntegerField(read_only=True)
-    fu = serializers.IntegerField(source="ut_days", allow_null=True)
 
     # medicine = MedicineSerializers(many=True)
     class Meta:

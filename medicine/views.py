@@ -492,6 +492,7 @@ def get_medicine(request, id=None):
 def get_or_medicine(request, id=None):
     query_string = request.query_params
 
+
     adminRecord=True
     if "adminRecord" in query_string:
         adminRecord = True if query_string["adminRecord"] == "true" else False
