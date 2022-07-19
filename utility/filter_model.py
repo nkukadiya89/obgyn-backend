@@ -310,6 +310,8 @@ class ModelFilterMEDICINEOR:
                     filter_str = filter_str + "| Q(diagnosismodel__" + key + "=" + value + ")"
                 else:
                     filter_str = filter_str + "Q(diagnosismodel__" + key + "=" + value + ")"
+            
+            filter_str = filter_str + ")"
         else:
             filter_str = "model.filter(diagnosismodel__"+ fld_name + "="+ fld_val + ")" 
 
