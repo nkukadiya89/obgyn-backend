@@ -12,7 +12,7 @@ class DiagnosisModel(models.Model):
     diagnosis_type = models.CharField(max_length=3, default="D")
     medicine = models.ManyToManyField(MedicineModel,blank=True)
     ut_weeks = models.IntegerField(null=True)
-    ut_days = models.IntegerField(null=True)
+    fu = models.IntegerField(null=True)
     advice = models.CharField(max_length=100, null=True)
 
     created_by = models.IntegerField(default=1, unique=False)
