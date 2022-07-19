@@ -295,44 +295,56 @@ class ModelFilterMEDICINE:
 
 class ModelFilterMEDICINEOR:
     def filter_fields(self, model, filter_fields):
-
+        
         filter_fields_dict = {}
         for ffields in filter_fields:
             fld_name, fld_val = ffields.split("=")
             filter_fields_dict[fld_name] = fld_val
 
-        if (
-            "diagnosis_id" in filter_fields_dict
-            and "fu" in filter_fields_dict
-            and "ut_weeks" in filter_fields_dict
-        ):
-            model = model.filter(
-                Q(diagnosismodel__diagnosis_id=filter_fields_dict["diagnosis_id"])
-                | Q(
-                    diagnosismodel__deleted=0,
-                    diagnosismodel__fu=filter_fields_dict["fu"],
-                    diagnosismodel__ut_weeks=filter_fields_dict["ut_weeks"],
-                )
-            )
-        elif (
-            "diagnosis_id" not in filter_fields_dict
-            and "fu" in filter_fields_dict
-            and "ut_weeks" in filter_fields_dict
-        ):
-            model = model.filter(
-                diagnosismodel__deleted=0,
-                diagnosismodel__fu=filter_fields_dict["fu"],
-                diagnosismodel__ut_weeks=filter_fields_dict["ut_weeks"],
-            )
-        elif (
-            "diagnosis_id" in filter_fields_dict
-            and "fu" not in filter_fields_dict
-            and "ut_weeks" not in filter_fields_dict
-        ):
-            model = model.filter(
-                diagnosismodel__diagnosis_id=filter_fields_dict["diagnosis_id"]
-            )
+        if len(filter_fields_dict)>1:
+            filter_str = "model.filter("
+            cnt = 0
+            for key,value in filter_fields_dict.items():
+                cnt +=1
+                if cnt>1:
+                    filter_str = filter_str + "| Q(diagnosismodel__" + key + "=" + value + ")"
+                else:
+                    filter_str = filter_str + "Q(diagnosismodel__" + key + "=" + value + ")"
+        else:
+            filter_str = "model.filter(diagnosismodel__"+ fld_name + "="+ fld_val + ")" 
 
+        # if (
+        #     "diagnosis_id" in filter_fields_dict
+        #     and "fu" in filter_fields_dict
+        #     and "ut_weeks" in filter_fields_dict
+        # ):
+        #     model = model.filter(
+        #         Q(diagnosismodel__diagnosis_id=filter_fields_dict["diagnosis_id"])
+        #         | Q(
+        #             diagnosismodel__deleted=0,
+        #             diagnosismodel__fu=filter_fields_dict["fu"],
+        #             diagnosismodel__ut_weeks=filter_fields_dict["ut_weeks"],
+        #         )
+        #     )
+        # elif (
+        #     "diagnosis_id" not in filter_fields_dict
+        #     and "fu" in filter_fields_dict
+        #     and "ut_weeks" in filter_fields_dict
+        # ):
+        #     model = model.filter(
+        #         diagnosismodel__deleted=0,
+        #         diagnosismodel__fu=filter_fields_dict["fu"],
+        #         diagnosismodel__ut_weeks=filter_fields_dict["ut_weeks"],
+        #     )
+        # elif (
+        #     "diagnosis_id" in filter_fields_dict
+        #     and "fu" not in filter_fields_dict
+        #     and "ut_weeks" not in filter_fields_dict
+        # ):
+        #     model = model.filter(
+        #         diagnosismodel__diagnosis_id=filter_fields_dict["diagnosis_id"]
+        #     )
+        model = eval(filter_str)
         model = model.distinct()
         return model
 
