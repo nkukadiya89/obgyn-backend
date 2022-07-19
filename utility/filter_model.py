@@ -219,7 +219,7 @@ class ModelFilterDIAGNOSIS:
             if fld_name == "ut_weeks":
                 model = model.filter(ut_weeks=fld_value)
             if fld_name == "fu":
-                model = model.filter(ut_days=fld_value)
+                model = model.filter(fu=fld_value)
             if fld_name == "diagnosis_type":
                 model = model.filter(diagnosis_type__icontains=fld_value)
         return model
@@ -228,7 +228,7 @@ class ModelFilterDIAGNOSIS:
         search = query_string["search"]
         if search:
             if search.isnumeric():
-                model = model.filter(Q(ut_weeks=search) | Q(ut_days=search))
+                model = model.filter(Q(ut_weeks=search) | Q(fu=search))
             else:
                 model = model.filter(
                     Q(diagnosis_name__icontains=search)
@@ -263,8 +263,8 @@ class ModelFilterMEDICINE:
                 model = model.filter(diagnosismodel__diagnosis_id=fld_value)
             if fld_name == "ut_weeks":
                 model = model.filter(diagnosismodel__ut_weeks=fld_value)
-            if fld_name == "ut_days":
-                model = model.filter(diagnosismodel__ut_days=fld_value)
+            if fld_name == "fu":
+                model = model.filter(diagnosismodel__fu=fld_value)
 
         model = model.distinct()
         return model
@@ -276,7 +276,7 @@ class ModelFilterMEDICINE:
                 model = model.filter(
                     Q(diagnosismodel__diagnosis_id=search)
                     | Q(diagnosismodel__ut_weeks=search)
-                    | Q(diagnosismodel__ut_days=search)
+                    | Q(diagnosismodel__fu=search)
                 )
             else:
                 model = model.filter(
@@ -303,30 +303,30 @@ class ModelFilterMEDICINEOR:
 
         if (
             "diagnosis_id" in filter_fields_dict
-            and "ut_days" in filter_fields_dict
+            and "fu" in filter_fields_dict
             and "ut_weeks" in filter_fields_dict
         ):
             model = model.filter(
                 Q(diagnosismodel__diagnosis_id=filter_fields_dict["diagnosis_id"])
                 | Q(
                     diagnosismodel__deleted=0,
-                    diagnosismodel__ut_days=filter_fields_dict["ut_days"],
+                    diagnosismodel__fu=filter_fields_dict["fu"],
                     diagnosismodel__ut_weeks=filter_fields_dict["ut_weeks"],
                 )
             )
         elif (
             "diagnosis_id" not in filter_fields_dict
-            and "ut_days" in filter_fields_dict
+            and "fu" in filter_fields_dict
             and "ut_weeks" in filter_fields_dict
         ):
             model = model.filter(
                 diagnosismodel__deleted=0,
-                diagnosismodel__ut_days=filter_fields_dict["ut_days"],
+                diagnosismodel__fu=filter_fields_dict["fu"],
                 diagnosismodel__ut_weeks=filter_fields_dict["ut_weeks"],
             )
         elif (
             "diagnosis_id" in filter_fields_dict
-            and "ut_days" not in filter_fields_dict
+            and "fu" not in filter_fields_dict
             and "ut_weeks" not in filter_fields_dict
         ):
             model = model.filter(
@@ -343,7 +343,7 @@ class ModelFilterMEDICINEOR:
                 model = model.filter(
                     Q(diagnosismodel__diagnosis_id=search)
                     | Q(diagnosismodel__ut_weeks=search)
-                    | Q(diagnosismodel__ut_days=search)
+                    | Q(diagnosismodel__fu=search)
                 )
             else:
                 model = model.filter(
