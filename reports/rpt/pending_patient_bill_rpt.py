@@ -8,7 +8,7 @@ from django.http import JsonResponse
 
 
 @csrf_exempt
-def panding_patient_bill_rpt(request, start_date=None, end_date=None, language_id=1):
+def pending_patient_bill_rpt(request, start_date=None, end_date=None, language_id=1):
 
     context_list = []
     if start_date !=None or end_date!=None :
@@ -53,7 +53,7 @@ def panding_patient_bill_rpt(request, start_date=None, end_date=None, language_i
         context["error"] = "Please create report header."
         return JsonResponse(context)
 
-    template_name = "reports/en/panding_patient_billing.html"
+    template_name = "reports/en/pending_patient_billing.html"
     return render(request, template_name,
                   {"context_list": context_list, "template_header": template_header.header_text.replace("'", "\"")})    
 

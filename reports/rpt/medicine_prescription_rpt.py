@@ -2,7 +2,7 @@ from ast import Delete
 from django.shortcuts import render
 from template_header.models import TemplateHeaderModel
 from patient_prescription.models import PatientPrescriptionModel
-from patient_voucher.models import PatientVoucherModel, VoucherItemModel
+from patient_voucher.models import PatientVoucherModel, VoucherItemModel, voucher_type_choice
 from consultation.models import ConsultationModel
 
 from django.views.decorators.csrf import csrf_exempt
@@ -98,18 +98,11 @@ def medicine_prescription_rpt(request,voucher_id, language_id=None):
             context["medicine"] = medicine
 
         else:
-            # voucher_type = patient_voucher.voucher_type 
-            # voucher_type = PatientVoucherModel.objects.filter(voucher_type="voucher_type_name")
+            
             context = {}
             context["amount"] = patient_voucher.amount
-            context["voucher_type"] = patient_voucher.voucher_type
-            # for voucher_type in patient_voucher:
-            #     context["voucher_type"] = voucher_type.voucher_type_name
-            #     # context_sub["unit"] = voucher_item.unit
-        
-            # context["medicine"] = medicine
-            # context["hb"] = consultation.hb
-            # context["blood_group"] = consultation.blood_group
+
+            context["voucher_type"] = [vt[1] for vt in voucher_type_choice if vt[0] == patient_voucher.voucher_type][0]
             context["name"] = "".join(
                 [
                     patient_opd.patient.first_name  if patient_opd.patient.first_name else " ",
