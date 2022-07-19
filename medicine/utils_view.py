@@ -34,7 +34,7 @@ def link_diagnosis(request, medicine_id):
         if serializer.is_valid():
             serializer.save()
 
-        diagnosis = DiagnosisModel.objects.get(
+    diagnosis = DiagnosisModel.objects.get(
             pk=serializer.data["diagnosis_id"])
 
     diagnosis.medicine.add(medicine_id)
