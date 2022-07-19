@@ -307,13 +307,13 @@ class ModelFilterMEDICINEOR:
             for key,value in filter_fields_dict.items():
                 cnt +=1
                 if cnt>1:
-                    filter_str = filter_str + "| Q(diagnosismodel__" + key + "=" + value + ")"
+                    filter_str = filter_str + "| Q(diagnosismodel__" + key + "=" + value + ",deleted=0)"
                 else:
-                    filter_str = filter_str + "Q(diagnosismodel__" + key + "=" + value + ")"
+                    filter_str = filter_str + "Q(diagnosismodel__" + key + "=" + value + ",deleted=0)"
             
             filter_str = filter_str + ")"
         else:
-            filter_str = "model.filter(diagnosismodel__"+ fld_name + "="+ fld_val + ")" 
+            filter_str = "model.filter(diagnosismodel__"+ fld_name + "="+ fld_val + ",deleted=0)" 
 
         # if (
         #     "diagnosis_id" in filter_fields_dict
@@ -346,6 +346,8 @@ class ModelFilterMEDICINEOR:
         #     model = model.filter(
         #         diagnosismodel__diagnosis_id=filter_fields_dict["diagnosis_id"]
         #     )
+
+
         model = eval(filter_str)
         model = model.distinct()
         return model
