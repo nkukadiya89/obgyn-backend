@@ -52,7 +52,7 @@
 
             <tr style="border:none;visibility:visible">
                   <td style="border:none;">4.બાળકનું નામ: </td>
-                    <td style="border:none;"><b>-</b></td>
+                    <td style="border:none;"><b>{{context.child_name}}</b></td>
                     </tr>
             <tr style="border:none;visibility:visible">
                   <td style="border:none;">5.માતાનું નામ:</td>
@@ -111,21 +111,22 @@
       <table width="100%" class="report" style="visibility:visible">
    <tr style="visibility:visible"><td colspan="4" style="text-align:center;visibility:visible">
                     <h2 style="font-size:18px;display:block;visibility:visible">રજીસ્ટારે ભરવું.</h2>
-                 </td></tr>               
+                 </td></tr>  
                  
-                 
-                    <tr style="border:none;visibility:visible">
-                        <td width="27%"style="border:none;">નો. નંબર: </td>
-                         <td width="23%"style="border:none;"></td>
-                    <td width="30%"style="border:none;">નો.તારીખ: </td>
-                     <td width="20%"style="border:none;"></td>
-                    </tr>
-                      <tr style="border:none;visibility:visible">
-                        <td style="border:none;">જીલ્લો: </td>
-                           <td style="border:none;"><b>{{context.district}}</b></td>
-                          <td style="border:none;">નો.એકમ: </td>
-                             <td style="border:none;"></td>
-                    </tr>
+                  
+                  <tr style="border:none;visibility:visible">
+                    <td style="border:none;">નો. નંબર: </td>
+                    <td style="border:none;"><b></b></td>
+                    <td style="border:none;">નો.તારીખ: </td>
+                    <td style="border:none;"> <b></b></td>
+                </tr>
+                
+                  <tr style="border:none;visibility:visible">
+                    <td style="border:none;">જીલ્લો: </td>
+                    <td style="border:none;"><b>{{context.district}}</b></td>
+                    <td style="border:none;">નો.એકમ: </td>
+                    <td style="border:none;"></td>
+                </tr>
                    
                       <tr style="border:none;visibility:visible">
                        <td style="border:none;">તાલુકો:</td>
@@ -193,7 +194,7 @@
             
                                                    <tr style="border:none;visibility:visible">
                         <td style="border:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;અ.જીલ્લો:/પીન:</td>
-                        <td style="border:none;"><b>{{context.mother_address}}</b> </td>
+                        <td style="border:none;"><b>{{context.mother_district}} / {{context.pin}} </b> </td>
                         <td style="border:none;">(યોગ્ય જગ્યાએ ટીકમાર્ક કરો)</td>
                         <td style="border:none;"></td>    
                     
@@ -285,15 +286,14 @@
                     <h2 style="font-size:18px;display:block;visibility:visible">રજીસ્ટારે ભરવું.</h2>
                  </td></tr>               
                    <tr style="border:none;visibility:visible">
-                        <td width="20%" style="border:none;">નામ: </td>
-                       <td width="35%" style="border:none;">
-                           {{contex.mother_name}}</td>
-                        <td width="20%" style="border:none;">નોધણી  નંબર:</td>
-                        <td width="25%" style="border:none;"></td>
+                    <td style="border:none;">નામ:</td>
+                    <td style="border:none;"><b>{{context.mother_name}}</b></td>
+                        <td style="border:none;">નોધણી  નંબર:</td>
+                        <td style="border:none;"><b></b></td>
                     </tr>
                       <tr style="border:none;visibility:visible">
                         <td style="border:none;">જીલ્લો: </td>
-                        <td style="border:none;"><b>{{context.mother_address}}</b> </td>
+                        <td style="border:none;"><b>{{context.mother_district}}</b> </td>
                         <td style="border:none;">જન્મ તારીખ:</td>
                         <td style="border:none;"><b>{{context.date}} </b></td>
                     </tr>

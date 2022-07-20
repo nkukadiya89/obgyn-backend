@@ -54,7 +54,8 @@ def child_birth_rpt(request, id, language_id=None):
     )
     context["mother_taluka"] = patient_delivery.city.city_name if patient_delivery.city.city_name else " "
     context["mother_city"] = patient_delivery.taluka.taluka_name if patient_delivery.taluka.taluka_name else " "
-    context["address"] = "".join(
+    context["mother_district"] = patient_delivery.district.district_name if patient_delivery.district.district_name else " "
+    context["address"] = " ".join(
         [
             " ",
             patient.city.city_name if patient.city.city_name else " ",
@@ -69,12 +70,15 @@ def child_birth_rpt(request, id, language_id=None):
     context["district"] = patient_opd.consulted_by.hospital.district.district_name if patient_opd.consulted_by.hospital.district.district_name else " "
     context["taluka"] = patient_opd.consulted_by.hospital.taluka.taluka_name if patient_opd.consulted_by.hospital.taluka.taluka_name else " "
     context["city"] = patient_opd.consulted_by.hospital.city.city_name if patient_opd.consulted_by.hospital.city.city_name else " "
+    context["pin"] = patient_delivery.pin
 
+    context["regd_no"] = patient_delivery.regd_no
     context["age"] = patient.age
     context["date"] = patient_delivery.birth_date
     context["time"] = patient_delivery.birth_time
     context["gender"] = patient_delivery.child_gender
     context["weight"] = patient_delivery.weight
+    context["child_name"] = patient_delivery.child_name
     context["child_status"] = patient_delivery.baby_status
     context["child_count"] = patient_delivery.live_male_female
     context["episitomy_by"] = patient_delivery.weight
@@ -99,11 +103,11 @@ def child_birth_rpt(request, id, language_id=None):
             else " ",
         ]
     )
-    context["religion"] = patient_delivery.religion
-    context["father_education"] = patient_delivery.father_education
-    context["mother_education"] = patient_delivery.mother_education
-    context["father_occupation"] = patient_delivery.father_occupation
-    context["mother_occupation"] = patient_delivery.mother_occupation
+    context["religion"] = patient_delivery.religion.field_value
+    context["father_education"] = patient_delivery.father_education.field_value
+    context["mother_education"] = patient_delivery.mother_education.field_value
+    context["father_occupation"] = patient_delivery.father_occupation.field_value
+    context["mother_occupation"] = patient_delivery.mother_occupation.field_value
     context["marriage_age"] = patient_delivery.marriage_age
     context["live_male_female"] = patient_delivery.live_male_female
     context["delivery_type"] = patient_delivery.delivery_type
