@@ -57,17 +57,12 @@ class USGFormChildSerializers(serializers.ModelSerializer):
 class PatientUSGFormSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(PatientUSGFormSerializers, self).to_representation(instance)
-
         
-        # if "patient_opd" in ret:
-        #     ret["patient_opd_id"] = ret["patient_opd"]
-        #     del ret["patient_opd"]
-
         if "patient_opd" in ret:
-            ret["patient_opd_id"] = PatientOpdSerializers(instance.patient_opd ).data["patient_opd_id"]
-            ret["husband_father_name"] = PatientOpdSerializers(instance.patient_opd ).data["husband_father_name"]
-            ret["age"] = PatientOpdSerializers(instance.patient_opd).data["age"]
+            ret["patient_opd_id"] = ret["patient_opd"]
+            del ret["patient_opd"]
 
+     
         if "indication" in ret:
             indication_list = {}
             for each_indication in ret["indication"]:
@@ -147,6 +142,7 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
         return ret
 
     def validate(self, data):
+
         if "regd_no" in data:
             patient = PatientModel.objects.filter(registered_no=data["regd_no"])
             if len(patient) == 0:
@@ -155,13 +151,6 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
         else:
             raise serializers.ValidationError("Patient is missing")
 
-        if "age" not in data:
-            patient = PatientOpdModel.objects.filter(age=data["age"])
-            raise serializers.ValidationError("age missing")
-
-        if "husband_father_name" not in data:
-            patient = PatientOpdModel.objects.filter(husband_father_name=data["husband_father_name"])
-            raise serializers.ValidationError("husband_father_name missing")
 
         return data
 
