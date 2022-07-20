@@ -1,3 +1,4 @@
+from cmath import nan
 import json
 
 from rest_framework import status
@@ -80,6 +81,15 @@ def create(request):
     data = {}
     request.data["created_by"] = request.user.id
     if request.method == "POST":
+
+        patient_opd = PatientOpdModel.objects.filter(patient_opd_id=request.data["patient_opd_id"]).first()
+       
+        if (patient_opd.patient.age == None or patient_opd.patient.husband_father_name == None):
+            data["success"] = False
+            data["msg"] = "Please fill the Husband father name and age information."
+            data["data"] = request.data
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
         patient_usgform = PatientUSGFormModel()
         request.data["serial_no_month"], request.data["serial_no_year"], sr_no = get_obgyn_config(request.user ,PatientUSGFormModel)
         
