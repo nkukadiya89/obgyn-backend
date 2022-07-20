@@ -35,7 +35,6 @@ class PatientSerializers(serializers.ModelSerializer):
 
         ret["landmark"] = instance.landmark
 
-
         if "phone" in ret:
             if "F_" in instance.phone:
                 ret["phone"] = ""
@@ -44,15 +43,6 @@ class PatientSerializers(serializers.ModelSerializer):
     def validate(self, data):
         first_name = data.get("first_name")
         last_name = data.get("last_name")
-
-        husband_father_name = data.get("husband_father_name")
-        grand_father_name = data.get("grand_father_name")
-
-        if not bool(re.match('[a-zA-Z\s]+$', husband_father_name)):
-            raise serializers.ValidationError("Invalid Husband/Father Name")
-        if not bool(re.match('[a-zA-Z\s]+$', grand_father_name)):
-            raise serializers.ValidationError("Invalid Grand Father Name")
-
 
         if "phone" in data:
             phone = data.get("phone")
@@ -75,7 +65,15 @@ class PatientSerializers(serializers.ModelSerializer):
             last_name = user.last_name
             middle_name = user.middle_name
             regd_no = user.registered_no
-            name = first_name + " " + middle_name + " " + last_name
+            name = (
+                first_name
+                if first_name
+                else "" + " " + middle_name
+                if middle_name
+                else "" + " " + last_name
+                if last_name
+                else ""
+            )
             raise serializers.ValidationError(
                 f"Patient {name} registered previously. Reg. No. {regd_no}"
             )
@@ -151,7 +149,6 @@ class DynamicFieldModelSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance, *args, **kwargs):
         ret = super(DynamicFieldModelSerializer, self).to_representation(instance)
-
 
         if "phone" in ret:
             if "F_" in instance.phone:
