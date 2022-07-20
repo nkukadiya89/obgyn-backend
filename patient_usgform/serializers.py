@@ -3,6 +3,8 @@ from consultation.models import ConsultationModel
 
 from manage_fields.serializers import ManageFieldsSerializers
 from patient.models import PatientModel
+from patient_opd.models import PatientOpdModel
+from patient_opd.serializers import PatientOpdSerializers
 from manage_fields.models import ManageFieldsModel
 from patient_indoor.models import PatientIndoorModel
 from .models import PatientUSGFormModel, USGFormChildModel
@@ -56,9 +58,15 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super(PatientUSGFormSerializers, self).to_representation(instance)
 
+        
+        # if "patient_opd" in ret:
+        #     ret["patient_opd_id"] = ret["patient_opd"]
+        #     del ret["patient_opd"]
+
         if "patient_opd" in ret:
-            ret["patient_opd_id"] = ret["patient_opd"]
-            del ret["patient_opd"]
+            ret["patient_opd_id"] = PatientOpdSerializers(instance.patient_opd ).data["patient_opd_id"]
+            ret["husband_father_name"] = PatientOpdSerializers(instance.patient_opd ).data["husband_father_name"]
+            ret["age"] = PatientOpdSerializers(instance.patient_opd).data["age"]
 
         if "indication" in ret:
             indication_list = {}
@@ -74,6 +82,7 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
                 + " "
                 + UserSerializers(instance.name_of_doctor).data["last_name"].title()
             )
+        
 
         for fld_nm in ["result_of_sonography", "any_indication_mtp", "any_other"]:
             fld_name = fld_nm + "_name"
@@ -145,6 +154,14 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
             data["patient_id"] = patient[0].patient_id
         else:
             raise serializers.ValidationError("Patient is missing")
+
+        if "age" not in data:
+            patient = PatientOpdModel.objects.filter(age=data["age"])
+            raise serializers.ValidationError("age missing")
+
+        if "husband_father_name" not in data:
+            patient = PatientOpdModel.objects.filter(husband_father_name=data["husband_father_name"])
+            raise serializers.ValidationError("husband_father_name missing")
 
         return data
 
