@@ -84,7 +84,7 @@ def create(request):
 
         patient_opd = PatientOpdModel.objects.filter(patient_opd_id=request.data["patient_opd_id"]).first()
        
-        if (patient_opd.patient.age == None or patient_opd.patient.husband_father_name == None):
+        if (patient_opd.patient.age == 0 or patient_opd.patient.age == None or patient_opd.patient.husband_father_name == None or patient_opd.patient.husband_father_name == ""):
             data["success"] = False
             data["msg"] = "Please fill the Husband father name and age information."
             data["data"] = request.data
