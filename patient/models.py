@@ -32,7 +32,7 @@ class PatientModel(User):
     husband_father_name = models.CharField(max_length=100, default="",null=True) 
     husband_title = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="husband_title",
                                       null=True)
-    grand_father_name = models.CharField(max_length=100, default="")
+    grand_father_name = models.CharField(max_length=100, default="",null=True)
     grand_title = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="grand_title",
                                     null=True)
 
