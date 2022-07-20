@@ -29,7 +29,7 @@ class PatientModel(User):
     profile_image = models.CharField(max_length=250, default="", null=True)
     date_of_opd = models.DateField(default=now)
     registered_no = models.CharField(max_length=100, default="")
-    husband_father_name = models.CharField(max_length=100, default="")
+    husband_father_name = models.CharField(max_length=100, default="",null=True) 
     husband_title = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="husband_title",
                                       null=True)
     grand_father_name = models.CharField(max_length=100, default="")
@@ -39,7 +39,7 @@ class PatientModel(User):
     regd_no_barcode = models.CharField(max_length=250, null=True)
     mob_no_barcode = models.CharField(max_length=250, null=True)
 
-    age = models.IntegerField(default=0)
+    age = models.IntegerField(default=0,null=True)
     
     religion = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="religion",
                                       null=True)
