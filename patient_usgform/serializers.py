@@ -111,7 +111,7 @@ class PatientUSGFormSerializers(serializers.ModelSerializer):
         ).first()
 
         if consultation:
-            ret["lmp_date"] = consultation.lmp_date.strftime("%d-%m-%Y")
+            ret["lmp_date"] = consultation.lmp_date(format="%d-%m-%Y")
             ret["diagnosis_id"] = consultation.diagnosis.diagnosis_id
             ret["diagnosis_name"] = consultation.diagnosis.diagnosis_name
             ret["ut_weeks"] = consultation.ut_weeks
