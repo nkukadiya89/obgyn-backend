@@ -86,7 +86,7 @@ def create(request):
        
         if (patient_opd.patient.age == 0 or patient_opd.patient.age == None or patient_opd.patient.grand_father_name == None or patient_opd.patient.grand_father_name == ""):
             data["success"] = False
-            data["msg"] = "Please fill the grand father name and age information."
+            data["msg"] = {err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors}
             
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
