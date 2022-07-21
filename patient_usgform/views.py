@@ -86,7 +86,7 @@ def create(request):
        
         if (patient_opd.patient.age == 0 or patient_opd.patient.age == None or patient_opd.patient.grand_father_name == None or patient_opd.patient.grand_father_name == ""):
             data["success"] = False
-            data["msg"] = {err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors}
+            data["msg"] = "Please fill the grand father name and age information."
             
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
@@ -122,7 +122,7 @@ def create(request):
             return Response(data=data, status=status.HTTP_201_CREATED)
 
         data["success"] = False
-        data["msg"] = serializer.errors
+        data["msg"] = {err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors}
         data["data"] = serializer.data
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
@@ -171,7 +171,7 @@ def patch(request, id):
             return Response(data=data, status=status.HTTP_200_OK)
 
         data["success"] = False
-        data["msg"] = serializer.errors
+        data["msg"] = {err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors}
         data["data"] = []
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
@@ -280,7 +280,7 @@ def create_child(request):
             return Response(data=data, status=status.HTTP_201_CREATED)
 
         data["success"] = False
-        data["msg"] = serializer.errors
+        data["msg"] = {err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors}
         data["data"] = serializer.data
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
@@ -313,7 +313,7 @@ def child_patch(request, id):
             return Response(data=data, status=status.HTTP_200_OK)
 
         data["success"] = False
-        data["msg"] = serializer.errors
+        data["msg"] = {err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors}
         data["data"] = []
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 

@@ -73,7 +73,7 @@ def create(request):
             return Response(data=data, status=status.HTTP_201_CREATED)
 
         data["success"] = False
-        data["msg"] = serializer.errors
+        data["msg"] = {err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors}
         data["data"] = serializer.data
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
