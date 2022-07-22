@@ -493,7 +493,7 @@ def get_or_medicine(request, id=None):
     query_string = request.query_params
 
 
-    adminRecord=True
+    adminRecord=False
     if "adminRecord" in query_string:
         adminRecord = True if query_string["adminRecord"] == "true" else False
 
@@ -505,7 +505,7 @@ def get_or_medicine(request, id=None):
             if adminRecord:
                 medicine = MedicineModel.objects.filter(
                     Q(deleted=0, created_by=1)
-                    | Q(created_by=request.data.get("created_by"))
+                    | Q(created_by=request.user.id)
             )
             else:
                 medicine = MedicineModel.objects.filter(
