@@ -11,6 +11,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 from patient_opd.models import PatientOpdModel
+from patient_referal.models import PatientReferalModel, PatientReferalIndication
+from manage_fields.models import ManageFieldsModel
 from utility.search_filter import filtering_query
 from .models import PatientUSGFormModel, USGFormChildModel
 from .serializers import PatientUSGFormSerializers, USGFormChildSerializers
@@ -83,11 +85,19 @@ def create(request):
     if request.method == "POST":
 
         patient_opd = PatientOpdModel.objects.filter(patient_opd_id=request.data["patient_opd_id"]).first()
+
        
         if (patient_opd.patient.age == 0 or patient_opd.patient.age == None or patient_opd.patient.grand_father_name == None or patient_opd.patient.grand_father_name == ""):
             data["success"] = False
-            data["msg"] = "Please fill the grand father name and age information."
-            
+            data["msg"] = "Please fill the grand father name and age information."            
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+        
+        patient_referal = PatientReferalModel.objects.filter(patient_opd_id=request.data["patient_opd_id"]).first()
+        
+        indication = list(PatientReferalIndication.objects.filter(patientreferalmodel=patient_referal.patient_referal_id).values_list("managefieldsmodel_id",flat=True))
+        if len(indication) == 0:
+            data["success"] = False
+            data["msg"] = "Please fill the Indication/s for diagnostic procedure."            
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
         patient_usgform = PatientUSGFormModel()
