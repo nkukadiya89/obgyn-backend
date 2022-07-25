@@ -13,6 +13,7 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from patient_opd.models import PatientOpdModel
 from patient_referal.models import PatientReferalModel, PatientReferalIndication
 from manage_fields.models import ManageFieldsModel
+from patient_referal.serializers import PatientReferalSerializers
 from utility.search_filter import filtering_query
 from .models import PatientUSGFormModel, USGFormChildModel
 from .serializers import PatientUSGFormSerializers, USGFormChildSerializers
@@ -92,13 +93,18 @@ def create(request):
             data["msg"] = "Please fill the grand father name and age information."            
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
         
-        patient_referal = PatientReferalModel.objects.filter(patient_opd_id=request.data["patient_opd_id"]).first()
-        
-        indication = list(PatientReferalIndication.objects.filter(patientreferalmodel=patient_referal.patient_referal_id).values_list("managefieldsmodel_id",flat=True))
-        if len(indication) == 0:
-            data["success"] = False
-            data["msg"] = "Please fill the Indication/s for diagnostic procedure."            
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+        if "indication" in request.data:
+            indication_list = request.data["indication"]
+            if len(indication_list) == 0:
+                data["success"] = False
+                data["msg"] = "Please fill the Indication/s for diagnostic procedure."            
+                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+
+            # patient_referal = PatientReferalModel.objects.filter(patient_opd_id=request.data["patient_opd_id"]).first()
+            # indication = list(PatientReferalIndication.objects.filter(patientreferalmodel=patient_referal.patient_referal_id).values_list("managefieldsmodel_id",flat=True))
+                
 
         patient_usgform = PatientUSGFormModel()
         request.data["serial_no_month"], request.data["serial_no_year"], sr_no = get_obgyn_config(request.user ,PatientUSGFormModel)
