@@ -85,6 +85,7 @@ def create(request):
     request.data["created_by"] = request.user.id
     if request.method == "POST":
 
+        patient_referal_data = PatientReferalModel.objects.filter(patient_opd_id=request.data["patient_opd_id"]).first()
         patient_opd = PatientOpdModel.objects.filter(patient_opd_id=request.data["patient_opd_id"]).first()
 
        
@@ -92,18 +93,11 @@ def create(request):
             data["success"] = False
             data["msg"] = "Please fill the grand father name and age information."            
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-        
-
-        if "indication" in request.data:
-            indication_list = request.data["indication"]
-            if len(indication_list) == 0:
-                data["success"] = False
-                data["msg"] = "Please fill the Indication/s for diagnostic procedure."            
-                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-
-
-            # patient_referal = PatientReferalModel.objects.filter(patient_opd_id=request.data["patient_opd_id"]).first()
-            # indication = list(PatientReferalIndication.objects.filter(patientreferalmodel=patient_referal.patient_referal_id).values_list("managefieldsmodel_id",flat=True))
+    
+        if patient_referal_data == None:
+            data["success"] = False
+            data["msg"] = "Please fill the Indication/s for diagnostic procedure."            
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
                 
 
         patient_usgform = PatientUSGFormModel()
