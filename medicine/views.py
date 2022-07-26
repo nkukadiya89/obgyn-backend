@@ -507,7 +507,7 @@ def get_or_medicine(request, id=None):
                     Q(deleted=0, created_by=1)
                     | Q(created_by=request.user.id)
             )
-            else:
+            else:   
                 medicine = MedicineModel.objects.filter(
                     created_by=request.user.id, deleted=0
                 )
