@@ -79,11 +79,8 @@ def mtp_list_rpt(request, start_date, end_date, language_id=None):
                 else " "
             )
             context["age"] = patient_opd.patient.age
-            context["religion"] = (
-                patient_opd.patient.religion.field_value
-                if patient_opd.patient.religion.field_value
-                else " "
-            )
+            context["religion"] = patient_mtp.religion.field_value if patient_mtp.religion else ""
+            
 
             context["duration"] = patient_mtp.ut_weeks
             context["reason"] = patient_mtp.reason_for_mtp
