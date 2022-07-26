@@ -45,7 +45,7 @@ def billing_rpt(request, start_date=None, end_date=None, language_id=1):
         context["rs_per_visit"] = patient_billing.rs_per_visit
         context["consulting_fees"] = patient_billing.consulting_fees
         context["usg_rs"] = patient_billing.usg_rs
-        context["room_type"] = patient_billing.room_type
+        context["room_type"] = patient_billing.room_type.field_value  if patient_billing.room_type else ""
         context["room_no_of_day"] = patient_billing.room_no_of_day
         context["room_rs"] = patient_billing.room_rs
         context["procedure_charge"] = patient_billing.procedure_charge
