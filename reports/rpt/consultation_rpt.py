@@ -81,9 +81,9 @@ def consultation_rpt(request, id, language_id=None):
 
     context["hb"] = consultation.hb
 
-    context["ho"] = consultation.ho.field_value
+    context["ho"] = consultation.ho.field_value if consultation.ho else ""
     context["blood_group"] = consultation.blood_group
-    context["co"] = consultation.co.field_value
+    context["co"] = consultation.co.field_value if consultation.co else ""
     context["age"] = patient_opd.patient.age
     context["mh"] = "--NA--"
     context["lmp"] = consultation.lmp_date
