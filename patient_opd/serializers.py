@@ -92,7 +92,7 @@ class PatientOpdSerializers(serializers.ModelSerializer):
             raise serializers.ValidationError("Patient is missing")
         
         if data["consulted_by"].user_type != "DOCTOR":
-            raise serializers.ValidationError("Selected doctor is not of type DOCTOR")
+            raise serializers.ValidationError("Consulted by is not of type DOCTOR")
 
         return data
 
