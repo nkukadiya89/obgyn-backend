@@ -15,8 +15,8 @@ class PatientDeliverySerializers(serializers.ModelSerializer):
         ret = super(PatientDeliverySerializers, self).to_representation(instance)
         patient = PatientSerializers(instance.patient)
         ret["first_name"] = patient.data["first_name"]
-        # ret["last_name"] = patient.data["last_name"]
-        # ret["husband_father_name"] = instance.data["husband_father_name"]
+        ret["last_name"] = patient.data["last_name"]
+        ret["husband_father_name"] = patient.data["husband_father_name"]
         ret["grand_father_name"] = patient.data["grand_father_name"]
         ret["phone"] = patient.data["phone"]
 
