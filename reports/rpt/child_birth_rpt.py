@@ -45,12 +45,12 @@ def child_birth_rpt(request, id, language_id=None):
         [
             patient_delivery.husband_name if patient_delivery.husband_name else " ",
             " ",
-            patient_delivery.husband_father_name if patient_delivery.husband_father_name else " ",
-            " ",
+            # patient_delivery.husband_father_name if patient_delivery.husband_father_name else " ",
+            # " ",
             patient_delivery.patient.last_name if patient_delivery.patient.last_name else " ",
         ]
     )
-    # print(patient.last_name)
+
     # context["father_name"] = patient_delivery.husband_name if patient_delivery.husband_name else " "
     context["mother_address"] = "".join(
         [
