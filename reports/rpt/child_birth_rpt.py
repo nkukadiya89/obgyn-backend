@@ -32,14 +32,26 @@ def child_birth_rpt(request, id, language_id=None):
     context = {}
     context["mother_name"] = "".join(
         [
-            patient.first_name if patient.first_name else " ",
+            patient_delivery.patient.first_name if patient_delivery.patient.first_name else " ",
+            " ",
+            patient_delivery.husband_name if patient_delivery.husband_name else " ",
             " ",
             patient.middle_name if patient.middle_name else " ",
             " ",
             patient.last_name if patient.last_name else " ",
         ]
     )
-    context["father_name"] = patient_delivery.husband_name if patient_delivery.husband_name else " "
+    context["father_name"] = "".join(
+        [
+            patient_delivery.husband_name if patient_delivery.husband_name else " ",
+            " ",
+            patient_delivery.husband_father_name if patient_delivery.husband_father_name else " ",
+            " ",
+            patient_delivery.patient.last_name if patient_delivery.patient.last_name else " ",
+        ]
+    )
+    # print(patient.last_name)
+    # context["father_name"] = patient_delivery.husband_name if patient_delivery.husband_name else " "
     context["mother_address"] = "".join(
         [
             " ",
@@ -104,7 +116,7 @@ def child_birth_rpt(request, id, language_id=None):
         ]
     )
     context["religion"] = patient_delivery.religion.field_value
-    context["father_education"] = patient_delivery.father_education.field_value
+    context["father_education"] = patient_delivery.father_education.field_value if patient_delivery.father_education else ""
     context["mother_education"] = patient_delivery.mother_education.field_value
     context["father_occupation"] = patient_delivery.father_occupation.field_value
     context["mother_occupation"] = patient_delivery.mother_occupation.field_value
