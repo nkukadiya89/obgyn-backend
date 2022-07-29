@@ -44,24 +44,22 @@ def birth_rpt(request, id, language_id=None):
     context = {}
     context["mother_name"] = "".join(
         [
-            patient.first_name if patient.first_name else " ",
+            patient_delivery.mother_name if patient_delivery.mother_name else " ",
             " ",
-            patient.middle_name if patient.middle_name else " ",
-            " ",
-            patient.last_name if patient.last_name else " ",
+            patient_delivery.delivery_last_name if patient_delivery.delivery_last_name else " ",
         ]
     )
     context["father_name"] = patient_delivery.husband_name if patient_delivery.husband_name else " "
     context["address"] = "".join(
         [
             " ",
-            patient.city.city_name if patient.city.city_name else " ",
+            patient_delivery.city.city_name if patient_delivery.city.city_name else " ",
             " ",
-            patient.district.district_name if patient.district.district_name else " ",
+            patient_delivery.taluka.taluka_name if patient_delivery.taluka.taluka_name else " ",
             " ",
-            patient.taluka.taluka_name if patient.taluka.taluka_name else " ",
+            patient_delivery.district.district_name if patient_delivery.district.district_name else " ",
             " ",
-            patient.state.state_name if patient.state.state_name else " ",
+            patient_delivery.state.state_name if patient_delivery.state.state_name else " ",
         ]
     )
     context["age"] = patient.age

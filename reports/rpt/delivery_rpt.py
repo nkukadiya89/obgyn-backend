@@ -96,7 +96,7 @@ def delivery_rpt(request, start_date=None, end_date=None,id_list=None, language_
         context["weight"] = patient_delivery.weight
         context["child_count"] = patient_delivery.live_male_female
         context["mother_education"] = patient_delivery.mother_education.field_value
-        context["father_education"] = patient_delivery.father_education.field_value
+        context["father_education"] = patient_delivery.father_education.field_value if patient_delivery.father_education else ""
         context["mother_occupation"] = patient_delivery.mother_occupation.field_value
         context["father_occupation"] = patient_delivery.father_occupation.field_value
 
