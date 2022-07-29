@@ -32,22 +32,22 @@ def child_birth_rpt(request, id, language_id=None):
     context = {}
     context["mother_name"] = "".join(
         [
-            patient_delivery.patient.first_name if patient_delivery.patient.first_name else " ",
+            patient_delivery.mother_name if patient_delivery.mother_name else " ",
             " ",
             patient_delivery.husband_name if patient_delivery.husband_name else " ",
             " ",
-            patient.middle_name if patient.middle_name else " ",
-            " ",
-            patient.last_name if patient.last_name else " ",
+            # patient.middle_name if patient.middle_name else " ",
+            # " ",
+            patient_delivery.delivery_last_name if patient_delivery.delivery_last_name else " ",
         ]
     )
     context["father_name"] = "".join(
         [
             patient_delivery.husband_name if patient_delivery.husband_name else " ",
             " ",
-            # patient_delivery.husband_father_name if patient_delivery.husband_father_name else " ",
-            # " ",
-            patient_delivery.patient.last_name if patient_delivery.patient.last_name else " ",
+            patient_delivery.delivery_husband_father_name if patient_delivery.delivery_husband_father_name else " ",
+            " ",
+            patient_delivery.delivery_last_name if patient_delivery.delivery_last_name else " ",
         ]
     )
 
@@ -57,26 +57,26 @@ def child_birth_rpt(request, id, language_id=None):
             " ",
             patient_delivery.city.city_name if patient_delivery.city.city_name else " ",
             " ",
-            patient_delivery.district.district_name if patient_delivery.district.district_name else " ",
-            " ",
             patient_delivery.taluka.taluka_name if patient_delivery.taluka.taluka_name else " ",
+            " ",
+            patient_delivery.district.district_name if patient_delivery.district.district_name else " ",
             " ",
             patient_delivery.state.state_name if patient_delivery.state.state_name else " ",
         ]
     )
-    context["mother_taluka"] = patient_delivery.city.city_name if patient_delivery.city.city_name else " "
-    context["mother_city"] = patient_delivery.taluka.taluka_name if patient_delivery.taluka.taluka_name else " "
+    context["mother_city"] = patient_delivery.city.city_name if patient_delivery.city.city_name else " "
+    context["mother_taluka"] = patient_delivery.taluka.taluka_name if patient_delivery.taluka.taluka_name else " "
     context["mother_district"] = patient_delivery.district.district_name if patient_delivery.district.district_name else " "
     context["address"] = " ".join(
         [
             " ",
-            patient.city.city_name if patient.city.city_name else " ",
+            patient_delivery.city.city_name if patient_delivery.city.city_name else " ",
             " ",
-            patient.district.district_name if patient.district.district_name else " ",
+            patient_delivery.taluka.taluka_name if patient_delivery.taluka.taluka_name else " ",
             " ",
-            patient.taluka.taluka_name if patient.taluka.taluka_name else " ",
+            patient_delivery.district.district_name if patient_delivery.district.district_name else " ",
             " ",
-            patient.state.state_name if patient.state.state_name else " ",
+            patient_delivery.state.state_name if patient_delivery.state.state_name else " ",
         ]
     )
     context["district"] = patient_opd.consulted_by.hospital.district.district_name if patient_opd.consulted_by.hospital.district.district_name else " "
