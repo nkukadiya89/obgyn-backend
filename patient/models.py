@@ -39,7 +39,7 @@ class PatientModel(User):
     regd_no_barcode = models.CharField(max_length=250, null=True)
     mob_no_barcode = models.CharField(max_length=250, null=True)
 
-    age = models.IntegerField(default=0,null=True)
+    age = models.CharField(max_length=100, default="",null=True)
     
     religion = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="religion",
                                       null=True)
