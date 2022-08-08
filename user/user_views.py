@@ -4,6 +4,11 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.utils.timezone import now
 from language.models import LanguageModel
+from state.models import StateModel
+from taluka.models import TalukaModel
+from city.models import CityModel
+from district.models import DistrictModel
+from manage_fields.models import ManageFieldsModel
 from obgyn_config.models import ObgynConfigModel
 from obgyn_config.views import get_obgyn_config
 from patient_usgform.models import PatientUSGFormModel
@@ -53,6 +58,16 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                                    "defaultLanguageId": LanguageModel.objects.get(
                                        pk=self.user.default_language_id).language_id,
                                    "defaultLanguage": LanguageModel.objects.get(pk=self.user.default_language_id).code,
+                                   "state": StateModel.objects.get(pk=self.user.state_id).state_id,
+                                   "state_name": StateModel.objects.get(pk=self.user.state_id).state_name,
+                                   "district": DistrictModel.objects.get(pk=self.user.district_id).district_id,
+                                   "district_name": DistrictModel.objects.get(pk=self.user.district_id).district_name,
+                                   "taluka": TalukaModel.objects.get(pk=self.user.taluka_id).taluka_id,
+                                   "taluka_name": TalukaModel.objects.get(pk=self.user.taluka_id).taluka_name,
+                                   "city": CityModel.objects.get(pk=self.user.city_id).city_id,
+                                   "city_name": CityModel.objects.get(pk=self.user.city_id).city_name,
+                                #    "prefix": ManageFieldsModel.objects.get(pk=self.user.prefix).prefix_id,
+                                #    "prefix_name": ManageFieldsModel.objects.get(pk=self.user.prefix).prefix_name,
                                    "hospital_id":self.user.hospital_id,
                                    "user_type": self.user.user_type, "permission": permission_list,
                                    "rs_per_visit": rs_per_visit,"rs_per_usg": rs_per_usg,
