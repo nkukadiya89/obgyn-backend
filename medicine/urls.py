@@ -18,6 +18,7 @@ from .views import (
     delete_medicine,
     create_medicine_type,
     get_unique_medicine,
+    medicine_to_type,
 )
 
 urlpatterns = [
@@ -31,6 +32,7 @@ urlpatterns = [
     path("update-medicine/<int:id>/", patch_medicine),
 
     path("unique_medicine/",get_unique_medicine,name="unique_medicine"),
+    path("get_medicine_type/", medicine_to_type, name="medicine_to_type"),
 
 
     

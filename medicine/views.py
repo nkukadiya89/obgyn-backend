@@ -104,8 +104,8 @@ def create_medicine(request):
                         "msg"
                     ] = "Medicine Created successfully but not linked with Diagnosis"
             if (
-                "diagnosis_name" in request.data
-                and "diagnosis_type" not in request.data
+                    "diagnosis_name" in request.data
+                    and "diagnosis_type" not in request.data
             ):
                 data[
                     "msg"
@@ -293,7 +293,7 @@ def get_timing(request, id=None):
     data = {}
     query_string = request.query_params
 
-    adminRecord=True
+    adminRecord = True
     if "adminRecord" in query_string:
         adminRecord = True if query_string["adminRecord"] == "true" else False
 
@@ -304,7 +304,7 @@ def get_timing(request, id=None):
             if adminRecord:
                 timing = TimingModel.objects.filter(
                     Q(deleted=0, created_by=1)
-                    | Q(created_by=request.user.id,deleted=0)
+                    | Q(created_by=request.user.id, deleted=0)
                 )
             else:
                 timing = TimingModel.objects.filter(
@@ -336,7 +336,7 @@ def patch_timing(request, id):
     request.data["created_by"] = request.user.id
     try:
         if id:
-            timing = TimingModel.objects.get(pk=id,deleted=0)
+            timing = TimingModel.objects.get(pk=id, deleted=0)
         else:
             timing = TimingModel.objects.filter(deleted=0)
     except TimingModel.DoesNotExist:
@@ -369,7 +369,7 @@ def patch_medicine_type(request, id):
     request.data["created_by"] = request.user.id
     try:
         if id:
-            medicine_type = MedicineTypeModel.objects.get(pk=id,deleted=0)
+            medicine_type = MedicineTypeModel.objects.get(pk=id, deleted=0)
         else:
             medicine_type = MedicineTypeModel.objects.filter(deleted=0)
     except MedicineTypeModel.DoesNotExist:
@@ -402,7 +402,7 @@ def patch_medicine(request, id):
     request.data["created_by"] = request.user.id
     try:
         if id:
-            medicine = MedicineModel.objects.get(pk=id,deleted=0)
+            medicine = MedicineModel.objects.get(pk=id, deleted=0)
         else:
             medicine = MedicineModel.objects.filter(deleted=0)
     except MedicineModel.DoesNotExist:
@@ -437,7 +437,7 @@ def patch_medicine(request, id):
 def get_medicine(request, id=None):
     query_string = request.query_params
 
-    adminRecord=True
+    adminRecord = True
     if "adminRecord" in query_string:
         adminRecord = True if query_string["adminRecord"] == "true" else False
 
@@ -450,7 +450,7 @@ def get_medicine(request, id=None):
                 medicine = MedicineModel.objects.filter(
                     Q(deleted=0, created_by=1)
                     | Q(created_by=request.user.id)
-            )
+                )
             else:
                 medicine = MedicineModel.objects.filter(
                     created_by=request.user.id, deleted=0
@@ -492,8 +492,7 @@ def get_medicine(request, id=None):
 def get_or_medicine(request, id=None):
     query_string = request.query_params
 
-
-    adminRecord=False
+    adminRecord = False
     if "adminRecord" in query_string:
         adminRecord = True if query_string["adminRecord"] == "true" else False
 
@@ -506,8 +505,8 @@ def get_or_medicine(request, id=None):
                 medicine = MedicineModel.objects.filter(
                     Q(deleted=0, created_by=1)
                     | Q(created_by=request.user.id)
-            )
-            else:   
+                )
+            else:
                 medicine = MedicineModel.objects.filter(
                     created_by=request.user.id, deleted=0
                 )
@@ -546,7 +545,7 @@ def get_or_medicine(request, id=None):
 def get_medicine_type(request, id=None):
     query_string = request.query_params
 
-    adminRecord=False
+    adminRecord = False
     if "adminRecord" in query_string:
         adminRecord = True if query_string["adminRecord"] == "true" else False
 
@@ -559,7 +558,7 @@ def get_medicine_type(request, id=None):
                 medicine_type = MedicineTypeModel.objects.filter(
                     Q(deleted=0, created_by=1)
                     | Q(created_by=request.user.id)
-            )
+                )
             else:
                 medicine_type = MedicineTypeModel.objects.filter(
                     created_by=request.user.id, deleted=0
@@ -593,7 +592,7 @@ def get_medicine_type(request, id=None):
 def get_unique_medicine(request, id=None):
     query_string = request.query_params
     if "," in query_string["fields"]:
-        distinc_key =  query_string["fields"].split(",")[1]
+        distinc_key = query_string["fields"].split(",")[1]
     else:
         distinc_key = query_string["fields"]
 
@@ -625,3 +624,27 @@ def get_unique_medicine(request, id=None):
         data["msg"] = "OK"
         data["data"] = serializer.data
         return Response(data=data, status=status.HTTP_200_OK)
+
+@api_view(["GET"])
+@authentication_classes([JWTAuthentication])
+@validate_permission("medicine_type", "view")
+def medicine_to_type(request):
+    data = {}
+    query_string = request.query_params
+    medicine_name = query_string["medicine_name"]
+
+    medicine_list = list(
+        MedicineModel.objects.filter(medicine__iexact=medicine_name).values_list('medicine_type_id', flat=True))
+
+    if medicine_list:
+        medicine_type = MedicineTypeModel.objects.filter(medicine_type_id__in=medicine_list).distinct()
+
+    if len(medicine_type) >0:
+        serializer = MedicineTypeSerializers(medicine_type, many=True)
+    else:
+        serializer = MedicineTypeSerializers(MedicineSerializers())
+
+    data["success"] = True
+    data["msg"] = "OK"
+    data["data"] = serializer.data
+    return Response(data=data, status=status.HTTP_200_OK)
