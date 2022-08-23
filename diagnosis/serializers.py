@@ -40,10 +40,10 @@ class DiagnosisSerializers(serializers.ModelSerializer):
             if int(data.get('ut_weeks')) <= 0:
                 raise serializers.ValidationError(
                     "UT Weeks not provided.")
-        elif diagnosis_type.upper() == "D":
-            if not diagnosis_name or len(diagnosis_name) == 0:
-                raise serializers.ValidationError(
-                    "Diagnosis Name not provided.")
+        # elif diagnosis_type.upper() == "D":
+        #     if not diagnosis_name or len(diagnosis_name) == 0:
+        #         raise serializers.ValidationError(
+        #             "Diagnosis Name not provided.")
 
         if diagnosis_type == "D":
             duplicate_diagnosis = DiagnosisModel.objects.filter(

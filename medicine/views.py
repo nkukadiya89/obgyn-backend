@@ -634,17 +634,27 @@ def medicine_to_type(request):
     medicine_name = query_string["medicine_name"]
 
     medicine_list = list(
-        MedicineModel.objects.filter(medicine__iexact=medicine_name).values_list('medicine_type_id', flat=True))
+        MedicineModel.objects.filter(medicine__iexact=medicine_name).values_list('medicine_type_id','medicine_id'))
+
+    medicine_list = [item for t in medicine_list for item in t]
+    medicine_type_id = medicine_list[0::2]
+    medicine_id = medicine_list[1::2]
+
 
     if medicine_list:
-        medicine_type = MedicineTypeModel.objects.filter(medicine_type_id__in=medicine_list).distinct()
+        medicine_type = MedicineTypeModel.objects.filter(medicine_type_id__in=medicine_type_id).distinct()
 
-    if len(medicine_type) >0:
-        serializer = MedicineTypeSerializers(medicine_type, many=True)
-    else:
-        serializer = MedicineTypeSerializers(MedicineSerializers())
+    # if len(medicine_type) >0:
+    #     serializer = MedicineTypeSerializers(medicine_type, many=True)
+    # else:
+    #     serializer = MedicineTypeSerializers(MedicineSerializers())
+
+    medicine = MedicineModel.objects.filter(medicine_id__in=medicine_id)
+    serializer = DynamicFieldModelSerializer(medicine, many=True, fields="medicine_id,medicine_type,medicine_type_id")
 
     data["success"] = True
     data["msg"] = "OK"
     data["data"] = serializer.data
+    # new_data = list(serializer.data)
+    
     return Response(data=data, status=status.HTTP_200_OK)
