@@ -98,7 +98,7 @@ def create_medicine(request):
 
             data["msg"] = "Data updated successfully"
 
-            if "diagnosis_name" in request.data and "diagnosis_type" in request.data:
+            if request.data["diagnosis_name"] != None and "diagnosis_type" in request.data:
                 if not link_diagnosis(request, serializer.data["medicine_id"]):
                     data[
                         "msg"
