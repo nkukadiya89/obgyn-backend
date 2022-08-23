@@ -30,6 +30,7 @@ def link_diagnosis(request, medicine_id):
         diagnosis_dict["created_by"] = request.data.get('created_by')
         diagnosis_dict["deleted"] = 0
 
+
         serializer = DiagnosisSerializers(diagnosis, data=diagnosis_dict)
         if serializer.is_valid():
             serializer.save()
