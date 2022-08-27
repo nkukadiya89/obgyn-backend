@@ -31,4 +31,4 @@ class Obgyn_Configserializers(serializers.ModelSerializer):
 
     class Meta:
         model = ObgynConfigModel
-        fields = fields = "__all__"
+        fields = "__all__"
