@@ -16,7 +16,7 @@ class PatientBillingModel(models.Model):
     payment_choice =(
         ("ONLINE","ONLINE"),
         ("CASH","CASH"),
-        ('CHECK','CHECK')
+        ('CHEQUE','CHEQUE')
     )
     patient_billing_id = models.AutoField(primary_key=True)
     patient_opd = models.ForeignKey(PatientOpdModel, on_delete=models.DO_NOTHING, null=True)
