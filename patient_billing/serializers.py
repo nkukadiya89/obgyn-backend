@@ -52,7 +52,7 @@ class PatientBillingSerializers(serializers.ModelSerializer):
         data["usg_rs"] = float(data["rs_per_usg"]) * int(data["no_of_usg"])
         data["room_rs"] = float(data["rs_per_room"]) * int(data["room_no_of_day"])
         data["nursing_rs"] = float(data["rs_per_day"]) * int(data["nursing_no_of_days"])
-
+        data["payment"] = data["payment"].upper()
         data["total_rs"] = float(data["consulting_fees"]) + float(data["usg_rs"]) + \
                            float(data["room_rs"]) + float(data["procedure_charge"]) + float(
             data["medicine_rs"]) + float(data["nursing_rs"]) + float(data["other_rs"])
@@ -68,7 +68,7 @@ class PatientBillingSerializers(serializers.ModelSerializer):
     ot_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
     discharge_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
     invoice_date = serializers.DateField(format="%d-%m-%Y")
-
+    payment = serializers.CharField(required=True)
     class Meta:
         model = PatientBillingModel
         exclude = ('created_at', 'patient')
