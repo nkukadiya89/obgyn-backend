@@ -39,6 +39,7 @@ def daily_opd_income_rpt(request, rpt_date=None, language_id=None):
     context["col6_total"] = 0
     context["col7_total"] = 0
     context["col8_total"] = 0
+    context["col9_total"] = 0
 
     for patient_opd in patient_otp_list:
         patient_opd_id=patient_opd.patient_opd_id
@@ -78,6 +79,7 @@ def daily_opd_income_rpt(request, rpt_date=None, language_id=None):
 
 
             try:
+                context_sub["payment"] = patient_billing.payment
                 context_sub["consulting"] = patient_billing.consulting_fees
                 context_sub["sonography"] = patient_billing.usg_rs
                 context_sub["nursing"] = patient_billing.nursing_rs
@@ -87,6 +89,7 @@ def daily_opd_income_rpt(request, rpt_date=None, language_id=None):
                 context_sub["other_charge"] = patient_billing.other_rs
                 context_sub["total"] = patient_billing.total_rs
             except:
+                context_sub["payment"] = 0
                 context_sub["consulting"] = 0
                 context_sub["sonography"] = 0
                 context_sub["nursing"] = 0

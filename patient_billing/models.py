@@ -13,10 +13,16 @@ from manage_fields.models import ManageFieldsModel
 
 # Create your models here.
 class PatientBillingModel(models.Model):
+    payment_choice =(
+        ("ONLINE","ONLINE"),
+        ("CASH","CASH"),
+        ('CHEQUE','CHEQUE')
+    )
     patient_billing_id = models.AutoField(primary_key=True)
     patient_opd = models.ForeignKey(PatientOpdModel, on_delete=models.DO_NOTHING, null=True)
     patient = models.ForeignKey(PatientModel, on_delete=models.DO_NOTHING)
     regd_no = models.CharField(max_length=100, default="")
+    payment = models.CharField(max_length=15, choices=payment_choice, default="CASH")
 
     invoice_no = models.CharField(max_length=25, null=True)
     invoice_date = models.DateField(default=now)
