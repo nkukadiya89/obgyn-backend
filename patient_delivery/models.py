@@ -48,6 +48,7 @@ class PatientDeliveryModel(models.Model):
     district = models.ForeignKey(DistrictModel,on_delete=models.DO_NOTHING, null=True)
     state = models.ForeignKey(StateModel,on_delete=models.DO_NOTHING, null=True)
     pin = models.IntegerField(null=True)
+    patient_mobile = models.CharField(max_length=25, null=True)
     landmark = models.CharField(max_length=500, null=True)
     lastname = models.CharField(max_length=100, null=True)
     marriage_age = models.IntegerField(default=0, null=True)
