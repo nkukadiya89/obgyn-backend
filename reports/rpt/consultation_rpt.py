@@ -105,7 +105,8 @@ def consultation_rpt(request, id, language_id=None):
     context["tprbp"] = "/".join(
         [str(consultation.temprature), str(consultation.puls),
          str(consultation.resperistion),
-         str(consultation.bp)])
+         str(consultation.daistolic_bp),
+         str(consultation.systolic_bp)])
     context["pio"] = "--NA--"
     context["rscvs"] = consultation.rs + "/" + consultation.cvs
     context["pa"] = consultation.pa_value

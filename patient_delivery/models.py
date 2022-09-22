@@ -20,7 +20,7 @@ class PatientDeliveryModel(models.Model):
     )
     delivery_type_choice = (
         ("NORMAL", "NORMAL"),
-        ("CESARIAN", "CESARIAN"),
+        ("CEASERIAN", "CEASERIAN"),
         ("INSTRUMENTAL","INSTRUMENTAL"),
     )
 
