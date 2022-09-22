@@ -64,6 +64,9 @@ class ConsultationSerializers(serializers.ModelSerializer):
         if len(data["systolic_bp"]) >= 8:
             raise serializers.ValidationError("Enter valid Systolic BP")
 
+        if len(data["daistolic_bp"]) >= 8:
+            raise serializers.ValidationError("Enter valid Daistolic BP")
+
         if data["tsh"]:
             if len(str(data["tsh"])) >= 8:
                 raise serializers.ValidationError("Enter valid TSH")
