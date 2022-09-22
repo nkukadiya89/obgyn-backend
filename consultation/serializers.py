@@ -61,8 +61,8 @@ class ConsultationSerializers(serializers.ModelSerializer):
             if 0 >= int(data["puls"]) >= 200:
                 raise serializers.ValidationError("Enter valid Puls")
 
-        if len(data["bp"]) >= 8:
-            raise serializers.ValidationError("Enter valid BP")
+        if len(data["systolic_bp"]) >= 8:
+            raise serializers.ValidationError("Enter valid Systolic BP")
 
         if data["tsh"]:
             if len(str(data["tsh"])) >= 8:
