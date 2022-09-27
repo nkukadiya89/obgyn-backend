@@ -91,7 +91,8 @@ def create(request):
     request.data["created_by"] = request.user.id
     if request.method == "POST":
         patient_delivery = PatientDeliveryModel()
-        request.data["serial_no_month"], request.data["serial_no_year"], request.data["sr_no"] = get_obgyn_config(request.user ,PatientDeliveryModel)
+        if "sr_no" not in request.data:
+            request.data["serial_no_month"], request.data["serial_no_year"], request.data["sr_no"] = get_obgyn_config(request.user ,PatientDeliveryModel)
 
         serializer = PatientDeliverySerializers(patient_delivery, data=request.data)
 
