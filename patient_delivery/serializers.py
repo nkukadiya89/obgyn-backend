@@ -80,6 +80,10 @@ class PatientDeliverySerializers(serializers.ModelSerializer):
             child_name__iexact=data["child_name"],
             patient_id=data["patient_id"],
         )
+        
+        if self.partial:
+            patient_delivery = patient_delivery.filter(~Q(pk=self.instance.patient_delivery_id))
+
         if len(patient_delivery) > 1:
             raise serializers.ValidationError("Child already registered.")
 
@@ -98,17 +102,17 @@ class PatientDeliverySerializers(serializers.ModelSerializer):
         if len(str(data["weight"])) > 4:
             raise serializers.ValidationError("Check value of Weight.")
 
-        child_name = data.get('child_name')
+        # child_name = data.get('child_name')
 
-        duplicate_child = PatientDeliveryModel.objects.filter(deleted=0, child_name__iexact=child_name)
+        # duplicate_child = PatientDeliveryModel.objects.filter(deleted=0, child_name__iexact=child_name)
 
-        if self.partial:
-            duplicate_child = duplicate_child.filter(~Q(pk=self.instance.patient_delivery_id)).first()
-        else:
-            duplicate_child = duplicate_child.first()
+        # if self.partial:
+        #     duplicate_child = duplicate_child.filter(~Q(pk=self.instance.patient_delivery_id)).first()
+        # else:
+        #     duplicate_child = duplicate_child.first()
 
-        if duplicate_child != None:
-            raise serializers.ValidationError("child already exist.")
+        # if duplicate_child != None:
+        #     raise serializers.ValidationError("child already exist.")
 
         return data
 
