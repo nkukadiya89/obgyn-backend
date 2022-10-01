@@ -33,10 +33,10 @@ def register_view(request):
         data = {}
         if serializer.is_valid():
             new_user = serializer.save()
+
             user.set_password(request.data["password"])
             user.uid = str(now()).replace("-", "").replace(":", "").replace(" ", "").replace(".", "").split("+")[0][:16]
             user.save()
-            create_profile(user)
             data["success"] = True
             data["msg"] = "OK"
             data['response'] = "Successfully register a new user."
@@ -46,6 +46,8 @@ def register_view(request):
             data["msg"] = "User Registration Failed."
             data["errors"] = serializer.errors
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+        
+        create_profile(user)
 
         if user.user_type == "HOSPITAL":
             name = user.hospital_name
