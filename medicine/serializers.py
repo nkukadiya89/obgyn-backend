@@ -195,7 +195,7 @@ class DynamicFieldModelSerializer(serializers.ModelSerializer):
         fields = kwargs.pop("fields", None)
 
         super(DynamicFieldModelSerializer, self).__init__(*args, **kwargs)
-    
+
         fields = set(fields.split(","))
 
         if fields is not None:
@@ -208,14 +208,13 @@ class DynamicFieldModelSerializer(serializers.ModelSerializer):
     def to_representation(self, instance, *args, **kwargs):
         ret = super(DynamicFieldModelSerializer, self).to_representation(instance)
 
-        print(ret)
         if "medicine_type" in ret:
             ret["medicine_type"] = MedicineTypeSerializers(instance.medicine_type).data[
                 "medicine_type"
             ]
-            ret["medicine_type_id"] = MedicineTypeSerializers(instance.medicine_type).data[
-                "medicine_type_id"
-            ]
+            ret["medicine_type_id"] = MedicineTypeSerializers(
+                instance.medicine_type
+            ).data["medicine_type_id"]
 
         if "morning_timing" in ret:
             ret["morning_timing"] = TimingSerializers(instance.morning_timing).data[

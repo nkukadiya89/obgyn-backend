@@ -743,7 +743,6 @@ class ModelFilterPATIENTOPD:
                 search = search.replace("/", "-")
                 search = datetime.strptime(search, "%d-%m-%Y").strftime("%Y-%m-%d")
                 model = model.filter(opd_date=search)
-                print("akash")
             else:
                 model = model.filter(
                     Q(patient__first_name__icontains=search)
