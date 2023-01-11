@@ -1,7 +1,17 @@
 from operator import mod
+from datetime import datetime
 import re
 
 from django.db.models import Q
+from dateutil.parser import parse
+
+
+def is_date(string_fmt_date):
+    try:
+        parse(string_fmt_date, fuzzy=False)
+        return True
+    except ValueError:
+        return False
 
 
 def camel_to_snake(variable_name):
@@ -187,7 +197,8 @@ class ModelFilterSTATE:
     def search(self, model, query_string):
         search = query_string["search"]
         if search:
-            model = model.filter(Q(state_name__icontains=search)
+            model = model.filter(
+                Q(state_name__icontains=search)
                 | Q(language__language__icontains=search)
             )
         return model
@@ -237,7 +248,6 @@ class ModelFilterDIAGNOSIS:
                     | Q(diagnosis_type__icontains=search)
                 )
         return model
-
 
 
 class ModelFilterMEDICINE:
@@ -295,25 +305,45 @@ class ModelFilterMEDICINE:
 
 class ModelFilterMEDICINEOR:
     def filter_fields(self, model, filter_fields):
-        
+
         filter_fields_dict = {}
         for ffields in filter_fields:
             fld_name, fld_val = ffields.split("=")
             filter_fields_dict[fld_name] = fld_val
 
-        if len(filter_fields_dict)>1:
+        if len(filter_fields_dict) > 1:
             filter_str = "model.filter("
             cnt = 0
-            for key,value in filter_fields_dict.items():
-                cnt +=1
-                if cnt>1:
-                    filter_str = filter_str + "| Q(diagnosismodel__" + key + "=" + value + ",deleted=0)"
+            for key, value in filter_fields_dict.items():
+                cnt += 1
+                if cnt > 1:
+                    filter_str = (
+                        filter_str
+                        + "| Q(diagnosismodel__"
+                        + key
+                        + "="
+                        + value
+                        + ",deleted=0)"
+                    )
                 else:
-                    filter_str = filter_str + "Q(diagnosismodel__" + key + "=" + value + ",deleted=0)"
-            
+                    filter_str = (
+                        filter_str
+                        + "Q(diagnosismodel__"
+                        + key
+                        + "="
+                        + value
+                        + ",deleted=0)"
+                    )
+
             filter_str = filter_str + ")"
         else:
-            filter_str = "model.filter(diagnosismodel__"+ fld_name + "="+ fld_val + ",deleted=0)" 
+            filter_str = (
+                "model.filter(diagnosismodel__"
+                + fld_name
+                + "="
+                + fld_val
+                + ",deleted=0)"
+            )
 
         # if (
         #     "diagnosis_id" in filter_fields_dict
@@ -346,7 +376,6 @@ class ModelFilterMEDICINEOR:
         #     model = model.filter(
         #         diagnosismodel__diagnosis_id=filter_fields_dict["diagnosis_id"]
         #     )
-
 
         model = eval(filter_str)
         model = model.distinct()
@@ -446,7 +475,7 @@ class ModelFilterFIELDMASTER:
                 model = model.filter(field_master_name__icontains=fld_value)
             if fld_name == "field_master_id":
                 model = model.filter(field_master_id=fld_value)
-            if fld_name == 'slug':
+            if fld_name == "slug":
                 model = model.filter(slug=fld_value)
         return model
 
@@ -454,8 +483,7 @@ class ModelFilterFIELDMASTER:
         search = query_string["search"]
         if search:
             model = model.filter(
-                Q(field_master_name__icontains=search) |
-                Q(slug__icontains=search)
+                Q(field_master_name__icontains=search) | Q(slug__icontains=search)
             )
         return model
 
@@ -711,17 +739,22 @@ class ModelFilterPATIENTOPD:
     def search(self, model, query_string):
         search = query_string["search"]
         if search:
-            model = model.filter(
-                Q(patient__first_name__icontains=search)
-                | Q(patient__middle_name__icontains=search)
-                | Q(patient__last_name__icontains=search)
-                | Q(patient__registered_no=search)
-                | Q(patient__phone__icontains=search)
-                | Q(patient__husband_father_name__icontains=search)
-                | Q(patient__grand_father_name__icontains=search)
-                | Q(patient__city__city_name__icontains=search)
-                | Q(regd_no__iexact=search)
-            )
+            if is_date(search):
+                search = search.replace("/", "-")
+                search = datetime.strptime(search, "%d-%m-%Y").strftime("%Y-%m-%d")
+                model = model.filter(opd_date=search)
+            else:
+                model = model.filter(
+                    Q(patient__first_name__icontains=search)
+                    | Q(patient__middle_name__icontains=search)
+                    | Q(patient__last_name__icontains=search)
+                    | Q(patient__registered_no=search)
+                    | Q(patient__phone__icontains=search)
+                    | Q(patient__husband_father_name__icontains=search)
+                    | Q(patient__grand_father_name__icontains=search)
+                    | Q(patient__city__city_name__icontains=search)
+                    | Q(regd_no__iexact=search)
+                )
         return model
 
 
@@ -1267,13 +1300,9 @@ class ModelFilterSUBSCRIPTION:
         search = query_string["search"]
         if search:
             if search.isnumeric():
-                model = model.filter(
-                    Q(subscription_id=search)
-                )
+                model = model.filter(Q(subscription_id=search))
             else:
-                model = model.filter(
-                    Q(subscription_name__icontains=search)
-                )
+                model = model.filter(Q(subscription_name__icontains=search))
         return model
 
 
@@ -1289,7 +1318,9 @@ class ModelFilterSUBSCRIPTIONPURCHASE:
             if fld_name == "hospital":
                 model = model.filter(hospital=fld_value)
             if fld_name == "subscription":
-                model = model.filter(subscription__subscription_name__icontains=fld_value)
+                model = model.filter(
+                    subscription__subscription_name__icontains=fld_value
+                )
             if fld_name == "price":
                 model = model.filter(price=fld_value)
             if fld_name == "duration":
@@ -1316,8 +1347,7 @@ class ModelFilterSUBSCRIPTIONPURCHASE:
         if search:
             if search.isnumeric():
                 model = model.filter(
-                    Q(subscription_purchase_id=search)
-                    | Q(invoice_no=search)
+                    Q(subscription_purchase_id=search) | Q(invoice_no=search)
                 )
             else:
                 model = model.filter(
@@ -1325,6 +1355,7 @@ class ModelFilterSUBSCRIPTIONPURCHASE:
                     | Q(subscription__subscription_name__icontains=search)
                 )
         return model
+
 
 class ModelFilterOBGYNCONFIG:
     def filter_fields(self, model, filter_fields):
@@ -1368,14 +1399,12 @@ class ModelFilterOBGYNCONFIG:
         search = query_string["search"]
         if search:
             if search.isnumeric():
-                model = model.filter(
-                    Q(obgyn_config_id=search)
-                )
+                model = model.filter(Q(obgyn_config_id=search))
             else:
                 model = model.filter(
-                    Q(city__city_name__icontains=search)|
-                    Q(taluka__taluka_name__icontains=search)|
-                    Q(district__district_name__icontains=search)|
-                    Q(state__state_name__icontains=search)
+                    Q(city__city_name__icontains=search)
+                    | Q(taluka__taluka_name__icontains=search)
+                    | Q(district__district_name__icontains=search)
+                    | Q(state__state_name__icontains=search)
                 )
         return model
