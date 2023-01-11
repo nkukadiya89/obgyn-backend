@@ -5,7 +5,7 @@ from utility.filter_model import *
 
 
 def camel_to_snake(variable_name):
-    variable_name = re.sub(r'(?<!^)(?=[A-Z])', '_', variable_name).lower()
+    variable_name = re.sub(r"(?<!^)(?=[A-Z])", "_", variable_name).lower()
     return variable_name
 
 
@@ -65,7 +65,7 @@ def user_filtering_query(model, query_string, model_id, classnm):
         if "pageRecord" in query_string:
             pageRecord = query_string["pageRecord"]
         else:
-            pageRecord = config('PAGE_LIMIT')
+            pageRecord = config("PAGE_LIMIT")
         model, data["warning"] = pagination(model, query_string["page"], pageRecord)
 
         data["current_page"] = int(query_string["page"])
@@ -114,7 +114,7 @@ def filtering_query(model, query_string, model_id, classnm):
         if "pageRecord" in query_string:
             pageRecord = query_string["pageRecord"]
         else:
-            pageRecord = config('PAGE_LIMIT')
+            pageRecord = config("PAGE_LIMIT")
         model, data["warning"] = pagination(model, query_string["page"], pageRecord)
 
     return model, data
