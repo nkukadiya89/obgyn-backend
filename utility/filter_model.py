@@ -7,9 +7,9 @@ from dateutil.parser import parse
 
 
 def is_date(string_fmt_date):
+    format = "%d-%m-%Y"
     try:
-        parse(string_fmt_date, fuzzy=False)
-        return True
+        return bool(datetime.strptime(string_fmt_date, format))
     except ValueError:
         return False
 
