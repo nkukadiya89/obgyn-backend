@@ -52,6 +52,7 @@ class PatientBillingModel(models.Model):
     other_charge = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="billing_other_charge", null=True)
     other_rs = models.FloatField(default=0.0)
     total_rs = models.FloatField(default=0.0)
+    cheque_no = models.IntegerField(default=0)
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)

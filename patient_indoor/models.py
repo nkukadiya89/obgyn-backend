@@ -49,6 +49,7 @@ class PatientIndoorModel(models.Model):
     operation = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="operation_indr")
     diagnosis = models.ForeignKey(DiagnosisModel, on_delete=models.DO_NOTHING, null=True)
     provisional_diagnosis = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="provisional_diagnosis") 
+    daistolic_bp = models.CharField(max_length=15, default="", null=True)
 
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)

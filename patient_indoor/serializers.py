@@ -44,6 +44,7 @@ class PatientIndoorSerializers(serializers.ModelSerializer):
     adm_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
     oper_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
     disch_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
+    daistolic_bp = serializers.CharField(allow_null=True)
     
 
     class Meta:
