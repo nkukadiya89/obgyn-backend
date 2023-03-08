@@ -63,7 +63,7 @@ class PatientBillingSerializers(serializers.ModelSerializer):
 
     patient_billing_id = serializers.IntegerField(read_only=True)
     total_rs = serializers.IntegerField(read_only=True)
-
+    cheque_no = serializers.CharField(allow_null=True)
     admission_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
     ot_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)
     discharge_date = serializers.DateField(format="%d-%m-%Y", allow_null=True)

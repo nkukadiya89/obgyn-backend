@@ -275,6 +275,12 @@ class ModelFilterMEDICINE:
                 model = model.filter(diagnosismodel__ut_weeks=fld_value)
             if fld_name == "fu":
                 model = model.filter(diagnosismodel__fu=fld_value)
+            if fld_name == "search_medicine":
+                model = model.filter(medicine__icontains=fld_value)
+            if fld_name == "search_contain":
+                model = model.filter(contain__icontains=fld_value)
+            if fld_name == "serach_company":
+                model = model.filter(company=fld_value)
 
         model = model.distinct()
         return model
