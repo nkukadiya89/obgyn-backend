@@ -441,6 +441,15 @@ def get_medicine(request, id=None):
     if "adminRecord" in query_string:
         adminRecord = True if query_string["adminRecord"] == "true" else False
 
+    search_medicine = search_contain = search_company = ""
+
+    if "search_medicine" in query_string:
+        search_medicine = query_string["search_medicine"]
+    if"search_contain" in query_string:
+        search_contain = query_string["search_contain"]
+    if "search_company" in query_string:
+        search_company = query_string["search_company"]
+    
     data = {}
     try:
         if id:
@@ -455,6 +464,21 @@ def get_medicine(request, id=None):
                 medicine = MedicineModel.objects.filter(
                     created_by=request.user.id, deleted=0
                 )
+        # if search_medicine:
+        #     medicine = medicine.filter(medicine__icontains=search_medicine)
+        # if search_contain:
+        #     medicine = medicine.filter(contain__icontains=search_contain)
+        # if serach_company:
+        #     medicine = medicine.filter(company__icontains=serach_company)
+        search_string = None
+        if search_medicine:
+           search_string = "Q(medicine__icontains=search_medicine)"
+        if search_contain:
+            search_string = search_string+"| Q(contain__icontains=search_contain)" if search_string else "Q(contain__icontains=search_contain)"
+        if search_company:
+            search_string = search_string+"| Q(company__icontains=search_company)" if search_string else "Q(company__icontains=search_company)"
+        if search_string:
+            medicine  = eval("medicine.filter("+search_string+")")
 
         data["total_record"] = len(medicine)
 
