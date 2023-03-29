@@ -1,25 +1,25 @@
 import json
+
 from django.db.models import Q
 from django.db.models.functions import Lower
-
 from django.utils.timezone import now
 from rest_framework import status
-from rest_framework.decorators import (
-    api_view,
-    authentication_classes,
-)
+from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
+from rest_framework_simplejwt.authentication import (
+    JWTAuthentication,
+    JWTTokenUserAuthentication,
+)
 
 from user.models import User
 from utility.aws_file_upload import upload_barcode_image
 from utility.decorator import validate_permission, validate_permission_id
 from utility.search_filter import filtering_query
+
 from .models import PatientModel
-from .serializers import PatientSerializers, DynamicFieldModelSerializer
+from .serializers import DynamicFieldModelSerializer, PatientSerializers
 
 
 class PatientAPI(APIView):
@@ -99,12 +99,10 @@ def create(request):
 
             serializer.save()
             patient.registered_no = (
-                str(now())
-                .replace("-", "")
-                .replace(":", "")
-                .replace(" ", "")
-                .replace(".", "")
-                .split("+")[0][:16]
+                str(now().day)
+                + str("{:0>2}".format(now().month))
+                + str(now().year)[::3]
+                + str(now()).split(" ")[1].split(".")[0].replace(":", "")
             )
 
             patient.save()
@@ -121,8 +119,9 @@ def create(request):
                         patient.upload_file(file)
                         patient.save()
 
-            patient.regd_no_barcode, mob_url = upload_barcode_image(patient.registered_no, patient.phone,
-                                                                    patient.patient_id)
+            patient.regd_no_barcode, mob_url = upload_barcode_image(
+                patient.registered_no, patient.phone, patient.patient_id
+            )
             patient.save()
 
             data["success"] = True
@@ -131,7 +130,9 @@ def create(request):
             return Response(data=data, status=status.HTTP_201_CREATED)
 
         data["success"] = False
-        data["msg"] = {err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors}
+        data["msg"] = {
+            err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors
+        }
         data["data"] = serializer.data
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
@@ -167,8 +168,9 @@ def patch(request, id):
                     patient.upload_file(file)
                     patient.save()
 
-            patient.regd_no_barcode, mob_url = upload_barcode_image(patient.registered_no, patient.phone,
-                                                                    patient.patient_id)
+            patient.regd_no_barcode, mob_url = upload_barcode_image(
+                patient.registered_no, patient.phone, patient.patient_id
+            )
             patient.save()
 
             data["success"] = True
@@ -177,7 +179,9 @@ def patch(request, id):
             return Response(data=data, status=status.HTTP_200_OK)
 
         data["success"] = False
-        data["msg"] = {err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors}
+        data["msg"] = {
+            err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors
+        }
         data["data"] = []
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
@@ -189,11 +193,12 @@ def patch(request, id):
 def get(request, id=None):
     query_string = request.query_params
     data = {}
+    user_id = request.user.id
     try:
         if id:
-            patient = PatientModel.objects.filter(pk=id, deleted=0)
+            patient = PatientModel.objects.filter(pk=id, deleted=0, created_by=user_id)
         else:
-            patient = PatientModel.objects.filter(deleted=0)
+            patient = PatientModel.objects.filter(deleted=0, created_by=user_id)
 
         data["total_record"] = len(patient)
         patient, data = filtering_query(patient, query_string, "patient_id", "PATIENT")
@@ -229,15 +234,18 @@ def get_unique_patient(request, id=None):
     data = {}
     try:
         if id:
-            patient = PatientModel.objects.filter(pk=id, deleted=0).order_by(Lower(distinc_key))
+            patient = PatientModel.objects.filter(pk=id, deleted=0).order_by(
+                Lower(distinc_key)
+            )
         else:
             patient = PatientModel.objects.filter(
-                Q(deleted=0, created_by=1)
-                | Q(created_by=request.user.id, deleted=0)
+                Q(deleted=0, created_by=1) | Q(created_by=request.user.id, deleted=0)
             )
 
         data["total_record"] = len(patient)
-        search_string = "patient.filter(" + distinc_key + "__icontains='" + search_val + "')"
+        search_string = (
+            "patient.filter(" + distinc_key + "__icontains='" + search_val + "')"
+        )
         patient = eval(search_string)
         patient = patient.distinct(distinc_key)
     except PatientModel.DoesNotExist:
@@ -247,7 +255,9 @@ def get_unique_patient(request, id=None):
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == "GET":
-        serializer = DynamicFieldModelSerializer(patient, many=True, fields=query_string["fields"])
+        serializer = DynamicFieldModelSerializer(
+            patient, many=True, fields=query_string["fields"]
+        )
 
         data["success"] = True
         data["msg"] = "OK"

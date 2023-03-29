@@ -2,30 +2,38 @@ import json
 
 from django.contrib.auth.hashers import check_password
 from django.shortcuts import HttpResponse
+from django.utils.timezone import now
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAuthenticated
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+)
+from rest_framework.permissions import (
+    AllowAny,
+    IsAuthenticated,
+    IsAuthenticatedOrReadOnly,
+)
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from email_util.send_user_email import generate_token, decode_token, send_mail
-from utility.search_filter import user_filtering_query
-from .models import User
-from .serializers import UserSerializers, DynamicFieldModelSerializer
-from django.utils.timezone import now
+from email_util.send_user_email import decode_token, generate_token, send_mail
 from obgyn_config.views import update_global_charges
-from .utils_views import create_profile
+from utility.search_filter import user_filtering_query
 
+from .models import User
+from .serializers import DynamicFieldModelSerializer, UserSerializers
+from .utils_views import create_profile
 
 # Create your views here.
 
 # REGISTER HOSPITAL/DOCTOR/STAFF
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @permission_classes([AllowAny])
 def register_view(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         user = User()
 
         serializer = UserSerializers(user, data=request.data)
@@ -35,18 +43,25 @@ def register_view(request):
             new_user = serializer.save()
 
             user.set_password(request.data["password"])
-            user.uid = str(now()).replace("-", "").replace(":", "").replace(" ", "").replace(".", "").split("+")[0][:16]
+            user.uid = (
+                str(now())
+                .replace("-", "")
+                .replace(":", "")
+                .replace(" ", "")
+                .replace(".", "")
+                .split("+")[0][:16]
+            )
             user.save()
             data["success"] = True
             data["msg"] = "OK"
-            data['response'] = "Successfully register a new user."
-            data['email'] = new_user.email
+            data["response"] = "Successfully register a new user."
+            data["email"] = new_user.email
         else:
             data["success"] = False
             data["msg"] = "User Registration Failed."
             data["errors"] = serializer.errors
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-        
+
         create_profile(user)
 
         if user.user_type == "HOSPITAL":
@@ -67,7 +82,7 @@ def register_view(request):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def update_user(request, id):
@@ -107,7 +122,7 @@ def update_user(request, id):
 
 
 # ================= Retrieve Single or Multiple records=========================
-@api_view(['GET'])
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def get_user(request, type, id=None):
@@ -137,14 +152,16 @@ def get_user(request, type, id=None):
         serializer = UserSerializers(user, many=True)
         if "fields" in query_string:
             if query_string["fields"]:
-                serializer = DynamicFieldModelSerializer(user, many=True, fields=query_string["fields"])
+                serializer = DynamicFieldModelSerializer(
+                    user, many=True, fields=query_string["fields"]
+                )
 
         data["data"] = serializer.data
         return Response(data=data, status=status.HTTP_200_OK)
 
 
 # ================= Retrieve Single or Multiple records=========================
-@api_view(['GET'])
+@api_view(["GET"])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def get_user_field_wise(request, type, id=None):
@@ -171,13 +188,15 @@ def get_user_field_wise(request, type, id=None):
         data["success"] = True
         data["msg"] = "OK"
         user = user
-        serializer = DynamicFieldModelSerializer(user, many=True, fields=query_string["fields"])
+        serializer = DynamicFieldModelSerializer(
+            user, many=True, fields=query_string["fields"]
+        )
         data["data"] = serializer.data
         return Response(data=data, status=status.HTTP_200_OK)
 
 
 # CHANGE PASSWORD
-@api_view(['POST'])
+@api_view(["POST"])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def change_password(request):
@@ -185,8 +204,8 @@ def change_password(request):
     user = request.user
 
     req_data = request.data
-    old_password = req_data.get('old_password')
-    new_password = req_data.get('new_password')
+    old_password = req_data.get("old_password")
+    new_password = req_data.get("new_password")
 
     if check_password(old_password, user.password):
         user.set_password(new_password)
@@ -205,9 +224,9 @@ def change_password(request):
 @authentication_classes([JWTAuthentication])
 @permission_classes([AllowAny])
 @csrf_exempt
-@api_view(('POST',))
+@api_view(("POST",))
 def forget_password(request):
-    data = json.loads(request.body.decode('utf-8'))
+    data = json.loads(request.body.decode("utf-8"))
     resp_data = {}
     email = data.get("email", None)
     if email == None:
@@ -243,11 +262,11 @@ def forget_password(request):
 @csrf_exempt
 @authentication_classes([JWTAuthentication])
 @permission_classes([AllowAny])
-@api_view(('POST',))
+@api_view(("POST",))
 def reset_password(request, token):
     data = {}
     try:
-        res_data = json.loads(request.body.decode('utf-8'))
+        res_data = json.loads(request.body.decode("utf-8"))
     except:
         data["success"] = False
         data["msg"] = "Service Not available"
@@ -290,9 +309,9 @@ def reset_password(request, token):
 @csrf_exempt
 @authentication_classes(JWTAuthentication)
 @permission_classes([IsAuthenticatedOrReadOnly])
-@api_view(('DELETE',))
+@api_view(("DELETE",))
 def delete_user(request):
-    body = json.loads(request.body.decode('utf-8'))
+    body = json.loads(request.body.decode("utf-8"))
     data = {}
     if "id" not in body:
         data["success"] = False
@@ -319,7 +338,7 @@ def delete_user(request):
 @csrf_exempt
 @authentication_classes(JWTAuthentication)
 @permission_classes([IsAuthenticatedOrReadOnly])
-@api_view(('POST',))
+@api_view(("POST",))
 def verify_user(request, token):
     data = {}
     try:
@@ -352,11 +371,11 @@ def verify_user(request, token):
 @csrf_exempt
 @authentication_classes(JWTAuthentication)
 @permission_classes([IsAuthenticatedOrReadOnly])
-@api_view(('POST',))
+@api_view(("POST",))
 def send_verify_link(request):
     data = {}
     try:
-        req_data = json.loads(request.body.decode('utf-8'))
+        req_data = json.loads(request.body.decode("utf-8"))
     except:
         data["success"] = False
         data["msg"] = "Service not available"

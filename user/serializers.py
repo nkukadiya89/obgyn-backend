@@ -133,6 +133,7 @@ class UserSerializers(serializers.ModelSerializer):
 
             email = data.get('email')
             data["username"] = email.lower()
+            
         elif user_type == "HOSPITAL":
             username = data.get("username").lower()
             email = data.get('email')
