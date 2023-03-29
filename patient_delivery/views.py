@@ -6,19 +6,21 @@ from rest_framework.decorators import (
     authentication_classes,
     permission_classes,
 )
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
+from rest_framework_simplejwt.authentication import (
+    JWTAuthentication,
+    JWTTokenUserAuthentication,
+)
 
+from obgyn_config.views import get_obgyn_config
 from patient_opd.models import PatientOpdModel
+from utility.decorator import validate_permission, validate_permission_id
 from utility.search_filter import filtering_query
+
 from .models import PatientDeliveryModel
 from .serializers import PatientDeliverySerializers, change_payload
-from utility.decorator import validate_permission, validate_permission_id
-from obgyn_config.views import get_obgyn_config
 
 
 class PatientDeliveryAPI(APIView):
@@ -92,14 +94,20 @@ def create(request):
     if request.method == "POST":
         patient_delivery = PatientDeliveryModel()
         if "sr_no" not in request.data:
-            request.data["serial_no_month"], request.data["serial_no_year"], request.data["sr_no"] = get_obgyn_config(request.user ,PatientDeliveryModel)
+            (
+                request.data["serial_no_month"],
+                request.data["serial_no_year"],
+                request.data["sr_no"],
+            ) = get_obgyn_config(request.user, PatientDeliveryModel)
 
         serializer = PatientDeliverySerializers(patient_delivery, data=request.data)
 
         if serializer.is_valid():
             serializer.save()
 
-            patient_delivery = PatientDeliveryModel.objects.filter(deleted=0, regd_no=request.data["regd_no"]).order_by('-created_at')
+            patient_delivery = PatientDeliveryModel.objects.filter(
+                deleted=0, regd_no=request.data["regd_no"]
+            ).order_by("-created_at")
             serializer = PatientDeliverySerializers(patient_delivery, many=True)
 
             data["success"] = True
@@ -108,20 +116,22 @@ def create(request):
             return Response(data=data, status=status.HTTP_201_CREATED)
 
         data["success"] = False
-        data["msg"] = {err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors}
+        data["msg"] = {
+            err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors
+        }
         data["data"] = serializer.data
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("patient_delivery","change")
+@validate_permission_id("patient_delivery", "change")
 def patch(request, id):
     data = {}
     request.data["created_by"] = request.user.id
     try:
         if id:
-            patient_delivery = PatientDeliveryModel.objects.get(pk=id,deleted=0)
+            patient_delivery = PatientDeliveryModel.objects.get(pk=id, deleted=0)
         else:
             patient_delivery = PatientDeliveryModel.objects.filter(deleted=0)
 
@@ -137,11 +147,12 @@ def patch(request, id):
             patient_delivery, request.data, partial=True
         )
 
-
         if serializer.is_valid():
             serializer.save()
 
-            patient_delivery = PatientDeliveryModel.objects.filter(deleted=0, regd_no=request.data["regd_no"]).order_by('-created_at')
+            patient_delivery = PatientDeliveryModel.objects.filter(
+                deleted=0, regd_no=request.data["regd_no"]
+            ).order_by("-created_at")
             serializer = PatientDeliverySerializers(patient_delivery, many=True)
 
             data["success"] = True
@@ -150,14 +161,16 @@ def patch(request, id):
             return Response(data=data, status=status.HTTP_200_OK)
 
         data["success"] = False
-        data["msg"] = {err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors}
+        data["msg"] = {
+            err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors
+        }
         data["data"] = []
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission_id("patient_delivery","view")
+@validate_permission_id("patient_delivery", "view")
 # ================= Retrieve Single or Multiple records=========================
 def get(request, id=None):
     query_string = request.query_params
@@ -189,12 +202,12 @@ def get(request, id=None):
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
-@validate_permission("patient_delivery","view")
+@validate_permission("patient_delivery", "view")
 def get_sequence(request):
     data = {}
 
-    data["serial_no_month"], data["serial_no_year"], data["sr_no"] = get_obgyn_config(request.user, PatientDeliveryModel)
+    data["serial_no_month"], data["serial_no_year"], data["sr_no"] = get_obgyn_config(
+        request.user, PatientDeliveryModel
+    )
 
-    return Response(data=data,status=status.HTTP_200_OK)
-
-
+    return Response(data=data, status=status.HTTP_200_OK)

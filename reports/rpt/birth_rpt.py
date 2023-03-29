@@ -1,10 +1,10 @@
+from django.http import JsonResponse
 from django.shortcuts import render
-from template_header.models import TemplateHeaderModel
+from django.views.decorators.csrf import csrf_exempt
+
 from patient.models import PatientModel
 from patient_delivery.models import PatientDeliveryModel
-
-from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
+from template_header.models import TemplateHeaderModel
 
 
 @csrf_exempt
@@ -46,20 +46,24 @@ def birth_rpt(request, id, language_id=None):
         [
             patient_delivery.mother_name if patient_delivery.mother_name else " ",
             " ",
-            patient_delivery.delivery_last_name if patient_delivery.delivery_last_name else " ",
+            patient_delivery.delivery_last_name
+            if patient_delivery.delivery_last_name
+            else " ",
         ]
     )
-    context["father_name"] = patient_delivery.husband_name if patient_delivery.husband_name else " "
+    context["father_name"] = (
+        patient_delivery.husband_name if patient_delivery.husband_name else " "
+    )
     context["address"] = "".join(
         [
             " ",
             patient_delivery.city.city_name if patient_delivery.city.city_name else " ",
             " ",
-            patient_delivery.taluka.taluka_name if patient_delivery.taluka.taluka_name else " ",
+            patient_delivery.taluka if patient_delivery.taluka else " ",
             " ",
-            patient_delivery.district.district_name if patient_delivery.district.district_name else " ",
+            patient_delivery.district if patient_delivery.district else " ",
             " ",
-            patient_delivery.state.state_name if patient_delivery.state.state_name else " ",
+            patient_delivery.state if patient_delivery.state else " ",
         ]
     )
     context["age"] = patient.age

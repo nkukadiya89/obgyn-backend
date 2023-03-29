@@ -1,13 +1,15 @@
-from rest_framework import serializers
 from django.db.models import Q
+from rest_framework import serializers
+
+from city.serializers import CitySerializers
+from district.serializers import DistrictSerializers
+from manage_fields.serializers import ManageFieldsSerializers
 from patient.models import PatientModel
 from patient.serializers import PatientSerializers
-from .models import PatientDeliveryModel
-from city.serializers import CitySerializers
-from taluka.serializers import TalukaSerializers
-from district.serializers import DistrictSerializers
 from state.serializers import StateSerializers
-from manage_fields.serializers import ManageFieldsSerializers
+from taluka.serializers import TalukaSerializers
+
+from .models import PatientDeliveryModel
 
 
 class PatientDeliverySerializers(serializers.ModelSerializer):
@@ -26,35 +28,17 @@ class PatientDeliverySerializers(serializers.ModelSerializer):
             del ret["patient_opd"]
 
         if "city" in ret:
-            ret["city_name"] = CitySerializers(instance.city).data[
-                "city_name"
-            ]
-        if "taluka" in ret:
-            ret["taluka_name"] = TalukaSerializers(instance.taluka).data[
-                "taluka_name"
-            ]
-            
-        if "district" in ret:
-            ret["district_name"] = DistrictSerializers(instance.district).data[
-                "district_name"
-            ]
-        if "state" in ret:
-            ret["state_name"] = StateSerializers(instance.state).data[
-                "state_name"
-            ]
+            ret["city_name"] = CitySerializers(instance.city).data["city_name"]
 
-        # if "mother_occupation" in ret:
-        #     ret["mother_occupation_name"] = ManageFieldsSerializers(instance.mother_occupation).data["field_value"]
-        # if "mother_education" in ret:
-        #     ret["mother_education_name"] = ManageFieldsSerializers(instance.mother_education).data["field_value"]
-        #
-        #
-        # if "father_occupation" in ret:
-        #     ret["father_occupation_name"] = ManageFieldsSerializers(instance.father_occupation).data["field_value"]
-        # if "father_education" in ret:
-        #     ret["father_education_name"] = ManageFieldsSerializers(instance.father_education).data["field_value"]
-
-        for fld_nm in ["religion", "episio_by", "dayan", "mother_occupation", "father_occupation", "mother_education","father_education"]:
+        for fld_nm in [
+            "religion",
+            "episio_by",
+            "dayan",
+            "mother_occupation",
+            "father_occupation",
+            "mother_education",
+            "father_education",
+        ]:
             fld_name = fld_nm + "_name"
             search_instance = "instance" + "." + fld_nm
             if fld_nm in ret:
@@ -80,9 +64,11 @@ class PatientDeliverySerializers(serializers.ModelSerializer):
             child_name__iexact=data["child_name"],
             patient_id=data["patient_id"],
         )
-        
+
         if self.partial:
-            patient_delivery = patient_delivery.filter(~Q(pk=self.instance.patient_delivery_id))
+            patient_delivery = patient_delivery.filter(
+                ~Q(pk=self.instance.patient_delivery_id)
+            )
 
         if len(patient_delivery) > 1:
             raise serializers.ValidationError("Child already registered.")
@@ -101,18 +87,6 @@ class PatientDeliverySerializers(serializers.ModelSerializer):
 
         if len(str(data["weight"])) > 4:
             raise serializers.ValidationError("Check value of Weight.")
-
-        # child_name = data.get('child_name')
-
-        # duplicate_child = PatientDeliveryModel.objects.filter(deleted=0, child_name__iexact=child_name)
-
-        # if self.partial:
-        #     duplicate_child = duplicate_child.filter(~Q(pk=self.instance.patient_delivery_id)).first()
-        # else:
-        #     duplicate_child = duplicate_child.first()
-
-        # if duplicate_child != None:
-        #     raise serializers.ValidationError("child already exist.")
 
         return data
 

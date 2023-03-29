@@ -1,27 +1,24 @@
 from operator import mod
-from pyexpat import model
+
 from django.db import models
 from django.utils.timezone import now
+from pyexpat import model
 
-from patient.models import PatientModel
 from city.models import CityModel
-from taluka.models import TalukaModel
 from district.models import DistrictModel
-from state.models import StateModel
 from manage_fields.models import ManageFieldsModel
+from patient.models import PatientModel
+from state.models import StateModel
+from taluka.models import TalukaModel
 
 
 # Create your models here.
 class PatientDeliveryModel(models.Model):
-    gender_choice = (
-        ("MALE", "MALE"),
-        ("FEMALE", "FEMALE"),
-        ("OTHER", "OTHER")
-    )
+    gender_choice = (("MALE", "MALE"), ("FEMALE", "FEMALE"), ("OTHER", "OTHER"))
     delivery_type_choice = (
         ("NORMAL", "NORMAL"),
         ("CEASERIAN", "CEASERIAN"),
-        ("INSTRUMENTAL","INSTRUMENTAL"),
+        ("INSTRUMENTAL", "INSTRUMENTAL"),
     )
 
     patient_delivery_id = models.AutoField(primary_key=True)
@@ -38,15 +35,34 @@ class PatientDeliveryModel(models.Model):
     delivery_husband_father_name = models.CharField(max_length=150, null=True)
     husband_father_name = models.CharField(max_length=150, null=True)
     child_name = models.CharField(max_length=100, default="")
-    child_gender = models.CharField(max_length=10, choices=gender_choice, default="MALE")
-    delivery_type = models.CharField(max_length=20, choices=delivery_type_choice, default="NORMAL")
-    religion = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="delivery_religion", null=True)
-    episio_by = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="delivery_dpisio_by", null=True)
-    dayan = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="delivery_dayan", null=True)
-    city = models.ForeignKey(CityModel,on_delete=models.DO_NOTHING, null=True)
-    taluka = models.ForeignKey(TalukaModel,on_delete=models.DO_NOTHING, null=True)
-    district = models.ForeignKey(DistrictModel,on_delete=models.DO_NOTHING, null=True)
-    state = models.ForeignKey(StateModel,on_delete=models.DO_NOTHING, null=True)
+    child_gender = models.CharField(
+        max_length=10, choices=gender_choice, default="MALE"
+    )
+    delivery_type = models.CharField(
+        max_length=20, choices=delivery_type_choice, default="NORMAL"
+    )
+    religion = models.ForeignKey(
+        ManageFieldsModel,
+        on_delete=models.DO_NOTHING,
+        related_name="delivery_religion",
+        null=True,
+    )
+    episio_by = models.ForeignKey(
+        ManageFieldsModel,
+        on_delete=models.DO_NOTHING,
+        related_name="delivery_dpisio_by",
+        null=True,
+    )
+    dayan = models.ForeignKey(
+        ManageFieldsModel,
+        on_delete=models.DO_NOTHING,
+        related_name="delivery_dayan",
+        null=True,
+    )
+    city = models.ForeignKey(CityModel, on_delete=models.DO_NOTHING, null=True)
+    taluka = models.CharField(max_length=55, null=True)
+    district = models.CharField(max_length=55, null=True)
+    state = models.CharField(max_length=55, null=True)
     pin = models.IntegerField(null=True)
     patient_mobile = models.CharField(max_length=25, null=True)
     landmark = models.CharField(max_length=500, null=True)
@@ -57,10 +73,30 @@ class PatientDeliveryModel(models.Model):
     live_male_female = models.CharField(max_length=15, null=True)
     no_of_delivery = models.IntegerField(default=0, null=True)
     weight = models.FloatField(default=0.0, null=True)
-    father_education = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="delivery_f_education", null=True)
-    mother_education = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="delivery_m_education", null=True)
-    father_occupation = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="delivery_f_occupation", null=True)
-    mother_occupation = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, related_name="delivery_m_occupation", null=True)
+    father_education = models.ForeignKey(
+        ManageFieldsModel,
+        on_delete=models.DO_NOTHING,
+        related_name="delivery_f_education",
+        null=True,
+    )
+    mother_education = models.ForeignKey(
+        ManageFieldsModel,
+        on_delete=models.DO_NOTHING,
+        related_name="delivery_m_education",
+        null=True,
+    )
+    father_occupation = models.ForeignKey(
+        ManageFieldsModel,
+        on_delete=models.DO_NOTHING,
+        related_name="delivery_f_occupation",
+        null=True,
+    )
+    mother_occupation = models.ForeignKey(
+        ManageFieldsModel,
+        on_delete=models.DO_NOTHING,
+        related_name="delivery_m_occupation",
+        null=True,
+    )
     baby_status = models.CharField(max_length=15, default="")
     serial_no_month = models.IntegerField(default=0, null=True)
     serial_no_year = models.IntegerField(default=0, null=True)
