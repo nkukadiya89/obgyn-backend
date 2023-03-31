@@ -59,7 +59,7 @@ class PatientDeliveryModel(models.Model):
         related_name="delivery_dayan",
         null=True,
     )
-    city = models.ForeignKey(CityModel, on_delete=models.DO_NOTHING, null=True)
+    city = models.CharField(max_length=55, null=True)
     taluka = models.CharField(max_length=55, null=True)
     district = models.CharField(max_length=55, null=True)
     state = models.CharField(max_length=55, null=True)

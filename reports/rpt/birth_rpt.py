@@ -57,7 +57,7 @@ def birth_rpt(request, id, language_id=None):
     context["address"] = "".join(
         [
             " ",
-            patient_delivery.city.city_name if patient_delivery.city.city_name else " ",
+            patient_delivery.city if patient_delivery.city else " ",
             " ",
             patient_delivery.taluka if patient_delivery.taluka else " ",
             " ",

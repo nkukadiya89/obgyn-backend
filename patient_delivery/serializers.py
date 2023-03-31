@@ -27,9 +27,6 @@ class PatientDeliverySerializers(serializers.ModelSerializer):
             ret["patient_id"] = patient.data["patient_id"]
             del ret["patient_opd"]
 
-        if "city" in ret:
-            ret["city_name"] = CitySerializers(instance.city).data["city_name"]
-
         for fld_nm in [
             "religion",
             "episio_by",

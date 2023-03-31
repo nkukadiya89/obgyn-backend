@@ -63,7 +63,7 @@ def child_birth_rpt(request, id, language_id=None):
     context["mother_address"] = "".join(
         [
             " ",
-            patient_delivery.city.city_name if patient_delivery.city.city_name else " ",
+            patient_delivery.city if patient_delivery.city else " ",
             " ",
             patient_delivery.taluka if patient_delivery.taluka else " ",
             " ",
@@ -72,9 +72,7 @@ def child_birth_rpt(request, id, language_id=None):
             patient_delivery.state if patient_delivery.state else " ",
         ]
     )
-    context["mother_city"] = (
-        patient_delivery.city.city_name if patient_delivery.city.city_name else " "
-    )
+    context["mother_city"] = patient_delivery.city if patient_delivery.city else " "
     context["mother_taluka"] = (
         patient_delivery.taluka if patient_delivery.taluka else " "
     )
@@ -84,7 +82,7 @@ def child_birth_rpt(request, id, language_id=None):
     context["address"] = " ".join(
         [
             " ",
-            patient_delivery.city.city_name if patient_delivery.city.city_name else " ",
+            patient_delivery.city if patient_delivery.city else " ",
             " ",
             patient_delivery.taluka if patient_delivery.taluka else " ",
             " ",
@@ -104,8 +102,8 @@ def child_birth_rpt(request, id, language_id=None):
         else " "
     )
     context["city"] = (
-        patient_opd.consulted_by.hospital.city.city_name
-        if patient_opd.consulted_by.hospital.city.city_name
+        patient_opd.consulted_by.hospital.city
+        if patient_opd.consulted_by.hospital.city
         else " "
     )
     context["pin"] = patient_delivery.pin
@@ -124,8 +122,8 @@ def child_birth_rpt(request, id, language_id=None):
     context["hospital_address"] = "".join(
         [
             " ",
-            patient_opd.consulted_by.hospital.city.city_name
-            if patient_opd.consulted_by.hospital.city.city_name
+            patient_opd.consulted_by.hospital.city
+            if patient_opd.consulted_by.hospital.city
             else " ",
             " ",
             patient_opd.consulted_by.hospital.district.district_name
