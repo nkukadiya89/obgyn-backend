@@ -3,26 +3,26 @@ import json
 from django.db.models import Q
 from django.db.models.functions import Lower
 from rest_framework import status
-from rest_framework.decorators import (
-    api_view,
-    authentication_classes,
-)
+from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
+from rest_framework_simplejwt.authentication import (
+    JWTAuthentication,
+    JWTTokenUserAuthentication,
+)
 
 from utility.decorator import validate_permission, validate_permission_id
 from utility.search_filter import filtering_query
-from .models import MedicineModel, TimingModel, MedicineTypeModel
+
+from .models import MedicineModel, MedicineTypeModel, TimingModel
 from .serializers import (
+    DynamicFieldModelSerializer,
     MedicineSerializers,
     MedicineTypeSerializers,
     TimingSerializers,
-    DynamicFieldModelSerializer,
 )
-from .utils_view import link_diagnosis, delete_child_table
+from .utils_view import delete_child_table, link_diagnosis
 
 
 class MedicineAPI(APIView):
@@ -98,14 +98,17 @@ def create_medicine(request):
 
             data["msg"] = "Data updated successfully"
 
-            if request.data["diagnosis_name"] != None and "diagnosis_type" in request.data:
+            if (
+                request.data["diagnosis_name"] != None
+                and "diagnosis_type" in request.data
+            ):
                 if not link_diagnosis(request, serializer.data["medicine_id"]):
                     data[
                         "msg"
                     ] = "Medicine Created successfully but not linked with Diagnosis"
             if (
-                    "diagnosis_name" in request.data
-                    and "diagnosis_type" not in request.data
+                "diagnosis_name" in request.data
+                and "diagnosis_type" not in request.data
             ):
                 data[
                     "msg"
@@ -117,7 +120,9 @@ def create_medicine(request):
             return Response(data=data, status=status.HTTP_201_CREATED)
 
         data["success"] = False
-        data["msg"] = {err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors}
+        data["msg"] = {
+            err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors
+        }
         data["data"] = serializer.data
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
@@ -199,7 +204,9 @@ def create_medicine_type(request):
             return Response(data=data, status=status.HTTP_201_CREATED)
 
         data["success"] = False
-        data["msg"] = {err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors}
+        data["msg"] = {
+            err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors
+        }
         data["data"] = serializer.data
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
@@ -280,7 +287,9 @@ def create_timing(request):
             return Response(data=data, status=status.HTTP_201_CREATED)
 
         data["success"] = False
-        data["msg"] = {err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors}
+        data["msg"] = {
+            err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors
+        }
         data["data"] = serializer.data
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
@@ -356,7 +365,9 @@ def patch_timing(request, id):
             return Response(data=data, status=status.HTTP_200_OK)
 
         data["success"] = False
-        data["msg"] = {err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors}
+        data["msg"] = {
+            err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors
+        }
         data["data"] = []
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
@@ -389,7 +400,9 @@ def patch_medicine_type(request, id):
             return Response(data=data, status=status.HTTP_200_OK)
 
         data["success"] = False
-        data["msg"] = {err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors}
+        data["msg"] = {
+            err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors
+        }
         data["data"] = []
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
@@ -425,7 +438,9 @@ def patch_medicine(request, id):
             return Response(data=data, status=status.HTTP_200_OK)
 
         data["success"] = False
-        data["msg"] = {err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors}
+        data["msg"] = {
+            err_obj: str(serializer.errors[err_obj][0]) for err_obj in serializer.errors
+        }
         data["data"] = []
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
@@ -445,11 +460,11 @@ def get_medicine(request, id=None):
 
     if "search_medicine" in query_string:
         search_medicine = query_string["search_medicine"]
-    if"search_contain" in query_string:
+    if "search_contain" in query_string:
         search_contain = query_string["search_contain"]
     if "search_company" in query_string:
         search_company = query_string["search_company"]
-    
+
     data = {}
     try:
         if id:
@@ -457,8 +472,7 @@ def get_medicine(request, id=None):
         else:
             if adminRecord:
                 medicine = MedicineModel.objects.filter(
-                    Q(deleted=0, created_by=1)
-                    | Q(created_by=request.user.id)
+                    Q(deleted=0, created_by=1) | Q(created_by=request.user.id)
                 )
             else:
                 medicine = MedicineModel.objects.filter(
@@ -472,13 +486,21 @@ def get_medicine(request, id=None):
         #     medicine = medicine.filter(company__icontains=serach_company)
         search_string = None
         if search_medicine:
-           search_string = "Q(medicine__icontains=search_medicine)"
+            search_string = "Q(medicine__icontains=search_medicine)"
         if search_contain:
-            search_string = search_string+"| Q(contain__icontains=search_contain)" if search_string else "Q(contain__icontains=search_contain)"
+            search_string = (
+                search_string + "| Q(contain__icontains=search_contain)"
+                if search_string
+                else "Q(contain__icontains=search_contain)"
+            )
         if search_company:
-            search_string = search_string+"| Q(company__icontains=search_company)" if search_string else "Q(company__icontains=search_company)"
+            search_string = (
+                search_string + "| Q(company__icontains=search_company)"
+                if search_string
+                else "Q(company__icontains=search_company)"
+            )
         if search_string:
-            medicine  = eval("medicine.filter("+search_string+")")
+            medicine = eval("medicine.filter(" + search_string + ")")
 
         data["total_record"] = len(medicine)
 
@@ -528,12 +550,15 @@ def get_or_medicine(request, id=None):
             if adminRecord:
                 medicine = MedicineModel.objects.filter(
                     Q(deleted=0, created_by=1)
-                    | Q(created_by=request.user.id)
+                    | Q(created_by=request.user.id, deleted=0)
                 )
             else:
                 medicine = MedicineModel.objects.filter(
                     created_by=request.user.id, deleted=0
                 )
+
+                if medicine.count() == 0:
+                    medicine = MedicineModel.objects.filter(deleted=0, created_by=1)
 
         data["total_record"] = len(medicine)
 
@@ -580,8 +605,7 @@ def get_medicine_type(request, id=None):
         else:
             if adminRecord:
                 medicine_type = MedicineTypeModel.objects.filter(
-                    Q(deleted=0, created_by=1)
-                    | Q(created_by=request.user.id)
+                    Q(deleted=0, created_by=1) | Q(created_by=request.user.id)
                 )
             else:
                 medicine_type = MedicineTypeModel.objects.filter(
@@ -623,11 +647,12 @@ def get_unique_medicine(request, id=None):
     data = {}
     try:
         if id:
-            medicine = MedicineModel.objects.filter(pk=id, deleted=0).order_by(Lower(distinc_key))
+            medicine = MedicineModel.objects.filter(pk=id, deleted=0).order_by(
+                Lower(distinc_key)
+            )
         else:
             medicine = MedicineModel.objects.filter(
-                Q(deleted=0, created_by=1)
-                | Q(created_by=request.user.id)
+                Q(deleted=0, created_by=1) | Q(created_by=request.user.id)
             )
         data["total_record"] = len(medicine)
 
@@ -640,7 +665,9 @@ def get_unique_medicine(request, id=None):
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == "GET":
-        serializer = DynamicFieldModelSerializer(medicine, many=True, fields=query_string["fields"])
+        serializer = DynamicFieldModelSerializer(
+            medicine, many=True, fields=query_string["fields"]
+        )
 
         # medicine = [item for m in medicine for item in m]
 
@@ -648,6 +675,7 @@ def get_unique_medicine(request, id=None):
         data["msg"] = "OK"
         data["data"] = serializer.data
         return Response(data=data, status=status.HTTP_200_OK)
+
 
 @api_view(["GET"])
 @authentication_classes([JWTAuthentication])
@@ -658,15 +686,19 @@ def medicine_to_type(request):
     medicine_name = query_string["medicine_name"]
 
     medicine_list = list(
-        MedicineModel.objects.filter(medicine__iexact=medicine_name).values_list('medicine_type_id','medicine_id'))
+        MedicineModel.objects.filter(medicine__iexact=medicine_name).values_list(
+            "medicine_type_id", "medicine_id"
+        )
+    )
 
     medicine_list = [item for t in medicine_list for item in t]
     medicine_type_id = medicine_list[0::2]
     medicine_id = medicine_list[1::2]
 
-
     if medicine_list:
-        medicine_type = MedicineTypeModel.objects.filter(medicine_type_id__in=medicine_type_id).distinct()
+        medicine_type = MedicineTypeModel.objects.filter(
+            medicine_type_id__in=medicine_type_id
+        ).distinct()
 
     # if len(medicine_type) >0:
     #     serializer = MedicineTypeSerializers(medicine_type, many=True)
@@ -674,11 +706,13 @@ def medicine_to_type(request):
     #     serializer = MedicineTypeSerializers(MedicineSerializers())
 
     medicine = MedicineModel.objects.filter(medicine_id__in=medicine_id)
-    serializer = DynamicFieldModelSerializer(medicine, many=True, fields="medicine_id,medicine_type,medicine_type_id")
+    serializer = DynamicFieldModelSerializer(
+        medicine, many=True, fields="medicine_id,medicine_type,medicine_type_id"
+    )
 
     data["success"] = True
     data["msg"] = "OK"
     data["data"] = serializer.data
     # new_data = list(serializer.data)
-    
+
     return Response(data=data, status=status.HTTP_200_OK)
