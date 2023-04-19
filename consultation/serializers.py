@@ -1,17 +1,19 @@
+import datetime
 from re import T
 from tkinter.tix import Tree
+
 from jmespath import search
 from rest_framework import serializers
-import datetime
-from diagnosis.serializers import DiagnosisSerializers
 
+from diagnosis.serializers import DiagnosisSerializers
 from manage_fields.serializers import ManageFieldsSerializers
-from patient.models import PatientModel
-from .models import ConsultationModel
-from patient_prescription.models import PatientPrescriptionModel
-from patient_prescription.serializers import PatientPrescriptionSerializers
 from medicine.models import MedicineModel
 from medicine.serializers import MedicineSerializers
+from patient.models import PatientModel
+from patient_prescription.models import PatientPrescriptionModel
+from patient_prescription.serializers import PatientPrescriptionSerializers
+
+from .models import ConsultationModel
 
 
 class ConsultationSerializers(serializers.ModelSerializer):
@@ -26,15 +28,24 @@ class ConsultationSerializers(serializers.ModelSerializer):
             ret["diagnosis_name"] = DiagnosisSerializers(instance.diagnosis).data[
                 "diagnosis_name"
             ]
-        
-        first_edd =  PatientModel.objects.filter(
-            registered_no=instance.regd_no
-        ).values("first_edd")[0]["first_edd"]
+        ret["children_count"] = (
+            instance.ftnd_male_live
+            + instance.ftnd_male_dead
+            + instance.ftnd_female_live
+            + instance.ftnd_female_dead
+            + instance.ftlscs_male_live
+            + instance.ftlscs_male_dead
+            + instance.ftlscs_female_live
+            + instance.ftlscs_female_dead
+        )
+        first_edd = PatientModel.objects.filter(registered_no=instance.regd_no).values(
+            "first_edd"
+        )[0]["first_edd"]
 
         if first_edd:
-            ret["first_edd"] =first_edd.strftime("%d-%m-%Y")
+            ret["first_edd"] = first_edd.strftime("%d-%m-%Y")
 
-        for fld_nm in ["co", "ho", "eb_pp", "ps", "pv", "fu","breast"]:
+        for fld_nm in ["co", "ho", "eb_pp", "ps", "pv", "fu", "breast"]:
             fld_name = fld_nm + "_name"
             search_instance = "instance" + "." + fld_nm
             if fld_nm in ret:
@@ -52,7 +63,7 @@ class ConsultationSerializers(serializers.ModelSerializer):
         return ret
 
     def validate(self, data):
-        
+
         if data["ut_weeks"]:
             if 4 >= int(data["ut_weeks"]) >= 41:
                 raise serializers.ValidationError("Enter valid UT Weeks")
@@ -72,19 +83,19 @@ class ConsultationSerializers(serializers.ModelSerializer):
                 raise serializers.ValidationError("Enter valid TSH")
 
         if data["resperistion"]:
-            if  len(data["resperistion"])>6:
+            if len(data["resperistion"]) > 6:
                 raise serializers.ValidationError("Enter valid Resperistion")
 
-        if  0 >= int(data["spo2"]) >= 100:
+        if 0 >= int(data["spo2"]) >= 100:
             raise serializers.ValidationError("Enter valid SpO2%")
 
         if data["mh_every"]:
             if 0 >= int(data["mh_every"]) >= 90:
-                raise serializers.ValidationError("mh_every is not in the 0-90 ")    
+                raise serializers.ValidationError("mh_every is not in the 0-90 ")
 
         if data["mh_for"]:
             if 0 >= int(data["mh_for"]) >= 30:
-                raise serializers.ValidationError("mh_for is not in the 0-30 ")        
+                raise serializers.ValidationError("mh_for is not in the 0-30 ")
 
         if "regd_no" in data:
             patient = PatientModel.objects.filter(registered_no=data["regd_no"])
