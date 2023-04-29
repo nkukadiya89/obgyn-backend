@@ -1,13 +1,15 @@
 from operator import mod
-from django.db import models
-from user.models import User
-from manage_fields.models import ManageFieldsModel
-from city.models import CityModel
-from taluka.models import TalukaModel
-from district.models import DistrictModel
-from state.models import StateModel
 
+from django.db import models
 from django.utils.timezone import now
+
+from city.models import CityModel
+from district.models import DistrictModel
+from manage_fields.models import ManageFieldsModel
+from state.models import StateModel
+from taluka.models import TalukaModel
+from user.models import User
+
 
 # Create your models here.
 class ObgynConfigModel(models.Model):
@@ -18,14 +20,20 @@ class ObgynConfigModel(models.Model):
     rs_per_room = models.FloatField(default=0, null=True)
     operative_charge = models.FloatField(default=0, null=True)
     rs_per_day_nursing = models.FloatField(default=0, null=True)
-    prefix  = models.ForeignKey(ManageFieldsModel, on_delete=models.DO_NOTHING, null=True, related_name="config_prefix")
+    prefix = models.ForeignKey(
+        ManageFieldsModel,
+        on_delete=models.DO_NOTHING,
+        null=True,
+        related_name="config_prefix",
+    )
     city = models.ForeignKey(CityModel, on_delete=models.CASCADE, null=True)
     taluka = models.ForeignKey(TalukaModel, on_delete=models.CASCADE, null=True)
     district = models.ForeignKey(DistrictModel, on_delete=models.CASCADE, null=True)
     state = models.ForeignKey(StateModel, on_delete=models.CASCADE, null=True)
     address = models.CharField(max_length=500, null=True)
-    monthly_usg = models.IntegerField(default=0,null=True)
-    yearly_usg = models.IntegerField(default=0,null=True)
+    monthly_usg = models.IntegerField(default=0, null=True)
+    yearly_usg = models.IntegerField(default=0, null=True)
+    usg_or_pa = models.CharField(max_length=15, default="", null=True)
     created_by = models.IntegerField(default=1, unique=False)
     deleted = models.IntegerField(default=0, unique=False)
     created_at = models.DateTimeField(default=now)
